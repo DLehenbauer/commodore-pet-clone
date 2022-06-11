@@ -1,0 +1,62 @@
+# PET Clone - Open hardware implementation of the Commodore PET
+# by Daniel Lehenbauer (and contributors).
+# 
+# https://github.com/DLehenbauer/commodore-pet-clone
+#
+# To the extent possible under law, I, Daniel Lehenbauer, have waived all
+# copyright and related or neighboring rights to this project. This work is
+# published from the United States.
+#
+# @copyright CC0 http://creativecommons.org/publicdomain/zero/1.0/
+# @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
+
+**/bin/
+
+# TODO: Figure out why these are not placed in /test/bin/
+test/src/*.d
+test/src/*.o
+testpins/src/*.d
+testpins/src/*.o
+
+# KiCad local settings
+hw/**/*.kicad_prl
+
+# KiCad backup files
+hw/**/*-bak
+hw/**/_autosave-*
+hw/**/*.bck
+hw/**/*-backups/*.zip
+hw/*/#auto_saved_files#
+
+# KiCad footprint cache
+hw/**/fp-info-cache
+
+# Spectra import/export
+hw/**/*.dsn
+hw/**/*.ses
+
+# BOM import/export
+hw/**/*.xml
+hw/**/*.csv
+
+# Icarus Verilog build output
+rtl/*.out
+rtl/*.vcd
+
+# Quartus generated files
+rtl/*.v.bak
+rtl/*.sdc.bak
+rtl/db/**
+rtl/incremental_db/**
+rtl/output_files/**
+rtl/*.dpf
+rtl/*.qws
+
+# ATMISP log file
+rtl/jtag.log
+
+# Don't commit PRGs
+prgs/**
+
+# CMake build artifacts
+/sw/build

@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/arm-linux-gnueabihf-gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-arm",
+            "compilerArgs": [
+                "--sysroot=/opt/rpi/sysroot",
+                "-isystem",
+                "/opt/rpi/sysroot/opt/vc/include"
+            ]
+        }
+    ],
+    "version": 4
+}

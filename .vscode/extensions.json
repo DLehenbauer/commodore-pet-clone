@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-vscode.cpptools-extension-pack",
+        "mshr-h.veriloghdl",
+        "streetsidesoftware.code-spell-checker",
+        "xaver.clang-format"
+    ]
+}

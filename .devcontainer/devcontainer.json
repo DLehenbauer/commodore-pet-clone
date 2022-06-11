@@ -1,0 +1,37 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.166.1/containers/debian
+{
+    "name": "PET",
+    "build": {
+        "dockerfile": "Dockerfile",
+        // Update 'VARIANT' to pick an Debian version: buster, stretch
+        "args": {
+            // "VARIANT": "bullseye",
+            // "RPI_RELEASE": "bullseye"
+        }
+    },
+
+    // Set *default* container specific settings.json values on container create.
+    "settings": { 
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+            "bash": {
+                "path": "/bin/bash"
+            }
+        }
+    },
+
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "mshr-h.veriloghdl",
+        "mutantdino.resourcemonitor",
+        "streetsidesoftware.code-spell-checker",
+        "xaver.clang-format"
+    ],
+
+    "runArgs": [ "--cap-add=SYS_ADMIN" ],
+
+    // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "vscode"
+}
