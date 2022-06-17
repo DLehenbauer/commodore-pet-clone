@@ -1532,8 +1532,8 @@
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062df3127"
       (reference "C12") (unit 1) (value "22n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/8ae8dadc-6b93-414c-849b-7cbb39f7e863"
-      (reference "C13") (unit 1) (value "22u 25V") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    (path "/00000000-0000-0000-0000-000061ed99de/fa3581e0-c130-421f-9b2f-f5e522241ea7"
+      (reference "C13") (unit 1) (value "10uF 50V") (footprint "Capacitor_SMD:C_1206_3216Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/ba832d2a-ccf0-430b-b948-4ac3f97241ae"
       (reference "C14") (unit 1) (value "22u 25V") (footprint "Capacitor_SMD:C_0805_2012Metric")
@@ -1545,7 +1545,7 @@
       (reference "C16") (unit 1) (value "47u 10V") (footprint "Capacitor_SMD:C_1206_3216Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/1cbc10ef-bb4f-4e54-b068-079e19c32b1d"
-      (reference "C17") (unit 1) (value "1u 25V") (footprint "Capacitor_SMD:C_0402_1005Metric")
+      (reference "C17") (unit 1) (value "1u 50V") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000061f99143"
       (reference "C18") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1560,7 +1560,7 @@
       (reference "C21") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/a19761b5-717f-4f4d-a096-4b62a3c63e1b"
-      (reference "C22") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
+      (reference "C22") (unit 1) (value "100n 50V") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-0000635f92b6"
       (reference "C23") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1593,7 +1593,7 @@
       (reference "C33") (unit 1) (value "22n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-00006190e295"
-      (reference "C35") (unit 1) (value "470u 35V") (footprint "Capacitor_THT:CP_Radial_D13.0mm_P5.00mm")
+      (reference "C35") (unit 1) (value "470u 35V") (footprint "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000061f4c74a"
       (reference "D1") (unit 1) (value "RED LED") (footprint "LED_SMD:LED_0603_1608Metric")
@@ -1693,12 +1693,6 @@
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/e1beb45f-c642-4d7d-901b-801c2a34e703"
       (reference "JP6") (unit 1) (value "CASS B ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
-    )
-    (path "/00000000-0000-0000-0000-0000614e685e/60708919-50f5-4bbe-8d66-44d1e255379c"
-      (reference "JP7") (unit 1) (value "A10 SEL") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
-    )
-    (path "/00000000-0000-0000-0000-0000614e685e/b824e4b2-cfd9-4c6b-8c33-38efd78b3920"
-      (reference "JP8") (unit 1) (value "A11 SEL") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/3542eae7-8328-4455-a384-ea5a38c355f6"
       (reference "L1") (unit 1) (value "68uH") (footprint "PET:L_10.4x11.4_H4")
@@ -1911,7 +1905,7 @@
       (reference "U12") (unit 1) (value "AS6C1008") (footprint "Package_DIP:DIP-32_W15.24mm_Socket")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/c8cae53c-0c9e-40a7-86df-a57e8b2917d7"
-      (reference "U13") (unit 1) (value "Raspberry Pi Zero W") (footprint "PET:Raspberry Pi Zero W")
+      (reference "U13") (unit 1) (value "Raspberry Pi Zero") (footprint "PET:Raspberry Pi Zero W 2")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/1cb7efbd-cb21-4c0a-bb06-295ded2b2bb4"
       (reference "U15") (unit 1) (value "LM317AG-TN3-R") (footprint "Package_TO_SOT_SMD:TO-252-2")
