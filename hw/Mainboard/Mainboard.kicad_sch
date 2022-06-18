@@ -158,7 +158,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 39cc6803-7db3-4877-934d-6e50836e995f)
   )
-  (wire (pts (xy 200.66 69.85) (xy 184.15 69.85))
+  (wire (pts (xy 187.96 69.85) (xy 184.15 69.85))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 3b9c5ffd-e59b-402d-8c5e-052f7ca643a4)
   )
@@ -191,7 +191,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 4d2fd49e-2cb2-44d4-8935-68488970d97b)
   )
-  (wire (pts (xy 200.66 82.55) (xy 200.66 69.85))
+  (wire (pts (xy 187.96 82.55) (xy 187.96 69.85))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 4fb2577d-2e1c-480c-9060-124510b35053)
   )
@@ -203,7 +203,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 560efb63-644c-4816-a2b8-b305c9f38e95)
   )
-  (wire (pts (xy 203.2 85.09) (xy 184.15 85.09))
+  (wire (pts (xy 190.5 85.09) (xy 184.15 85.09))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 5a33f5a4-a470-4c04-9e2d-532b5f01a5d6)
   )
@@ -211,7 +211,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 60d26b83-9c3a-4edb-93ef-ab3d9d05e8cb)
   )
-  (wire (pts (xy 203.2 67.31) (xy 203.2 85.09))
+  (wire (pts (xy 190.5 67.31) (xy 190.5 85.09))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 6133fb54-5524-482e-9ae2-adbf29aced9e)
   )
@@ -400,7 +400,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid cfcbedb8-7935-45e9-9511-800f7528a336)
   )
-  (wire (pts (xy 184.15 82.55) (xy 200.66 82.55))
+  (wire (pts (xy 184.15 82.55) (xy 187.96 82.55))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid d035bb7a-e806-42f2-ba95-a390d279aef1)
   )
@@ -475,7 +475,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid eee2d4ba-e851-4381-8fdd-7ee0090673e3)
   )
-  (wire (pts (xy 184.15 67.31) (xy 203.2 67.31))
+  (wire (pts (xy 184.15 67.31) (xy 190.5 67.31))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid f08895dc-4dcb-4aef-a39b-5a08864cdaaf)
   )
@@ -1454,9 +1454,6 @@
     (path "/00000000-0000-0000-0000-000061ed99de/3427d4df-31cf-48ad-b42a-1637759c375c"
       (reference "#PWR0142") (unit 1) (value "+5V") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/832dae7c-34f7-4d2e-a07a-a39ab8fe9dc8"
-      (reference "#PWR0143") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/f94f38b6-5436-4837-b515-615070abf0ca"
       (reference "#PWR0144") (unit 1) (value "+3V3") (footprint "")
     )
@@ -1570,9 +1567,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-0000636ec979"
       (reference "C25") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/42471964-7b89-46cd-9c88-20e12acd0466"
-      (reference "C26") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-00006193952e"
       (reference "C27") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1861,9 +1855,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/cb25a6cd-ac7a-4e08-be7f-c655967ffdbd"
       (reference "SW2") (unit 1) (value "RESET") (footprint "Button_Switch_THT:SW_Tactile_SPST_Angled_PTS645Vx39-2LFS")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/86d45c97-948b-483b-bb8a-7f8094502f55"
-      (reference "SW3") (unit 1) (value "RUN") (footprint "Button_Switch_THT:SW_PUSH_6mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/d724628a-968b-43f8-8489-f234f074e4df"
       (reference "SW4") (unit 1) (value "RESET") (footprint "Button_Switch_THT:SW_PUSH_6mm")
