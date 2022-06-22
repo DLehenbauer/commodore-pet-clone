@@ -12,6 +12,8 @@
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 cmake_minimum_required(VERSION 3.13.1)
+include(FetchContent)
+
 project(main)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -70,3 +72,9 @@ download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/kerna
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-80-b-60Hz.901474-03.bin DA56995BE008C5F7DB1094E81E5060AA)
 
 FetchContent_MakeAvailable(${rom_downloads})
+
+add_custom_target(deploy
+    DEPENDS main
+    COMMAND ssh ${PI_HOST} "sudo killall -9 gdb\; sudo killall -9 main\; sudo killall -9 scp\; true"
+    COMMAND scp -r ${CMAKE_CURRENT_BINARY_DIR}/bin/* ${PI_HOST}:~
+)
