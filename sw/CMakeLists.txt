@@ -60,16 +60,21 @@ function(download_rom url hash)
     set (rom_downloads ${rom_downloads} PARENT_SCOPE)
 endfunction()
 
-# Basic 4.0, non-CRTC
+# US Character Set
+download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/characters-2.901447-10.bin 9880432E633B15998D58884FF34C4E70)
+
+# BASIC 4.0
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/basic-4-b000.901465-23.bin 43B3A9F5E1C762AF0B3BB6CC71AAFB84)
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/basic-4-c000.901465-20.bin 398217F35FA50417C7E84883A93A349B)
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/basic-4-d000.901465-21.bin AB780E94772DCA756A0678A17B5BC3A2)
-download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/characters-2.901447-10.bin 9880432E633B15998D58884FF34C4E70)
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-n.901447-29.bin 6FE27B43EC550A04D30B2E45F07D51FB)
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/kernal-4.901465-22.bin 16EC21443EA5431AB63D511061054E6F)
 
-# BASIC 4.0, CRTC, 60HZ
+# BASIC 4.0, 40C, GFX KBD, 60Hz, CRTC
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-80-b-60Hz.901474-03.bin DA56995BE008C5F7DB1094E81E5060AA)
+
+# BASIC 4.0, 40C, GFX KBD, 50Hz, CRTC
+download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-40-n-50Hz.901498-01.bin B76D756E7AC8752AE0035F3CE5F1383C)
 
 FetchContent_MakeAvailable(${rom_downloads})
 
