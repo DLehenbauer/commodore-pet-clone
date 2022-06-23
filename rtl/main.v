@@ -238,11 +238,7 @@ module main (
     wire pi_pending = !pi_pending_b;
     wire pi_done;
     assign pi_done_b = !pi_done;
-    
-    assign P3_LED_D2 = pi_pending_b;
-    assign P7_LED_D4 = pi_done_b;
-    assign P9_LED_D5 = !res_b;
-    
+        
     wire cpu_select;
     wire cpu_read_strobe;
     wire cpu_write_strobe;
@@ -259,6 +255,10 @@ module main (
     assign cpu_res_b = res_b ? 1'bZ : 1'b0;
     assign cpu_irq_b = irq_b ? 1'bZ : 1'b0;
     assign cpu_nmi_b = nmi_b ? 1'bZ : 1'b0;
+
+    assign P3_LED_D2 = pi_pending_b;
+    assign P7_LED_D4 = pi_done_b;
+    assign P9_LED_D5 = !res_b;
     
     // Timing
     timing timing(

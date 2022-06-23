@@ -22,7 +22,7 @@
     input  pi_write_strobe,
     output oe
 );
-    reg [7:0] kbd_matrix [10];
+    reg [7:0] kbd_matrix [10:0];
     reg [3:0] selected_kbd_row = 4'h0;
 
     // Save the selected keyboard row when the CPU writes to port A ($E810)
