@@ -33,39 +33,35 @@ constexpr uint16_t keyMatrixEnd     = keyMatrixStart + 10;  // 10 rows
 constexpr uint16_t crtcStart = 0xE8F0;
 constexpr uint16_t crtcEnd   = 0xE900;
 
-bool loadRom(const char* file, uint8_t* pDest, std::streamsize byteSize) {
-    std::ifstream input(file, std::ios::binary);
+bool loadRom(const RomEntry rom) {
+    const std::string path = "roms/";
+
+    std::ifstream input((path + rom.file).c_str(), std::ios::binary);
     if (!input.good()) {
-        trace("loadRom(): Failed to open '%s'.\n", file);
+        trace("loadRom(): Failed to open '%s'.\n", rom.file);
         return false;
     }
 
-    input.read(reinterpret_cast<char*>(pDest), byteSize);
+    input.read(reinterpret_cast<char *>(&memory[rom.addr]), rom.byteLength);
     if (!input) {
-        trace("loadRom(): '%s' too short (expected %u bytes, but got %u bytes).\n", file, byteSize, input.gcount());
+        trace("loadRom(): '%s' too short (expected %u bytes, but got %u bytes).\n", rom.file, rom.byteLength, input.gcount());
         return false;
     }
 
     input.peek();
     if (!input.eof()) {
-        trace("loadRom(): '%s' too long (expected %u bytes).\n", file, byteSize);
+        trace("loadRom(): '%s' too long (expected %u bytes).\n", rom.file, rom.byteLength);
         return false;
     }
 
     input.close();
-    trace("ROM Loaded: '%s' (%u Kb)\n", file, byteSize / 1024);
+    trace("ROM Loaded: '%s' (%u Kb)\n", rom.file, rom.byteLength / 1024);
     return true;
 }
 
-bool loadRomSet(unsigned index) {
-    const RomEntry* pRom = (romSets + index)->roms;
-
+bool loadRoms(const RomEntry pRom[]) {
     while (pRom->file != nullptr) {
-        std::string path = "roms/";
-        std::string file = pRom->file;
-        std::string fullPath = path + file;
-
-        if (!loadRom(fullPath.c_str(), memory + pRom->addr, pRom->byteLength)) {
+        if (!loadRom(*pRom)) {
             return false;
         }
         pRom++;
@@ -170,14 +166,16 @@ void display(
     }
 }
 
-uint8_t charRom[256 * 8];
-
 void reset(CDriver driver) {
     memset(memory, 0, 0x10000);
 
-    // 4: Basic 4, no-CRTC
-    // 6: Basic 4, CRTC, 60 Hz
-    bool ok = loadRomSet(6);
+    bool ok = loadRoms(basic4);
+    assert(ok);
+
+    ok = loadRom(basic_4_edit_40col_gfx_CRTC_50Hz);
+    assert(ok);
+
+    ok = loadRom(charUS);
     assert(ok);
 
      // No keys currently pressed
@@ -204,10 +202,7 @@ void reset(CDriver driver) {
 }
 
 int main() {
-    bool ok = loadRom("roms/characters-2.901447-10.bin", charRom, /* byteSize: */ sizeof(charRom));
-    assert(ok);
-
-    std::thread displayThread(display, charRom, sizeof(charRom), &charRomPage, &memory[0x8000], &memory[crtcStart], &memory[0xE800]);
+    std::thread displayThread(display, &memory[charUS.addr], charUS.byteLength, &charRomPage, &memory[0x8000], &memory[crtcStart], &memory[0xE800]);
 
     CDriver driver = CDriver();
     reset(driver);

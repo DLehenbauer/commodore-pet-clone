@@ -13,4 +13,4 @@
 git clean -Xfd
 mkdir sw/build
 cd sw/build
-cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross-rpi0w2.cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross-rpi0w2.cmake -DCMAKE_BUILD_TYPE=Debug "$@" ../..
