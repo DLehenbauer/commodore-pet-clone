@@ -49,17 +49,17 @@ derive_pll_clocks -create_base_clocks
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
 # tBVD
-set_input_delay -min -clock [get_clocks {phi2}]  0 [get_ports {bus_addr[*] bus_rw_b}]
-set_input_delay -max -clock [get_clocks {phi2}] 30 [get_ports {bus_addr[*] bus_rw_b}]
+set_input_delay -min -clock [get_clocks { phi2 }]  0 [get_ports { bus_addr[*] bus_rw_b }]
+set_input_delay -max -clock [get_clocks { phi2 }] 30 [get_ports { bus_addr[*] bus_rw_b }]
 
 # tMDS
-set_input_delay -min -clock [get_clocks {phi2}]  0 [get_ports {bus_data[*]}]
-set_input_delay -max -clock [get_clocks {phi2}] 40 [get_ports {bus_data[*]}]
+set_input_delay -min -clock [get_clocks { phi2 }]  0 [get_ports { bus_data[*] }]
+set_input_delay -max -clock [get_clocks { phi2 }] 40 [get_ports { bus_data[*] }]
 
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 
-set_output_delay -min -clock { phi2 } -8 [get_ports {via_cs2_b pia2_cs2_b pia1_cs2_b}]
-set_output_delay -max -clock { phi2 } -8 [get_ports {via_cs2_b pia2_cs2_b pia1_cs2_b}]
+set_output_delay -min -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
+set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
 
 # ???
-set_false_path -from {timing:timing|sync:pi_sync|state.PENDING} -to {timing:timing|sync:pi_sync|state.DONE}
+set_false_path -from { timing:timing|sync:pi_sync|state.PENDING } -to { timing:timing|sync:pi_sync|state.DONE }
