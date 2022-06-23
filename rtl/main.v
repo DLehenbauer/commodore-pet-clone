@@ -260,9 +260,18 @@ module main (
     assign P7_LED_D4 = pi_done_b;
     assign P9_LED_D5 = !res_b;
     
+    wire clk16;     // 16 MHz clock from PLL
+    wire clk25;     // 25 MHz clock from PLL
+    
+    pll pll(
+        .inclk0(P17_50MHz),
+        .c0(clk16),
+        .c1(clk25)
+    );
+    
     // Timing
     timing timing(
-        .clk(pi_clk),
+        .clk(clk16),
         .res_b(cpu_res_b),
         .phi2(phi2),
         .bus_rw_b(bus_rw_b),

@@ -11,16 +11,14 @@
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
 # Aliases
-set clk_16 [get_ports { pi_clk }]
-set clk_8 [get_registers {timing:timing|count[0]}]
-set clk_4 [get_registers {timing:timing|count[1]}]
-set clk_2 [get_registers {timing:timing|count[2]}]
-set clk_1 [get_registers {timing:timing|count[3]}]
+set clk_16 { pll|altpll_component|pll|clk[0] }
+set clk_8 [get_registers { timing:timing|count[0] }]
+set clk_4 [get_registers { timing:timing|count[1] }]
+set clk_2 [get_registers { timing:timing|count[2] }]
+set clk_1 [get_registers { timing:timing|count[3] }]
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
-create_clock -name "clk_16" -period "16MHz" $clk_16
-
 create_generated_clock -name "clk_8" \
     -source $clk_16 \
     -divide_by 2 \
