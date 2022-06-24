@@ -51,6 +51,10 @@ rtl/incremental_db/**
 rtl/output_files/**
 rtl/*.dpf
 rtl/*.qws
+rtl/*_nativelink_simulation.rpt
+
+# ModelSim generated files
+rtl/simulation/modelsim/**/*
 
 # ATMISP log file
 rtl/jtag.log
