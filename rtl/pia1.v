@@ -1,6 +1,6 @@
 /**
  * PET Clone - Open hardware implementation of the Commodore PET
- * by Daniel Lehenbauer (and contributors).
+ * by Daniel Lehenbauer and contributors.
  * 
  * https://github.com/DLehenbauer/commodore-pet-clone
  *
