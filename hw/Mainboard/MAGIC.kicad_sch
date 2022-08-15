@@ -1983,6 +1983,10 @@
     (uuid ff870511-3a90-49f1-9990-5aec7ad35822)
   )
 
+  (text "GPIO2/3 have built-in 1k8 pull ups" (at 66.04 26.67 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 6554e2c7-4e03-4512-9861-4c1057bfbb1b)
+  )
   (text "~{OE} is high @ 2V" (at 219.71 77.47 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid bd66370e-0b12-446b-870b-ae5623128808)
