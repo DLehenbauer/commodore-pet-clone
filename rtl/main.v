@@ -192,10 +192,10 @@ module main (
     output P3_LED_D2,       // Low to Light LED
     output P7_LED_D4,       // Low to Light LED
     output P9_LED_D5,       // Low to Light LED
-    input  P17_50MHz,       // Clock input	
-    input  P26_1V2,         // Connected to Vcc 1.2V	Only needed for EP2C8. The "zero ohm" resistor could be removed and the pin used as normal.
-    input  P27_GND,         // Connected to GND. Only needed for EP2C8. The "zero ohm" resistor could be removed and the pin used as normal.
-    input  P73_POR          // 10uF capacitor to ground. 10K resistor to Vcc, for power up reset if needed?
+    input  P17_50MHz,       // Clock input
+    input  P26_1V2,         // Connected to Vcc 1.2V.  Only needed for EP2C8.  "Zero ohm" resistor can be removed and the pin used as normal.
+    input  P27_GND,         // Connected to GND.  Only needed for EP2C8.  "Zero ohm" resistor can be removed and the pin used as normal.
+    input  P73_POR          // 10uF capacitor to ground + 10K resistor to Vcc (Presumably for power up reset?)
 );
     wire pi_pending = !pi_pending_b;
     wire pi_done;
