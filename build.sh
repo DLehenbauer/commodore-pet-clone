@@ -10,7 +10,5 @@
 # @copyright CC0 http://creativecommons.org/publicdomain/zero/1.0/
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
-git clean -Xfd
-mkdir sw/build
 cd sw/build
-cmake -DPI_HOST=pi@rpi3.local -DCMAKE_TOOLCHAIN_FILE=../cmake/cross-rpi0w2.cmake -DCMAKE_BUILD_TYPE=Debug "$@" ..
+cmake --build . --target deploy "$@"

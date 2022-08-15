@@ -19,6 +19,9 @@
 #include "roms.hpp"
 #include "trace.hpp"
 
+//#define CRTC_50HZ
+//#define CRTC_60HZ
+
 uint8_t memory[0x10000] = { 0 };
 uint8_t charRomPage = 1;
 
@@ -172,7 +175,13 @@ void reset(CDriver driver) {
     bool ok = loadRoms(basic4);
     assert(ok);
 
+#if defined(CRTC_50HZ)
     ok = loadRom(basic_4_edit_40col_gfx_CRTC_50Hz);
+#elif defined(CRTC_60HZ)
+    ok = loadRom(basic_4_edit_40col_gfx_CRTC_60Hz);
+#else
+    ok = loadRom(basic_4_edit_40col_gfx_noCRTC);
+#endif
     assert(ok);
 
     ok = loadRom(charUS);
@@ -218,6 +227,7 @@ int main() {
             driver.pi_write(keyAddr, memory[keyAddr]);
         }
 
+#if defined(CRTC_50HZ) || defined(CRTC_60HZ)
         for (uint16_t crtc_io_addr = crtcStart; crtc_io_addr < crtcEnd; crtc_io_addr++) {
             const uint8_t r = driver.pi_read(crtc_io_addr);
             if (memory[crtc_io_addr] != r) {
@@ -225,6 +235,7 @@ int main() {
                 memory[crtc_io_addr] = r;
             }
         }
+#endif
 
         if (CDisplay::s_funcKey) {
             const unsigned key = 31 - __builtin_clz(CDisplay::s_funcKey);
