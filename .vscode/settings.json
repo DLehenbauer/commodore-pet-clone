@@ -70,5 +70,6 @@
         "rtl/db/**": true,
         "rtl/incremental_db/**": true,
         "rtl/output_files/**": true
-    }
+    },
+    "cmake.configureOnOpen": false
 }
