@@ -60,6 +60,3 @@ set_input_delay -max -clock [get_clocks { phi2 }] 40 [get_ports { bus_data[*] }]
 
 set_output_delay -min -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
 set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
-
-# ???
-set_false_path -from { timing:timing|sync:pi_sync|state.PENDING } -to { timing:timing|sync:pi_sync|state.DONE }

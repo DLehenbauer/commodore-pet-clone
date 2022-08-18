@@ -14,38 +14,21 @@
 
 module sync (
     input clk,
-    input select,
-    input pending,          // read/write is pending
+    input pending,
     output strobe,
-    output done             // read/write has completed
+    output reg done = 0
 );
-    parameter [1:0] IDLE    = 2'b00,
-                    PENDING = 2'b01,
-                    DONE    = 2'b11;
-
-    reg [1:0] state = IDLE;
-    reg [1:0] next  = IDLE;
+    reg ready = 0;
 
     always @(posedge clk or negedge pending) begin
-        if (!pending) state = IDLE;
-        else state <= next;
-    end
-    
-    always @(*) begin
-        next = 2'bxx;
-    
-        if (!pending) next = IDLE;
-        else case (state)
-            IDLE:   if (pending && !select) next = PENDING;
-                    else next = IDLE;
-            
-            PENDING: if (select) next = DONE;
-                     else next = PENDING;
-            
-            DONE:    next = DONE;
-        endcase
+        if (!pending) ready <= 0;
+        else ready <= clk && pending;
     end
 
-    assign strobe = select && (state === PENDING);
-    assign done   = (state === DONE);
+    always @(negedge clk or negedge pending) begin
+        if (!pending) done <= 0;
+        else done <= strobe && pending;
+    end
+
+    assign strobe = clk && pending && ready && !done;
 endmodule
