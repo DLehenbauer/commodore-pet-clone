@@ -218,14 +218,14 @@ class CDriver {
             while (donebPin.read());
 
             const uint8_t data = dataPins.read();
-
-            pendingbPin.write(1);
             const uint8_t actual = dataPins.read();
             if (actual != data) {
                 trace("READ ERROR:");
                 trace("  [FAIL] %04x: %02x != %02x\n", addr, actual, data);
                 assert(false);
             }
+
+            pendingbPin.write(1);
 
             return data;
         }
