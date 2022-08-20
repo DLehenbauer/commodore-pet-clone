@@ -1568,6 +1568,9 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-0000636ec979"
       (reference "C25") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
+    (path "/00000000-0000-0000-0000-000061ed99de/061cd672-1ff7-4cce-9558-feb0a17a4d21"
+      (reference "C26") (unit 1) (value "47u 10V") (footprint "Capacitor_SMD:C_1206_3216Metric")
+    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-00006193952e"
       (reference "C27") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
@@ -1582,6 +1585,9 @@
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/c0e1067e-438b-4f20-91d0-408044db35ba"
       (reference "C31") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    )
+    (path "/00000000-0000-0000-0000-000061ed99de/1e5a8c49-78e6-4a20-baf0-2006ae78eab6"
+      (reference "C32") (unit 1) (value "47u 10V") (footprint "Capacitor_SMD:C_1206_3216Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062ee44a0"
       (reference "C33") (unit 1) (value "22n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1671,22 +1677,22 @@
       (reference "J24") (unit 1) (value "FPGA_P3") (footprint "Connector_PinSocket_2.54mm:PinSocket_2x14_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/2a95e86c-c6c0-46aa-b818-245b269c2229"
-      (reference "JP1") (unit 1) (value "CASS A ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP1") (unit 1) (value "CASS A ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/5bd4a830-73a3-4504-83ce-78525d450a97"
-      (reference "JP2") (unit 1) (value "CASS B ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP2") (unit 1) (value "CASS B ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/325e9863-1136-4cb8-a83a-f6de85da234f"
-      (reference "JP3") (unit 1) (value "CASS A READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP3") (unit 1) (value "CASS A READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/eb8e7fc3-6929-4c77-b10b-8a2a52ad0c17"
-      (reference "JP4") (unit 1) (value "CASS B READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP4") (unit 1) (value "CASS B READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/0df00b32-fc43-4b8d-b2e6-2eec2e4ddb85"
-      (reference "JP5") (unit 1) (value "CASS A ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP5") (unit 1) (value "CASS A ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/e1beb45f-c642-4d7d-901b-801c2a34e703"
-      (reference "JP6") (unit 1) (value "CASS B ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP6") (unit 1) (value "CASS B ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/3542eae7-8328-4455-a384-ea5a38c355f6"
       (reference "L1") (unit 1) (value "68uH") (footprint "PET:L_10.4x11.4_H4")
