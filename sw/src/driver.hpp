@@ -82,18 +82,6 @@ class CDriver {
             dataPins.setPinMode(CGpioMode::Input);
         }
 
-        // $E81x: PIA 1
-        // $E82x: PIA 2
-        // $E84x: VIA
-        // $E88x: CRTC
-        static bool is_io_aperture(const uint16_t addr) {
-            return 0xE800 <= addr && addr <= 0xE8FF;
-        }
-
-        static bool is_read_only(const uint16_t addr) {
-            return addr >= 0x9000 && !is_io_aperture(addr);
-        }
-
         void read_bus_unchecked() {
             uint32_t bits = CGpio::readAll();
 
@@ -106,98 +94,6 @@ class CDriver {
             const uint16_t a0to14 = (bits >> a0to14Pins.pinStart) & 0x7FFF;
             addr = a15 | a0to14;
             data = bits >> dataPins.pinStart;
-        }
-
-        bool vet_core(
-            const uint16_t expected_addr,
-            const uint8_t expected_data,
-            const bool expected_rw_b,
-            bool compareData,
-            bool show
-        ) const {
-            const bool eq_addr = addr == expected_addr;
-            const bool eq_data = (!compareData) || (data == expected_data);
-            const bool eq_rw_b = rw_b == expected_rw_b;
-
-            const bool eq = eq_rw_b && eq_addr && eq_data;
-            const bool legal = rw_b || (addr < 0x9000 || (0xE800 < addr && addr < 0xf000));
-            const bool result = eq && legal;
-
-            if (!result) {
-                trace("IO ERROR:\n");
-                show = true;
-            } else if (show) {
-                trace("IO OK:\n");
-            }
-
-            if (show) {
-                trace("  [%s] rw_b: %s (%d) %s %s (%d)\n",
-                    eq_rw_b
-                        ? legal
-                            ? " OK "
-                            : "ILLG"
-                        : "FAIL",
-                    rw_b ? "RD" : "WR",
-                    rw_b,
-                    eq_rw_b ? "==" : "!=",
-                    expected_rw_b ? "RD" : "WR",
-                    expected_rw_b);
-                trace("  [%s] addr: %04x %s %04x\n", eq_addr ? " OK " : "FAIL", addr, eq_addr ? "==" : "!=", expected_addr);
-                if (compareData) {
-                    trace("  [%s] data: %02x %s %02x\n", eq_data ? " OK " : "FAIL", data, eq_data ? "==" : "!=", expected_data);
-                }
-            }
-
-            return result;
-        }
-
-        void trace_bus() {
-            if (rw_b) {
-                trace("R: (%04x) -> %02x\n", addr, data);
-            } else {
-                trace("W: (%04x) <- %02x\n", addr, data);
-            }
-        }
-
-        void sniff_bus() {
-            pendingbPin.write(1);
-            rwbPin.inputMode();
-            a15Pin.inputMode();
-            a0to14Pins.inputMode();
-            dataPins.inputMode();
-
-            uint32_t bits = CGpio::readAll();
-            const bool rw_b       = (bits & (1 << rwbPin.pinStart)) != 0;
-            const uint16_t a15    = (bits >> a15Pin.pinStart) << 15;
-            const uint16_t a0to14 = (bits >> a0to14Pins.pinStart) & 0x7FFF;
-            const uint16_t addr = a15 | a0to14;
-            const uint16_t data = bits >> dataPins.pinStart;
-
-            if (rw_b) {
-                trace("R: (%04x) -> %02x\n", addr, data);
-            } else {
-                trace("W: (%04x) <- %02x\n", addr, data);
-            }
-        }
-
-        void vet(bool compareData) {
-            bool ok = false;
-            for (int c = -1; !ok && c < 3; c++) {
-                uint16_t expected_addr = addr;
-                uint8_t expected_data = data;
-                bool expected_rw_b = rw_b;
-                read_bus_unchecked();
-
-                const bool first_attempt = c == -1;
-                ok = vet_core(expected_addr, expected_data, expected_rw_b, compareData, /* show: */ !first_attempt);
-                if (ok && first_attempt) {
-                    return;
-                }
-
-                usleep(100);
-            }
-
-            assert(false);
         }
 
         static constexpr uint32_t get_addr_bits(const uint16_t addr) {
