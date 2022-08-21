@@ -12,6 +12,34 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
+// Simple H/V sync generator @60 Hz.
+module hvSync(
+    input clk16,
+    output hsync,
+    output vsync,
+    output irq
+);
+    reg [18:0] count = 0;
+    
+    // Bits 9:0 divide 16 MHz 'clk' by 1024 to get the HSync frequency of ~15.6 KHz
+    assign hsync = count[9];
+
+    // Bits 18:10 count horizontal scan lines.  Bit 18 is high only momentarily before
+    // we reach line 260 and reset the counter.  Therefore we use bit 17 to get a 60 Hz
+    // VSync with a duty cycle of ~49.2%.
+    
+    parameter VBLANK = (19'd260 << 10);
+    
+    assign vsync = count[17];
+    assign irq   = count >= (VBLANK - 32);
+    
+    always @(posedge clk16) begin
+        if (count != (VBLANK - 1)) count <= count + 19'd1;
+        else count <= 0;
+    end
+endmodule
+
+ 
 module crtc(
     input  cclk,
     input     [16:0] bus_addr,
