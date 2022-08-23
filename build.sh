@@ -11,4 +11,4 @@
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
 cd sw/build
-cmake --build . --target deploy "$@"
+cmake --build . --target run "$@"
