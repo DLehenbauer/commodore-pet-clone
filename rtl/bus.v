@@ -39,7 +39,7 @@ module bus(
     reg [3:0] count = 0;
 
     always @(posedge clk16) begin
-        count <= count + 1;
+        count <= count + 4'h1;
     end
 
     assign pi_select  = !cpu_select;
@@ -47,6 +47,4 @@ module bus(
     assign cpu_select = count[3:3] == 1'b1;
     assign io_select  = cpu_select && count != 4'b1000;
     assign cpu_strobe = count[3:1] == 4'b110;
-
-    wire clk8 = count[0];
 endmodule

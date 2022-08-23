@@ -12,10 +12,11 @@
 
 # Aliases
 set clk_16 { pll|altpll_component|pll|clk[0] }
-set clk_8 [get_registers { timing:timing|count[0] }]
-set clk_4 [get_registers { timing:timing|count[1] }]
-set clk_2 [get_registers { timing:timing|count[2] }]
-set clk_1 [get_registers { timing:timing|count[3] }]
+set clk_8 [get_registers { timing:timing|bus:bus|count[0] }]
+set clk_4 [get_registers { timing:timing|bus:bus|count[1] }]
+set clk_2 [get_registers { timing:timing|bus:bus|count[2] }]
+set clk_1 [get_registers { timing:timing|bus:bus|count[3] }]
+
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
@@ -28,20 +29,25 @@ create_generated_clock -name "clk_4" \
     -source $clk_16 \
     -divide_by 4 \
     $clk_4
-    
-create_generated_clock -name "clk_2" \
-    -source $clk_16 \
-    -divide_by 8 \
-    $clk_2
-    
-create_generated_clock -name "clk_1" \
-    -source $clk_16 \
-    -divide_by 16 \
-    $clk_1
-    
+
 create_generated_clock -name "phi2" \
-    -source $clk_1 \
+    -source $clk_8 \
+    -edges {13 15 29} \
     $phi2
+
+# create_generated_clock -name "clk_2" \
+#     -source $clk_16 \
+#     -divide_by 8 \
+#     $clk_2
+    
+# create_generated_clock -name "clk_1" \
+#     -source $clk_16 \
+#     -divide_by 16 \
+#     $clk_1
+    
+# create_generated_clock -name "phi2" \
+#     -source $clk_1 \
+#     $phi2
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks

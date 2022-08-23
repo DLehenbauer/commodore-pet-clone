@@ -30,18 +30,16 @@ module timing(
     input  pi_pending,
     output pi_done
 );
-    reg [3:0] count = 0;
-    
-    always @(posedge clk) begin
-        count <= count + 4'd1;
-    end
+    wire pi_enable;
 
-    wire [3:0] strobe = count[3:0];
-
-    assign phi2             = strobe[3];
-    assign cpu_select       = strobe == 4'd0 || strobe >= 4'd6;
-    assign io_select        = strobe >= 4'd7;
-    assign pi_select        = !cpu_select;
+    bus bus(
+        .clk16(clk),
+        .pi_select(pi_select),
+        .pi_strobe(pi_enable),
+        .cpu_select(cpu_select),
+        .io_select(io_select),
+        .cpu_strobe(phi2)
+    );
 
     assign cpu_read_strobe  =  bus_rw_b && phi2;
     assign cpu_write_strobe = !bus_rw_b && phi2;
@@ -49,7 +47,7 @@ module timing(
     wire pi_strobe;
 
     sync pi_sync(
-        .clk(pi_select),
+        .clk(pi_enable),
         .pending(pi_pending),
         .done(pi_done),
         .strobe(pi_strobe)
