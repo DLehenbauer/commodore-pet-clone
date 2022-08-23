@@ -16,10 +16,6 @@ module timing(
     input clk,
 
     output phi2,
-    output hsync,
-    output vsync,
-    output irq,
-
     input res_b,
 
     input  bus_rw_b,
@@ -34,23 +30,10 @@ module timing(
     input  pi_pending,
     output pi_done
 );
-    reg [18:0] count = 0;
-    
-    // Bits 9:0 divide 16 MHz 'clk' by 1024 to get the HSync frequency of ~15.6 KHz
-    assign hsync = count[9];
-
-    // Bits 18:10 count horizontal scan lines.  Bit 18 is high only momentarily before
-    // we reach line 260 and reset the counter.  Therefore we use bit 17 to get a 60 Hz
-    // VSync with a duty cycle of ~49.2%.
-    
-    parameter VBLANK = (19'd260 << 10);
-    
-    assign vsync = count[17];
-    assign irq   = count >= (VBLANK - 32);
+    reg [3:0] count = 0;
     
     always @(posedge clk) begin
-        if (count != (VBLANK - 1)) count <= count + 19'd1;
-        else count <= 0;
+        count <= count + 4'd1;
     end
 
     wire [3:0] strobe = count[3:0];
