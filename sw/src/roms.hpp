@@ -21,7 +21,8 @@ struct RomEntry {
     std::streamsize byteLength;
 };
 
-constexpr RomEntry charUS = { /* name: */ "characters-2.901447-10.bin", /* addr: */ 0x8800, /* byteLength: */ 0x0800 };
+constexpr RomEntry charUS        = { /* name: */ "characters-2.901447-10.bin", /* addr: */ 0x8800, /* byteLength: */ 0x0800 };
+constexpr RomEntry charPetRobots = { /* name: */ "characters-petrobots-12.bin", /* addr: */ 0x8800, /* byteLength: */ 0x0800 };
 
 constexpr RomEntry basic4[] = {
     RomEntry { /* name: */ "basic-4-b000.901465-23.bin",     /* addr: */ 0xb000, /* byteLength: */ 0x1000 },

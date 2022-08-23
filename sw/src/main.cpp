@@ -19,6 +19,7 @@
 #include "roms.hpp"
 #include "trace.hpp"
 
+//#define PETROBOTS
 //#define CRTC_50HZ
 //#define CRTC_60HZ
 
@@ -184,7 +185,11 @@ void reset(CDriver driver) {
 #endif
     assert(ok);
 
+#if defined(PETROBOTS)
+    ok = loadRom(charPetRobots);
+#else
     ok = loadRom(charUS);
+#endif
     assert(ok);
 
      // No keys currently pressed
