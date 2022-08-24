@@ -83,3 +83,8 @@ add_custom_target(deploy
     COMMAND ssh ${PI_HOST} "sudo killall -9 gdb\; sudo killall -9 main\; sudo killall -9 scp\; true"
     COMMAND scp -r ${CMAKE_CURRENT_BINARY_DIR}/bin/* ${PI_HOST}:~
 )
+
+add_custom_target(run
+    DEPENDS deploy
+    COMMAND ssh ${PI_HOST} "sudo ./main"
+)
