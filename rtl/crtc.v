@@ -41,7 +41,7 @@ endmodule
 
  
 module crtc(
-    input  cclk,
+    input  cclk,                    // 1 MHz Character Clock
     input     [16:0] bus_addr,
     input      [7:0] data_in,
     input     [15:0] pi_addr,
@@ -53,7 +53,7 @@ module crtc(
     output reg hsync,
     output vsync
 );
-    reg [5:0] status;
+    reg [5:0] status = 0;
     reg [7:0] r [16:0];
 
     // CCLK cycle #   0000000000111111 .... 3333344444444445555555555
@@ -119,12 +119,15 @@ module crtc(
             r[13] = 8'h00;
             r[14] = 8'h00;
             r[15] = 8'h00;
+            r[16] = 8'h00;
 
             h_front <= r[R1_H_DISPLAYED];
             h_sync  <= r[R2_H_SYNC_POS];
             h_back  <= r[R2_H_SYNC_POS] + r[R3_H_AND_V_SYNC_WIDTH][3:0];
             h_reset <= r[R0_H_TOTAL];
         end else if (crtc_select) begin
+            // 'crtc_select' is high when the bus address is in the $E8xx range.  Even addresses
+            // map to CRTC register 0 and odd addresses are CRTC register 1.
             if (bus_addr[0] == 0)
                 status <= data_in[5:0];
             else
