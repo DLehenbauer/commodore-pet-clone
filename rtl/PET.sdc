@@ -12,42 +12,44 @@
 
 # Aliases
 set clk_16 { pll|altpll_component|pll|clk[0] }
-set clk_8 [get_registers { timing:timing|bus:bus|count[0] }]
-set clk_4 [get_registers { timing:timing|bus:bus|count[1] }]
-set clk_2 [get_registers { timing:timing|bus:bus|count[2] }]
-set clk_1 [get_registers { timing:timing|bus:bus|count[3] }]
+
+set pi_select  [get_registers { timing:timing|bus:bus|state[0] }]
+set pi_strobe  [get_registers { timing:timing|bus:bus|state[1] }]
+set cpu_select [get_registers { timing:timing|bus:bus|state[2] }]
+set io_select  [get_registers { timing:timing|bus:bus|state[3] }]
+set cpu_strobe [get_registers { timing:timing|bus:bus|state[4] }]
 
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
-create_generated_clock -name "clk_8" \
+create_generated_clock -name "pi_select" \
     -source $clk_16 \
-    -divide_by 2 \
-    $clk_8
-    
-create_generated_clock -name "clk_4" \
+    -edges {1 17 33} \
+    $pi_select
+
+create_generated_clock -name "pi_strobe" \
     -source $clk_16 \
-    -divide_by 4 \
-    $clk_4
+    -edges {5 9 37} \
+    $pi_strobe
+
+create_generated_clock -name "cpu_select" \
+    -source $clk_16 \
+    -edges {17 33 49} \
+    $cpu_select
+
+create_generated_clock -name "io_select" \
+    -source $clk_16 \
+    -edges {21 33 53} \
+    $io_select
+
+create_generated_clock -name "cpu_strobe" \
+    -source $clk_16 \
+    -edges {25 29 57} \
+    $cpu_strobe
 
 create_generated_clock -name "phi2" \
-    -source $clk_8 \
-    -edges {13 15 29} \
+    -source $cpu_strobe \
     $phi2
-
-# create_generated_clock -name "clk_2" \
-#     -source $clk_16 \
-#     -divide_by 8 \
-#     $clk_2
-    
-# create_generated_clock -name "clk_1" \
-#     -source $clk_16 \
-#     -divide_by 16 \
-#     $clk_1
-    
-# create_generated_clock -name "phi2" \
-#     -source $clk_1 \
-#     $phi2
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks

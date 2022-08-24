@@ -20,11 +20,9 @@ module bus(
     output io_select,
     output cpu_strobe
 );
-    //               0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  0
-    //                _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _ 
+    // count         0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  0
+    //               :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_  :_ 
     // clk16        _| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_
-    //                ___     ___     ___     ___     ___     ___     ___     ___     ___
-    // clk8         _|000|___|001|___|010|___|011|___|100|___|101|___|110|___|111|___|000
     //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
     //  pi_select   _/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\_______________________________/‾‾‾
     //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
@@ -35,16 +33,51 @@ module bus(
     //  io_select   _________________________________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\___
     //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
     // cpu_strobe   _________________________________________________/‾‾‾‾‾‾‾\___________
+    //
+    // Note: Conversion to clock:
+    //
+    //       edge # = count * 2 + 1
+    //       { rise edge #, fall edge #, rise edge # + 32}
 
     reg [3:0] count = 0;
+    reg [4:0] state = PI_SELECT, next = PI_SELECT;
 
+    parameter [4:0] PI_SELECT  = 5'b00001,
+                    PI_STROBE  = 5'b00011,
+                    CPU_SELECT = 5'b00100,
+                    IO_SELECT  = 5'b01100,
+                    CPU_STROBE = 5'b11100;
+    
     always @(posedge clk16) begin
         count <= count + 4'h1;
+        state <= next;
+    end
+    
+    always @(count) begin
+        next = 5'bxxxxx;
+        case (count)
+            0: next = PI_SELECT;
+            1: next = PI_SELECT;
+            2: next = PI_STROBE;
+            3: next = PI_STROBE;
+            4: next = PI_SELECT;
+            5: next = PI_SELECT;
+            6: next = PI_SELECT;
+            7: next = PI_SELECT;
+            8: next = CPU_SELECT;
+            9: next = CPU_SELECT;
+            10: next = IO_SELECT;
+            11: next = IO_SELECT;
+            12: next = CPU_STROBE;
+            13: next = CPU_STROBE;
+            14: next = IO_SELECT;
+            15: next = IO_SELECT;        
+        endcase
     end
 
-    assign pi_select  = !cpu_select;
-    assign pi_strobe  = count[3:1] == 3'b001;
-    assign cpu_select = count[3:3] == 1'b1;
-    assign io_select  = cpu_select && count != 4'b1000;
-    assign cpu_strobe = count[3:1] == 4'b110;
+    assign pi_select  = state[0];
+    assign pi_strobe  = state[1];
+    assign cpu_select = state[2];
+    assign io_select  = state[3];
+    assign cpu_strobe = state[4];
 endmodule
