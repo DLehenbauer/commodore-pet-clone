@@ -13,7 +13,6 @@
 # Aliases
 set clk_16 { pll|altpll_component|pll|clk[0] }
 
-set pi_select  [get_registers { timing:timing|bus:bus|state[0] }]
 set pi_strobe  [get_registers { timing:timing|bus:bus|state[1] }]
 set cpu_select [get_registers { timing:timing|bus:bus|state[2] }]
 set io_select  [get_registers { timing:timing|bus:bus|state[3] }]
@@ -22,11 +21,6 @@ set cpu_strobe [get_registers { timing:timing|bus:bus|state[4] }]
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
-create_generated_clock -name "pi_select" \
-    -source $clk_16 \
-    -edges {1 17 33} \
-    $pi_select
-
 create_generated_clock -name "pi_strobe" \
     -source $clk_16 \
     -edges {5 9 37} \

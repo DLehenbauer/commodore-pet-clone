@@ -17,12 +17,12 @@
     input  [7:0]  data_in,
     output [7:0]  data_out,
     input  res_b,
-    input  cpu_read_strobe,
+    input  cpu_select,
     input  cpu_write_strobe,
     input  pi_write_strobe,
     output oe
 );
-    reg [7:0] kbd_matrix [10:0];
+    reg [7:0] kbd_matrix [9:0];
     reg [3:0] selected_kbd_row = 4'h0;
 
     // Save the selected keyboard row when the CPU writes to port A ($E810)
@@ -37,7 +37,7 @@
 
     // Intercept reads to port B ($E812) when the cached key matrix has a pressed key.
     // Otherwise, enable data from the PIA.
-    assign oe = !(cpu_read_strobe && addr == 17'hE812 && data_out != 8'hff);
+    assign oe = !(cpu_select && addr == 17'hE812 && data_out != 8'hff);
 
     assign data_out = kbd_matrix[selected_kbd_row];
 endmodule

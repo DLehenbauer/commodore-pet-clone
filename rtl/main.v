@@ -268,7 +268,7 @@ module main (
         .data_out(pia_data_out),
         .res_b(cpu_res_b),
         .pi_write_strobe(pi_write_strobe),
-        .cpu_read_strobe(cpu_read_strobe),
+        .cpu_select(cpu_select),
         .cpu_write_strobe(cpu_write_strobe),
         .oe(pia1_oe)
     );
