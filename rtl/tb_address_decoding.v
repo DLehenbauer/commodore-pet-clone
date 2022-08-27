@@ -17,7 +17,6 @@
 module tb();
     reg clk         = 0;
     reg [16:0] addr = 0;
-    reg rw_b        = 0;
 
     wire ram_enable;
     wire pia1_enable;
@@ -25,21 +24,20 @@ module tb();
     wire via_enable;
     wire crtc_enable;
     wire io_enable;
-    wire mirror_enable;
-    wire write_enable;
+    wire is_mirrored;
+    wire is_readonly;
 
     address_decoding address_decoding(
         .clk(clk),
         .addr(addr),
-        .rw_b(rw_b),
         .ram_enable(ram_enable),
         .pia1_enable(pia1_enable),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
         .crtc_enable(crtc_enable),
         .io_enable(io_enable),
-        .mirror_enable(mirror_enable),
-        .write_enable(write_enable)
+        .is_mirrored(is_mirrored),
+        .is_readonly(is_readonly)
     );
 
     task check(
@@ -49,8 +47,8 @@ module tb();
         input expected_via_enable,
         input expected_crtc_enable,
         input expected_io_enable,
-        input expected_mirror_enable,
-        input expected_write_enable
+        input expected_is_mirrored,
+        input expected_is_readonly
     );
         if (ram_enable != expected_ram_enable) begin
             $display("[%t] 'ram_enable' must be %d, but got %d.", $time, expected_ram_enable, ram_enable);
@@ -82,13 +80,13 @@ module tb();
             $stop;
         end
 
-        if (mirror_enable != expected_mirror_enable) begin
-            $display("[%t] 'mirror_enable' must be %d, but got %d.", $time, expected_mirror_enable, mirror_enable);
+        if (is_mirrored != expected_is_mirrored) begin
+            $display("[%t] 'is_mirrored' must be %d, but got %d.", $time, expected_is_mirrored, is_mirrored);
             $stop;
         end
 
-        if (write_enable != expected_write_enable) begin
-            $display("[%t] 'write_enable' must be %d, but got %d.", $time, expected_write_enable, write_enable);
+        if (is_readonly != expected_is_readonly) begin
+            $display("[%t] 'is_readonly' must be %d, but got %d.", $time, expected_is_readonly, is_readonly);
             $stop;
         end
     endtask
@@ -103,14 +101,12 @@ module tb();
         input expected_via_enable,
         input expected_crtc_enable,
         input expected_io_enable,
-        input expected_mirror_enable,
-        input expected_write_enable
+        input expected_is_mirrored,
+        input expected_is_readonly
     );
         $display("%s: $%x-$%x", name, start_addr, end_addr);
 
         for (addr = start_addr; addr <= end_addr; addr = addr + 1) begin
-            rw_b = 0;
-
             @(posedge clk);
             #1 check(
                 expected_ram_enable,
@@ -119,22 +115,8 @@ module tb();
                 expected_via_enable,
                 expected_crtc_enable,
                 expected_io_enable,
-                expected_mirror_enable,
-                /* expected_write_enable: */ 0
-            );
-
-            rw_b = 1;
-
-            @(posedge clk);
-            #1 check(
-                expected_ram_enable,
-                expected_pia1_enable,
-                expected_pia2_enable,
-                expected_via_enable,
-                expected_crtc_enable,
-                expected_io_enable,
-                expected_mirror_enable,
-                expected_write_enable
+                expected_is_mirrored,
+                expected_is_readonly
             );
         end
     endtask
@@ -160,8 +142,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 0,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 1
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 0
         );
 
         check_range(
@@ -174,8 +156,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 0,
-            /* expected_mirror_enable : */ 1,
-            /* expected_write_enable  : */ 1
+            /* expected_is_mirrored   : */ 1,
+            /* expected_is_readonly   : */ 0
         );
 
         check_range(
@@ -188,8 +170,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 0,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 0
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 1
         );
 
         check_range(
@@ -202,8 +184,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 1,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 1
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 0
         );
 
         check_range(
@@ -216,8 +198,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 1,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 1
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 0
         );
 
         check_range(
@@ -230,8 +212,8 @@ module tb();
             /* expected_via_enable    : */ 1,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 1,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 1
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 0
         );
 
         check_range(
@@ -244,8 +226,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 1,
             /* expected_io_enable     : */ 1,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 1
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 0
         );
 
         check_range(
@@ -258,8 +240,8 @@ module tb();
             /* expected_via_enable    : */ 0,
             /* expected_crtc_enable   : */ 0,
             /* expected_io_enable     : */ 0,
-            /* expected_mirror_enable : */ 0,
-            /* expected_write_enable  : */ 0
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 1
         );
 
         $display("[%t] Test Complete", $time);
