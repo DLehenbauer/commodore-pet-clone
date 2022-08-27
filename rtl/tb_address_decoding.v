@@ -53,50 +53,15 @@ module tb();
         input expected_is_mirrored,
         input expected_is_readonly
     );
-        if (ram_enable != expected_ram_enable) begin
-            $display("[%t] 'ram_enable' must be %d, but got %d.", $time, expected_ram_enable, ram_enable);
-            $stop;
-        end
-
-        if (magic_enable != expected_magic_enable) begin
-            $display("[%t] 'magic_enable' must be %d, but got %d.", $time, expected_magic_enable, magic_enable);
-            $stop;
-        end
-
-        if (pia1_enable != expected_pia1_enable) begin
-            $display("[%t] 'pia1_enable' must be %d, but got %d.", $time, expected_pia1_enable, pia1_enable);
-            $stop;
-        end
-
-        if (pia2_enable != expected_pia2_enable) begin
-            $display("[%t] 'pia2_enable' must be %d, but got %d.", $time, expected_pia2_enable, pia2_enable);
-            $stop;
-        end
-
-        if (via_enable != expected_via_enable) begin
-            $display("[%t] 'via_enable' must be %d, but got %d.", $time, expected_via_enable, via_enable);
-            $stop;
-        end
-
-        if (crtc_enable != expected_crtc_enable) begin
-            $display("[%t] 'crtc_enable' must be %d, but got %d.", $time, expected_crtc_enable, crtc_enable);
-            $stop;
-        end
-
-        if (io_enable != expected_io_enable) begin
-            $display("[%t] 'io_enable' must be %d, but got %d.", $time, expected_io_enable, io_enable);
-            $stop;
-        end
-
-        if (is_mirrored != expected_is_mirrored) begin
-            $display("[%t] 'is_mirrored' must be %d, but got %d.", $time, expected_is_mirrored, is_mirrored);
-            $stop;
-        end
-
-        if (is_readonly != expected_is_readonly) begin
-            $display("[%t] 'is_readonly' must be %d, but got %d.", $time, expected_is_readonly, is_readonly);
-            $stop;
-        end
+        assert_equal(ram_enable, expected_ram_enable, "ram_enable");
+        assert_equal(magic_enable, expected_magic_enable, "magic_enable");
+        assert_equal(pia1_enable, expected_pia1_enable, "pia1_enable");
+        assert_equal(pia2_enable, expected_pia2_enable, "pia2_enable");
+        assert_equal(via_enable, expected_via_enable, "via_enable");
+        assert_equal(crtc_enable, expected_crtc_enable, "crtc_enable");
+        assert_equal(io_enable, expected_io_enable, "io_enable");
+        assert_equal(is_mirrored, expected_is_mirrored, "is_mirrored");
+        assert_equal(is_readonly, expected_is_readonly, "is_readonly");
     endtask
 
     task check_range(

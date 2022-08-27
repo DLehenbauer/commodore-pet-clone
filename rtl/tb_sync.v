@@ -31,15 +31,8 @@ module tb();
         input expected_strobe,
         input expected_done
     );
-        if (strobe != expected_strobe) begin
-            $display("[%t] 'strobe' must be %d, but got %d.", $time, expected_strobe, strobe);
-            $stop;
-        end
-
-        if (done != expected_done) begin
-            $display("[%t] 'done' must be %d, but got %d.", $time, expected_done, done);
-            $stop;
-        end
+        assert_equal(strobe, expected_strobe, "strobe");
+        assert_equal(done, expected_done, "done");
     endtask
 
     initial begin

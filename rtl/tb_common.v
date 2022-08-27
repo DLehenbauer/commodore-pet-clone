@@ -1,0 +1,10 @@
+task assert_equal(
+    input actual,
+    input expected,
+    input string name
+);
+    if (actual != expected) begin
+        $display("[%t] '%s' must be %d, but got %d.", $time, name, actual, expected);
+        $stop;
+    end
+endtask
