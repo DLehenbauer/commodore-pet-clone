@@ -57,7 +57,7 @@ module timing(
     assign pi_write_strobe  = !pi_rw_b && pi_strobe;
 endmodule
 
-module address_decoding(
+module address_decoding_old(
     input io_select,
     input [16:0] addr,
     output ram_enable,
@@ -247,17 +247,24 @@ module main (
     wire rom_select;
     wire crtc_enable;
     
-    address_decoding decode0(
+    address_decoding_old decode0(
         .io_select(io_select),
         .addr(bus_addr),
         .ram_enable(ram_enable),
         .vram_enable(vram_enable),
+        .rom_select(rom_select)
+    );
+    
+    address_decoding decode1(
+        .clk(io_select),
+        .addr(bus_addr),
+        .rw_b(bus_rw_b),
         .pia1_enable(pia1_enable),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
-        .crtc_enable(crtc_enable),
-        .rom_select(rom_select)
+        .crtc_enable(crtc_enable)
     );
+
 
     wire [7:0] pia_data_out;
     wire pia1_oe;

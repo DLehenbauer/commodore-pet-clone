@@ -158,6 +158,7 @@ set_location_assignment PIN_144 -to cpu_res_b
 
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (SystemVerilog)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
+set_global_assignment -name VERILOG_FILE address_decoding.v
 set_global_assignment -name VERILOG_FILE bus.v
 set_global_assignment -name VERILOG_FILE sync.v
 set_global_assignment -name VERILOG_FILE crtc.v
