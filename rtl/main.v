@@ -250,7 +250,6 @@ module main (
     address_decoding_old decode0(
         .io_select(io_select),
         .addr(bus_addr),
-        .ram_enable(ram_enable),
         .vram_enable(vram_enable),
         .rom_select(rom_select)
     );
@@ -258,7 +257,7 @@ module main (
     address_decoding decode1(
         .clk(io_select),
         .addr(bus_addr),
-        .rw_b(bus_rw_b),
+        .ram_enable(ram_enable),
         .pia1_enable(pia1_enable),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
@@ -280,19 +279,8 @@ module main (
         .oe(pia1_oe)
     );
     
-    wire [7:0] crtc_data_out;
-    wire crtc_oe;
-    
-    crtc crtc(
-        .cclk(phi2),
-        .bus_addr(bus_addr),
-        .data_in(bus_data),
-        .pi_addr(pi_addr),
-        .data_out(crtc_data_out),
-        .res_b(cpu_res_b),
-        .read_strobe(pi_read_strobe),
-        .write_strobe(cpu_write_strobe || pi_write_strobe),
-        .crtc_select(crtc_enable),
+    hvSync hvSync(
+        .clk16(clk16),
         .hsync(hsync),
         .vsync(vsync)
     );
@@ -320,7 +308,6 @@ module main (
 
     always @(negedge pi_read_strobe)
         if (pi_addr == 16'he80e) pi_data_reg <= { 7'h0, gfx };
-        else if (16'hE8F0 <= pi_addr && pi_addr < 16'hE900) pi_data_reg <= crtc_data_out;
         else pi_data_reg <= bus_data;
     
     assign bus_rw_b = cpu_enable
