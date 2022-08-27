@@ -23,19 +23,19 @@ module address_decoding(
               PERMIT_WRITE     = 8,
               ENABLE_MIRROR    = 9;
 
-    parameter RAM   = (1 << ENABLE_RAM)  | (1 << PERMIT_WRITE),
-              VRAM  = (1 << ENABLE_RAM)  | (1 << PERMIT_WRITE) | (1 << ENABLE_MIRROR),
-              MAGIC = (1 << ENABLE_RAM)  | (1 << PERMIT_WRITE),
-              ROM   = (1 << ENABLE_RAM),
-              PIA1  = (1 << ENABLE_PIA1) | (1 << PERMIT_WRITE) | (1 << ENABLE_IO),
-              PIA2  = (1 << ENABLE_PIA2) | (1 << PERMIT_WRITE) | (1 << ENABLE_IO),
-              VIA   = (1 << ENABLE_VIA)  | (1 << PERMIT_WRITE) | (1 << ENABLE_IO),
-              CRTC  = (1 << ENABLE_CRTC) | (1 << PERMIT_WRITE) | (1 << ENABLE_IO);
+    parameter RAM   = (10'b1 << ENABLE_RAM)  | (10'b1 << PERMIT_WRITE),
+              VRAM  = (10'b1 << ENABLE_RAM)  | (10'b1 << PERMIT_WRITE) | (10'b1 << ENABLE_MIRROR),
+              MAGIC = (10'b1 << ENABLE_RAM)  | (10'b1 << PERMIT_WRITE),
+              ROM   = (10'b1 << ENABLE_RAM),
+              PIA1  = (10'b1 << ENABLE_PIA1) | (10'b1 << PERMIT_WRITE) | (10'b1 << ENABLE_IO),
+              PIA2  = (10'b1 << ENABLE_PIA2) | (10'b1 << PERMIT_WRITE) | (10'b1 << ENABLE_IO),
+              VIA   = (10'b1 << ENABLE_VIA)  | (10'b1 << PERMIT_WRITE) | (10'b1 << ENABLE_IO),
+              CRTC  = (10'b1 << ENABLE_CRTC) | (10'b1 << PERMIT_WRITE) | (10'b1 << ENABLE_IO);
 
     reg [9:0] select = 10'h0;
 
     always @(posedge clk) begin
-        select = 8'hxx;
+        select = 10'hxxx;
 
         casex (addr[16:0])
             17'b0_0xxx_xxxx_xxxx_xxxx: select = RAM;     // RAM   : 0000-7FFF
