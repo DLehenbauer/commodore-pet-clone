@@ -57,51 +57,6 @@ module timing(
     assign pi_write_strobe  = !pi_rw_b && pi_strobe;
 endmodule
 
-module address_decoding_old(
-    input io_select,
-    input [16:0] addr,
-    output ram_enable,
-    output vram_enable,
-    output pia1_enable,
-    output pia2_enable,
-    output via_enable,
-    output crtc_enable,
-    output rom_select
-);
-    parameter RAM  = 0,
-              PIA1 = 1,
-              PIA2 = 2,
-              VIA  = 3,
-              CRTC = 4,
-              ROM  = 5,
-              VRAM = 6;
-
-    reg [6:0] select;
-
-    always @(posedge io_select) begin
-        select = 7'b0;
-
-        casex (addr[16:0])
-            17'b0_0xxx_xxxx_xxxx_xxxx: select[RAM]  = 1'b1;    // RAM  : 0000-7FFF
-            17'b0_1000_xxxx_xxxx_xxxx: select[VRAM] = 1'b1;    // VRAM : 8000-8FFF
-            17'b0_1110_1000_0000_xxxx: select[RAM]  = 1'b1;    // CTRL : E80x
-            17'b0_1110_1000_0001_xxxx: select[PIA1] = 1'b1;    // PIA1 : E81x
-            17'b0_1110_1000_001x_xxxx: select[PIA2] = 1'b1;    // PIA2 : E820-E83F
-            17'b0_1110_1000_01xx_xxxx: select[VIA]  = 1'b1;    // VIA  : E840-E87F
-            17'b0_1110_1000_1xxx_xxxx: select[CRTC] = 1'b1;    // CRTC : E880-E8FF
-            default:                   select[ROM]  = 1'b1;    // ROM  : 9000-E800, E900-FFFF
-        endcase
-    end
-
-    assign ram_enable   = select[RAM];
-    assign vram_enable  = select[VRAM];
-    assign pia1_enable  = select[PIA1];
-    assign pia2_enable  = select[PIA2];
-    assign via_enable   = select[VIA];
-    assign crtc_enable  = select[CRTC];
-    assign rom_select   = select[ROM];
-endmodule
-
 module pi_ctl(
     input pi_write_strobe,
     input [15:0] pi_addr,
@@ -239,31 +194,28 @@ module main (
         .rdy(cpu_rdy)
     );
     
+    wire ram_enable;
     wire pia1_enable;
     wire pia2_enable;
     wire via_enable;
-    wire ram_enable;
-    wire vram_enable;
-    wire rom_select;
     wire crtc_enable;
-    
-    address_decoding_old decode0(
-        .io_select(io_select),
-        .addr(bus_addr),
-        .vram_enable(vram_enable),
-        .rom_select(rom_select)
-    );
+    wire io_enable;
+
+    wire is_readonly;
+    wire is_mirrored;
     
     address_decoding decode1(
         .clk(io_select),
         .addr(bus_addr),
         .ram_enable(ram_enable),
+        .io_enable(io_enable),
         .pia1_enable(pia1_enable),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
-        .crtc_enable(crtc_enable)
+        .crtc_enable(crtc_enable),
+        .is_readonly(is_readonly),
+        .is_mirrored(is_mirrored)
     );
-
 
     wire [7:0] pia_data_out;
     wire pia1_oe;
@@ -274,7 +226,7 @@ module main (
         .data_out(pia_data_out),
         .res_b(cpu_res_b),
         .pi_write_strobe(pi_write_strobe),
-        .cpu_select(cpu_enable),
+        .cpu_select(io_select),
         .cpu_write_strobe(cpu_write_strobe),
         .oe(pia1_oe)
     );
@@ -297,9 +249,9 @@ module main (
     assign via_cs2_b  = !via_cs;
     assign io_oe_b    = !io_oe;
 
-    assign ram_ce_b       = !(ram_enable || vram_enable || rom_select || !cpu_enable);
+    assign ram_ce_b       = !(ram_enable || !cpu_enable);
     wire read_strobe      =  pi_read_strobe || (cpu_read_strobe && cpu_be);
-    wire write_strobe     = pi_write_strobe || (cpu_write_strobe && cpu_be && !rom_select);
+    wire write_strobe     = pi_write_strobe || (cpu_write_strobe && cpu_be && !is_readonly);
 
     assign read_strobe_b  = !read_strobe;
     assign write_strobe_b = !write_strobe;
@@ -318,7 +270,7 @@ module main (
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr[11:10] = pi_select
         ? pi_addr[11:10]            // Give RPi access to full RAM
-        : vram_enable
+        : is_mirrored
             ? 2'b00                 // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
             : bus_addr[11:10];
     

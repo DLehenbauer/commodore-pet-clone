@@ -19,6 +19,7 @@ module tb();
     reg [16:0] addr = 0;
 
     wire ram_enable;
+    wire magic_enable;
     wire pia1_enable;
     wire pia2_enable;
     wire via_enable;
@@ -31,6 +32,7 @@ module tb();
         .clk(clk),
         .addr(addr),
         .ram_enable(ram_enable),
+        .magic_enable(magic_enable),
         .pia1_enable(pia1_enable),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
@@ -42,6 +44,7 @@ module tb();
 
     task check(
         input expected_ram_enable,
+        input expected_magic_enable,
         input expected_pia1_enable,
         input expected_pia2_enable,
         input expected_via_enable,
@@ -52,6 +55,11 @@ module tb();
     );
         if (ram_enable != expected_ram_enable) begin
             $display("[%t] 'ram_enable' must be %d, but got %d.", $time, expected_ram_enable, ram_enable);
+            $stop;
+        end
+
+        if (magic_enable != expected_magic_enable) begin
+            $display("[%t] 'magic_enable' must be %d, but got %d.", $time, expected_magic_enable, magic_enable);
             $stop;
         end
 
@@ -96,6 +104,7 @@ module tb();
         input [16:0] start_addr,
         input [16:0] end_addr,
         input expected_ram_enable,
+        input expected_magic_enable,
         input expected_pia1_enable,
         input expected_pia2_enable,
         input expected_via_enable,
@@ -110,6 +119,7 @@ module tb();
             @(posedge clk);
             #1 check(
                 expected_ram_enable,
+                expected_magic_enable,
                 expected_pia1_enable,
                 expected_pia2_enable,
                 expected_via_enable,
@@ -137,6 +147,7 @@ module tb();
             /* start_addr: */ 'h0000,
             /* end_addr:   */ 'h7fff,
             /* expected_ram_enable    : */ 1,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 0,
@@ -151,6 +162,7 @@ module tb();
             /* start_addr: */ 'h8000,
             /* end_addr:   */ 'h8fff,
             /* expected_ram_enable    : */ 1,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 0,
@@ -165,6 +177,7 @@ module tb();
             /* start_addr: */ 'h9000,
             /* end_addr:   */ 'he7ff,
             /* expected_ram_enable    : */ 1,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 0,
@@ -175,10 +188,26 @@ module tb();
         );
 
         check_range(
+            /* name:       */ "MAGIC",
+            /* start_addr: */ 'he800,
+            /* end_addr:   */ 'he80f,
+            /* expected_ram_enable    : */ 0,
+            /* expected_magic_enable  : */ 1,
+            /* expected_pia1_enable   : */ 0,
+            /* expected_pia2_enable   : */ 0,
+            /* expected_via_enable    : */ 0,
+            /* expected_crtc_enable   : */ 0,
+            /* expected_io_enable     : */ 0,
+            /* expected_is_mirrored   : */ 0,
+            /* expected_is_readonly   : */ 0
+        );
+
+        check_range(
             /* name:       */ "PIA1",
             /* start_addr: */ 'he810,
             /* end_addr:   */ 'he81f,
             /* expected_ram_enable    : */ 0,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 1,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 0,
@@ -193,6 +222,7 @@ module tb();
             /* start_addr: */ 'he820,
             /* end_addr:   */ 'he83f,
             /* expected_ram_enable    : */ 0,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 1,
             /* expected_via_enable    : */ 0,
@@ -207,6 +237,7 @@ module tb();
             /* start_addr: */ 'he840,
             /* end_addr:   */ 'he87f,
             /* expected_ram_enable    : */ 0,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 1,
@@ -221,6 +252,7 @@ module tb();
             /* start_addr: */ 'he880,
             /* end_addr:   */ 'he8ff,
             /* expected_ram_enable    : */ 0,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 0,
@@ -235,6 +267,7 @@ module tb();
             /* start_addr: */ 'hf000,
             /* end_addr:   */ 'hffff,
             /* expected_ram_enable    : */ 1,
+            /* expected_magic_enable  : */ 0,
             /* expected_pia1_enable   : */ 0,
             /* expected_pia2_enable   : */ 0,
             /* expected_via_enable    : */ 0,

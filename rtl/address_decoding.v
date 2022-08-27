@@ -3,6 +3,7 @@ module address_decoding(
     input [16:0] addr,
 
     output ram_enable,
+    output magic_enable,
     output pia1_enable,
     output pia2_enable,
     output via_enable,
@@ -33,7 +34,7 @@ module address_decoding(
 
     parameter RAM   = ENABLE_RAM_MASK,
               VRAM  = ENABLE_RAM_MASK  | IS_MIRRORED_MASK,
-              MAGIC = ENABLE_RAM_MASK,
+              MAGIC = ENABLE_MAGIC_MASK,
               ROM   = ENABLE_RAM_MASK  | IS_READONLY_MASK,
               PIA1  = ENABLE_PIA1_MASK | ENABLE_IO_MASK,
               PIA2  = ENABLE_PIA2_MASK | ENABLE_IO_MASK,
@@ -61,6 +62,7 @@ module address_decoding(
     assign is_readonly      = select[IS_READONLY_FLAG];
     assign is_mirrored      = select[IS_MIRRORED_FLAG];
 
+    assign magic_enable     = select[ENABLE_MAGIC_FLAG];
     assign io_enable        = select[ENABLE_IO_FLAG];
     assign pia1_enable      = select[ENABLE_PIA1_FLAG];
     assign pia2_enable      = select[ENABLE_PIA2_FLAG];
