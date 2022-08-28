@@ -64,8 +64,8 @@ module pi_ctl(
     output res_b,
     output rdy
 );
-    parameter RES_B = 0,
-              RDY   = 1;
+    localparam RES_B = 0,
+               RDY   = 1;
 
     reg [1:0] state = 2'b00;
 

@@ -12,34 +12,34 @@ module address_decoding(
     output is_mirrored,
     output is_readonly
 );
-    parameter ENABLE_RAM_FLAG   = 0,
-              ENABLE_MAGIC_FLAG = 1,
-              ENABLE_PIA1_FLAG  = 2,
-              ENABLE_PIA2_FLAG  = 3,
-              ENABLE_VIA_FLAG   = 4,
-              ENABLE_CRTC_FLAG  = 5,
-              ENABLE_IO_FLAG    = 6,
-              IS_READONLY_FLAG  = 7,
-              IS_MIRRORED_FLAG  = 8;
+    localparam ENABLE_RAM_FLAG   = 0,
+               ENABLE_MAGIC_FLAG = 1,
+               ENABLE_PIA1_FLAG  = 2,
+               ENABLE_PIA2_FLAG  = 3,
+               ENABLE_VIA_FLAG   = 4,
+               ENABLE_CRTC_FLAG  = 5,
+               ENABLE_IO_FLAG    = 6,
+               IS_READONLY_FLAG  = 7,
+               IS_MIRRORED_FLAG  = 8;
 
-    parameter ENABLE_RAM_MASK   = 9'b1 << ENABLE_RAM_FLAG,
-              ENABLE_MAGIC_MASK = 9'b1 << ENABLE_MAGIC_FLAG,
-              ENABLE_PIA1_MASK  = 9'b1 << ENABLE_PIA1_FLAG,
-              ENABLE_PIA2_MASK  = 9'b1 << ENABLE_PIA2_FLAG,
-              ENABLE_VIA_MASK   = 9'b1 << ENABLE_VIA_FLAG,
-              ENABLE_CRTC_MASK  = 9'b1 << ENABLE_CRTC_FLAG,
-              ENABLE_IO_MASK    = 9'b1 << ENABLE_IO_FLAG,
-              IS_READONLY_MASK  = 9'b1 << IS_READONLY_FLAG,
-              IS_MIRRORED_MASK  = 9'b1 << IS_MIRRORED_FLAG;
+    localparam ENABLE_RAM_MASK   = 9'b1 << ENABLE_RAM_FLAG,
+               ENABLE_MAGIC_MASK = 9'b1 << ENABLE_MAGIC_FLAG,
+               ENABLE_PIA1_MASK  = 9'b1 << ENABLE_PIA1_FLAG,
+               ENABLE_PIA2_MASK  = 9'b1 << ENABLE_PIA2_FLAG,
+               ENABLE_VIA_MASK   = 9'b1 << ENABLE_VIA_FLAG,
+               ENABLE_CRTC_MASK  = 9'b1 << ENABLE_CRTC_FLAG,
+               ENABLE_IO_MASK    = 9'b1 << ENABLE_IO_FLAG,
+               IS_READONLY_MASK  = 9'b1 << IS_READONLY_FLAG,
+               IS_MIRRORED_MASK  = 9'b1 << IS_MIRRORED_FLAG;
 
-    parameter RAM   = ENABLE_RAM_MASK,
-              VRAM  = ENABLE_RAM_MASK  | IS_MIRRORED_MASK,
-              MAGIC = ENABLE_MAGIC_MASK,
-              ROM   = ENABLE_RAM_MASK  | IS_READONLY_MASK,
-              PIA1  = ENABLE_PIA1_MASK | ENABLE_IO_MASK,
-              PIA2  = ENABLE_PIA2_MASK | ENABLE_IO_MASK,
-              VIA   = ENABLE_VIA_MASK  | ENABLE_IO_MASK,
-              CRTC  = ENABLE_CRTC_MASK | ENABLE_IO_MASK;
+    localparam RAM   = ENABLE_RAM_MASK,
+               VRAM  = ENABLE_RAM_MASK  | IS_MIRRORED_MASK,
+               MAGIC = ENABLE_MAGIC_MASK,
+               ROM   = ENABLE_RAM_MASK  | IS_READONLY_MASK,
+               PIA1  = ENABLE_PIA1_MASK | ENABLE_IO_MASK,
+               PIA2  = ENABLE_PIA2_MASK | ENABLE_IO_MASK,
+               VIA   = ENABLE_VIA_MASK  | ENABLE_IO_MASK,
+               CRTC  = ENABLE_CRTC_MASK | ENABLE_IO_MASK;
 
     reg [8:0] select = 0;
 
