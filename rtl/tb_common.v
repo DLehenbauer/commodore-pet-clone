@@ -1,6 +1,6 @@
 task assert_equal(
-    input actual,
-    input expected,
+    input integer actual,
+    input integer expected,
     input string name
 );
     if (actual != expected) begin

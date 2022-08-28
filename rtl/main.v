@@ -195,11 +195,11 @@ module main (
     );
     
     wire ram_enable;
-    wire pia1_enable;
+    wire pia1_enable_before_kbd;
     wire pia2_enable;
     wire via_enable;
     wire crtc_enable;
-    wire io_enable;
+    wire io_enable_before_kbd;
 
     wire is_readonly;
     wire is_mirrored;
@@ -208,8 +208,8 @@ module main (
         .clk(io_select),
         .addr(bus_addr),
         .ram_enable(ram_enable),
-        .io_enable(io_enable),
-        .pia1_enable(pia1_enable),
+        .io_enable(io_enable_before_kbd),
+        .pia1_enable(pia1_enable_before_kbd),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
         .crtc_enable(crtc_enable),
@@ -217,19 +217,25 @@ module main (
         .is_mirrored(is_mirrored)
     );
 
-    wire [7:0] pia_data_out;
-    wire pia1_oe;
+    wire [7:0] kbd_data_out;
+    wire kbd_enable;
     
-    pia1 pia1(
-        .addr(bus_addr),
-        .data_in(bus_data),
-        .data_out(pia_data_out),
-        .res_b(cpu_res_b),
+    keyboard keyboard(
+        .pi_addr(pi_addr),
+        .pi_data(pi_data),
         .pi_write_strobe(pi_write_strobe),
-        .cpu_select(io_select),
+        .bus_addr(bus_addr),
+        .bus_data_in(bus_data),
+        .bus_rw_b(bus_rw_b),
+        .pia1_enabled_in(pia1_enable_before_kbd),
+        .io_select(io_select),
         .cpu_write_strobe(cpu_write_strobe),
-        .oe(pia1_oe)
+        .kbd_data_out(kbd_data_out),
+        .kbd_enable(kbd_enable)
     );
+
+    wire pia1_enable = pia1_enable_before_kbd && !kbd_enable;
+    wire io_enable = io_enable_before_kbd && !kbd_enable;
     
     hvSync hvSync(
         .clk16(clk16),
@@ -242,7 +248,7 @@ module main (
     wire   pia1_cs  = pia1_enable && cpu_be;
     wire   pia2_cs  = pia2_enable && cpu_be;
     wire   via_cs   = via_enable && cpu_be;
-    wire   io_oe    = (pia1_cs && pia1_oe) || pia2_cs || via_cs;
+    wire   io_oe    = io_enable && cpu_be;
 
     assign pia1_cs2_b = !pia1_cs;
     assign pia2_cs2_b = !pia2_cs;
@@ -285,8 +291,8 @@ module main (
     assign bus_data =
         pi_write_strobe
             ? pi_data           // RPi is writing, and therefore driving data
-            : !pia1_oe          // 0 = data from pia1 is disabled, 1 = normal bus access (including pia1)
-                ? pia_data_out  // When PIA1 is not enabled (oe = 0) the FPGA is servicing a read on behalf of the PIA.
+            : kbd_enable        // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
+                ? kbd_data_out  // Return USB keyboard state for PIA 1 Port B ($E812)
                 : 8'bZ;         // Is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
 
     // Audio
