@@ -12,25 +12,25 @@ module address_decoding(
     output is_mirrored,
     output is_readonly
 );
-    localparam ENABLE_RAM_FLAG   = 0,
-               ENABLE_MAGIC_FLAG = 1,
-               ENABLE_PIA1_FLAG  = 2,
-               ENABLE_PIA2_FLAG  = 3,
-               ENABLE_VIA_FLAG   = 4,
-               ENABLE_CRTC_FLAG  = 5,
-               ENABLE_IO_FLAG    = 6,
-               IS_READONLY_FLAG  = 7,
-               IS_MIRRORED_FLAG  = 8;
+    localparam ENABLE_RAM_BIT   = 0,
+               ENABLE_MAGIC_BIT = 1,
+               ENABLE_PIA1_BIT  = 2,
+               ENABLE_PIA2_BIT  = 3,
+               ENABLE_VIA_BIT   = 4,
+               ENABLE_CRTC_BIT  = 5,
+               ENABLE_IO_BIT    = 6,
+               IS_READONLY_BIT  = 7,
+               IS_MIRRORED_BIT  = 8;
 
-    localparam ENABLE_RAM_MASK   = 9'b1 << ENABLE_RAM_FLAG,
-               ENABLE_MAGIC_MASK = 9'b1 << ENABLE_MAGIC_FLAG,
-               ENABLE_PIA1_MASK  = 9'b1 << ENABLE_PIA1_FLAG,
-               ENABLE_PIA2_MASK  = 9'b1 << ENABLE_PIA2_FLAG,
-               ENABLE_VIA_MASK   = 9'b1 << ENABLE_VIA_FLAG,
-               ENABLE_CRTC_MASK  = 9'b1 << ENABLE_CRTC_FLAG,
-               ENABLE_IO_MASK    = 9'b1 << ENABLE_IO_FLAG,
-               IS_READONLY_MASK  = 9'b1 << IS_READONLY_FLAG,
-               IS_MIRRORED_MASK  = 9'b1 << IS_MIRRORED_FLAG;
+    localparam ENABLE_RAM_MASK   = 9'b1 << ENABLE_RAM_BIT,
+               ENABLE_MAGIC_MASK = 9'b1 << ENABLE_MAGIC_BIT,
+               ENABLE_PIA1_MASK  = 9'b1 << ENABLE_PIA1_BIT,
+               ENABLE_PIA2_MASK  = 9'b1 << ENABLE_PIA2_BIT,
+               ENABLE_VIA_MASK   = 9'b1 << ENABLE_VIA_BIT,
+               ENABLE_CRTC_MASK  = 9'b1 << ENABLE_CRTC_BIT,
+               ENABLE_IO_MASK    = 9'b1 << ENABLE_IO_BIT,
+               IS_READONLY_MASK  = 9'b1 << IS_READONLY_BIT,
+               IS_MIRRORED_MASK  = 9'b1 << IS_MIRRORED_BIT;
 
     localparam RAM   = ENABLE_RAM_MASK,
                VRAM  = ENABLE_RAM_MASK  | IS_MIRRORED_MASK,
@@ -58,14 +58,14 @@ module address_decoding(
         endcase
     end
 
-    assign ram_enable       = select[ENABLE_RAM_FLAG];
-    assign is_readonly      = select[IS_READONLY_FLAG];
-    assign is_mirrored      = select[IS_MIRRORED_FLAG];
+    assign ram_enable       = select[ENABLE_RAM_BIT];
+    assign is_readonly      = select[IS_READONLY_BIT];
+    assign is_mirrored      = select[IS_MIRRORED_BIT];
 
-    assign magic_enable     = select[ENABLE_MAGIC_FLAG];
-    assign io_enable        = select[ENABLE_IO_FLAG];
-    assign pia1_enable      = select[ENABLE_PIA1_FLAG];
-    assign pia2_enable      = select[ENABLE_PIA2_FLAG];
-    assign via_enable       = select[ENABLE_VIA_FLAG];
-    assign crtc_enable      = select[ENABLE_CRTC_FLAG];
+    assign magic_enable     = select[ENABLE_MAGIC_BIT];
+    assign io_enable        = select[ENABLE_IO_BIT];
+    assign pia1_enable      = select[ENABLE_PIA1_BIT];
+    assign pia2_enable      = select[ENABLE_PIA2_BIT];
+    assign via_enable       = select[ENABLE_VIA_BIT];
+    assign crtc_enable      = select[ENABLE_CRTC_BIT];
 endmodule
