@@ -42,6 +42,8 @@ module tb();
         end
     end
 
+    // TODO: This needs to be updated after changing sync.v to be driven by 16 MHz clock
+
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
@@ -49,7 +51,7 @@ module tb();
         $display("[%t] Test: 'strobe' and 'done' are initially 0", $time);
         check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'pending' after positive colck edge does not raise strobe", $time);
+        $display("[%t] Test: 'pending' after positive clock edge does not raise strobe", $time);
         @(posedge clk);
         #1 pending = 1'b1;
         check(/* strobe: */ 0, /* done: */ 0);

@@ -31,7 +31,7 @@
     reg [7:0] kbd_matrix [9:0];
     reg [3:0] current_kbd_row = 4'h0;
 
-    always @(posedge pi_write_strobe) begin
+    always @(negedge pi_write_strobe) begin
         if (17'hE800 <= pi_addr && pi_addr <= 17'hE809) begin
             kbd_matrix[pi_addr[3:0]] <= pi_data;
         end
