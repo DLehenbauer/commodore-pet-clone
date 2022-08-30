@@ -22,7 +22,7 @@
     input bus_rw_b,
 
     input pia1_enabled_in,
-    input io_select,
+    input io_read,
     input cpu_write_strobe,
 
     output reg [7:0] kbd_data_out = 8'hff,
@@ -49,13 +49,13 @@
         current_kbd_row = bus_data_in[3:0];
     end
 
-    wire reading_port_b = io_select && bus_rw_b && pia1_enabled_in && bus_addr == PORTB;
+    wire reading_port_b = io_read && pia1_enabled_in && bus_addr == PORTB;
 
     always @(posedge reading_port_b) begin
         kbd_data_out <= kbd_matrix[current_kbd_row];
     end
 
-    // Intercept reads to port B ($E812) when the cached key matrix has a pressed key.
-    // Otherwise, enable data from the PIA.
+    // Intercept reads to port B ($E812) only when the cached key matrix has a pressed key.
+    // Otherwise, reads should go to PIA1 so that the standard PET keyboard also works.
     assign kbd_enable = reading_port_b && kbd_data_out != 8'hff;
 endmodule

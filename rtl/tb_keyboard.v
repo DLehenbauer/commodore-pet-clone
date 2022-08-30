@@ -33,6 +33,8 @@ module tb();
     wire kbd_enable;
     wire [7:0] kbd_data_out;
 
+    wire io_read = io_select && bus_rw_b;
+
     keyboard keyboard(
         .pi_addr(pi_addr),
         .pi_data(pi_data),
@@ -42,7 +44,7 @@ module tb();
         .bus_data_in(bus_data_in),
         .bus_rw_b(bus_rw_b),
 
-        .io_select(io_select),
+        .io_read(io_read),
         .cpu_write_strobe(cpu_write_strobe),
         .pia1_enabled_in(pia1_enabled_in),
 

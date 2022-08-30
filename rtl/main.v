@@ -23,6 +23,7 @@ module timing(
     output cpu_read_strobe,
     output cpu_write_strobe,
     output io_select,
+    output io_read,
     input  pi_rw_b,
     output pi_select,
     output pi_read_strobe,
@@ -43,6 +44,12 @@ module timing(
 
     assign cpu_read_strobe  =  bus_rw_b && phi2;
     assign cpu_write_strobe = !bus_rw_b && phi2;
+
+    // io_read signals that the FPGA should drive 'bus_data' when intercepting reads
+    // from the CPU (e.g., for keyboard).  It transitions to high after the CPU is enabled
+    // and the bus_addr/bus_rw_b are valid, but before the positive edge of the CPU clock
+    // (i.e., phi2).
+    assign io_read = bus_rw_b && io_select;
 
     wire pi_strobe;
 
@@ -169,6 +176,8 @@ module main (
         .c1(clk25)
     );
     
+    wire io_read;
+
     // Timing
     timing timing(
         .clk(clk16),
@@ -179,6 +188,7 @@ module main (
         .cpu_read_strobe(cpu_read_strobe),
         .cpu_write_strobe(cpu_write_strobe),
         .io_select(io_select),
+        .io_read(io_read),
         .pi_rw_b(pi_rw_b),
         .pi_select(pi_select),
         .pi_read_strobe(pi_read_strobe),
@@ -229,7 +239,7 @@ module main (
         .bus_data_in(bus_data),
         .bus_rw_b(bus_rw_b),
         .pia1_enabled_in(pia1_enable_before_kbd),
-        .io_select(io_select),
+        .io_read(io_read),
         .cpu_write_strobe(cpu_write_strobe),
         .kbd_data_out(kbd_data_out),
         .kbd_enable(kbd_enable)
