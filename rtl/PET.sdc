@@ -23,22 +23,22 @@ set phi2 [get_ports { phi2 }]
 # Clock constraints
 create_generated_clock -name "pi_strobe" \
     -source $clk_16 \
-    -edges {5 9 37} \
+    -edges {3 5 35} \
     $pi_strobe
 
 create_generated_clock -name "cpu_select" \
     -source $clk_16 \
-    -edges {17 33 49} \
+    -edges {25 33 57} \
     $cpu_select
 
 create_generated_clock -name "io_select" \
     -source $clk_16 \
-    -edges {21 33 53} \
+    -edges {27 33 59} \
     $io_select
 
 create_generated_clock -name "cpu_strobe" \
     -source $clk_16 \
-    -edges {25 29 57} \
+    -edges {29 31 61} \
     $cpu_strobe
 
 create_generated_clock -name "phi2" \

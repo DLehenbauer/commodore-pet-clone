@@ -47,7 +47,8 @@ module timing(
     wire pi_strobe;
 
     sync pi_sync(
-        .clk(pi_enable),
+        .clk(clk),
+        .enabled(pi_enable),
         .pending(pi_pending),
         .done(pi_done),
         .strobe(pi_strobe)
