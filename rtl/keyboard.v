@@ -15,7 +15,7 @@
  module keyboard(
     input [15:0] pi_addr,
     input [7:0]  pi_data,
-    input pi_write_strobe,
+    input pi_write,
 
     input [1:0] bus_addr,
     input [7:0] bus_data_in,
@@ -23,7 +23,7 @@
 
     input pia1_enabled_in,
     input io_read,
-    input cpu_write_strobe,
+    input cpu_write,
 
     output reg [7:0] kbd_data_out = 8'hff,
     output kbd_enable
@@ -31,7 +31,7 @@
     reg [7:0] kbd_matrix [9:0];
     reg [3:0] current_kbd_row = 4'h0;
 
-    always @(negedge pi_write_strobe) begin
+    always @(negedge pi_write) begin
         if (17'hE800 <= pi_addr && pi_addr <= 17'hE809) begin
             kbd_matrix[pi_addr[3:0]] <= pi_data;
         end
@@ -42,7 +42,7 @@
                PORTB = 2'd2,
                CRB   = 2'd3;
 
-    wire writing_port_a = cpu_write_strobe && pia1_enabled_in && bus_addr == PORTA;
+    wire writing_port_a = cpu_write && pia1_enabled_in && bus_addr == PORTA;
 
     // Save the selected keyboard row when the CPU writes to port A ($E810)
     always @(negedge writing_port_a) begin

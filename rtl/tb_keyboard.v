@@ -20,15 +20,15 @@ module tb();
 
     reg [15:0] pi_addr  = 16'hxxxx;
     reg [7:0]  pi_data  = 8'hxx;
-    reg pi_write_strobe = 0;
+    reg        pi_write = 0;
 
-    reg [1:0]  bus_addr = 2'h0;
+    reg [1:0]  bus_addr    = 2'h0;
     reg [7:0]  bus_data_in = 8'h0;
-    reg bus_rw_b = 0;
+    reg        bus_rw_b    = 0;
 
     reg io_select = 0;
     reg pia1_enabled_in = 0;
-    reg cpu_write_strobe = 0;
+    reg cpu_write = 0;
 
     wire kbd_enable;
     wire [7:0] kbd_data_out;
@@ -38,14 +38,14 @@ module tb();
     keyboard keyboard(
         .pi_addr(pi_addr),
         .pi_data(pi_data),
-        .pi_write_strobe(pi_write_strobe),
+        .pi_write(pi_write),
 
         .bus_addr(bus_addr),
         .bus_data_in(bus_data_in),
         .bus_rw_b(bus_rw_b),
 
         .io_read(io_read),
-        .cpu_write_strobe(cpu_write_strobe),
+        .cpu_write(cpu_write),
         .pia1_enabled_in(pia1_enabled_in),
 
         .kbd_data_out(kbd_data_out),
@@ -70,11 +70,11 @@ module tb();
         
         #1;
         
-        pi_write_strobe = 1;
+        pi_write = 1;
 
         #1;
         
-        pi_write_strobe = 0;
+        pi_write = 0;
         
         #1;
         pi_addr = 16'hxxxx;
@@ -96,11 +96,11 @@ module tb();
 
         #1;
 
-        cpu_write_strobe = 1;
+        cpu_write = 1;
 
         #1;
 
-        cpu_write_strobe = 0;
+        cpu_write = 0;
 
         #1;
 

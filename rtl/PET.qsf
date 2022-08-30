@@ -86,9 +86,6 @@ set_location_assignment PIN_27 -to P27_GND
 set_location_assignment PIN_28 -to pi_rw_b
 set_location_assignment PIN_30 -to pi_done_b
 set_location_assignment PIN_31 -to phi2
-set_location_assignment PIN_75 -to read_strobe_b
-set_location_assignment PIN_86 -to cpu_irq_b
-set_location_assignment PIN_76 -to write_strobe_b
 set_location_assignment PIN_40 -to pi_data[7]
 set_location_assignment PIN_41 -to pi_data[3]
 set_location_assignment PIN_42 -to pi_data[6]
@@ -115,9 +112,12 @@ set_location_assignment PIN_71 -to pi_addr[8]
 set_location_assignment PIN_72 -to pi_addr[0]
 set_location_assignment PIN_73 -to P73_POR
 set_location_assignment PIN_74 -to audio
+set_location_assignment PIN_75 -to ram_oe_b
+set_location_assignment PIN_76 -to ram_we_b
 set_location_assignment PIN_79 -to ram_ce_b
 set_location_assignment PIN_80 -to ram_addr[10]
 set_location_assignment PIN_81 -to ram_addr[11]
+set_location_assignment PIN_86 -to cpu_irq_b
 set_location_assignment PIN_87 -to cpu_be
 set_location_assignment PIN_89 -to diag
 set_location_assignment PIN_90 -to cb2
