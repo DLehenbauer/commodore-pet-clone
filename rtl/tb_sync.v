@@ -15,6 +15,7 @@
  */
 
 module tb();
+    reg enabled = 0;
     reg pending = 0;
     reg clk = 0;
     wire strobe;
@@ -22,6 +23,7 @@ module tb();
 
     sync sync(
         .clk(clk),
+        .enabled(enabled),
         .pending(pending),
         .strobe(strobe),
         .done(done)
@@ -42,8 +44,6 @@ module tb();
         end
     end
 
-    // TODO: This needs to be updated after changing sync.v to be driven by 16 MHz clock
-
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
@@ -51,19 +51,49 @@ module tb();
         $display("[%t] Test: 'strobe' and 'done' are initially 0", $time);
         check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'pending' after positive clock edge does not raise strobe", $time);
+        $display("[%t] Test: 'pending' without 'enabled' does not raise strobe", $time);
         @(posedge clk);
         #1 pending = 1'b1;
         check(/* strobe: */ 0, /* done: */ 0);
-        
-        $display("[%t] Test: 'strobe' raised on next positive clock", $time);
+
+        @(posedge clk);
+        #1 pending = 1'b1;
+        check(/* strobe: */ 0, /* done: */ 0);
+
+        // TODO: Current 'sync' raises strobe immediately on enabled, which is arguably correct
+        //       since enabled only goes high on a positive clock edge.
+
+        $display("[%t] Test: 'pending/enabled' does not raise strobe until next positive clock edge", $time);
+
+        #1 enabled = 1'b1;
+        check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: 'pending/enabled' raises strobe on next positive clock edge", $time);
+
         @(posedge clk);
         #1 check(/* strobe: */ 1, /* done: */ 0);
         
-        $display("[%t] Test: 'done' raised on negative clock", $time);
-        @(negedge clk);
+        $display("[%t] Test: '!enabled' does not raise 'done'", $time);
+        enabled = 1'b0;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: 'done' raised on next positive clock edge", $time);
+        @(posedge clk);
         #1 check(/* strobe: */ 0, /* done: */ 1);
         
+        $display("[%t] Test: 'done' held while still pending", $time);
+        @(posedge clk);
+        #1 check(/* strobe: */ 0, /* done: */ 1);
+
+        $display("[%t] Test: 'done' reset when !pending", $time);
+        #1 pending = 1'b0;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: pending/enabled high without clock edge", $time);
+        #1 pending = 1'b1;
+        #1 enabled = 1'b1;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
         $display("[%t] Test Complete", $time);
         $finish;
     end
