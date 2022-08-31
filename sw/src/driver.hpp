@@ -82,18 +82,14 @@ class CDriver {
             dataPins.setPinMode(CGpioMode::Input);
         }
 
-        void read_bus_unchecked() {
-            uint32_t bits = CGpio::readAll();
-
-            rw_b = (bits & (1 << rwbPin.pinStart)) != 0;
-            if (rw_b) {
-                dataPins.outputMode();
+        // Helper invoked by pi_read(), pi_write(), and ram_test() when ensuring that reads produce
+        // an expected value.
+        static void assert_equal(const char* kind, uint16_t addr, uint8_t actual, uint8_t expected) {
+            if (actual != expected) {
+                trace("%s ERROR:\n", kind);
+                trace("  [FAIL] $%04x: Expected $%02x, but got $%02x\n", addr, expected, actual);
+                assert(false);
             }
-
-            const uint16_t a15    = (bits >> a15Pin.pinStart) << 15;
-            const uint16_t a0to14 = (bits >> a0to14Pins.pinStart) & 0x7FFF;
-            addr = a15 | a0to14;
-            data = bits >> dataPins.pinStart;
         }
 
         static constexpr uint32_t get_addr_bits(const uint16_t addr) {
@@ -114,12 +110,10 @@ class CDriver {
             while (donebPin.read());
 
             const uint8_t data = dataPins.read();
+
+            // While holding pending high, perform a second read as a sanity check to help detect glitches.
             const uint8_t actual = dataPins.read();
-            if (actual != data) {
-                trace("READ ERROR:");
-                trace("  [FAIL] %04x: %02x != %02x\n", addr, actual, data);
-                assert(false);
-            }
+            assert_equal("READ", addr, actual, /* expected: */ data);
 
             pendingbPin.write(1);
 
@@ -140,12 +134,12 @@ class CDriver {
 
             pendingbPin.write(1);
 
+            // Immediately after completing the write, request a read of the same address as a sanity
+            // check to help detect glitches.  Note that this could fail if the 6502 were enabled and
+            // concurrently writing to the same address.  However, our current usage only writes when
+            // the 6502 is suspended or to shadowed address ranges not reachable by the CPU.
             const uint8_t actual = pi_read(addr);
-            if (actual != data) {
-                trace("WRITE ERROR:");
-                trace("  [FAIL] %04x: %02x != %02x\n", addr, actual, data);
-                assert(false);
-            }
+            assert_equal("WRITE", addr, actual, /* expected: */ data);
         }
 
         void set_clock(double mhz) {
@@ -199,13 +193,31 @@ class CDriver {
             for (unsigned addr = 0x0000; addr < 0x10000; addr++) {
                 if (addr == next_skip->start) {
                     const unsigned skipEnd = addr + next_skip->length;
-                    trace("Skipping %s: %4x-%4x\n", next_skip->desc, addr, skipEnd);
+                    trace("  Skipping %s: $%4x-%4x\n", next_skip->desc, addr, skipEnd);
                     addr = skipEnd;
                     next_skip++;
                 } else {
                     f(addr);
                 }
             }
+        }
+
+        void write_test_pattern(const uint8_t evenPattern, const uint8_t oddPattern) {
+            const uint8_t patterns[2] = { evenPattern, oddPattern };
+
+            trace("Writing: %02x %02x\n", patterns[0], patterns[1]);
+            foreach_addr([this, patterns](uint16_t addr) {
+                const uint16_t index = addr & 1;
+                pi_write(addr, patterns[index]);
+            });
+
+            trace("Reading: %02x %02x\n", patterns[0], patterns[1]);
+            foreach_addr([this, patterns](uint16_t addr) {
+                const uint16_t index = addr & 1;
+                const uint8_t expected = patterns[index];
+                const uint8_t actual = pi_read(addr);
+                assert_equal("VERIFY", addr, actual, expected);
+            });
         }
 
         void ram_test() {
@@ -216,32 +228,14 @@ class CDriver {
                 0b10101010,
             };
 
-            for (unsigned i = 0; i < 4; i++) {
-                const uint8_t pattern[2] = { checkers[i], static_cast<uint8_t>(~checkers[i]) };
+            for (unsigned i = 0; i < sizeof(checkers); i++) {
+                const uint8_t pattern0 =  checkers[i];
+                const uint8_t pattern1 = ~pattern0;
 
-                trace("RAM test: %02x %02x\n", pattern[0], pattern[0]);
-                foreach_addr([this, pattern](uint16_t addr) {
-                    pi_write(addr, pattern[0]);
-                });
-
-                trace("RAM test: %02x %02x\n", pattern[0], pattern[1]);
-                foreach_addr([this, pattern](uint16_t addr) {
-                    const uint16_t index = static_cast<uint16_t>(addr & 1);
-                    pi_write(addr, pattern[index]);
-                });
-
-                trace("RAM test: %02x %02x\n", pattern[1], pattern[0]);
-                foreach_addr([this, pattern](const uint16_t addr) {
-                    const uint16_t index = static_cast<uint16_t>(~addr & 1);
-                    pi_write(addr, pattern[index]);
-                });
-
-                if (pattern[1] != 0) {
-                    trace("RAM test: %02x %02x\n", pattern[1], pattern[1]);
-                    foreach_addr([this, pattern](uint16_t addr) {
-                        pi_write(addr, pattern[1]);
-                    });
-                }
+                write_test_pattern(pattern0, pattern0);
+                write_test_pattern(pattern0, pattern1);
+                write_test_pattern(pattern1, pattern0);
+                write_test_pattern(pattern1, pattern1);
             }
         }
 
@@ -261,13 +255,9 @@ class CDriver {
 
             // Verify RAM contents match 'memory'
             foreach_addr([this, memory](uint16_t addr) {
-                const uint8_t data = memory[addr];
+                const uint8_t expected = memory[addr];
                 const uint8_t actual = pi_read(addr);
-                if (actual != data) {
-                    trace("VERIFY ERROR:");
-                    trace("  [FAIL] %04x: %02x != %02x\n", addr, actual, data);
-                    assert(false);
-                }
+                assert_equal("VERIFY", addr, actual, expected);
             });
 
             // Reset will re-initialize PHI2 at 1 MHz 
