@@ -1,42 +1,34 @@
+/**
+ * PET Clone - Open hardware implementation of the Commodore PET
+ * by Daniel Lehenbauer and contributors.
+ * 
+ * https://github.com/DLehenbauer/commodore-pet-clone
+ *
+ * To the extent possible under law, I, Daniel Lehenbauer, have waived all
+ * copyright and related or neighboring rights to this project. This work is
+ * published from the United States.
+ *
+ * @copyright CC0 http://creativecommons.org/publicdomain/zero/1.0/
+ * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
+ */
+
 module sync (
     input clk,
-    input enabled,
-    input pending,          // read/write is pending
+    input pending,
     output strobe,
-    output done             // read/write has completed
+    output reg done = 0
 );
-    localparam PENDING_BIT = 0,
-               DONE_BIT    = 1;
-
-    localparam [1:0] IDLE    = 2'b00,
-                     PENDING = 2'b1 << PENDING_BIT,
-                     DONE    = 2'b1 << DONE_BIT;
-
-    reg [1:0] state = IDLE;
-    reg [1:0] next  = IDLE;
+    reg ready = 0;
 
     always @(posedge clk or negedge pending) begin
-        if (!pending) state = IDLE;
-        else state <= next;
-    end
-    
-    always @(*) begin
-        next = 2'bxx;
-    
-        if (!pending) next = IDLE;
-        else case (state)
-            IDLE:   if (pending && !enabled) next = PENDING;
-                    else next = IDLE;
-            
-            PENDING: if (enabled) next = DONE;
-                     else next = PENDING;
-            
-            DONE:    next = DONE;
-
-            default: next = 2'bxx;
-        endcase
+        if (!pending) ready <= 0;
+        else ready <= clk && pending;
     end
 
-    assign strobe = enabled && state[PENDING_BIT];
-    assign done   = state[DONE_BIT];
+    always @(negedge clk or negedge pending) begin
+        if (!pending) done <= 0;
+        else done <= ready;
+    end
+
+    assign strobe = clk && ready && !done;
 endmodule
