@@ -305,7 +305,7 @@ module main (
             ? pi_data           // RPi is writing, and therefore driving data
             : kbd_enable        // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
                 ? kbd_data_out  // Return USB keyboard state for PIA 1 Port B ($E812)
-                : 8'bZ;         // Is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
+                : 8'bZ;         // CPU is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
 
     // Audio
     assign audio = cb2 && diag;
