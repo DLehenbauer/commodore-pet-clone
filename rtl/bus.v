@@ -39,14 +39,15 @@ module bus(
     //       edge # = count * 2 + 1
     //       { rise edge #, fall edge #, rise edge # + 32}
 
-    reg [3:0] count = 0;
-    reg [4:0] state = PI_SELECT, next = PI_SELECT;
-
     localparam [4:0] PI_SELECT  = 5'b00001,
                      PI_STROBE  = 5'b00011,
                      CPU_SELECT = 5'b00100,
                      IO_SELECT  = 5'b01100,
                      CPU_STROBE = 5'b11100;
+
+    reg [3:0] count = 0;
+    reg [4:0] state = PI_SELECT, next = PI_SELECT;
+
     
     always @(posedge clk16) begin
         count <= count + 4'h1;

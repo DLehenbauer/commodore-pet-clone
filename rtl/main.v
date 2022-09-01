@@ -54,7 +54,8 @@ module timing(
     wire pi_strobe;
 
     sync pi_sync(
-        .clk(pi_enable),
+        .select(pi_select),
+        .enable(pi_enable),
         .pending(pi_pending),
         .done(pi_done),
         .strobe(pi_strobe)
@@ -281,14 +282,14 @@ module main (
     
     assign bus_rw_b = cpu_enable
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
-        : !pi_write;     // RPi is reading/writing and therefore driving rw_b
+        : !pi_write;            // RPi is reading/writing and therefore driving rw_b
     
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr[11:10] = pi_select
-        ? pi_addr[11:10]            // Give RPi access to full RAM
+        ? pi_addr[11:10]        // Give RPi access to full RAM
         : is_mirrored
-            ? 2'b00                 // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
+            ? 2'b00             // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
             : bus_addr[11:10];
     
     assign bus_addr = pi_select

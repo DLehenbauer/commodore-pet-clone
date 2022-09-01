@@ -19,6 +19,7 @@ set cpu_select [get_registers { timing:timing|bus:bus|state[2] }]
 set io_select  [get_registers { timing:timing|bus:bus|state[3] }]
 set cpu_strobe [get_registers { timing:timing|bus:bus|state[4] }]
 
+set pi_done [get_registers { timing:timing|sync:pi_sync|done }]
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
@@ -51,6 +52,11 @@ create_generated_clock -name "phi2" \
     -source $cpu_strobe \
     $phi2
 
+# create_generated_clock -name "pi_done" \
+#     -source $pi_select \
+#     -invert \
+#     $pi_done
+
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
 
@@ -68,3 +74,6 @@ set_input_delay -max -clock [get_clocks { phi2 }] 40 [get_ports { bus_data[*] }]
 
 set_output_delay -min -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
 set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
+
+# set_output_delay -min -clock { pi_done } -8 [get_ports { pi_data[*] }]
+# set_output_delay -max -clock { pi_done } -8 [get_ports { pi_data[*] }]

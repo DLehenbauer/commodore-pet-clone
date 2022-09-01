@@ -13,22 +13,23 @@
  */
 
 module sync (
-    input clk,
+    input select,
+    input enable,
     input pending,
     output strobe,
     output reg done = 0
 );
     reg ready = 0;
 
-    always @(posedge clk or negedge pending) begin
+    always @(posedge enable or negedge pending) begin
         if (!pending) ready <= 0;
-        else ready <= clk && pending;
+        else ready <= pending;
     end
 
-    always @(negedge clk or negedge pending) begin
+    always @(negedge select or negedge pending) begin
         if (!pending) done <= 0;
         else done <= ready;
     end
 
-    assign strobe = clk && ready && !done;
+    assign strobe = enable && ready && !done;
 endmodule

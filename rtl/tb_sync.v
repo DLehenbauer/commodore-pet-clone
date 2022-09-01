@@ -15,13 +15,22 @@
  */
 
 module tb();
+    reg clk16 = 0;
+    wire select;
+    wire enable;
     reg pending = 0;
-    reg clk = 0;
     wire strobe;
     wire done;
 
+    bus bus(
+        .clk16(clk16),
+        .pi_select(select),
+        .pi_strobe(enable)
+    );
+
     sync sync(
-        .clk(clk),
+        .select(select),
+        .enable(enable),
         .pending(pending),
         .strobe(strobe),
         .done(done)
@@ -36,9 +45,9 @@ module tb();
     endtask
 
     initial begin
-        clk = 0;
+        clk16 = 0;
         forever begin
-            #10 clk = ~clk;
+            #62.5 clk16 = ~clk16;
         end
     end
 
@@ -49,19 +58,28 @@ module tb();
         $display("[%t] Test: 'strobe' and 'done' are initially 0", $time);
         check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'pending' after positive clock edge does not raise strobe", $time);
-        @(posedge clk);
+        $display("[%t] Test: 'pending' after select does not raise strobe", $time);
+        @(posedge select);
         #1 pending = 1'b1;
         check(/* strobe: */ 0, /* done: */ 0);
         
-        $display("[%t] Test: 'strobe' raised on next positive clock", $time);
-        @(posedge clk);
+        $display("[%t] Test: 'strobe' raised on next positive enable", $time);
+        @(posedge enable);
         #1 check(/* strobe: */ 1, /* done: */ 0);
-        
-        $display("[%t] Test: 'done' raised on negative clock", $time);
-        @(negedge clk);
+
+        $display("[%t] Test: 'done' not raised on negative enable", $time);
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: 'done' raised on negative select", $time);
+        @(negedge select);
         #1 check(/* strobe: */ 0, /* done: */ 1);
+
+        $display("[%t] Test: 'done' cleared on negative pending", $time);
+        pending = 1'b0;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
         
+        @(posedge select)
         $display("[%t] Test Complete", $time);
         $finish;
     end
