@@ -80,11 +80,11 @@ set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_
 # SRAM
 # https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf
 
-set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] bus_data[*] }]
-set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] bus_data[*] }]
+set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] ram_addr[*] bus_data[*] }]
+set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] ram_addr[*] bus_data[*] }]
 
-set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b }]
-set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b }]
+set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b ram_addr[*] }]
+set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b ram_addr[*] }]
 
 # RPi
 

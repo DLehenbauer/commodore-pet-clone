@@ -216,7 +216,6 @@ module main (
     wire is_mirrored;
     
     address_decoding decode1(
-        .clk(io_select),
         .addr(bus_addr),
         .ram_enable(ram_enable),
         .io_enable(io_enable_before_kbd),

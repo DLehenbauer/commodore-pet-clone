@@ -1,5 +1,4 @@
 module address_decoding(
-    input clk,
     input [16:0] addr,
 
     output ram_enable,
@@ -41,9 +40,9 @@ module address_decoding(
                VIA   = ENABLE_VIA_MASK  | ENABLE_IO_MASK,
                CRTC  = ENABLE_CRTC_MASK | ENABLE_IO_MASK;
 
-    reg [8:0] select = 0;
+    reg [8:0] select = 9'hxxx;
 
-    always @(posedge clk) begin
+    always @(*) begin
         select = 9'hxxx;
 
         casex (addr[16:0])

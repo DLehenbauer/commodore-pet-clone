@@ -15,8 +15,7 @@
  */
 
 module tb();
-    reg clk         = 0;
-    reg [16:0] addr = 0;
+    reg [16:0] addr = 17'hxxxxx;
 
     wire ram_enable;
     wire magic_enable;
@@ -29,7 +28,6 @@ module tb();
     wire is_readonly;
 
     address_decoding address_decoding(
-        .clk(clk),
         .addr(addr),
         .ram_enable(ram_enable),
         .magic_enable(magic_enable),
@@ -81,7 +79,6 @@ module tb();
         $display("%s: $%x-$%x", name, start_addr, end_addr);
 
         for (addr = start_addr; addr <= end_addr; addr = addr + 1) begin
-            @(posedge clk);
             #1 check(
                 expected_ram_enable,
                 expected_magic_enable,
@@ -95,13 +92,6 @@ module tb();
             );
         end
     endtask
-
-    initial begin
-        clk = 0;
-        forever begin
-            #10 clk = ~clk;
-        end
-    end
 
     initial begin
         $dumpfile("out.vcd");
