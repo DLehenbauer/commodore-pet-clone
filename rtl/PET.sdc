@@ -60,6 +60,7 @@ create_generated_clock -name "phi2" \
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
 
+# CPU
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
 # tBVD
@@ -70,10 +71,22 @@ set_input_delay -max -clock [get_clocks { phi2 }] 30 [get_ports { bus_addr[*] bu
 set_input_delay -min -clock [get_clocks { phi2 }]  0 [get_ports { bus_data[*] }]
 set_input_delay -max -clock [get_clocks { phi2 }] 40 [get_ports { bus_data[*] }]
 
+# PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 
-set_output_delay -min -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
+set_output_delay -min -clock { phi2 }  0 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
 set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
 
-# set_output_delay -min -clock { pi_done } -8 [get_ports { pi_data[*] }]
-# set_output_delay -max -clock { pi_done } -8 [get_ports { pi_data[*] }]
+# SRAM
+# https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf
+
+set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] bus_data[*] }]
+set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] bus_data[*] }]
+
+set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b }]
+set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b }]
+
+# RPi
+
+# set_output_delay -min -clock { pi_done } -7 [get_ports { pi_data[*] }]
+# set_output_delay -max -clock { pi_done } -7 [get_ports { pi_data[*] }]

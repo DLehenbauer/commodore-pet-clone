@@ -12,6 +12,25 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
+//        clk16  /‾\_/‾\_/‾\_/‾\_/‾\_/‾\_
+//               :   :   :   :   :   :   
+//      pending  __/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\_____  Async signal that transfer is pending
+//               :   :   :   :   :   :   
+//       select  ____/‾‾‾‾‾‾‾‾‾‾‾\_______  Our turn to use bus: setup source/destination
+//               :   :   :   :   :   :   
+//       enable  ________/‾‾‾\___________  Perform the read or write
+//               :   :   :   :   :   :   
+//       strobe  ________/‾‾‾\___________  Generate the read or write strobe (only if transfer is in progress)
+//               :   :   :   :   :   :   
+//         done  ________________/‾‾‾\___  Signal that transfer is complete
+//
+// Notes:
+//  - 'pending' must be signaled 1-cycle before 'enable' (posedge of select) so that we have
+//    incoming signals (e.g., addr) in advance to setup the appropriate chips (RAM, I/O, etc.)
+//
+//  - Similarly, we must hold 'select' (and delay 'done') by 1-cycle after 'enable' so that our
+//    incoming signals (e.g., addr) are held while we capture output on negedge 'enable'.  This
+//    also gives our output a chance to propagate before the external device attempts to read.
 module sync (
     input select,
     input enable,
@@ -21,9 +40,9 @@ module sync (
 );
     reg ready = 0;
 
-    always @(posedge enable or negedge pending) begin
+    always @(posedge select or negedge pending) begin
         if (!pending) ready <= 0;
-        else ready <= pending;
+        else ready <= 1'b1;
     end
 
     always @(negedge select or negedge pending) begin

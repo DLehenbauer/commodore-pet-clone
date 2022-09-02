@@ -58,27 +58,68 @@ module tb();
         $display("[%t] Test: 'strobe' and 'done' are initially 0", $time);
         check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'pending' after select does not raise strobe", $time);
+        $display("[%t] Test: No 'strobe' if 'pending' low.", $time);
         @(posedge select);
-        #1 pending = 1'b1;
-        check(/* strobe: */ 0, /* done: */ 0);
-        
-        $display("[%t] Test: 'strobe' raised on next positive enable", $time);
-        @(posedge enable);
-        #1 check(/* strobe: */ 1, /* done: */ 0);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'done' not raised on negative enable", $time);
+        @(posedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
         @(negedge enable);
         #1 check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'done' raised on negative select", $time);
+        @(negedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: 'pending' after 'select' delayed until next 'select'", $time);
+        @(posedge select);
+        #1 pending = 1'b1;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
+        #1 check(/* strobe: */ 1, /* done: */ 0);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
         @(negedge select);
         #1 check(/* strobe: */ 0, /* done: */ 1);
 
         $display("[%t] Test: 'done' cleared on negative pending", $time);
         pending = 1'b0;
         #1 check(/* strobe: */ 0, /* done: */ 0);
-        
+
+        $display("[%t] Test: 'pending' before select raises 'strobe' on next enable", $time);
+        #1 pending = 1'b1;
+
+        @(posedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
+        #1 check(/* strobe: */ 1, /* done: */ 0);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 1);
+
+        $display("[%t] Test: 'done' cleared on negative pending", $time);
+        pending = 1'b0;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
         @(posedge select)
         $display("[%t] Test Complete", $time);
         $finish;
