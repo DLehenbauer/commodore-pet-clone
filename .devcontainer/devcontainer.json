@@ -23,12 +23,13 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        "ms-vscode.cpptools-extension-pack",
-        "mshr-h.veriloghdl",
-        "mutantdino.resourcemonitor",
-        "streetsidesoftware.code-spell-checker",
-        "xaver.clang-format"
-    ],
+		"DavidAnson.vscode-markdownlint",
+		"ms-vscode.cpptools-extension-pack",
+		"mshr-h.veriloghdl",
+		"mutantdino.resourcemonitor",
+		"streetsidesoftware.code-spell-checker",
+		"xaver.clang-format"
+	],
 
     "runArgs": [ "--cap-add=SYS_ADMIN" ],
 

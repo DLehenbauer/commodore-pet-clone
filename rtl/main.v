@@ -204,6 +204,20 @@ module main (
         .res_b(res_b),
         .rdy(cpu_rdy)
     );
+
+    wire [7:0] crtc_data_out;
+    wire crtc_data_out_enable;
+
+    crtc ctrc(
+        .pi_addr(pi_addr),
+        .pi_data_in(pi_data),
+        .pi_enabled(pi_select),
+        .pi_read(pi_read),
+        .pi_write(pi_write),
+
+        .crtc_data_out(crtc_data_out),
+        .crtc_data_out_enable(crtc_data_out_enable)
+    );
     
     wire ram_enable;
     wire pia1_enable_before_kbd;
@@ -273,10 +287,11 @@ module main (
     assign ram_oe_b = !ram_oe;
     assign ram_we_b = !ram_we;
 
-    reg [7:0] pi_data_reg = 8'hee;
+    reg [7:0] pi_data_reg = 8'hxx;
 
     always @(negedge pi_read)
         if (pi_addr == 16'he80e) pi_data_reg <= { 7'h0, gfx };
+        else if (crtc_data_out_enable) pi_data_reg <= crtc_data_out;
         else pi_data_reg <= bus_data;
     
     assign bus_rw_b = cpu_enable
