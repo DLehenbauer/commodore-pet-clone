@@ -15,6 +15,7 @@
 module timing(
     input clk,
 
+    output clk8,
     output phi2,
     input res_b,
 
@@ -35,6 +36,7 @@ module timing(
 
     bus bus(
         .clk16(clk),
+        .clk8(clk8),
         .pi_select(pi_select),
         .pi_strobe(pi_enable),
         .cpu_select(cpu_enable),
@@ -168,19 +170,19 @@ module main (
     assign P9_LED_D5 = !res_b;
     
     wire clk16;     // 16 MHz clock from PLL
-    wire clk25;     // 25 MHz clock from PLL
     
     pll pll(
         .inclk0(P17_50MHz),
-        .c0(clk16),
-        .c1(clk25)
+        .c0(clk16)
     );
     
+    wire clk8;
     wire io_read;
 
     // Timing
     timing timing(
         .clk(clk16),
+        .clk8(clk8),
         .res_b(cpu_res_b),
         .phi2(phi2),
         .bus_rw_b(bus_rw_b),
@@ -261,10 +263,14 @@ module main (
     wire pia1_enable = pia1_enable_before_kbd && !kbd_enable;
     wire io_enable = io_enable_before_kbd && !kbd_enable;
     
-    hvSync hvSync(
-        .clk16(clk16),
-        .hsync(hsync),
-        .vsync(vsync)
+    wire reset = !res_b;
+
+    video v(
+        .pixel_clk(clk8),
+        .reset(reset),
+        .video(video),
+        .h_sync(hsync),
+        .v_sync(vsync)
     );
     
     // Address Decoding
@@ -323,7 +329,4 @@ module main (
 
     // Audio
     assign audio = cb2 && diag;
-
-    // Video
-    assign video = 1'b0;
 endmodule

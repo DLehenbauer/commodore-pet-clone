@@ -11,8 +11,9 @@
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
 # Aliases
-set clk_16 { pll|altpll_component|pll|clk[0] }
+set clk_16     { pll|altpll_component|pll|clk[0] }
 
+set clk_8      [get_registers { timing:timing|bus:bus|count[0] }]
 set pi_select  [get_registers { timing:timing|bus:bus|state[0] }]
 set pi_strobe  [get_registers { timing:timing|bus:bus|state[1] }]
 set cpu_select [get_registers { timing:timing|bus:bus|state[2] }]
@@ -23,6 +24,11 @@ set pi_done [get_registers { timing:timing|sync:pi_sync|done }]
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
+create_generated_clock -name "clk_8" \
+    -source $clk_16 \
+    -divide_by 2 \
+    $clk_8
+
 create_generated_clock -name "pi_select" \
     -source $clk_16 \
     -edges {1 7 33} \

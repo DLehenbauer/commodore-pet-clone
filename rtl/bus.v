@@ -14,6 +14,7 @@
 
 module bus(
     input clk16,
+    output clk8,
     output pi_select,
     output pi_strobe,
     output cpu_select,
@@ -81,4 +82,6 @@ module bus(
     assign cpu_select = state[2];
     assign io_select  = state[3];
     assign cpu_strobe = state[4];
+
+    assign clk8 = count[0];
 endmodule
