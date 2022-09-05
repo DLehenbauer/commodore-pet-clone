@@ -17,6 +17,9 @@ module bus(
     output clk8,
     output pi_select,
     output pi_strobe,
+    output video_select,
+    output video_ram_strobe,
+    output video_rom_strobe,
     output cpu_select,
     output io_select,
     output cpu_strobe
@@ -29,6 +32,12 @@ module bus(
     //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
     //  pi_strobe   _____/‾‾‾\___________________________________________________________
     //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //  video_sel   _____________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\___________________
+    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //  video_ram   _________________/‾‾‾\_______________________________________________
+    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //  video_rom   _________________________/‾‾‾\_______________________________________
+    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
     // cpu_select   _________________________________________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\___
     //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
     //  io_select   _____________________________________________________/‾‾‾‾‾‾‾‾‾‾‾\___
@@ -40,15 +49,17 @@ module bus(
     //       edge # = count * 2 + 1
     //       { rise edge #, fall edge #, rise edge # + 32}
 
-    localparam [4:0] PI_SELECT  = 5'b00001,
-                     PI_STROBE  = 5'b00011,
-                     CPU_SELECT = 5'b00100,
-                     IO_SELECT  = 5'b01100,
-                     CPU_STROBE = 5'b11100;
+    localparam [7:0] PI_SELECT          = 8'b00000001,
+                     PI_STROBE          = 8'b00000011,
+                     VIDEO_SELECT       = 8'b00000100,
+                     VIDEO_RAM_STROBE   = 8'b00001100,
+                     VIDEO_ROM_STROBE   = 8'b00010100,
+                     CPU_SELECT         = 8'b00100000,
+                     IO_SELECT          = 8'b01100000,
+                     CPU_STROBE         = 8'b11100000;
 
     reg [3:0] count = 0;
-    reg [4:0] state = PI_SELECT, next = PI_SELECT;
-
+    reg [7:0] state = PI_SELECT, next = PI_SELECT;
     
     always @(posedge clk16) begin
         count <= count + 4'h1;
@@ -56,20 +67,20 @@ module bus(
     end
     
     always @(count) begin
-        next = 5'bxxxxx;
+        next = 8'bxxxxxxxx;
         case (count)
-            0: next = PI_SELECT;
-            1: next = PI_STROBE;
-            2: next = PI_SELECT;
-            3: next = 0;
-            4: next = 0;
-            5: next = 0;
-            6: next = 0;
-            7: next = 0;
-            8: next = 0;
-            9: next = 0;
-            10: next = 0;
-            11: next = 0;
+            0: next  = PI_SELECT;
+            1: next  = PI_STROBE;
+            2: next  = PI_SELECT;
+            3: next  = VIDEO_SELECT;
+            4: next  = VIDEO_RAM_STROBE;
+            5: next  = VIDEO_SELECT;
+            6: next  = VIDEO_ROM_STROBE;
+            7: next  = VIDEO_SELECT;
+            8: next  = VIDEO_SELECT;
+            9: next  = VIDEO_SELECT;
+            10: next = VIDEO_SELECT;
+            11: next = VIDEO_SELECT;
             12: next = CPU_SELECT;
             13: next = IO_SELECT;
             14: next = CPU_STROBE;
@@ -77,11 +88,14 @@ module bus(
         endcase
     end
 
-    assign pi_select  = state[0];
-    assign pi_strobe  = state[1];
-    assign cpu_select = state[2];
-    assign io_select  = state[3];
-    assign cpu_strobe = state[4];
+    assign pi_select        = state[0];
+    assign pi_strobe        = state[1];
+    assign video_select     = state[2];
+    assign video_ram_strobe = state[3];
+    assign video_rom_strobe = state[4];
+    assign cpu_select       = state[5];
+    assign io_select        = state[6];
+    assign cpu_strobe       = state[7];
 
     assign clk8 = count[0];
 endmodule

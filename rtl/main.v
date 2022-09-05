@@ -25,6 +25,9 @@ module timing(
     output cpu_write,
     output io_select,
     output io_read,
+    output video_select,
+    output video_ram_strobe,
+    output video_rom_strobe,
     input  pi_rw_b,
     output pi_select,
     output pi_read,
@@ -39,6 +42,9 @@ module timing(
         .clk8(clk8),
         .pi_select(pi_select),
         .pi_strobe(pi_enable),
+        .video_select(video_select),
+        .video_ram_strobe(video_ram_strobe),
+        .video_rom_strobe(video_rom_strobe),
         .cpu_select(cpu_enable),
         .io_select(io_select),
         .cpu_strobe(phi2)
@@ -178,6 +184,9 @@ module main (
     
     wire clk8;
     wire io_read;
+    wire video_select;
+    wire video_ram_strobe;
+    wire video_rom_strobe;
 
     // Timing
     timing timing(
@@ -191,6 +200,9 @@ module main (
         .cpu_write(cpu_write),
         .io_select(io_select),
         .io_read(io_read),
+        .video_select(video_select),
+        .video_ram_strobe(video_ram_strobe),
+        .video_rom_strobe(video_rom_strobe),
         .pi_rw_b(pi_rw_b),
         .pi_select(pi_select),
         .pi_read(pi_read),
@@ -264,11 +276,16 @@ module main (
     wire io_enable = io_enable_before_kbd && !kbd_enable;
     
     wire reset = !res_b;
+    wire [11:0] video_addr;
 
     video v(
         .pixel_clk(clk8),
         .reset(reset),
-        .video(video),
+        .addr_out(video_addr),
+        .data_in(bus_data),
+        .video_ram_strobe(video_ram_strobe),
+        .video_rom_strobe(video_rom_strobe),
+        .video_out(video),
         .h_sync(hsync),
         .v_sync(vsync)
     );
@@ -286,7 +303,7 @@ module main (
     assign io_oe_b    = !io_oe;
 
     wire ram_ce = ram_enable || !cpu_enable;
-    wire ram_oe =  pi_read || (cpu_read  && cpu_be);
+    wire ram_oe =  pi_read || video_select || (cpu_read  && cpu_be);
     wire ram_we = pi_write || (cpu_write && cpu_be && !is_readonly);
 
     assign ram_ce_b = !ram_ce;
@@ -306,15 +323,20 @@ module main (
     
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
-    assign ram_addr[11:10] = pi_select
-        ? pi_addr[11:10]        // Give RPi access to full RAM
-        : is_mirrored
-            ? 2'b00             // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
-            : bus_addr[11:10];
+    assign ram_addr[11:10] =
+        pi_select
+            ? pi_addr[11:10]            // Give RPi access to full RAM
+            : video_select
+                ? video_addr[11:10]
+                : is_mirrored
+                    ? 2'b00             // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
+                    : bus_addr[11:10];
     
     assign bus_addr = pi_select
-        ? {1'b0, pi_addr}       // RPi is reading/writing, and therefore driving addr
-        : {1'b0, 16'bZ};        // CPU is reading/writing, and therefore driving addr
+        ? {1'b0, pi_addr}           // RPi is reading/writing, and therefore driving addr
+        : video_select
+            ? { 5'b01000, video_addr }
+            : {1'b0, 16'bZ};        // CPU is reading/writing, and therefore driving addr
 
     assign pi_data = pi_rw_b
         ? pi_data_reg           // RPi is reading from register

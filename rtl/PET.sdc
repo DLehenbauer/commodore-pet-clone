@@ -11,14 +11,17 @@
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
 # Aliases
-set clk_16     { pll|altpll_component|pll|clk[0] }
+set clk_16           { pll|altpll_component|pll|clk[0] }
 
-set clk_8      [get_registers { timing:timing|bus:bus|count[0] }]
-set pi_select  [get_registers { timing:timing|bus:bus|state[0] }]
-set pi_strobe  [get_registers { timing:timing|bus:bus|state[1] }]
-set cpu_select [get_registers { timing:timing|bus:bus|state[2] }]
-set io_select  [get_registers { timing:timing|bus:bus|state[3] }]
-set cpu_strobe [get_registers { timing:timing|bus:bus|state[4] }]
+set clk_8            [get_registers { timing:timing|bus:bus|count[0] }]
+
+set pi_select        [get_registers { timing:timing|bus:bus|state[0] }]
+set pi_strobe        [get_registers { timing:timing|bus:bus|state[1] }]
+set video_ram_strobe [get_registers { timing:timing|bus:bus|state[3] }]
+set video_rom_strobe [get_registers { timing:timing|bus:bus|state[4] }]
+set cpu_select       [get_registers { timing:timing|bus:bus|state[5] }]
+set io_select        [get_registers { timing:timing|bus:bus|state[6] }]
+set cpu_strobe       [get_registers { timing:timing|bus:bus|state[7] }]
 
 set pi_done [get_registers { timing:timing|sync:pi_sync|done }]
 set phi2 [get_ports { phi2 }]
@@ -38,6 +41,16 @@ create_generated_clock -name "pi_strobe" \
     -source $clk_16 \
     -edges {3 5 35} \
     $pi_strobe
+
+create_generated_clock -name "video_ram_strobe" \
+    -source $clk_16 \
+    -edges {9 11 41} \
+    $video_ram_strobe
+
+create_generated_clock -name "video_rom_strobe" \
+    -source $clk_16 \
+    -edges {13 15 45} \
+    $video_rom_strobe
 
 create_generated_clock -name "cpu_select" \
     -source $clk_16 \

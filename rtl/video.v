@@ -9,6 +9,7 @@ module sync_gen(
     input [3:0] sync_width,
     input [4:0] adjust,             // fine adjustment in pixels
 
+    output wire clk_out,            // start of next character / line of text
     output wire active,
     output wire sync
 );
@@ -71,11 +72,109 @@ module sync_gen(
 
     assign active = state == ACTIVE;
     assign sync   = state == SYNC;
+    assign clk_out = pixel_counter == char_pixel_size;
+endmodule
+
+module dot_gen(
+    input reset,
+    input pixel_clk,                // Pixel clock (40 col = 8 MHz)
+    input char_clk,                 // Character clock (40 col = 1 MHz)
+    input h_sync,
+    input v_sync,
+    input line_clk,
+    input active,
+
+    output reg [11:0] addr_out = 0, // 2KB video ram ($000-7FF) or 2KB character rom ($800-FFF)
+    input       [7:0] data_in,
+    input             video_ram_strobe,
+    input             video_rom_strobe,
+
+    output video_out
+);
+    reg [10:0] video_row_addr;
+
+    always @(posedge line_clk or posedge v_sync or posedge reset) begin
+        if (reset) begin
+            video_row_addr <= 0;
+        end else if (v_sync) begin
+            video_row_addr <= 0;
+        end else begin
+            video_row_addr = video_row_addr + 11'd40;
+        end
+    end
+
+    reg [10:0] video_addr;
+    
+    always @(posedge char_clk or posedge h_sync or posedge reset) begin
+        if (reset) begin
+            video_addr <= 0;
+        end else if (h_sync) begin
+            video_addr <= video_row_addr;
+        end else begin
+            if (active) begin
+                video_addr <= video_addr + 1'b1;
+            end
+        end
+    end
+
+    reg [7:0] pixels_out;
+
+    always @(posedge pixel_clk or posedge reset) begin
+        if (reset) begin
+            pixels_out <= 8'h0;
+        end else begin
+            if (char_clk) begin
+                pixels_out <= next_pixels_out;
+            end else begin
+                pixels_out[7:0] <= { pixels_out[6:0], 1'b0 };
+            end
+        end
+    end
+    
+    
+    assign video_out = active & pixels_out[7];
+
+    reg [4:0] char_y_counter;
+
+    always @(posedge h_sync or posedge line_clk or posedge reset) begin
+        if (reset | line_clk) begin
+            char_y_counter <= 0;
+        end else begin
+            char_y_counter = char_y_counter + 1'b1;
+        end
+    end
+
+    reg [7:0] next_char_out;
+
+    always @(posedge video_ram_strobe or posedge video_rom_strobe or posedge reset) begin
+        if (reset) begin
+            addr_out <= 0;
+        end else if (video_ram_strobe) begin
+            addr_out <= { 1'b0, video_addr };
+        end else begin       
+            addr_out <= { 1'b1, next_char_out, char_y_counter[2:0] };
+        end
+    end
+
+    always @(negedge video_ram_strobe) begin
+        next_char_out <= data_in;
+    end
+
+    reg [7:0] next_pixels_out;
+
+    always @(negedge video_rom_strobe) begin
+        next_pixels_out <= data_in;
+    end
 endmodule
 
 module video_gen(
     input reset,
-    input pixel_clk,                // 16 MHz pixel clock
+    input pixel_clk,                // Pixel clock (40 col = 8 MHz)
+    
+    output [11:0] addr_out,
+    input  [7:0]  data_in,
+    input         video_ram_strobe,
+    input         video_rom_strobe,
 
     input [7:0] h_char_total,       // Total characters per scanline (-1).
     input [7:0] h_char_displayed,   // Displayed characters per row
@@ -93,8 +192,12 @@ module video_gen(
     output h_sync,
 
     output v_active,
-    output v_sync
+    output v_sync,
+
+    output video_out
 );
+    wire char_clk;                  // Character clock (40 col = 1 MHz)
+
     sync_gen h_sync_gen(
         .reset(reset),
         .clk(pixel_clk),
@@ -105,8 +208,11 @@ module video_gen(
         .sync_width(h_sync_width),
         .adjust(5'd0),
         .active(h_active),
-        .sync(h_sync)
+        .sync(h_sync),
+        .clk_out(char_clk)
     );
+
+    wire line_clk;
 
     sync_gen v_sync_gen(
         .reset(reset),
@@ -118,16 +224,38 @@ module video_gen(
         .sync_width(v_sync_width),
         .adjust(v_adjust),
         .active(v_active),
-        .sync(v_sync)
+        .sync(v_sync),
+        .clk_out(line_clk)
+    );
+
+    dot_gen dot_gen(
+        .reset(reset),
+        .pixel_clk(pixel_clk),
+        .char_clk(char_clk),
+        .h_sync(h_sync),
+        .v_sync(v_sync),
+        .line_clk(line_clk),
+        .addr_out(addr_out),
+        .data_in(data_in),
+        .video_ram_strobe(video_ram_strobe),
+        .video_rom_strobe(video_rom_strobe),
+        .active(h_active & v_active),
+        .video_out(video_out)
     );
 endmodule
 
 module video(
-    input       reset,
-    input       pixel_clk,
-    output      video,
-    output      h_sync,
-    output      v_sync
+    input         reset,
+    input         pixel_clk,
+    
+    output [11:0] addr_out,
+    input  [7:0]  data_in,
+    input         video_ram_strobe,
+    input         video_rom_strobe,
+    
+    output        video_out,
+    output        h_sync,
+    output        v_sync
 );
     localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-displayed characters, minus one, per horizontal line.
                                             //       The frequency of HSYNC is thus determined by this register.
@@ -187,6 +315,11 @@ module video(
     video_gen vg(
         .reset(reset),
         .pixel_clk(pixel_clk),
+        
+        .addr_out(addr_out),
+        .data_in(data_in),
+        .video_ram_strobe(video_ram_strobe),
+        .video_rom_strobe(video_rom_strobe),
 
         .h_char_total(r[R0_H_TOTAL]),
         .h_char_displayed(r[R1_H_DISPLAYED]),
@@ -204,8 +337,8 @@ module video(
         .h_active(h_active),
         
         .v_sync(v_sync),
-        .v_active(v_active)
+        .v_active(v_active),
+        
+        .video_out(video_out)
     );
-    
-    assign video = h_active & v_active;
 endmodule

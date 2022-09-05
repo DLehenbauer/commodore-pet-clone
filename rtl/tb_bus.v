@@ -15,28 +15,35 @@
  */
 
 module tb();
-    reg clk = 0;
+    reg clk16 = 0;
+
+    initial begin
+        clk16 = 0;
+        forever begin
+            #31.25 clk16 = ~clk16;
+        end
+    end
+
     wire pi_select;
     wire pi_strobe;
+    wire video_select;
+    wire video_ram_strobe;
+    wire video_rom_strobe;
     wire cpu_select;
     wire io_select;
     wire cpu_strobe;
 
     bus bus(
-        .clk16(clk),
+        .clk16(clk16),
         .pi_select(pi_select),
         .pi_strobe(pi_strobe),
+        .video_select(video_select),
+        .video_ram_strobe(video_ram_strobe),
+        .video_rom_strobe(video_rom_strobe),
         .cpu_select(cpu_select),
         .io_select(io_select),
         .cpu_strobe(cpu_strobe)
     );
-
-    initial begin
-        clk = 0;
-        forever begin
-            #10 clk = ~clk;
-        end
-    end
 
     initial begin
         $dumpfile("out.vcd");
