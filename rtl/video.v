@@ -39,7 +39,7 @@ module sync_gen(
         end else if (char_counter == char_total)  begin
             adjust_counter <= adjust;
         end else if (adjust_counter != 0) begin
-            adjust_counter <= adjust_counter - 1;
+            adjust_counter <= adjust_counter - 1'b1;
         end
     end
 
@@ -162,11 +162,11 @@ module video(
     always @(posedge reset) begin
         // These non-standard CRTC values produce ~NTSC video.
 
-        r[R0_H_TOTAL]           = 8'd64;
+        r[R0_H_TOTAL]           = 8'd63;
         r[R1_H_DISPLAYED]       = 8'd40;
-        r[R2_H_SYNC_POS]        = 8'd50;
-        r[R3_SYNC_WIDTH]        = 8'h03;
-        r[R4_V_TOTAL]           = 7'd31;
+        r[R2_H_SYNC_POS]        = 8'd48;
+        r[R3_SYNC_WIDTH]        = 8'h15;
+        r[R4_V_TOTAL]           = 7'd32;
         r[R5_V_TOTAL_ADJUST]    = 5'd00;
         r[R6_V_DISPLAYED]       = 7'd25;
         r[R7_V_SYNC_POS]        = 7'd28;

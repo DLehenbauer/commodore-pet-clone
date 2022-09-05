@@ -52,7 +52,7 @@ module crtc(
     reg [7:0] r [16:0];
 
     wire pi_crtc_select = 16'he8f0 <= pi_addr && pi_addr <= 16'he8ff;
-    wire [3:0] pi_crtc_reg = pi_addr[3:0];
+    wire [4:0] pi_crtc_reg = { 1'b0, pi_addr[3:0] };
 
     always @(posedge pi_read) begin
         if (pi_crtc_select) begin
