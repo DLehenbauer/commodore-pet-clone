@@ -2,19 +2,19 @@ module sync_gen(
     input wire reset,
     input wire clk,
 
-    input [4:0] char_pixel_size,    // width/height of a character in pixels (-1)
-    input [7:0] char_total,         // total characters per scanline/frame (-1)
-    input [7:0] char_displayed,     // number characters displayed per row/col
-    input [7:0] sync_pos,
-    input [3:0] sync_width,
-    input [4:0] adjust,             // fine adjustment in pixels
+    input [4:0] char_pixel_size,    // Width/height of one character in pixels (-1)
+    input [7:0] char_total,         // Total characters per scanline/frame (-1)
+    input [7:0] char_displayed,     // Number characters displayed per row/col
+    input [7:0] sync_pos,           // Character offset at which sync pulse begins
+    input [3:0] sync_width,         // Width of sync pulse in characters
+    input [4:0] adjust,             // Fine adjustment in pixels
 
-    output wire clk_out,            // start of next character / line of text
-    output wire active,
-    output wire sync
+    output wire next,               // Start of next row/col
+    output wire active,             // Within the visible pertion of the display
+    output wire sync                // Produced sync pulse
 );
-    reg [4:0] pixel_counter;
-    reg [7:0] char_counter;
+    reg [4:0] pixel_counter;        // X/Y pixel position within current character
+    reg [7:0] char_counter;         // Current character (row/col)
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
@@ -44,11 +44,11 @@ module sync_gen(
         end
     end
 
-    localparam ACTIVE = 0,
-               FRONT  = 1,
-               SYNC   = 2,
-               BACK   = 3,
-               ADJUST = 4;
+    localparam ACTIVE = 0,          // Within visible portion of display
+               FRONT  = 1,          // Blank prior to sync pulse
+               SYNC   = 2,          // Sync pulse high
+               BACK   = 3,          // Blank following sync pulse
+               ADJUST = 4;          // Fine adjustment
 
     reg [2:0] state;
 
@@ -72,7 +72,7 @@ module sync_gen(
 
     assign active = state == ACTIVE;
     assign sync   = state == SYNC;
-    assign clk_out = pixel_counter == char_pixel_size;
+    assign next = pixel_counter == char_pixel_size;
 endmodule
 
 module dot_gen(
@@ -209,7 +209,7 @@ module video_gen(
         .adjust(5'd0),
         .active(h_active),
         .sync(h_sync),
-        .clk_out(char_clk)
+        .next(char_clk)
     );
 
     wire line_clk;
@@ -225,7 +225,7 @@ module video_gen(
         .adjust(v_adjust),
         .active(v_active),
         .sync(v_sync),
-        .clk_out(line_clk)
+        .next(line_clk)
     );
 
     dot_gen dot_gen(
