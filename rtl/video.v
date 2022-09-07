@@ -75,30 +75,30 @@ module dot_gen(
 
     output video_out
 );
-    reg [10:0] video_row_addr;
+    reg [10:0] row_addr;
 
     wire next_line = line_clk & active;
 
     always @(posedge next_line or posedge v_sync or posedge reset) begin
         if (reset) begin
-            video_row_addr <= 0;
+            row_addr <= 0;
         end else if (v_sync) begin
-            video_row_addr <= 0;
+            row_addr <= 0;
         end else begin
-            video_row_addr <= video_row_addr + 11'd40;
+            row_addr <= row_addr + 11'd40;
         end
     end
 
-    reg [10:0] video_addr;
+    reg [10:0] char_addr;
     
     always @(posedge char_clk or posedge h_sync or posedge reset) begin
         if (reset) begin
-            video_addr <= 0;
+            char_addr <= 0;
         end else if (h_sync) begin
-            video_addr <= video_row_addr;
+            char_addr <= row_addr;
         end else begin
             if (active) begin
-                video_addr <= video_addr + 1'b1;
+                char_addr <= char_addr + 1'b1;
             end
         end
     end
@@ -137,7 +137,7 @@ module dot_gen(
         if (reset) begin
             addr_out <= 0;
         end else if (video_ram_strobe) begin
-            addr_out <= { 1'b0, video_addr };
+            addr_out <= { 1'b0, char_addr };
         end else begin       
             addr_out <= { 2'b10, next_char_out[6:0], char_y_counter[2:0] };
         end
