@@ -93,18 +93,6 @@ module dot_gen(
 
     reg [10:0] char_addr;
     
-    always @(posedge char_clk or posedge h_sync or posedge reset) begin
-        if (reset) begin
-            char_addr <= 0;
-        end else if (h_sync) begin
-            char_addr <= row_addr;
-        end else begin
-            if (active) begin
-                char_addr <= char_addr + 1'b1;
-            end
-        end
-    end
-
     reg [7:0] pixels_out;
     reg reverse_video;
 
@@ -135,11 +123,17 @@ module dot_gen(
 
     reg [7:0] next_char_out;
 
+    wire next_char_addr = active
+        ? char_addr + 1'b1
+        : row_addr;
+
     always @(posedge video_ram_strobe or posedge video_rom_strobe or posedge reset) begin
         if (reset) begin
+            char_addr <= 0;
             addr_out <= 0;
         end else if (video_ram_strobe) begin
-            addr_out <= { 1'b0, char_addr };
+            addr_out <= { 1'b0, next_char_addr };
+            char_addr <= next_char_addr;
         end else begin       
             addr_out <= { 2'b10, next_char_out[6:0], char_y_counter[2:0] };
         end
@@ -183,10 +177,9 @@ module video_gen(
     output v_active,
     output v_sync,
 
-    output video_out
+    output video_out,
+    output char_clk                 // Character clock (40 col = 1 MHz)
 );
-    wire char_clk;                  // Character clock (40 col = 1 MHz)
-
     sync_gen h_sync_gen(
         .reset(reset),
         .clk(pixel_clk),

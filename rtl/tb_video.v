@@ -58,17 +58,19 @@ module tb();
     
     wire v_sync;
     wire v_active;
+
+    wire char_clk;
     
     reg reset = 0;
 
-    wire [11:0] video_addr;
+    wire [11:0] addr_out;
     reg [7:0] data_in = 8'h01;
     
     video_gen vg(
         .reset(reset),
         .pixel_clk(pixel_clk),
 
-        .addr_out(video_addr),
+        .addr_out(addr_out),
         .data_in(8'h01),
         .video_ram_strobe(video_ram_strobe),
         .video_rom_strobe(video_rom_strobe),
@@ -89,10 +91,25 @@ module tb();
         .h_active(h_active),
         
         .v_sync(v_sync),
-        .v_active(v_active)
+        .v_active(v_active),
+
+        .char_clk(char_clk)
     );
 
-    wire [16:0] full_video_addr = { 5'b01000, video_addr };
+    wire active = h_active & v_active;
+    reg [11:0] last_ram_addr_read;
+    reg [11:0] last_rom_addr_read;
+
+    always @(negedge video_ram_strobe)
+        last_ram_addr_read <= addr_out;
+
+    always @(negedge video_rom_strobe)
+        last_rom_addr_read <= addr_out;
+
+    task skip_to_next_frame();
+        @(posedge v_sync);
+        @(posedge active);
+    endtask
 
     initial begin
         $dumpfile("out.vcd");
@@ -101,9 +118,15 @@ module tb();
         #1 reset = 1'b1;
         #1 reset = 1'b0;
 
-        #1000000;
+        skip_to_next_frame();
 
-        $display("[%t] Test Complete", $time);
+        @(posedge video_ram_strobe);
+        assert_equal(last_ram_addr_read, 11'h000, "last_ram_addr_read");
+
+        @(posedge char_clk);
+        assert_equal(last_ram_addr_read, 11'h001, "last_ram_addr_read");
+
+        #10 $display("[%t] Test Complete", $time);
         $finish;
     end
 endmodule
