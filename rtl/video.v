@@ -16,63 +16,47 @@ module sync_gen(
     reg [4:0] pixel_counter;        // X/Y pixel position within current character
     reg [7:0] char_counter;         // Current character (row/col)
 
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
-            pixel_counter <= 0;
-            char_counter <= 0;
-        end else if (pixel_counter == char_pixel_size) begin
-            pixel_counter <= 0;
-            if (char_counter == char_total) begin
-                char_counter <= 0;
-            end else begin
-                char_counter <= char_counter + 1'b1;
-            end
-        end else if (pixel_counter != 0 || adjust_counter == 0) begin
-            pixel_counter <= pixel_counter + 1'b1;
-        end
-    end
-
-    reg [4:0] adjust_counter;
-
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
-            adjust_counter <= 0;
-        end else if (char_counter == char_total)  begin
-            adjust_counter <= adjust;
-        end else if (adjust_counter != 0) begin
-            adjust_counter <= adjust_counter - 1'b1;
-        end
-    end
-
     localparam ACTIVE = 0,          // Within visible portion of display
                FRONT  = 1,          // Blank prior to sync pulse
                SYNC   = 2,          // Sync pulse high
                BACK   = 3,          // Blank following sync pulse
                ADJUST = 4;          // Fine adjustment
 
-    reg [2:0] state;
+    reg [2:0] state, next_state;
+
+    // Indicates we've reached the end of the current character / text line
+    assign next = pixel_counter == char_pixel_size;
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            state = ACTIVE;
-        end else if (char_counter == char_displayed) begin
-            state = FRONT;
-        end else if (char_counter == sync_pos) begin
-            state = SYNC;
-        end else if (char_counter == sync_pos + sync_width) begin
-            state = BACK;
-        end else if (char_counter == 0) begin
-            if (adjust_counter == 0) begin
-                state = ACTIVE;
+            pixel_counter <= 0;
+            char_counter <= 0;
+            state <= ACTIVE;
+        end else if (next) begin
+            pixel_counter <= 0;
+            if (char_counter == char_total) begin
+                char_counter <= 0;
+                state <= ACTIVE;
             end else begin
-                state = ADJUST;
+                char_counter <= next_char;
+                state <= next_state;
             end
+        end else begin
+            pixel_counter <= pixel_counter + 1'b1;
         end
+    end
+
+    wire [7:0] next_char = char_counter + 1'b1;
+
+    always @(*) begin
+        if (next_char == sync_pos + sync_width) next_state = BACK;
+        else if (next_char == sync_pos) next_state = SYNC;
+        else if (next_char == char_displayed) next_state = FRONT;
+        else next_state = state;
     end
 
     assign active = state == ACTIVE;
     assign sync   = state == SYNC;
-    assign next = pixel_counter == char_pixel_size;
 endmodule
 
 module dot_gen(
@@ -99,7 +83,7 @@ module dot_gen(
         end else if (v_sync) begin
             video_row_addr <= 0;
         end else begin
-            video_row_addr = video_row_addr + 11'd40;
+            video_row_addr <= video_row_addr + 11'd40;
         end
     end
 

@@ -69,13 +69,13 @@ module tb();
         .pixel_clk(pixel_clk),
 
         .addr_out(video_addr),
-        .data_in(video_addr[7:0]),
+        .data_in(8'h01),
         .video_ram_strobe(video_ram_strobe),
         .video_rom_strobe(video_rom_strobe),
 
-        .h_char_total(8'd10),
-        .h_char_displayed(8'd6),
-        .h_sync_pos(8'd7),
+        .h_char_total(8'd7),
+        .h_char_displayed(8'd3),
+        .h_sync_pos(8'd4),
         .h_sync_width(4'd2),
 
         .v_char_height(5'd7),
