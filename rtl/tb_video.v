@@ -66,6 +66,22 @@ module tb();
     wire [11:0] addr_out;
     reg [7:0] data_in = 8'h01;
     
+    reg [7:0] h_char_displayed = 8'd1;
+    reg [7:0] h_front_porch    = 8'd1;
+    reg [3:0] h_sync_width     = 4'd1;
+    reg [7:0] h_back_porch     = 8'd1;
+
+    wire [7:0] h_sync_pos   = h_char_displayed + h_front_porch;
+    wire [7:0] h_char_total = h_sync_pos + h_sync_width + h_back_porch - 1'b1;
+
+    reg [6:0] v_char_displayed = 8'd1;
+    reg [6:0] v_front_porch    = 8'd1;
+    reg [3:0] v_sync_width     = 4'd1;
+    reg [6:0] v_back_porch     = 8'd1;
+
+    wire [6:0] v_sync_pos   = v_char_displayed + v_front_porch;
+    wire [6:0] v_char_total = v_sync_pos + v_sync_width + v_back_porch - 1'b1;
+
     video_gen vg(
         .reset(reset),
         .pixel_clk(pixel_clk),
@@ -75,16 +91,16 @@ module tb();
         .video_ram_strobe(video_ram_strobe),
         .video_rom_strobe(video_rom_strobe),
 
-        .h_char_total(8'd7),
-        .h_char_displayed(8'd3),
-        .h_sync_pos(8'd4),
-        .h_sync_width(4'd2),
+        .h_char_total(h_char_total),
+        .h_char_displayed(h_char_displayed),
+        .h_sync_pos(h_sync_pos),
+        .h_sync_width(h_sync_width),
 
         .v_char_height(5'd7),
-        .v_char_total(7'd6),
-        .v_char_displayed(7'd2),
-        .v_sync_pos(7'd3),
-        .v_sync_width(4'd1),
+        .v_char_total(v_char_total),
+        .v_char_displayed(v_char_displayed),
+        .v_sync_pos(v_sync_pos),
+        .v_sync_width(v_sync_width),
         .v_adjust(5'd4),
 
         .h_sync(h_sync),
@@ -112,19 +128,15 @@ module tb();
     endtask
 
     initial begin
-        $dumpfile("out.vcd");
-        $dumpvars;
-
         #1 reset = 1'b1;
         #1 reset = 1'b0;
 
         skip_to_next_frame();
 
-        @(posedge video_ram_strobe);
-        assert_equal(last_ram_addr_read, 11'h000, "last_ram_addr_read");
+        $dumpfile("out.vcd");
+        $dumpvars;
 
-        @(posedge char_clk);
-        assert_equal(last_ram_addr_read, 11'h001, "last_ram_addr_read");
+        skip_to_next_frame();
 
         #10 $display("[%t] Test Complete", $time);
         $finish;

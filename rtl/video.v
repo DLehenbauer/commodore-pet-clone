@@ -123,7 +123,7 @@ module dot_gen(
 
     reg [7:0] next_char_out;
 
-    wire next_char_addr = active
+    wire [10:0] next_char_addr = active
         ? char_addr + 1'b1
         : row_addr;
 
