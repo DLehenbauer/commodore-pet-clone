@@ -77,7 +77,9 @@ module dot_gen(
 );
     reg [10:0] video_row_addr;
 
-    always @(posedge line_clk or posedge v_sync or posedge reset) begin
+    wire next_line = line_clk & active;
+
+    always @(posedge next_line or posedge v_sync or posedge reset) begin
         if (reset) begin
             video_row_addr <= 0;
         end else if (v_sync) begin
@@ -113,8 +115,7 @@ module dot_gen(
                 pixels_out[7:0] <= { pixels_out[6:0], 1'b0 };
             end
         end
-    end
-    
+    end    
     
     assign video_out = active & pixels_out[7];
 
