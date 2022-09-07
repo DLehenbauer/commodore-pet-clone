@@ -104,6 +104,7 @@ module dot_gen(
     end
 
     reg [7:0] pixels_out;
+    reg reverse_video;
 
     always @(posedge pixel_clk or posedge reset) begin
         if (reset) begin
@@ -111,13 +112,14 @@ module dot_gen(
         end else begin
             if (char_clk) begin
                 pixels_out <= next_pixels_out;
+                reverse_video <= next_char_out[7];
             end else begin
                 pixels_out[7:0] <= { pixels_out[6:0], 1'b0 };
             end
         end
     end    
     
-    assign video_out = active & pixels_out[7];
+    assign video_out = (pixels_out[7] ^ reverse_video) & active;
 
     reg [4:0] char_y_counter;
 
@@ -137,7 +139,7 @@ module dot_gen(
         end else if (video_ram_strobe) begin
             addr_out <= { 1'b0, video_addr };
         end else begin       
-            addr_out <= { 1'b1, next_char_out, char_y_counter[2:0] };
+            addr_out <= { 2'b10, next_char_out[6:0], char_y_counter[2:0] };
         end
     end
 
