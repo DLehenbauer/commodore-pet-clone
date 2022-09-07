@@ -63,10 +63,11 @@ module dot_gen(
     input reset,
     input pixel_clk,                // Pixel clock (40 col = 8 MHz)
     input char_clk,                 // Character clock (40 col = 1 MHz)
+    input h_active,
     input h_sync,
+    input v_active,
     input v_sync,
     input line_clk,
-    input active,
 
     output reg [11:0] addr_out = 0, // 2KB video ram ($000-7FF) or 2KB character rom ($800-FFF)
     input       [7:0] data_in,
@@ -77,6 +78,7 @@ module dot_gen(
 );
     reg [10:0] row_addr;
 
+    wire active = h_active & v_active;
     wire next_line = line_clk & active;
 
     always @(posedge next_line or posedge v_sync or posedge reset) begin
@@ -220,13 +222,14 @@ module video_gen(
         .pixel_clk(pixel_clk),
         .char_clk(char_clk),
         .h_sync(h_sync),
+        .h_active(h_active),
         .v_sync(v_sync),
+        .v_active(v_active),
         .line_clk(line_clk),
         .addr_out(addr_out),
         .data_in(data_in),
         .video_ram_strobe(video_ram_strobe),
         .video_rom_strobe(video_rom_strobe),
-        .active(h_active & v_active),
         .video_out(video_out)
     );
 endmodule
