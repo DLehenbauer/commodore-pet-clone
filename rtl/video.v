@@ -9,7 +9,8 @@ module sync_gen(
     input [3:0] sync_width,         // Width of sync pulse in characters
     input [4:0] adjust,             // Fine adjustment in pixels
 
-    output wire next,               // Start of next row/col
+    output wire first,              // First pixel/scanline of row/col
+    output wire last,               // Last pixel/scanline of row/col
     output wire active,             // Within the visible pertion of the display
     output wire sync                // Produced sync pulse
 );
@@ -24,15 +25,15 @@ module sync_gen(
 
     reg [2:0] state, next_state;
 
-    // Indicates we've reached the end of the current character / text line
-    assign next = pixel_counter == char_pixel_size;
+    assign first = pixel_counter == 0;
+    assign last = pixel_counter == char_pixel_size;
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             pixel_counter <= 0;
             char_counter <= 0;
             state <= ACTIVE;
-        end else if (next) begin
+        end else if (last) begin
             pixel_counter <= 0;
             if (char_counter == char_total) begin
                 char_counter <= 0;
@@ -62,12 +63,14 @@ endmodule
 module dot_gen(
     input reset,
     input pixel_clk,                // Pixel clock (40 col = 8 MHz)
-    input char_clk,                 // Character clock (40 col = 1 MHz)
+    input col_start,
+    input col_end,                 // Character clock (40 col = 1 MHz)
     input h_active,
     input h_sync,
     input v_active,
     input v_sync,
-    input line_clk,
+    input row_start,
+    input row_end,
 
     output reg [11:0] addr_out = 0, // 2KB video ram ($000-7FF) or 2KB character rom ($800-FFF)
     input       [7:0] data_in,
@@ -79,7 +82,7 @@ module dot_gen(
     reg [10:0] row_addr;
 
     wire active = h_active & v_active;
-    wire next_line = line_clk & active;
+    wire next_line = row_end & active;
 
     always @(posedge next_line or posedge v_sync or posedge reset) begin
         if (reset) begin
@@ -100,7 +103,7 @@ module dot_gen(
         if (reset) begin
             pixels_out <= 8'h0;
         end else begin
-            if (char_clk) begin
+            if (col_end) begin
                 pixels_out <= next_pixels_out;
                 reverse_video <= next_char_out[7];
             end else begin
@@ -113,8 +116,10 @@ module dot_gen(
 
     reg [4:0] char_y_counter;
 
-    always @(posedge h_sync or posedge line_clk or posedge reset) begin
-        if (reset | line_clk) begin
+    wire next_row = row_end & h_active;
+
+    always @(posedge h_sync or posedge next_row or posedge reset) begin
+        if (reset | row_end) begin
             char_y_counter <= 0;
         end else begin
             char_y_counter = char_y_counter + 1'b1;
@@ -177,9 +182,11 @@ module video_gen(
     output v_active,
     output v_sync,
 
-    output video_out,
-    output char_clk                 // Character clock (40 col = 1 MHz)
+    output video_out
 );
+    wire col_start;
+    wire col_end;
+
     sync_gen h_sync_gen(
         .reset(reset),
         .clk(pixel_clk),
@@ -191,10 +198,12 @@ module video_gen(
         .adjust(5'd0),
         .active(h_active),
         .sync(h_sync),
-        .next(char_clk)
+        .first(col_start),
+        .last(col_end)
     );
 
-    wire line_clk;
+    wire row_start;
+    wire row_end;
 
     sync_gen v_sync_gen(
         .reset(reset),
@@ -207,18 +216,21 @@ module video_gen(
         .adjust(v_adjust),
         .active(v_active),
         .sync(v_sync),
-        .next(line_clk)
+        .first(row_start),
+        .last(row_end)
     );
 
     dot_gen dot_gen(
         .reset(reset),
         .pixel_clk(pixel_clk),
-        .char_clk(char_clk),
+        .col_start(col_start),
+        .col_end(col_end),
         .h_sync(h_sync),
         .h_active(h_active),
         .v_sync(v_sync),
         .v_active(v_active),
-        .line_clk(line_clk),
+        .row_start(row_start),
+        .row_end(row_end),
         .addr_out(addr_out),
         .data_in(data_in),
         .video_ram_strobe(video_ram_strobe),

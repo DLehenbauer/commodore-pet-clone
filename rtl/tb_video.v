@@ -67,17 +67,17 @@ module tb();
     reg [7:0] data_in = 8'h01;
     
     reg [7:0] h_char_displayed = 8'd1;
-    reg [7:0] h_front_porch    = 8'd1;
+    reg [7:0] h_front_porch    = 8'd0;
     reg [3:0] h_sync_width     = 4'd1;
-    reg [7:0] h_back_porch     = 8'd1;
+    reg [7:0] h_back_porch     = 8'd0;
 
     wire [7:0] h_sync_pos   = h_char_displayed + h_front_porch;
     wire [7:0] h_char_total = h_sync_pos + h_sync_width + h_back_porch - 1'b1;
 
-    reg [6:0] v_char_displayed = 8'd1;
-    reg [6:0] v_front_porch    = 8'd1;
+    reg [6:0] v_char_displayed = 7'd1;
+    reg [6:0] v_front_porch    = 7'd0;
     reg [3:0] v_sync_width     = 4'd1;
-    reg [6:0] v_back_porch     = 8'd1;
+    reg [6:0] v_back_porch     = 7'd0;
 
     wire [6:0] v_sync_pos   = v_char_displayed + v_front_porch;
     wire [6:0] v_char_total = v_sync_pos + v_sync_width + v_back_porch - 1'b1;
@@ -107,9 +107,7 @@ module tb();
         .h_active(h_active),
         
         .v_sync(v_sync),
-        .v_active(v_active),
-
-        .char_clk(char_clk)
+        .v_active(v_active)
     );
 
     wire active = h_active & v_active;
