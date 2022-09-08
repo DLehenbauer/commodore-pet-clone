@@ -64,7 +64,7 @@ module dot_gen(
     input reset,
     input pixel_clk,                // Pixel clock (40 col = 8 MHz)
     input col_start,
-    input col_end,                 // Character clock (40 col = 1 MHz)
+    input col_end,                  // Character clock (40 col = 1 MHz)
     input h_active,
     input h_sync,
     input v_active,
@@ -119,7 +119,9 @@ module dot_gen(
     wire next_row = row_end & h_active;
 
     always @(posedge h_sync or posedge next_row or posedge reset) begin
-        if (reset | row_end) begin
+        if (reset) begin
+            char_y_counter <= 0;
+        end else if (next_row) begin
             char_y_counter <= 0;
         end else begin
             char_y_counter = char_y_counter + 1'b1;
