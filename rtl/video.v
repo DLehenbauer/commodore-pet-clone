@@ -72,7 +72,7 @@ module dot_gen(
     input row_start,
     input row_end,
 
-    output reg [11:0] addr_out = 0, // 2KB video ram ($000-7FF) or 2KB character rom ($800-FFF)
+    output     [11:0] addr_out,     // 2KB video ram ($000-7FF) or 2KB character rom ($800-FFF)
     input       [7:0] data_in,
     input             video_ram_strobe,
     input             video_rom_strobe,
@@ -116,35 +116,39 @@ module dot_gen(
 
     reg [4:0] char_y_counter;
 
-    wire next_row = row_end & h_active;
+    reg prev_row_end;
+    reg next_row;
 
-    always @(posedge h_sync or posedge next_row or posedge reset) begin
+    always @(posedge pixel_clk) begin
+        prev_row_end <= row_end & h_active;
+        next_row <= prev_row_end & !(row_end & h_active);
+    end
+
+    always @(negedge h_active or posedge next_row or posedge reset) begin
         if (reset) begin
             char_y_counter <= 0;
         end else if (next_row) begin
             char_y_counter <= 0;
         end else begin
-            char_y_counter = char_y_counter + 1'b1;
+            char_y_counter <= char_y_counter + 1'b1;
         end
     end
 
     reg [7:0] next_char_out;
 
-    wire [10:0] next_char_addr = active
-        ? char_addr + 1'b1
-        : row_addr;
-
-    always @(posedge video_ram_strobe or posedge video_rom_strobe or posedge reset) begin
+    always @(posedge video_ram_strobe or posedge reset) begin
         if (reset) begin
             char_addr <= 0;
-            addr_out <= 0;
         end else if (video_ram_strobe) begin
-            addr_out <= { 1'b0, next_char_addr };
-            char_addr <= next_char_addr;
-        end else begin       
-            addr_out <= { 2'b10, next_char_out[6:0], char_y_counter[2:0] };
+            char_addr <= active
+                ? char_addr + 1'b1
+                : row_addr;
         end
     end
+
+    assign addr_out = video_rom_strobe
+        ? { 2'b10, next_char_out[6:0], char_y_counter[2:0] }
+        : { 1'b0, char_addr };
 
     always @(negedge video_ram_strobe) begin
         next_char_out <= data_in;
