@@ -12,31 +12,6 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-// Simple H/V sync generator @60 Hz.
-module hvSync(
-    input clk16,
-    output hsync,
-    output vsync
-);
-    reg [18:0] count = 0;
-    
-    // Bits 9:0 divide 16 MHz 'clk' by 1024 to get the HSync frequency of ~15.6 KHz
-    assign hsync = count[9];
-
-    // Bits 18:10 count horizontal scan lines.  Bit 18 is high only momentarily before
-    // we reach line 260 and reset the counter.  Therefore we use bit 17 to get a 60 Hz
-    // VSync with a duty cycle of ~49.2%.
-    
-    localparam VBLANK = (19'd260 << 10);
-    
-    assign vsync = count[17];
-    
-    always @(posedge clk16) begin
-        if (count != (VBLANK - 1)) count <= count + 19'd1;
-        else count <= 0;
-    end
-endmodule
-
 module crtc(
     input res_b,
 
@@ -79,11 +54,13 @@ module crtc(
             r[14] = 8'h00;
             r[15] = 8'h00;
             r[16] = 8'h00;
-        end else if (crtc_select) begin
-            // 'crtc_select' is high when the bus address is in the $E8xx range.  Even addresses
-            // map to CRTC register 0 and odd addresses are CRTC register 1.
-            if (bus_addr[0] == 0) crtc_address_register <= bus_data_in[4:0];
-            else r[crtc_address_register] <= bus_data_in;
+        end else begin
+            if (crtc_select) begin
+                // 'crtc_select' is high when the bus address is in the $E8xx range.  Even addresses
+                // map to CRTC register 0 and odd addresses are CRTC register 1.
+                if (bus_addr[0] == 0) crtc_address_register <= bus_data_in[4:0];
+                else r[crtc_address_register] <= bus_data_in;
+            end
         end
     end
 

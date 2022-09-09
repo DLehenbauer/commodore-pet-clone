@@ -45,6 +45,7 @@ module tb();
         .crtc_select(crtc_enable),
         .bus_addr(bus_addr),
         .bus_data_in(bus_data_in),
+        .cpu_write(cpu_write),
 
         .pi_addr(pi_addr),
         .pi_data_in(pi_data),
@@ -105,7 +106,7 @@ module tb();
         #1 reset = 1;
         #1 reset = 0;
 
-        for (r = 0; r <= 17; r++) begin
+        for (r = 0; r <= 15; r++) begin
             #1 $display("[%t] Test: CPU select R%d", $time, r);
             cpu_select(/* r: */ r);
 
@@ -118,8 +119,14 @@ module tb();
             pi_load(r, value);
         end
 
-        for (r = 0; r <= 17; r++) begin
-            value = $random;
+        for (r = 16; r <= 17; r++) begin
+            #1 $display("[%t] Test: CPU select R%d", $time, r);
+            cpu_select(/* r: */ r);
+
+            value = 8'h80 | r;
+
+            #1 $display("[%t] Test: CPU store R%d = $%x", $time, r, value);
+            cpu_store(/* value: */ value);
         end
 
         $display("[%t] Test Complete", $time);
