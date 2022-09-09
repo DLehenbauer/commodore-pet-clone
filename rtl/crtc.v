@@ -37,7 +37,6 @@ module hvSync(
     end
 endmodule
 
- 
 module crtc(
     input res_b,
     input     [15:0] pi_addr,       // A0..A4 select CRTC registers R0..R17
