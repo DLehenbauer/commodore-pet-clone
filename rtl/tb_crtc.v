@@ -45,7 +45,6 @@ module tb();
         .crtc_select(crtc_enable),
         .bus_addr(bus_addr),
         .bus_data_in(bus_data_in),
-        .write_strobe(cpu_write),
 
         .pi_addr(pi_addr),
         .pi_data_in(pi_data),
@@ -80,6 +79,22 @@ module tb();
         assert_equal(crtc_r, value, "crtc_r");
     endtask
 
+    task pi_load(
+        input [4:0] r,
+        input [7:0] expected_value
+    );
+        pi_addr = 16'he8f0 | r;
+
+        #1 pi_read = 1'b1;
+        assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
+
+        #1 pi_read = 0;
+        assert_equal(crtc_data_out, expected_value, "crtc_data_out");
+        assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
+
+        #1 pi_addr = 16'h0;
+    endtask
+
     integer r;
     reg [7:0] value;
 
@@ -93,13 +108,18 @@ module tb();
         for (r = 0; r <= 17; r++) begin
             #1 $display("[%t] Test: CPU select R%d", $time, r);
             cpu_select(/* r: */ r);
+
+            value = 8'h80 | r;
+
+            #1 $display("[%t] Test: CPU store R%d = $%x", $time, r, value);
+            cpu_store(/* value: */ value);
+
+            #1 $display("[%t] Test: Pi load R%d == $%x", $time, r, value);
+            pi_load(r, value);
         end
 
         for (r = 0; r <= 17; r++) begin
             value = $random;
-            #1 $display("[%t] Test: CPU store R%d = %d", $time, r, value);
-            cpu_select(/* r: */ r);
-            cpu_store(/* value: */ value);
         end
 
         $display("[%t] Test Complete", $time);

@@ -43,10 +43,10 @@ module crtc(
     input            crtc_select,
     input     [16:0] bus_addr,
     input      [7:0] bus_data_in,
-    input            write_strobe,
+    input            cpu_write,
 
     input [15:0]     pi_addr,               // A0..4 select CRTC registers R0..17
-    input  [7:0]     pi_data_in,   
+    input  [7:0]     pi_data_in,
     input            pi_read,
     input            pi_write,
 
@@ -58,9 +58,9 @@ module crtc(
 );
     reg [7:0] r [16:0];
 
-    wire crtc_r = r[crtc_address_register];
+    assign crtc_r = r[crtc_address_register];
 
-    always @(posedge write_strobe or negedge res_b) begin
+    always @(posedge cpu_write or negedge res_b) begin
         if (!res_b) begin
             r[0] = 8'h31;
             r[1] = 8'h28;
@@ -90,7 +90,9 @@ module crtc(
     wire pi_crtc_select = 16'he8f0 <= pi_addr && pi_addr <= 16'he8ff;
     wire [4:0] pi_crtc_reg = { 1'b0, pi_addr[3:0] };
 
-    always @(negedge pi_read) begin
+    // Update 'crtc_data_out' on the rising edge of pi_read so it is available when 'pi_data_reg'
+    // is updated on the falling edge.
+    always @(posedge pi_read) begin
         if (pi_crtc_select) begin
             crtc_data_out <= r[pi_crtc_reg];
         end

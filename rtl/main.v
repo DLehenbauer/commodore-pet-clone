@@ -223,13 +223,15 @@ module main (
     wire crtc_data_out_enable;
 
     crtc ctrc(
+        .res_b(res_b),
         .crtc_select(crtc_enable),
         .bus_addr(bus_addr),
         .bus_data_in(bus_data),
-        .write_strobe(cpu_write),
+        .cpu_write(cpu_write),
 
         .pi_addr(pi_addr),
         .pi_data_in(pi_data),
+        .pi_enable(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
 
@@ -306,7 +308,7 @@ module main (
     assign via_cs2_b  = !via_cs;
     assign io_oe_b    = !io_oe;
 
-    wire ram_ce = ram_enable || !cpu_enable;
+    wire ram_ce = ram_enable || (!cpu_enable && !crtc_data_out_enable);
     wire ram_oe =  pi_read || video_select || (cpu_read  && cpu_be);
     wire ram_we = pi_write || (cpu_write && cpu_be && !is_readonly);
 
