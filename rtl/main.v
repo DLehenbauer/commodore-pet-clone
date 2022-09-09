@@ -223,9 +223,13 @@ module main (
     wire crtc_data_out_enable;
 
     crtc ctrc(
+        .crtc_select(crtc_enable),
+        .bus_addr(bus_addr),
+        .bus_data_in(bus_data),
+        .write_strobe(cpu_write),
+
         .pi_addr(pi_addr),
         .pi_data_in(pi_data),
-        .pi_enabled(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
 
