@@ -231,9 +231,7 @@ module main (
 
         .pi_addr(pi_addr),
         .pi_data_in(pi_data),
-        .pi_enable(pi_select),
         .pi_read(pi_read),
-        .pi_write(pi_write),
 
         .crtc_data_out(crtc_data_out),
         .crtc_data_out_enable(crtc_data_out_enable)

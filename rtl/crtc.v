@@ -35,7 +35,7 @@ module crtc(
 
     assign crtc_r = r[crtc_address_register];
 
-    always @(posedge cpu_write or negedge res_b) begin
+    always @(negedge cpu_write or negedge res_b) begin
         if (!res_b) begin
             r[0] = 8'h31;
             r[1] = 8'h28;
@@ -58,8 +58,8 @@ module crtc(
             if (crtc_select) begin
                 // 'crtc_select' is high when the bus address is in the $E8xx range.  Even addresses
                 // map to CRTC register 0 and odd addresses are CRTC register 1.
-                if (bus_addr[0] == 0) crtc_address_register <= bus_data_in[4:0];
-                else r[crtc_address_register] <= bus_data_in;
+                if (bus_addr[0]) r[crtc_address_register] <= bus_data_in;
+                else crtc_address_register <= bus_data_in[4:0];
             end
         end
     end
