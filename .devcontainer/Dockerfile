@@ -49,3 +49,42 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 # Tools for building / verifying RTL
 RUN apt-get update && apt-get -y install --no-install-recommends \
     iverilog
+
+# Raspberry Pi Pico SDK
+RUN mkdir /opt/pico
+
+RUN apt-get update && apt-get -y install --no-install-recommends \
+    build-essential \
+    cmake \
+    gcc-arm-none-eabi \
+    libnewlib-arm-none-eabi \
+    libstdc++-arm-none-eabi-newlib
+
+ENV PICO_SDK_PATH="/opt/pico/pico-sdk"
+
+RUN cd /opt/pico && \
+    git clone -b master https://github.com/raspberrypi/pico-sdk.git && \
+    cd pico-sdk && \
+    git submodule update --init
+
+# OpenOCD with Raspberry Pi Pico support
+RUN apt-get update && apt-get -y install --no-install-recommends \
+    autoconf \
+    automake \
+    build-essential \
+    libftdi-dev \
+    libtool \
+    libusb-1.0-0-dev \
+    texinfo
+
+RUN cd /opt/pico && \
+    git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --depth=1 --no-single-branch && \
+    cd openocd && \
+    ./bootstrap && \
+    ./configure --enable-picoprobe && \
+    make -j4 && \
+    sudo make install
+
+# Install minicom for UART communication with pico
+RUN apt-get update && apt-get -y install --no-install-recommends \
+    minicom

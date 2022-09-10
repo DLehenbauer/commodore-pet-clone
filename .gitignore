@@ -64,3 +64,4 @@ prgs/**
 
 # CMake build artifacts
 /sw/build
+/build
