@@ -1,5 +1,6 @@
 {
     "recommendations": [
+        "DavidAnson.vscode-markdownlint",
         "ms-vscode.cpptools-extension-pack",
         "mshr-h.veriloghdl",
         "streetsidesoftware.code-spell-checker",

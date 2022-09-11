@@ -15,13 +15,22 @@
  */
 
 module tb();
+    reg clk16 = 0;
+    wire select;
+    wire enable;
     reg pending = 0;
-    reg clk = 0;
     wire strobe;
     wire done;
 
+    bus bus(
+        .clk16(clk16),
+        .pi_select(select),
+        .pi_strobe(enable)
+    );
+
     sync sync(
-        .clk(clk),
+        .select(select),
+        .enable(enable),
         .pending(pending),
         .strobe(strobe),
         .done(done)
@@ -31,21 +40,14 @@ module tb();
         input expected_strobe,
         input expected_done
     );
-        if (strobe != expected_strobe) begin
-            $display("[%t] 'strobe' must be %d, but got %d.", $time, expected_strobe, strobe);
-            $stop;
-        end
-
-        if (done != expected_done) begin
-            $display("[%t] 'done' must be %d, but got %d.", $time, expected_done, done);
-            $stop;
-        end
+        assert_equal(strobe, expected_strobe, "strobe");
+        assert_equal(done, expected_done, "done");
     endtask
 
     initial begin
-        clk = 0;
+        clk16 = 0;
         forever begin
-            #10 clk = ~clk;
+            #62.5 clk16 = ~clk16;
         end
     end
 
@@ -56,19 +58,69 @@ module tb();
         $display("[%t] Test: 'strobe' and 'done' are initially 0", $time);
         check(/* strobe: */ 0, /* done: */ 0);
 
-        $display("[%t] Test: 'pending' after positive colck edge does not raise strobe", $time);
-        @(posedge clk);
+        $display("[%t] Test: No 'strobe' if 'pending' low.", $time);
+        @(posedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: 'pending' after 'select' delayed until next 'select'", $time);
+        @(posedge select);
         #1 pending = 1'b1;
-        check(/* strobe: */ 0, /* done: */ 0);
-        
-        $display("[%t] Test: 'strobe' raised on next positive clock", $time);
-        @(posedge clk);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
         #1 check(/* strobe: */ 1, /* done: */ 0);
-        
-        $display("[%t] Test: 'done' raised on negative clock", $time);
-        @(negedge clk);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge select);
         #1 check(/* strobe: */ 0, /* done: */ 1);
-        
+
+        $display("[%t] Test: 'done' cleared on negative pending", $time);
+        pending = 1'b0;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        $display("[%t] Test: 'pending' before select raises 'strobe' on next enable", $time);
+        #1 pending = 1'b1;
+
+        @(posedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge enable);
+        #1 check(/* strobe: */ 1, /* done: */ 0);
+
+        @(negedge enable);
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(negedge select);
+        #1 check(/* strobe: */ 0, /* done: */ 1);
+
+        $display("[%t] Test: 'done' cleared on negative pending", $time);
+        pending = 1'b0;
+        #1 check(/* strobe: */ 0, /* done: */ 0);
+
+        @(posedge select)
         $display("[%t] Test Complete", $time);
         $finish;
     end

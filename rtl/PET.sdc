@@ -11,11 +11,19 @@
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
 # Aliases
-set clk_16 { pll|altpll_component|pll|clk[0] }
-set clk_8 [get_registers { timing:timing|count[0] }]
-set clk_4 [get_registers { timing:timing|count[1] }]
-set clk_2 [get_registers { timing:timing|count[2] }]
-set clk_1 [get_registers { timing:timing|count[3] }]
+set clk_16           { pll|altpll_component|pll|clk[0] }
+
+set clk_8            [get_registers { timing:timing|bus:bus|count[0] }]
+
+set pi_select        [get_registers { timing:timing|bus:bus|state[0] }]
+set pi_strobe        [get_registers { timing:timing|bus:bus|state[1] }]
+set video_ram_strobe [get_registers { timing:timing|bus:bus|state[3] }]
+set video_rom_strobe [get_registers { timing:timing|bus:bus|state[4] }]
+set cpu_select       [get_registers { timing:timing|bus:bus|state[5] }]
+set io_select        [get_registers { timing:timing|bus:bus|state[6] }]
+set cpu_strobe       [get_registers { timing:timing|bus:bus|state[7] }]
+
+set pi_done [get_registers { timing:timing|sync:pi_sync|done }]
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
@@ -23,29 +31,55 @@ create_generated_clock -name "clk_8" \
     -source $clk_16 \
     -divide_by 2 \
     $clk_8
-    
-create_generated_clock -name "clk_4" \
+
+create_generated_clock -name "pi_select" \
     -source $clk_16 \
-    -divide_by 4 \
-    $clk_4
-    
-create_generated_clock -name "clk_2" \
+    -edges {1 7 33} \
+    $pi_select
+
+create_generated_clock -name "pi_strobe" \
     -source $clk_16 \
-    -divide_by 8 \
-    $clk_2
-    
-create_generated_clock -name "clk_1" \
+    -edges {3 5 35} \
+    $pi_strobe
+
+create_generated_clock -name "video_ram_strobe" \
     -source $clk_16 \
-    -divide_by 16 \
-    $clk_1
-    
+    -edges {9 11 41} \
+    $video_ram_strobe
+
+create_generated_clock -name "video_rom_strobe" \
+    -source $clk_16 \
+    -edges {13 15 45} \
+    $video_rom_strobe
+
+create_generated_clock -name "cpu_select" \
+    -source $clk_16 \
+    -edges {25 33 57} \
+    $cpu_select
+
+create_generated_clock -name "io_select" \
+    -source $clk_16 \
+    -edges {27 33 59} \
+    $io_select
+
+create_generated_clock -name "cpu_strobe" \
+    -source $clk_16 \
+    -edges {29 31 61} \
+    $cpu_strobe
+
 create_generated_clock -name "phi2" \
-    -source $clk_1 \
+    -source $cpu_strobe \
     $phi2
+
+# create_generated_clock -name "pi_done" \
+#     -source $pi_select \
+#     -invert \
+#     $pi_done
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
 
+# CPU
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
 # tBVD
@@ -56,7 +90,22 @@ set_input_delay -max -clock [get_clocks { phi2 }] 30 [get_ports { bus_addr[*] bu
 set_input_delay -min -clock [get_clocks { phi2 }]  0 [get_ports { bus_data[*] }]
 set_input_delay -max -clock [get_clocks { phi2 }] 40 [get_ports { bus_data[*] }]
 
+# PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 
-set_output_delay -min -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
+set_output_delay -min -clock { phi2 }  0 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
 set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
+
+# SRAM
+# https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf
+
+set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] ram_addr[*] bus_data[*] }]
+set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] ram_addr[*] bus_data[*] }]
+
+set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b ram_addr[*] }]
+set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b ram_addr[*] }]
+
+# RPi
+
+# set_output_delay -min -clock { pi_done } -7 [get_ports { pi_data[*] }]
+# set_output_delay -max -clock { pi_done } -7 [get_ports { pi_data[*] }]
