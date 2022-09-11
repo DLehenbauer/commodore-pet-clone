@@ -37,32 +37,56 @@ module spi_byte (
         : data_tx[7];
 endmodule
 
-module spi_register(
-    input reset,
-    input spi_sclk,
-    input spi_rx,
-    output done
-);
-    wire [7:0] rx;
-    wire byte_done;
+// commands:
+//
+// 0000 |   xxx   |  x  : NOP
+// 0001 |    2    | A16 : WRITE <A15:0> <D7:0>
+// 0010 |    2    | A16 : READ  <A15:0> <D7:0>
 
-    reg [7:0] bytes [2:0];
-    reg [1:0] byte_count = 0;
+// module spi_cmd(
+//     input reset,
+//     input spi_sclk,
+//     input spi_rx,
+//     input pi_select,
+//     input pi_strobe,
+//     output pi_addr,
+//     output pi_data,
+//     output pi_rw_b
+// );
+//     wire sclk = spi_sclk;
+//     wire [7:0] rx;
 
-    spi_byte rx_byte(
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(reset),       // 'cs_n' doubles as an asynchronous reset
-        .spi_rx(spi_rx),
-        .rx(rx),
-        .done(byte_done)
-    );
+//     spi_byte spi_byte(
+//         .spi_sclk(sclk),
+//         .spi_cs_n(spi_cs_n),
+//         .spi_rx(spi_rx),
+//         .done(byte_done)
+//     );
 
-    always @(posedge byte_done or posedge reset) begin
-        if (reset) begin
-            byte_count <= 0;
-        end else begin
-            bytes[byte_count] <= rx;
-            byte_count <= byte_count + 1'b1;
-        end
-    end
-endmodule
+//     localparam WAITING_FOR_CMD = 0,
+//                PENDING_READ    = 1,
+//                PENDING_WRITE   = 2;
+
+//     reg [7:0] state = WAITING_FOR_CMD;
+//     reg [7:0] bytes [8];
+
+//     always @(posedge byte_done or reset) begin
+//         if (reset) begin
+//             state <= 0;
+//         end else begin
+//             if (state == WAITING_FOR_CMD) begin
+//                 state <= rx;
+//             end else if (state[3:1]) begin
+//                 bytes[state[3:1]] <= rx;
+
+//                 if (state[3:1] == 1) begin
+//                     case (state[7:4])
+//                         PENDING_READ: ;
+//                     endcase
+//                 end
+
+//                 state[3:1] <= state[3:1] - 1'b1;
+//             end
+//         end
+//     end
+// endmodule
