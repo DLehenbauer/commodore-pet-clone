@@ -16,24 +16,37 @@
 
 module tb();
     reg spi_sclk = 0;
-    reg spi_cs_n = 0;
-    reg spi_rx = 1'bx;
+    reg spi_cs_n = 1;
+    wire spi_rx;
+    wire spi_tx;
 
     wire [7:0] rx;
-    wire done;
+    reg  [7:0] tx;
+    wire rx_done;
+    wire tx_done;
 
-    spi_byte spi_byte(
+    spi_byte spi0(
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
+        .spi_tx(spi_tx),
         
         .rx(rx),
-        .done(done)
+        .done(rx_done)
+    );
+
+    spi_byte spi1(
+        .spi_sclk(spi_sclk),
+        .spi_cs_n(spi_cs_n),
+        .spi_rx(spi_tx),
+        .spi_tx(spi_rx),
+        .tx(tx),
+        .done(tx_done)
     );
 
     reg [7:0] last_rx;
 
-    always @(posedge done) begin
+    always @(posedge rx_done) begin
         last_rx <= rx;
     end
 
@@ -44,22 +57,28 @@ module tb();
         #1 spi_cs_n = 0;
     endtask
 
+    task check_done(
+        input expected
+    );
+        assert_equal(rx_done, expected, "rx_done");
+        assert_equal(tx_done, expected, "tx_done");
+    endtask
+
     task xfer(
         input [7:0] data
     );
-        mosi_data = data;
+        tx = data;
 
         for (i = 0; i < 8; i++) begin
-            #1 spi_rx = mosi_data[7];
-            mosi_data[7:1] <= mosi_data[6:0];
             #1 spi_sclk = 1;
 
-            $display("[%t] Test: 'done' must be %d after bit %d.", $time, i === 7, i);
-            #1 assert_equal(done, i === 7, "done");
+            $display("[%t] Test: 'done' must be 0 while clk is high.", $time);
+            #1 check_done(1'b0);
             
             #1 spi_sclk = 0;
 
-            #1 assert_equal(done, i === 7, "done");
+            $display("[%t] Test: 'done' must be %d after bit %d.", $time, i == 7, i);
+            #1 check_done(i == 7);
         end
 
         $display("[%t] Test: Must receive byte $%x.", $time, data);
@@ -67,11 +86,11 @@ module tb();
     endtask
 
     task end_xfer;
-        #1 spi_rx = 1'bx;
+        #1 tx = 1'bx;
         #1 spi_cs_n = 1;
 
-        $display("[%t] Test: 'done' must be reset by 'cs_n'.", $time);
-        #1 assert_equal(done, 1'b0, "done");
+        #1 $display("[%t] Test: 'done' must be held by 'cs_n'.", $time);
+        check_done(1'b1);
     endtask
 
     byte values[];
@@ -80,8 +99,8 @@ module tb();
         $dumpfile("out.vcd");
         $dumpvars;
 
-        $display("[%t] Test: 'done' must be low at power on.", $time);
-        assert_equal(done, 1'b0, "done");        
+        $display("[%t] Test: 'done' must be 1 at power on.", $time);
+        #1 check_done(1'b1);
 
         values = new [4];
         values = '{
