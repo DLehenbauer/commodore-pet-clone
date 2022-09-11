@@ -15,17 +15,17 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg sclk = 0;
-    reg cs_n = 0;
-    reg mosi = 1'bx;
+    reg spi_sclk = 0;
+    reg spi_cs_n = 0;
+    reg spi_rx = 1'bx;
 
     wire [7:0] rx;
     wire done;
 
-    spi_slave spi(
-        .spi_sclk(sclk),
-        .spi_cs_n(cs_n),
-        .spi_mosi(mosi),
+    spi_byte spi_byte(
+        .spi_sclk(spi_sclk),
+        .spi_cs_n(spi_cs_n),
+        .spi_rx(spi_rx),
         
         .rx(rx),
         .done(done)
@@ -41,7 +41,7 @@ module tb();
     integer i;
 
     task begin_xfer;
-        #1 cs_n = 0;
+        #1 spi_cs_n = 0;
     endtask
 
     task xfer(
@@ -50,30 +50,52 @@ module tb();
         mosi_data = data;
 
         for (i = 0; i < 8; i++) begin
-            #1 mosi = mosi_data[7];
+            #1 spi_rx = mosi_data[7];
             mosi_data[7:1] <= mosi_data[6:0];
-            #1 sclk = 1;
-            #1 sclk = 0;
+            #1 spi_sclk = 1;
+
+            $display("[%t] Test: 'done' must be %d after bit %d.", $time, i === 7, i);
+            #1 assert_equal(done, i === 7, "done");
+            
+            #1 spi_sclk = 0;
+
+            #1 assert_equal(done, i === 7, "done");
         end
 
+        $display("[%t] Test: Must receive byte $%x.", $time, data);
         assert_equal(last_rx, data, "last_rx");
-        assert_equal(done, 1'b1, "done");
     endtask
 
     task end_xfer;
-        #1 mosi = 1'bx;
-        #1 cs_n = 1;
+        #1 spi_rx = 1'bx;
+        #1 spi_cs_n = 1;
+
+        $display("[%t] Test: 'done' must be reset by 'cs_n'.", $time);
+        #1 assert_equal(done, 1'b0, "done");
     endtask
+
+    byte values[];
 
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
 
+        $display("[%t] Test: 'done' must be low at power on.", $time);
+        assert_equal(done, 1'b0, "done");        
+
+        values = new [4];
+        values = '{
+            8'b11011010,
+            8'b01011011
+        };
+
+        #1 spi_cs_n = 0;
+        #1 spi_cs_n = 1;
+
         begin_xfer;
-        xfer(/* data: */ 8'hf0);
-        xfer(/* data: */ 8'h0f);
-        xfer(/* data: */ 8'hf0);
-        xfer(/* data: */ 8'h0f);
+        foreach (values[i]) begin
+            xfer(/* data: */ values[i]);
+        end
         end_xfer;
     end
 endmodule

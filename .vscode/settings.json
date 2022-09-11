@@ -71,5 +71,7 @@
         "rtl/incremental_db/**": true,
         "rtl/output_files/**": true
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "verilog.linting.linter": "iverilog",
+    "verilog.linting.iverilog.arguments": "-g2012"
 }
