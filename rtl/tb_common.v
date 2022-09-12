@@ -4,7 +4,7 @@ task assert_equal(
     input string name
 );
     if (actual !== expected) begin
-        $display("FAIL: '%s' must be %d, but got %d.", name, expected, actual);
+        $error("FAIL: '%s' must be %d, but got %d.", name, expected, actual);
         $stop;
     end
 endtask
