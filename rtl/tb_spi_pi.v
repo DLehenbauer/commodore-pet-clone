@@ -25,16 +25,6 @@ module tb();
     wire rx_done;
     wire tx_done;
 
-    spi_byte spi_byte_rx(
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_rx),
-        .spi_tx(spi_tx),
-        
-        .rx(rx),
-        .done(rx_done)
-    );
-
     spi_byte spi_byte_tx(
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
@@ -44,25 +34,26 @@ module tb();
         .done(tx_done)
     );
 
-    reg [7:0] last_rx;
+    wire [16:0] pi_addr;
+    wire [7:0] pi_data;
+    wire pi_rw_b;
+    wire pi_pending;
 
-    always @(posedge rx_done) begin
-        last_rx <= rx;
-    end
-
-    reg [7:0] mosi_data;
-    integer i;
-
-    task check_done(
-        input expected
+    pi_register pi_register(
+        .spi_sclk(spi_sclk),
+        .spi_cs_n(spi_cs_n),
+        .spi_rx(spi_rx),
+        .pi_addr(pi_addr),
+        .pi_data(pi_data),
+        .pi_rw_b(pi_rw_b),
+        .pi_pending(pi_pending)
     );
-        assert_equal(rx_done, expected, "rx_done");
-        assert_equal(tx_done, expected, "tx_done");
-    endtask
 
     task begin_xfer;
         #1 spi_cs_n = 0;
     endtask
+
+    integer i;
 
     task xfer(
         input [7:0] data
@@ -71,50 +62,26 @@ module tb();
 
         for (i = 0; i < 8; i++) begin
             #1 spi_sclk = 1;
-
-            // $display("[%t] Test: 'done' must be 0 while clk is high.", $time);
-            // #1 check_done(1'b0);
-            
             #1 spi_sclk = 0;
-
-            $display("[%t] Test: 'done' must be %d after bit %d.", $time, i == 7, i);
-            #1 check_done(i == 7);
         end
-
-        $display("[%t] Test: Must receive byte $%x.", $time, data);
-        assert_equal(last_rx, data, "last_rx");
     endtask
 
     task end_xfer;
         #1 tx = 1'bx;
         #1 spi_cs_n = 1;
-
-        #1 $display("[%t] Test: 'done' must be reset by 'cs_n'.", $time);
-        check_done(1'b0);
     endtask
-
-    byte values[];
 
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
 
-        $display("[%t] Test: 'done' must be 1 at power on.", $time);
-        #1 check_done(1'b1);
-
-        values = new [4];
-        values = '{
-            8'b11011010,
-            8'b01011011
-        };
-
         #1 spi_cs_n = 0;
         #1 spi_cs_n = 1;
 
         begin_xfer;
-        foreach (values[i]) begin
-            xfer(/* data: */ values[i]);
-        end
+        xfer(/* value: */ 8'h00);
+        xfer(/* value: */ 8'h80);
+        xfer(/* value: */ 8'h00);
         end_xfer;
     end
 endmodule
