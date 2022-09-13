@@ -1650,7 +1650,7 @@
       (reference "J7") (unit 1) (value "9V POWER") (footprint "Connector_BarrelJack:BarrelJack_Horizontal")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/cfa47e6b-c605-409f-81a1-e08233c8265d"
-      (reference "J8") (unit 1) (value "PET_SPEAKER_01x04_Male") (footprint "PET:PET_SPEAKER")
+      (reference "J8") (unit 1) (value "SPEAKER") (footprint "PET:PET_SPEAKER")
     )
     (path "/1dc0595f-3832-49f8-98ab-9c5f13feffce/d2ed9af1-106d-468e-baa5-126c797ea899"
       (reference "J9") (unit 1) (value "PET_Video") (footprint "PET:PET_Video")

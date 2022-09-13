@@ -923,7 +923,7 @@
     (property "Reference" "J8" (id 0) (at 189.23 97.7899 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Value" "PET_SPEAKER_01x04_Male" (id 1) (at 189.23 100.3299 0)
+    (property "Value" "SPEAKER" (id 1) (at 189.23 100.3299 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Footprint" "PET:PET_SPEAKER" (id 2) (at 187.96 100.33 0)

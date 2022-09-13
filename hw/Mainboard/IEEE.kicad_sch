@@ -1981,11 +1981,6 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 7da78911-dd6f-4bbd-9a74-8a3476ec1fb5)
   )
-  (bus (pts (xy 38.1 87.63) (xy 38.1 90.17))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid 7db24997-f3a6-4e9b-8197-b5d1475de159)
-  )
-
   (wire (pts (xy 194.31 137.16) (xy 196.85 137.16))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 7ed6e4d9-ef7d-497b-a622-ca73e9b35903)
@@ -2690,8 +2685,8 @@
     (uuid fe971b77-994c-417a-ba70-7aea2fb9bdba)
   )
 
-  (text "'07 drivers can sink 40ma\n\n'245 trancievers provide:\n• TTL → CMOS level conversion\n• Hysterises\n• Hi-Z inputs to avoid loading driver\n\n"
-    (at 116.84 106.68 0)
+  (text "Cheap/decent approximation of MC3446\n\n'07 drivers can sink 40ma\n\n'245 recievers provide:\n• TTL → CMOS level conversion\n• Hysterises\n• Hi-Z inputs to avoid loading driver\n"
+    (at 106.68 111.76 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 76078780-1af5-4a49-ba78-635b61698d99)
   )
