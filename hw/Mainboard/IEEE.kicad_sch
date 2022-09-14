@@ -2685,7 +2685,7 @@
     (uuid fe971b77-994c-417a-ba70-7aea2fb9bdba)
   )
 
-  (text "Cheap/decent approximation of MC3446\n\n'07 drivers can sink 40ma\n\n'245 recievers provide:\n• TTL → CMOS level conversion\n• Hysterises\n• Hi-Z inputs to avoid loading driver\n"
+  (text "Cheap/decent approximation of MC3446\n\n'07 drivers can sink 40ma\n\n'245 recievers provide:\n• TTL → CMOS level conversion\n• Hysterises\n• Hi-Z inputs to avoid loading driver\n\n1K resistors protect PIA2 in case it is\naccidentally configured to drive DIO_IN[0..7]"
     (at 106.68 111.76 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 76078780-1af5-4a49-ba78-635b61698d99)
