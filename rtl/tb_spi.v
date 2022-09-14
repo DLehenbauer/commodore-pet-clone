@@ -50,9 +50,6 @@ module tb();
         last_rx <= rx;
     end
 
-    reg [7:0] mosi_data;
-    integer i;
-
     task check_done(
         input expected
     );
@@ -64,6 +61,8 @@ module tb();
         #1 spi_cs_n = 0;
     endtask
 
+    integer i;
+
     task xfer(
         input [7:0] data
     );
@@ -71,10 +70,6 @@ module tb();
 
         for (i = 0; i < 8; i++) begin
             #1 spi_sclk = 1;
-
-            // $display("[%t] Test: 'done' must be 0 while clk is high.", $time);
-            // #1 check_done(1'b0);
-            
             #1 spi_sclk = 0;
 
             $display("[%t] Test: 'done' must be %d after bit %d.", $time, i == 7, i);
