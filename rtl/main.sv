@@ -113,7 +113,7 @@ module main (
     output ram_we_b,            // RAM 29 : 0 = write enabled,  1 = Not active
 
     // CPU
-    input res_b_in,
+    input reset_in,
     output res_b_out,
     output cpu_rdy,             // CPU  2 : 0 = halt,  1 = run
     input  cpu_sync,
@@ -146,7 +146,7 @@ module main (
     wire video_ram_strobe;
     wire video_rom_strobe;
 
-    wire res_b = res_b_in & res_b_out;
+    wire reset = reset_in & !res_b_out;
 
     // Timing
     timing timing(
@@ -238,7 +238,6 @@ module main (
     wire pia1_enable = pia1_enable_before_kbd && !kbd_enable;
     wire io_enable = io_enable_before_kbd && !kbd_enable;
     
-    wire reset = !res_b;
     wire [11:0] video_addr;
 
     video v(

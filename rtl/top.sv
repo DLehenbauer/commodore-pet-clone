@@ -112,7 +112,7 @@ module top(
         .ram_we_b(ram_we_b),
         .pi_pending(pi_pending),
         .pi_done(pi_done),
-        .res_b_in(cpu_res_b),
+        .reset_in(!cpu_res_b),
         .res_b_out(res_b),
         .cpu_rdy(cpu_rdy),
         .cpu_sync(cpu_sync),
