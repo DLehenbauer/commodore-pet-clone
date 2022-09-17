@@ -46,6 +46,7 @@ rtl/*.vcd
 # Quartus generated files
 rtl/*.v.bak
 rtl/*.sdc.bak
+rtl/*.sv.bak
 rtl/*.tcl.bak
 rtl/db/**
 rtl/incremental_db/**
