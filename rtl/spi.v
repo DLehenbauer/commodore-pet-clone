@@ -13,8 +13,8 @@
  */
 
 module spi_byte (
-    input  spi_sclk,
-    input  spi_cs_n,        // SPI chip select also doubles as an asyncronous reset
+    input  spi_cs_n,        // CS_N also doubles as an asyncronous reset
+    input  spi_sclk,        // SCLK must be low before falling edge of CS_N
     input  spi_rx,
     output spi_tx,
 
@@ -85,9 +85,8 @@ endmodule
 
 module pi_com(
     input reset,
-    input spi_sclk_src,
-    output spi_sclk,
-    output reg spi_cs_n,
+    input spi_sclk,
+    input spi_cs_n,
     input spi_rx,
     output spi_tx,
 
@@ -99,8 +98,6 @@ module pi_com(
     input pi_done_in,
     output reg pi_done_out = 1'b0
 );
-    assign spi_sclk = spi_sclk_src & !spi_cs_n;
-
     wire [7:0] rx [4];
     reg  [2:0] length;
     wire done;
@@ -131,24 +128,21 @@ module pi_com(
 
     // SPI MODE0 reads/writes on the positive clock edge.  We transition the state machine
     // on the negative clock edge.
-    always @(negedge spi_sclk_src or posedge reset or negedge pi_pending_in) begin
+    always @(negedge spi_sclk or posedge reset or negedge pi_pending_in) begin
         if (reset || !pi_pending_in) begin
             state <= IDLE;
-            spi_cs_n <= 1'b1;
             pi_done_out <= 1'b0;
             pi_pending_out <= 1'b0;
         end else begin
             case (next_state)
                 IDLE: begin
                     length <= 3'd0;
-                    spi_cs_n <= 1'b1;
                     pi_done_out <= 1'b0;
                     pi_pending_out <= 1'b0;
                 end
 
                 READ_CMD: begin
                     length <= 3'd1;
-                    spi_cs_n <= 1'b0;
                 end
 
                 WRITING: begin
@@ -156,8 +150,6 @@ module pi_com(
                 end
 
                 COMPLETING: begin
-                    spi_cs_n <= 1'b1;
-        
                     pi_rw_b         <= rw_b_in;
                     pi_addr         <= { a16_in, rx[1], rx[2] };
                     pi_data_out     <= rx[3];

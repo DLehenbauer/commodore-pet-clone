@@ -20,6 +20,13 @@ module tb();
     wire spi_rx;
     wire spi_tx;
 
+    initial begin
+        spi_sclk = 0;
+        forever begin
+            #31.25 spi_sclk = ~spi_sclk;
+        end
+    end
+
     wire [7:0] rx;
     reg  [7:0] tx;
     wire rx_done;
@@ -58,6 +65,9 @@ module tb();
     endtask
 
     task begin_xfer;
+        @(negedge spi_sclk);
+
+        // SCLK must be low prior to falling edge of CS_N.
         #1 spi_cs_n = 0;
     endtask
 
@@ -69,10 +79,10 @@ module tb();
         tx = data;
 
         for (i = 0; i < 8; i++) begin
-            #1 spi_sclk = 1;
-            #1 spi_sclk = 0;
+            @(posedge spi_sclk);
+            @(negedge spi_sclk);
 
-            $display("[%t] Test: 'done' must be %d after bit %d.", $time, i == 7, i);
+            $display("[%t] Test: 'done' must be %d after bit %0d.", $time, i == 7, i);
             #1 check_done(i == 7);
         end
 
@@ -81,11 +91,12 @@ module tb();
     endtask
 
     task end_xfer;
-        #1 tx = 1'bx;
-        #1 spi_cs_n = 1;
+        @(negedge spi_sclk);
+        tx = 1'bx;
+        spi_cs_n = 1;
 
-        #1 $display("[%t] Test: 'done' must be reset by 'cs_n'.", $time);
-        check_done(1'b0);
+        $display("[%t] Test: 'done' must be reset by 'cs_n'.", $time);
+        #1 check_done(1'b0);
     endtask
 
     byte values[];
@@ -111,5 +122,8 @@ module tb();
             xfer(/* data: */ values[i]);
         end
         end_xfer;
+
+        $display("[%t] Test Complete", $time);
+        $finish;
     end
 endmodule

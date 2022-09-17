@@ -15,17 +15,16 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg spi_sclk_src;
+    reg spi_sclk;
+    reg spi_cs_n = 1'b1;
 
     initial begin
-        spi_sclk_src = 0;
+        spi_sclk = 0;
         forever begin
-            #31.25 spi_sclk_src = ~spi_sclk_src;
+            #31.25 spi_sclk = ~spi_sclk;
         end
     end
 
-    wire spi_sclk;
-    wire spi_cs_n;
     wire spi_tx;
     reg spi_rx;
 
@@ -53,7 +52,6 @@ module tb();
     wire pi_done_out;
 
     pi_com pi_com(
-        .spi_sclk_src(spi_sclk_src),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -68,7 +66,9 @@ module tb();
     );
 
     task begin_xfer;
-        @(negedge spi_cs_n);
+        @(negedge spi_sclk);
+        #1;                 // SCLK must be low prior to falling edge of CS_N.
+        spi_cs_n = 0;
     endtask
 
     integer i;
@@ -85,7 +85,8 @@ module tb();
     endtask
 
     task end_xfer;
-        @(posedge spi_cs_n);
+        @(negedge spi_sclk);
+        spi_cs_n = 1'b1;
         #1 tx_byte = 1'bx;
     endtask
 
@@ -96,10 +97,10 @@ module tb();
         #1 pi_pending_in = 1'b1;
 
         begin_xfer;
-        xfer_byte(0);
-        xfer_byte(1);
-        xfer_byte(2);
-        xfer_byte(3);
+        xfer_byte(8'haa);
+        xfer_byte(8'h55);
+        xfer_byte(8'h81);
+        xfer_byte(8'h7e);
         end_xfer;
 
         #100 pi_done_in = 1'b1;

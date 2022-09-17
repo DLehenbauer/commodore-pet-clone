@@ -15,16 +15,15 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg spi_sclk_src = 0;
+    reg spi_sclk = 0;
 
     initial begin
-        spi_sclk_src = 0;
+        spi_sclk = 0;
         forever begin
-            #31.25 spi_sclk_src = ~spi_sclk_src;
+            #31.25 spi_sclk = ~spi_sclk;
         end
     end
 
-    reg spi_sclk = 0;
     reg spi_cs_n = 1;
     wire spi_rx;
     wire spi_tx;
@@ -46,60 +45,82 @@ module tb();
 
     wire [7:0] rx [4];
 
+    wire done;
+
     spi_buffer spi_buffer(
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .rx(rx),
-        .length(length)
+        .length(length),
+        .done(done)
     );
 
     task begin_xfer;
-        #1 spi_cs_n = 0;
+        @(negedge spi_sclk);
+        #1;                 // SCLK must be low prior to falling edge of CS_N.
+        spi_cs_n = 0;
     endtask
 
-    integer i;
+    integer bit_index;
 
     task xfer_byte(
         input [7:0] data
     );
         tx_byte = data;
 
-        for (i = 0; i < 8; i++) begin
-            #1 spi_sclk = 1;
-            #1 spi_sclk = 0;
+        for (bit_index = 0; bit_index < 8; bit_index++) begin
+            @(posedge spi_sclk);
+            @(negedge spi_sclk);
         end
     endtask
 
     task end_xfer;
-        #1 tx_byte = 1'bx;
-        #1 spi_cs_n = 1;
+        @(negedge spi_sclk);
+        tx_byte = 1'bx;
+        length = 3'bxxx;
+        spi_cs_n = 1;
+
+        $display("[%t]    Verify buffer contents after spi_cs_n raised:", $time);
+        for (byte_index = 0; byte_index < length; byte_index++) begin
+            $display("[%t]        byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
+            #1 assert_equal(rx[byte_index], bytes[byte_index], "rx");
+        end
     endtask
 
-    integer j;
+    integer byte_index;
+    logic unsigned [7:0] bytes [];
 
     task xfer(
-        input [2:0] xfer_length,
+        input [2:0] start_index,
+        input [2:0] end_index,
         input [7:0] byte0,
         input [7:0] byte1,
         input [7:0] byte2,
         input [7:0] byte3
     );
-        length = xfer_length;
+        bytes = new [4];
+        bytes = '{ byte0, byte1, byte2, byte3 };
 
-        begin_xfer;
-        xfer_byte(byte0);
-        xfer_byte(byte1);
-        xfer_byte(byte2);
-        xfer_byte(byte3);
-        end_xfer;
+        $display("[%t]    Verify buffer contents before transfer:", $time);
+        for (byte_index = 0; byte_index < start_index; byte_index++) begin
+            $display("[%t]        byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
+            #1 assert_equal(rx[byte_index], bytes[byte_index], "rx");
+        end
 
-        assert_equal(rx[0], byte0, "rx[0]");
-        assert_equal(rx[1], byte1, "rx[1]");
-        assert_equal(rx[2], byte2, "rx[2]");
-        assert_equal(rx[3], byte3, "rx[3]");
+        length = end_index;
 
-        length = 3'bxxx;
+        for (byte_index = start_index; byte_index < end_index; byte_index++) begin
+            $display("[%t]    Send byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
+            xfer_byte(bytes[byte_index]);
+            #1 assert_equal(rx[byte_index], bytes[byte_index], "rx");
+        end
+
+        $display("[%t]    Verify buffer contents after transfer:", $time);
+        for (byte_index = 0; byte_index < length; byte_index++) begin
+            $display("[%t]        byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
+            #1 assert_equal(rx[byte_index], bytes[byte_index], "rx");
+        end
     endtask
 
     initial begin
@@ -109,8 +130,24 @@ module tb();
         #1 spi_cs_n = 0;
         #1 spi_cs_n = 1;
 
-        xfer(3'd4, 8'h01, 8'h02, 8'h03, 8'h04);
+        $display("[%t] Test: Transfer [$aa, $55, $cc, $33]", $time);
 
+        begin_xfer;
+        xfer(/* start: */ 3'd0, /* end: */ 3'd4, 8'haa, 8'h55, 8'hcc, 8'h33);
+        end_xfer;
+
+        $display("[%t] Test: Transfer [$0f, $f0, $00, $ff]", $time);
+        begin_xfer;
+        xfer(/* start: */ 3'd0, /* end: */ 3'd4, 8'h0f, 8'hf0, 8'h00, 8'hff);
+        end_xfer;
+
+        $display("[%t] Test: Transfer [$01], then extend to [$02, $03, $04] ", $time);
+        begin_xfer;
+        xfer(/* start: */ 3'd0, /* end: */ 3'd1, 8'h01, 8'hxx, 8'hxx, 8'hxx);
+        xfer(/* start: */ 3'd1, /* end: */ 3'd4, 8'h01, 8'h02, 8'h03, 8'h04);
+        end_xfer;
+
+        $display("[%t] Test Complete", $time);
         $finish;
     end
 endmodule
