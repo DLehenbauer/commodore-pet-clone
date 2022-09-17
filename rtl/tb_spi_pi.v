@@ -97,7 +97,7 @@ module tb();
         #1 pi_pending_in = 1'b1;
 
         begin_xfer;
-        xfer_byte(8'haa);
+        xfer_byte(8'h40);
         xfer_byte(8'h55);
         xfer_byte(8'h81);
         xfer_byte(8'h7e);
@@ -106,6 +106,10 @@ module tb();
         #100 pi_done_in = 1'b1;
 
         @(posedge pi_done_out);
+        assert_equal(pi_addr, 17'h15581, "pi_addr");
+        assert_equal(pi_data_out, 8'h7e, "pi_data_out");
+        assert_equal(pi_rw_b, 1'b0, "pi_rw_b");
+        
         #100 pi_done_in = 1'b0;
         #100 pi_pending_in = 1'b0;
         #100 $finish;
