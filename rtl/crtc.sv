@@ -13,7 +13,7 @@
  */
 
 module crtc(
-    input res_b,
+    input reset,
 
     input            crtc_select,
     input     [16:0] bus_addr,
@@ -35,8 +35,8 @@ module crtc(
 
     assign crtc_r = r[crtc_address_register];
 
-    always @(negedge cpu_write or negedge res_b) begin
-        if (!res_b) begin
+    always @(negedge cpu_write or posedge reset) begin
+        if (reset) begin
             r[0] = 8'h31;
             r[1] = 8'h28;
             r[2] = 8'h29;

@@ -182,7 +182,7 @@ module main (
     wire crtc_data_out_enable;
 
     crtc ctrc(
-        .res_b(res_b),
+        .reset(reset),
         .crtc_select(crtc_enable),
         .bus_addr(bus_addr),
         .bus_data_in(bus_data),
