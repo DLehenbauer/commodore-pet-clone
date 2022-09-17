@@ -13,17 +13,17 @@
 # Aliases
 set clk_16           { pll|altpll_component|pll|clk[0] }
 
-set clk_8            [get_registers { timing:timing|bus:bus|count[0] }]
+set clk_8            [get_registers { main:main|timing:timing|bus:bus|count[0] }]
 
-set pi_select        [get_registers { timing:timing|bus:bus|state[0] }]
-set pi_strobe        [get_registers { timing:timing|bus:bus|state[1] }]
-set video_ram_strobe [get_registers { timing:timing|bus:bus|state[3] }]
-set video_rom_strobe [get_registers { timing:timing|bus:bus|state[4] }]
-set cpu_select       [get_registers { timing:timing|bus:bus|state[5] }]
-set io_select        [get_registers { timing:timing|bus:bus|state[6] }]
-set cpu_strobe       [get_registers { timing:timing|bus:bus|state[7] }]
+set pi_select        [get_registers { main:main|timing:timing|bus:bus|state[0] }]
+set pi_strobe        [get_registers { main:main|timing:timing|bus:bus|state[1] }]
+set video_ram_strobe [get_registers { main:main|timing:timing|bus:bus|state[3] }]
+set video_rom_strobe [get_registers { main:main|timing:timing|bus:bus|state[4] }]
+set cpu_select       [get_registers { main:main|timing:timing|bus:bus|state[5] }]
+set io_select        [get_registers { main:main|timing:timing|bus:bus|state[6] }]
+set cpu_strobe       [get_registers { main:main|timing:timing|bus:bus|state[7] }]
 
-set pi_done [get_registers { timing:timing|sync:pi_sync|done }]
+set pi_done [get_registers { main:main|timing:timing|sync:pi_sync|done }]
 set phi2 [get_ports { phi2 }]
 
 # Clock constraints
