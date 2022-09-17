@@ -14,11 +14,8 @@
 
 module timing(
     input clk,
-
     output clk8,
     output phi2,
-    input res_b,
-
     input  bus_rw_b,
     output cpu_enable,
     output cpu_read,
@@ -155,7 +152,6 @@ module main (
     timing timing(
         .clk(clk16),
         .clk8(clk8),
-        .res_b(res_b),
         .phi2(phi2),
         .bus_rw_b(bus_rw_b),
         .cpu_enable(cpu_enable),
