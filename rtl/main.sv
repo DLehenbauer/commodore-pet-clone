@@ -101,7 +101,7 @@ module main (
 
     // Pi
     input pi_rw_b,              // RPi 0       : 0 = CPU writing, 1 = CPU reading
-    input [15:0] pi_addr,       // RPi 5-19, 1 : Address of requested read/write
+    input [16:0] pi_addr,       // RPi 5-19, 1 : Address of requested read/write
     inout [7:0]  pi_data,       // RPi 20-27   : Data bits transfered to/from RPi
     input  pi_pending,
     output pi_done,

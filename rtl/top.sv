@@ -100,7 +100,7 @@ module top(
 
     main main(
         .pi_rw_b(pi_rw_b),
-        .pi_addr(pi_addr),
+        .pi_addr({ 1'b0, pi_addr }),
         .pi_data(pi_data),
         .bus_rw_b(bus_rw_b),
         .bus_addr(bus_addr),
