@@ -98,10 +98,13 @@ module top(
     // Audio
     assign audio = cb2 && diag;
 
+    wire [7:0] pi_rd_data;  // Outgoing data when Pi is reading
+
     main main(
         .pi_rw_b(pi_rw_b),
         .pi_addr({ 1'b0, pi_addr }),
-        .pi_data(pi_data),
+        .pi_wr_data(pi_data),       // Incoming data when Pi is writing
+        .pi_rd_data(pi_rd_data),    // Outgoing data when Pi is reading
         .bus_rw_b(bus_rw_b),
         .bus_addr(bus_addr),
         .bus_data(bus_data),
@@ -127,4 +130,8 @@ module top(
         .vsync(vsync),
         .video(video)
     );
+
+    assign pi_data = pi_rw_b
+        ? pi_rd_data                   // RPi is reading, fpga drive
+        : 8'bZ;                        // RPi is writing, pi drives
 endmodule

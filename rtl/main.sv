@@ -100,11 +100,12 @@ module main (
                                 //      resistors at R9 and R10.
 
     // Pi
-    input pi_rw_b,              // RPi 0       : 0 = CPU writing, 1 = CPU reading
-    input [16:0] pi_addr,       // RPi 5-19, 1 : Address of requested read/write
-    inout [7:0]  pi_data,       // RPi 20-27   : Data bits transfered to/from RPi
-    input  pi_pending,
-    output pi_done,
+    input             pi_rw_b,
+    input      [16:0] pi_addr,
+    inout       [7:0] pi_wr_data,   // Incoming data when Pi is writing
+    output reg  [7:0] pi_rd_data,   // Outgoing data when Pi is reading
+    input             pi_pending,
+    output            pi_done,
 
     // Timing
     input clk16,                // 16 MHz master clock
@@ -171,9 +172,9 @@ module main (
     );
     
     pi_ctl ctl(
-        .pi_write(pi_write),
         .pi_addr(pi_addr),
-        .pi_data(pi_data),
+        .pi_data(pi_wr_data),
+        .pi_write(pi_write),
         .res_b(res_b_out),
         .rdy(cpu_rdy)
     );
@@ -220,7 +221,7 @@ module main (
     
     keyboard keyboard(
         .pi_addr(pi_addr),
-        .pi_data(pi_data),
+        .pi_data(pi_wr_data),
         .pi_write(pi_write),
         .bus_addr(bus_addr),
         .bus_data_in(bus_data),
@@ -269,12 +270,10 @@ module main (
     assign ram_oe_b = !ram_oe;
     assign ram_we_b = !ram_we;
 
-    reg [7:0] pi_data_reg = 8'hxx;
-
     always @(negedge pi_read)
-        if (pi_addr == 16'he80e) pi_data_reg <= { 7'h0, gfx };
-        else if (crtc_data_out_enable) pi_data_reg <= crtc_data_out;
-        else pi_data_reg <= bus_data;
+        if (pi_addr == 16'he80e) pi_rd_data <= { 7'h0, gfx };
+        else if (crtc_data_out_enable) pi_rd_data <= crtc_data_out;
+        else pi_rd_data <= bus_data;
     
     assign bus_rw_b = cpu_enable
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
@@ -297,13 +296,9 @@ module main (
             ? { 5'b01000, video_addr }
             : {1'b0, 16'bZ};            // CPU is reading/writing, and therefore driving addr
 
-    assign pi_data = pi_rw_b
-        ? pi_data_reg                   // RPi is reading from register
-        : 8'bZ;                         // RPi is writing to bus
-
     assign bus_data =
         pi_write
-            ? pi_data                   // RPi is writing, and therefore driving data
+            ? pi_wr_data               // RPi is writing, and therefore driving data
             : kbd_enable                // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
                 ? kbd_data_out          // Return USB keyboard state for PIA 1 Port B ($E812)
                 : 8'bZ;                 // CPU is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
