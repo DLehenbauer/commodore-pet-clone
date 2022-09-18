@@ -187,11 +187,8 @@ module main (
         .bus_addr(bus_addr),
         .bus_data_in(bus_data),
         .cpu_write(cpu_write),
-
         .pi_addr(pi_addr),
-        .pi_data_in(pi_data),
         .pi_read(pi_read),
-
         .crtc_data_out(crtc_data_out),
         .crtc_data_out_enable(crtc_data_out_enable)
     );
@@ -295,19 +292,19 @@ module main (
                     : bus_addr[11:10];
     
     assign bus_addr = pi_select
-        ? {1'b0, pi_addr}           // RPi is reading/writing, and therefore driving addr
+        ? pi_addr                       // RPi is reading/writing, and therefore driving addr
         : video_select
             ? { 5'b01000, video_addr }
-            : {1'b0, 16'bZ};        // CPU is reading/writing, and therefore driving addr
+            : {1'b0, 16'bZ};            // CPU is reading/writing, and therefore driving addr
 
     assign pi_data = pi_rw_b
-        ? pi_data_reg           // RPi is reading from register
-        : 8'bZ;                 // RPi is writing to bus
+        ? pi_data_reg                   // RPi is reading from register
+        : 8'bZ;                         // RPi is writing to bus
 
     assign bus_data =
         pi_write
-            ? pi_data           // RPi is writing, and therefore driving data
-            : kbd_enable        // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
-                ? kbd_data_out  // Return USB keyboard state for PIA 1 Port B ($E812)
-                : 8'bZ;         // CPU is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
+            ? pi_data                   // RPi is writing, and therefore driving data
+            : kbd_enable                // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
+                ? kbd_data_out          // Return USB keyboard state for PIA 1 Port B ($E812)
+                : 8'bZ;                 // CPU is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
 endmodule

@@ -21,9 +21,7 @@ module crtc(
     input            cpu_write,
 
     input [15:0]     pi_addr,               // A0..4 select CRTC registers R0..17
-    input  [7:0]     pi_data_in,
     input            pi_read,
-    input            pi_write,
 
     output reg [7:0] crtc_data_out,
     output           crtc_data_out_enable,
@@ -31,10 +29,12 @@ module crtc(
     output reg [4:0] crtc_address_register,  // Internally selects R0..17.  Exposed for testing.
     output     [7:0] crtc_r                  // Contents of currently selected R0..17.  Exposed for testing.
 );
+    `include "crtc.vh"
+ 
     reg [7:0] r [16:0];
 
     assign crtc_r = r[crtc_address_register];
-
+    
     always @(negedge cpu_write or posedge reset) begin
         if (reset) begin
             r[0] = 8'h31;
