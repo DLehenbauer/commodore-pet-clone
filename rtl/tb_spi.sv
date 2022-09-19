@@ -15,17 +15,10 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg spi_sclk = 0;
-    reg spi_cs_n = 1;
+    reg spi_sclk = 1'b0;
+    reg spi_cs_n = 1'b1;
     wire spi_rx;
     wire spi_tx;
-
-    initial begin
-        spi_sclk = 0;
-        forever begin
-            #31.25 spi_sclk = ~spi_sclk;
-        end
-    end
 
     wire [7:0] rx;
     reg  [7:0] tx;
@@ -65,63 +58,97 @@ module tb();
     endtask
 
     task begin_xfer;
-        @(negedge spi_sclk);
-
-        // SCLK must be low prior to falling edge of CS_N.
-        #1 spi_cs_n = 0;
+        spi_cs_n = 0;
+        #500;
     endtask
 
-    integer i;
+    integer bit_index;
+    bit expected_done;
+
+    task xfer_bit();
+        spi_sclk = 1'b1;
+        #500;
+        spi_sclk = 1'b0;
+        #499;
+
+        expected_done = bit_index == 7;
+
+        $display("[%t]    'done' must be %d after bit %0d.", $time, expected_done, bit_index);
+        #1 check_done(expected_done);
+    endtask
 
     task xfer(
-        input [7:0] data
+        input [7:0] data,
+        input integer num_bits = 8
     );
         tx = data;
 
-        for (i = 0; i < 8; i++) begin
-            @(posedge spi_sclk);
-            @(negedge spi_sclk);
-
-            $display("[%t] Test: 'done' must be %d after bit %0d.", $time, i == 7, i);
-            #1 check_done(i == 7);
+        for (bit_index = 0; bit_index < num_bits; bit_index++) begin
+            xfer_bit();
         end
 
-        $display("[%t] Test: Must receive byte $%x.", $time, data);
-        assert_equal(last_rx, data, "last_rx");
+        if (num_bits == 8) begin
+            $display("[%t]    Must receive byte $%x.", $time, data);
+            assert_equal(last_rx, data, "last_rx");
+        end else begin
+            $display("[%t]    'done' must 0 after incomplete transfer.", $time);
+            #1 check_done(1'b0);
+        end
     endtask
 
     task end_xfer;
-        @(negedge spi_sclk);
         tx = 1'bx;
         spi_cs_n = 1;
 
-        $display("[%t] Test: 'done' must be reset by 'cs_n'.", $time);
+        $display("[%t]    'done' must be reset by 'cs_n'.", $time);
         #1 check_done(1'b0);
+
+        #499;
     endtask
 
+    integer i;
     byte values[];
 
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
 
-        $display("[%t] Test: 'done' must be 1 at power on.", $time);
-        #1 check_done(1'b1);
+        $display("[%t] Test: 'done' must be 0 at power on.", $time);
+        #1 check_done(1'b0);
 
+        $display("[%t] Test: Toggle cs_n after power on.", $time);
         values = new [4];
         values = '{
             8'b11011010,
             8'b01011011
         };
 
-        #1 spi_cs_n = 0;
-        #1 spi_cs_n = 1;
+        foreach (values[i]) begin
+            $display("[%t] Test: Transfer single byte $%h.", $time, values[i]);
+            begin_xfer;
+            xfer(/* data: */ values[i]);
+            end_xfer;
+        end
 
+
+        $display("[%t] Test: Transfer consecutive bytes $%h $%h.", $time, values[0], values[1]);
         begin_xfer;
         foreach (values[i]) begin
             xfer(/* data: */ values[i]);
         end
         end_xfer;
+
+        for (i = 0; i < 8; i++) begin
+            $display("[%t] Test: Toggling cs_n after %d bits resets spi state.", $time, i);
+            begin_xfer;
+            xfer(/* data: */ values[0], /* num_bits: */ i);
+            end_xfer;
+
+            $display("[%t] Test: Transfers correctly after toggling cs_n.", $time);
+            begin_xfer();
+            xfer(/* data: */ values[0]);
+            end_xfer();
+        end
 
         $display("[%t] Test Complete", $time);
         $finish;
