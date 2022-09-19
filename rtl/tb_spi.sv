@@ -22,8 +22,8 @@ module tb();
 
     wire [7:0] rx;
     reg  [7:0] tx;
-    wire rx_done;
-    wire tx_done;
+    wire rx_valid;
+    wire tx_valid;
 
     spi_byte spi_byte_rx(
         .spi_sclk(spi_sclk),
@@ -32,7 +32,7 @@ module tb();
         .spi_tx(spi_tx),
         
         .rx(rx),
-        .done(rx_done)
+        .valid(rx_valid)
     );
 
     spi_byte spi_byte_tx(
@@ -41,20 +41,20 @@ module tb();
         .spi_rx(spi_tx),
         .spi_tx(spi_rx),
         .tx(tx),
-        .done(tx_done)
+        .valid(tx_valid)
     );
 
     reg [7:0] last_rx;
 
-    always @(posedge rx_done) begin
+    always @(posedge rx_valid) begin
         last_rx <= rx;
     end
 
-    task check_done(
+    task check_valid(
         input expected
     );
-        assert_equal(rx_done, expected, "rx_done");
-        assert_equal(tx_done, expected, "tx_done");
+        assert_equal(rx_valid, expected, "rx_valid");
+        assert_equal(tx_valid, expected, "tx_valid");
     endtask
 
     task begin_xfer;
@@ -63,7 +63,7 @@ module tb();
     endtask
 
     integer bit_index;
-    bit expected_done;
+    bit expected_valid;
 
     task xfer_bit();
         spi_sclk = 1'b1;
@@ -71,10 +71,10 @@ module tb();
         spi_sclk = 1'b0;
         #499;
 
-        expected_done = bit_index == 7;
+        expected_valid = bit_index == 7;
 
-        $display("[%t]    'done' must be %d after bit %0d.", $time, expected_done, bit_index);
-        #1 check_done(expected_done);
+        $display("[%t]    'valid' must be %d after bit %0d.", $time, expected_valid, bit_index);
+        #1 check_valid(expected_valid);
     endtask
 
     task xfer(
@@ -91,8 +91,8 @@ module tb();
             $display("[%t]    Must receive byte $%x.", $time, data);
             assert_equal(last_rx, data, "last_rx");
         end else begin
-            $display("[%t]    'done' must 0 after incomplete transfer.", $time);
-            #1 check_done(1'b0);
+            $display("[%t]    'valid' must 0 after incomplete transfer.", $time);
+            #1 check_valid(1'b0);
         end
     endtask
 
@@ -100,8 +100,8 @@ module tb();
         tx = 1'bx;
         spi_cs_n = 1;
 
-        $display("[%t]    'done' must be reset by 'cs_n'.", $time);
-        #1 check_done(1'b0);
+        $display("[%t]    'valid' must be reset by 'cs_n'.", $time);
+        #1 check_valid(1'b0);
 
         #499;
     endtask
@@ -113,8 +113,8 @@ module tb();
         $dumpfile("out.vcd");
         $dumpvars;
 
-        $display("[%t] Test: 'done' must be 0 at power on.", $time);
-        #1 check_done(1'b0);
+        $display("[%t] Test: 'valid' must be 0 at power on.", $time);
+        #1 check_valid(1'b0);
 
         $display("[%t] Test: Toggle cs_n after power on.", $time);
         values = new [4];

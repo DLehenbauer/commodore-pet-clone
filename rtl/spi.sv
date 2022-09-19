@@ -21,7 +21,7 @@ module spi_byte (
     output reg [7:0] rx,    // Byte recieved.  Valid on rising edge of 'done'.
     input      [7:0] tx,    // Byte to transmit.  Producer must latch while transmitting.
 
-    output reg done = 0
+    output reg valid = 0    // Should copy/access rx and update tx on rising edge.
 );
     always @(posedge spi_sclk) begin
         if (!spi_cs_n) begin
@@ -33,10 +33,10 @@ module spi_byte (
 
     always @(negedge spi_sclk or posedge spi_cs_n) begin
         if (spi_cs_n) begin
-            done <= 1'b0;
+            valid <= 1'b0;
             tx_bit_index <= 3'd7;
         end else begin
-            done <= tx_bit_index == 3'd0;
+            valid <= tx_bit_index == 3'd0;
             tx_bit_index <= tx_bit_index - 1'b1;
         end
     end
