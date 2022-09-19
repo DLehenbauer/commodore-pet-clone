@@ -74,7 +74,6 @@ set_location_assignment PIN_24 -to hsync
 set_location_assignment PIN_25 -to cpu_rdy
 set_location_assignment PIN_26 -to P26_1V2
 set_location_assignment PIN_27 -to P27_GND
-set_location_assignment PIN_28 -to pi_rw_b
 set_location_assignment PIN_30 -to pi_done_b
 set_location_assignment PIN_31 -to phi2
 set_location_assignment PIN_40 -to pi_data[7]
@@ -85,22 +84,6 @@ set_location_assignment PIN_44 -to pi_data[5]
 set_location_assignment PIN_45 -to pi_data[1]
 set_location_assignment PIN_47 -to pi_data[4]
 set_location_assignment PIN_48 -to pi_data[0]
-set_location_assignment PIN_51 -to pi_addr[15]
-set_location_assignment PIN_52 -to pi_addr[7]
-set_location_assignment PIN_53 -to pi_addr[14]
-set_location_assignment PIN_55 -to pi_addr[6]
-set_location_assignment PIN_57 -to pi_addr[13]
-set_location_assignment PIN_58 -to pi_addr[5]
-set_location_assignment PIN_59 -to pi_addr[12]
-set_location_assignment PIN_60 -to pi_addr[4]
-set_location_assignment PIN_63 -to pi_addr[11]
-set_location_assignment PIN_64 -to pi_addr[3]
-set_location_assignment PIN_65 -to pi_addr[10]
-set_location_assignment PIN_67 -to pi_addr[2]
-set_location_assignment PIN_69 -to pi_addr[9]
-set_location_assignment PIN_70 -to pi_addr[1]
-set_location_assignment PIN_71 -to pi_addr[8]
-set_location_assignment PIN_72 -to pi_addr[0]
 set_location_assignment PIN_73 -to P73_POR
 set_location_assignment PIN_74 -to audio
 set_location_assignment PIN_75 -to ram_oe_b
@@ -154,6 +137,11 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_
 # Automatically program and reset target after assembly produces new .sof
 set_global_assignment -name POST_MODULE_SCRIPT_FILE "quartus_sh:scripts/PostModule.tcl"
 
+set_location_assignment PIN_64 -to spi_cs_n
+set_location_assignment PIN_58 -to spi_rx
+set_location_assignment PIN_55 -to spi_sclk
+set_location_assignment PIN_60 -to spi_tx
+set_global_assignment -name SYSTEMVERILOG_FILE spi.sv
 set_global_assignment -name SYSTEMVERILOG_FILE top.sv
 set_global_assignment -name SDC_FILE PET.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE address_decoding.sv

@@ -54,10 +54,12 @@ module spi_buffer(
     input      [7:0] tx [4],
     input      [2:0] length,
 
+    output [7:0] rx_byte,  // debug
+
     output done
 );
     reg [2:0] count = 0;
-    wire [7:0] rx_byte;
+    // wire [7:0] rx_byte;
     wire [7:0] tx_byte = tx[count];
     wire byte_done;
 
@@ -84,7 +86,6 @@ module spi_buffer(
 endmodule
 
 module pi_com(
-    input reset,
     input spi_sclk,
     input spi_cs_n,
     input spi_rx,
@@ -93,10 +94,13 @@ module pi_com(
     output reg [16:0] pi_addr,
     output reg [7:0] pi_data_out,
     output reg pi_rw_b = 1'b1,
-    input pi_pending_in,
+    input pi_pending_in,                    // pi_pending_in also serves as a reset
     output reg pi_pending_out = 1'b0,
     input pi_done_in,
-    output reg pi_done_out = 1'b0
+    output reg pi_done_out = 1'b0,
+
+    output reg [2:0] state = IDLE,      // DEBUG
+    output [7:0] rx_byte                // DEBUG
 );
     wire [7:0] rx [4];
     reg  [2:0] length;
@@ -104,7 +108,7 @@ module pi_com(
 
     wire rw_b_in = rx[0][7];
     wire a16_in  = rx[0][6];
-    wire cmd_in  = rx[0][5:0];
+    wire [5:0] cmd_in  = rx[0][5:0];
 
     spi_buffer spi_buffer(
         .spi_sclk(spi_sclk),
@@ -113,23 +117,24 @@ module pi_com(
         .spi_tx(spi_tx),
         .length(length),
         .rx(rx),
-        .done(done)
+        .done(done),
+        .rx_byte(rx_byte)
     );
 
     localparam CMD_WRITE = 0;
 
-    localparam IDLE = 0,
-               READ_CMD = 1,
-               WRITING = 2,
-               COMPLETING = 3,
-               DONE = 4;
+    localparam IDLE         = 3'd0,
+               READ_CMD     = 3'd1,
+               WRITING      = 3'd2,
+               COMPLETING   = 3'd3,
+               DONE         = 3'd4;
 
-    reg [2:0] state = IDLE;
+    //reg [2:0] state = IDLE;
 
     // SPI MODE0 reads/writes on the positive clock edge.  We transition the state machine
     // on the negative clock edge.
-    always @(negedge spi_sclk or posedge reset or negedge pi_pending_in) begin
-        if (reset || !pi_pending_in) begin
+    always @(negedge spi_sclk or negedge pi_pending_in) begin
+        if (!pi_pending_in) begin
             state <= IDLE;
             pi_done_out <= 1'b0;
             pi_pending_out <= 1'b0;
