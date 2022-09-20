@@ -25,6 +25,15 @@ module tb();
     wire rx_valid;
     wire tx_valid;
 
+    // reg clk;
+
+    // initial begin
+    //     clk = 0;
+    //     forever begin
+    //         #31.25 clk = ~clk;
+    //     end
+    // end
+
     spi_byte spi_byte_rx(
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),

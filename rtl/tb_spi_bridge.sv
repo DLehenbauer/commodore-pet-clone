@@ -36,7 +36,7 @@ module tb();
 
     wire [7:0] rx_byte;
     reg  [7:0] tx_byte;
-    wire byte_done;
+    wire byte_valid;
 
     spi_byte spi_byte_tx(
         .spi_sclk(spi_sclk),
@@ -45,7 +45,7 @@ module tb();
         .spi_tx(spi_rx),
         .rx(rx_byte),
         .tx(tx_byte),
-        .done(byte_done)
+        .valid(byte_valid)
     );
 
     reg pi_done_in = 1'b0;
