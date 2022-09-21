@@ -71,7 +71,7 @@ module tb();
     endtask
 
     task end_xfer;
-        tx_byte = 1'bx;
+        tx_byte = 8'hxx;
         length = 3'bxxx;
         spi_cs_n = 1'b1;
 

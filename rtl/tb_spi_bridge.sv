@@ -15,15 +15,8 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg spi_sclk;
+    reg spi_sclk = 1'b0;
     reg spi_cs_n = 1'b1;
-
-    initial begin
-        spi_sclk = 0;
-        forever begin
-            #31.25 spi_sclk = ~spi_sclk;
-        end
-    end
 
     wire spi_tx;
     reg spi_rx;
@@ -66,28 +59,29 @@ module tb();
     );
 
     task begin_xfer;
-        @(negedge spi_sclk);
-        #1;                 // SCLK must be low prior to falling edge of CS_N.
-        spi_cs_n = 0;
+        spi_cs_n = 1'b0;
+        #500;
     endtask
 
-    integer i;
+    integer bit_index;
 
     task xfer_byte(
         input [7:0] data
     );
         tx_byte = data;
 
-        for (i = 0; i < 8; i++) begin
-            @(posedge spi_sclk);
-            @(negedge spi_sclk);
+        for (bit_index = 0; bit_index < 8; bit_index++) begin
+            spi_sclk = 1'b1;
+            #500;
+            spi_sclk = 1'b0;
+            #500;
         end
     endtask
 
     task end_xfer;
-        @(negedge spi_sclk);
+        tx_byte = 8'hxx;
         spi_cs_n = 1'b1;
-        #1 tx_byte = 1'bx;
+        #500;
     endtask
 
     initial begin
@@ -98,14 +92,21 @@ module tb();
 
         begin_xfer;
         xfer_byte(8'h40);
+        end_xfer;
+
+        begin_xfer;
         xfer_byte(8'h55);
+        end_xfer;
+
+        begin_xfer;
         xfer_byte(8'h81);
+        end_xfer;
+        
+        begin_xfer;
         xfer_byte(8'h7e);
         end_xfer;
 
-        #100 pi_done_in = 1'b1;
-
-        @(posedge pi_done_out);
+        @(posedge pi_pending_out);
         assert_equal(pi_addr, 17'h15581, "pi_addr");
         assert_equal(pi_data_out, 8'h7e, "pi_data_out");
         assert_equal(pi_rw_b, 1'b0, "pi_rw_b");
