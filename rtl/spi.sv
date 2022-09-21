@@ -30,8 +30,9 @@ module spi_byte (
         if (spi_cs_n) begin
             rx_bit_index <= 3'd7;
             rx_done <= 1'b0;
+            rx <= 8'd0;
         end else if (spi_sclk) begin
-            rx <= { rx[6:0], spi_rx };
+            rx[rx_bit_index] <= spi_rx;
             rx_bit_index <= rx_bit_index - 1'b1;
             rx_done <= rx_bit_index == 3'd0;
         end

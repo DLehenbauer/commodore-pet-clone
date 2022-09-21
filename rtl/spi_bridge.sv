@@ -35,6 +35,7 @@ module pi_com(
     wire [5:0] cmd_in  = rx[0][5:0];
 
     spi_buffer spi_buffer(
+        .reset(!pi_pending_in),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),

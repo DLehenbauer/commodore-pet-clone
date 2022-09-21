@@ -91,7 +91,7 @@ module top(
 
     assign P3_LED_D2 = pi_pending_b;
     assign P7_LED_D4 = pi_done_b;
-    assign P9_LED_D5 = !res_b;
+    assign P9_LED_D5 = cpu_res_b;
     
     wire clk16;     // 16 MHz clock from PLL
     
@@ -103,12 +103,12 @@ module top(
     // Audio
     assign audio = cb2 && diag;
 
-    // spi_byte debug_byte(
-    //     .spi_cs_n(spi_cs_n),
-    //     .spi_sclk(spi_sclk),
-    //     .spi_rx(spi_rx),
-    //     .rx(pi_data)
-    // );
+    spi_byte debug_byte(
+        .spi_cs_n(spi_cs_n),
+        .spi_sclk(spi_sclk),
+        .spi_rx(spi_rx),
+        .rx(pi_data)
+    );
 
     // assign pi_data[0] = spi_sclk;
     // assign pi_data[1] = spi_cs_n;
@@ -124,7 +124,7 @@ module top(
 
     pi_com pi_com(
         .spi_sclk(spi_sclk),
-        .spi_cs_n(!pi_pending),
+        .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
         .pi_addr(pi_addr),
@@ -133,12 +133,8 @@ module top(
         .pi_pending_in(pi_pending),
         .pi_pending_out(pi_pending_out),
         .pi_done_in(pi_done_in),
-        .pi_done_out(pi_done),
-        .state(pi_data[2:0])
+        .pi_done_out(pi_done)
     );
-
-    assign pi_data[3] = pi_pending_out;
-    assign pi_data[4] = pi_done_in;
     
     main main(
         .pi_rw_b(pi_rw_b),
