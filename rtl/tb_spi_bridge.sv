@@ -106,7 +106,7 @@ module tb();
         xfer_byte(8'h7e);
         end_xfer;
 
-        @(posedge pi_pending_out);
+        assert_equal(pi_pending_out, 1'b1, "pi_pending_out");
         assert_equal(pi_addr, 17'h15581, "pi_addr");
         assert_equal(pi_data_out, 8'h7e, "pi_data_out");
         assert_equal(pi_rw_b, 1'b0, "pi_rw_b");

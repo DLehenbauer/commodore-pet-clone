@@ -55,9 +55,13 @@ module pi_com(
 
     reg [2:0] state = IDLE;
 
+    // The Pi Pico pulses CS_N after every byte which is convenient for advancing our state.
+    // With another SPI controller, we would need to use a separate clock.
+    wire state_clk = spi_cs_n | spi_sclk;
+
     // SPI MODE0 reads/writes on the positive clock edge.  We transition the state machine
     // on the negative clock edge.
-    always @(negedge spi_sclk or negedge pi_pending_in) begin
+    always @(posedge state_clk or negedge pi_pending_in) begin
         if (!pi_pending_in) begin
             state <= IDLE;
             pi_done_out <= 1'b0;
