@@ -25,16 +25,17 @@ module tb();
     wire rx_valid;
     wire tx_valid;
 
-    // reg clk;
+    reg sys_clk;
 
-    // initial begin
-    //     clk = 0;
-    //     forever begin
-    //         #31.25 clk = ~clk;
-    //     end
-    // end
+    initial begin
+        sys_clk = 0;
+        forever begin
+            #23 sys_clk = ~sys_clk;
+        end
+    end
 
     spi_byte spi_byte_rx(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -45,6 +46,7 @@ module tb();
     );
 
     spi_byte spi_byte_tx(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_tx),
@@ -65,6 +67,10 @@ module tb();
         assert_equal(rx_valid, expected, "rx_valid");
         assert_equal(tx_valid, expected, "tx_valid");
     endtask
+
+    always @(posedge spi_sclk) begin
+        check_valid(1'b0);
+    end
 
     task begin_xfer;
         spi_cs_n = 0;
