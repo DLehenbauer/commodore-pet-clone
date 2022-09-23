@@ -15,15 +15,6 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg sys_clk;
-
-    initial begin
-        sys_clk = 0;
-        forever begin
-            #23 sys_clk = ~sys_clk;
-        end
-    end
-
     reg start_sclk = 1'b0;
     reg spi_sclk = 1'b0;
 
@@ -46,7 +37,6 @@ module tb();
     wire tx_valid;
 
     spi_byte spi_byte_tx(
-        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_tx),
@@ -56,7 +46,6 @@ module tb();
     );
 
     spi_byte spi_byte_rx(
-        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -73,21 +62,20 @@ module tb();
     endtask
 
     always @(posedge spi_sclk) begin
-        $display("[%t]    'valid' must be 0 while SCLK is 1.", $time);
+        $display("[%t]    'valid' must be 0 after rising edge of SCLK.", $time);
         while (spi_sclk) begin
-            check_valid(1'b0);
-            #1;
+            #1 check_valid(1'b0);
         end
     end
 
     always @(negedge spi_sclk) begin
-        $display("[%t]    'valid' must be 0 at falling edge of SCLK.", $time);
+        $display("[%t]    Completed bit %0d:", $time, bit_index);
+        $display("[%t]        'valid' must be 0 at falling edge of SCLK.", $time);
         check_valid(0);
 
         expected_valid = bit_index === 7;
-        $display("[%t]    'valid' must be %d after falling edge of sys_clk.", $time, expected_valid);
+        $display("[%t]        'valid' must be %d after falling edge of SCLK.", $time, expected_valid);
 
-        @(negedge sys_clk);
         #1 check_valid(expected_valid);
     end
 
@@ -125,8 +113,6 @@ module tb();
             assert_equal(spi_sclk, 0, "spi_sclk");
             @(posedge rx_valid);
             assert_equal(rx, data, "rx");
-            assert_equal(spi_sclk, 0, "spi_sclk");
-            @(negedge rx_valid);
             assert_equal(spi_sclk, 0, "spi_sclk");
         end
     endtask
