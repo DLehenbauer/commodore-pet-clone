@@ -12,35 +12,6 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-module delay(
-    input reset,
-    input clk,
-    input signal,
-    output reg delayed = 1'b0
-);
-    always @(posedge clk or posedge reset) begin
-        delayed <= signal;
-    end
-endmodule;
-
-module positive_edge (
-    input reset,
-    input clk,
-    input signal,
-    output pulse
-);
-    wire delayed;
-
-    delay delay(
-        .reset(reset),
-        .clk(clk),
-        .signal(signal),
-        .delayed(delayed)
-    );
-
-    assign pulse = signal & ~delayed;
-endmodule
-
 module spi_byte (
     input  sys_clk,         // FPGA system clock.  Must be >= 4x spi_sclk.
 
@@ -56,7 +27,7 @@ module spi_byte (
 );
     always @(posedge spi_sclk or posedge spi_cs_n) begin
         if (spi_cs_n) begin
-            rx <= 8'd0;
+            rx <= 8'hxx;
         end else if (spi_sclk) begin
             rx <= { rx[6:0], spi_rx };
         end
@@ -77,19 +48,18 @@ module spi_byte (
 
     assign spi_tx = tx[tx_bit_index];
 
-    wire delayed_done;
-    
-    delay delay(
-        .reset(!spi_cs_n),
-        .clk(sys_clk),
-        .signal(done),
-        .delayed(delayed_done)
-    );
+    reg done_2 = 1'b0;
+    reg done_3 = 1'b0;
 
-    positive_edge positive_edge(
-        .reset(!spi_cs_n),
-        .clk(sys_clk),
-        .signal(delayed_done),
-        .pulse(valid)
-    );
+    always @(negedge sys_clk or posedge spi_cs_n) begin
+        if (spi_cs_n) begin
+            done_3 <= 1'b0;
+            done_2 <= 1'b0;
+        end else begin
+            done_3 <= done_2;
+            done_2 <= done;
+        end
+    end
+
+    assign valid = ~done_3 & done_2;
 endmodule

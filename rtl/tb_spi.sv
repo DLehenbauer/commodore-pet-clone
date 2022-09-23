@@ -15,16 +15,6 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg spi_sclk = 1'b0;
-    reg spi_cs_n = 1'b1;
-    wire spi_rx;
-    wire spi_tx;
-
-    wire [7:0] rx;
-    reg  [7:0] tx;
-    wire rx_valid;
-    wire tx_valid;
-
     reg sys_clk;
 
     initial begin
@@ -34,16 +24,26 @@ module tb();
         end
     end
 
-    spi_byte spi_byte_rx(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_rx),
-        .spi_tx(spi_tx),
-        
-        .rx(rx),
-        .valid(rx_valid)
-    );
+    reg start_sclk = 1'b0;
+    reg spi_sclk = 1'b0;
+
+    always @(posedge start_sclk) begin
+        while (start_sclk) begin
+            spi_sclk = 1'b1;
+            #500;
+            spi_sclk = 1'b0;
+            #500;
+        end
+    end
+
+    reg spi_cs_n = 1'b1;
+    wire spi_rx;
+    wire spi_tx;
+
+    wire [7:0] rx;
+    reg  [7:0] tx;
+    wire rx_valid;
+    wire tx_valid;
 
     spi_byte spi_byte_tx(
         .sys_clk(sys_clk),
@@ -55,11 +55,15 @@ module tb();
         .valid(tx_valid)
     );
 
-    reg [7:0] last_rx;
-
-    always @(posedge rx_valid) begin
-        last_rx <= rx;
-    end
+    spi_byte spi_byte_rx(
+        .sys_clk(sys_clk),
+        .spi_sclk(spi_sclk),
+        .spi_cs_n(spi_cs_n),
+        .spi_rx(spi_rx),
+        .spi_tx(spi_tx),
+        .rx(rx),
+        .valid(rx_valid)
+    );
 
     task check_valid(
         input expected
@@ -69,28 +73,42 @@ module tb();
     endtask
 
     always @(posedge spi_sclk) begin
-        check_valid(1'b0);
+        $display("[%t]    'valid' must be 0 while SCLK is 1.", $time);
+        while (spi_sclk) begin
+            check_valid(1'b0);
+            #1;
+        end
+    end
+
+    always @(negedge spi_sclk) begin
+        $display("[%t]    'valid' must be 0 at falling edge of SCLK.", $time);
+        check_valid(0);
+
+        expected_valid = bit_index === 7;
+        $display("[%t]    'valid' must be %d after falling edge of sys_clk.", $time, expected_valid);
+
+        @(negedge sys_clk);
+        #1 check_valid(expected_valid);
+    end
+
+    always @(negedge spi_cs_n) begin
+        $display("[%t]    'valid' must be reset by 'cs_n'.", $time);
+        #1 check_valid(1'b0);
     end
 
     task begin_xfer;
         spi_cs_n = 0;
         #500;
+        start_sclk = 1'b1;
+    endtask
+
+    task xfer_bit;
+        @(posedge spi_sclk);
+        @(negedge spi_sclk);
     endtask
 
     integer bit_index;
     bit expected_valid;
-
-    task xfer_bit();
-        spi_sclk = 1'b1;
-        #500;
-        spi_sclk = 1'b0;
-        #499;
-
-        expected_valid = bit_index == 7;
-
-        $display("[%t]    'valid' must be %d after bit %0d.", $time, expected_valid, bit_index);
-        #1 check_valid(expected_valid);
-    endtask
 
     task xfer(
         input [7:0] data,
@@ -104,21 +122,23 @@ module tb();
 
         if (num_bits == 8) begin
             $display("[%t]    Must receive byte $%x.", $time, data);
-            assert_equal(last_rx, data, "last_rx");
-        end else begin
-            $display("[%t]    'valid' must 0 after incomplete transfer.", $time);
-            #1 check_valid(1'b0);
+            assert_equal(spi_sclk, 0, "spi_sclk");
+            @(posedge rx_valid);
+            assert_equal(rx, data, "rx");
+            assert_equal(spi_sclk, 0, "spi_sclk");
+            @(negedge rx_valid);
+            assert_equal(spi_sclk, 0, "spi_sclk");
         end
     endtask
 
     task end_xfer;
+        start_sclk = 1'b0;
         tx = 1'bx;
+
+        #500;
         spi_cs_n = 1;
 
-        $display("[%t]    'valid' must be reset by 'cs_n'.", $time);
-        #1 check_valid(1'b0);
-
-        #499;
+        #500;
     endtask
 
     integer i;
@@ -154,7 +174,7 @@ module tb();
         end_xfer;
 
         for (i = 0; i < 8; i++) begin
-            $display("[%t] Test: Toggling cs_n after %d bits resets spi state.", $time, i);
+            $display("[%t] Test: Toggling cs_n after %0d bits resets spi state.", $time, i);
             begin_xfer;
             xfer(/* data: */ values[0], /* num_bits: */ i);
             end_xfer;
