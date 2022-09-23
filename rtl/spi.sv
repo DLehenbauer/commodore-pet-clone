@@ -16,7 +16,7 @@ module spi_byte (
     input  spi_cs_n,        // CS_N also functions as an asyncronous reset
     input  spi_sclk,        // SCLK must be low before falling edge of CS_N
     input  spi_rx,
-    output spi_tx,
+    inout  spi_tx,          // High-Z when CS_N to support multiple peripherals
 
     output reg [7:0] rx,    // Byte recieved.  Valid on rising edge of 'done'.
     input      [7:0] tx,    // Byte to transmit.  Producer must hold while transmitting.
@@ -46,5 +46,8 @@ module spi_byte (
     end
 
     assign valid = done & (tx_bit_index == 3'd7);
-    assign spi_tx = tx[tx_bit_index];
+
+    assign spi_tx = spi_cs_n
+        ? 1'bZ
+        : tx[tx_bit_index];
 endmodule
