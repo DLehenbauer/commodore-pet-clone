@@ -26,7 +26,9 @@ module pi_com(
     input pi_pending_in,                    // pi_pending_in also serves as a reset
     output reg pi_pending_out = 1'b0,
     input pi_done_in,
-    output reg pi_done_out = 1'b0
+    output reg pi_done_out = 1'b0,
+    
+    output reg [2:0] state = IDLE           // Expose internal state for debugging
 );
     wire [7:0] rx [4];
     reg  [2:0] length;
@@ -69,12 +71,6 @@ module pi_com(
                WRITING      = 3'd2,
                COMPLETING   = 3'd3,
                DONE         = 3'd4;
-
-    reg [2:0] state = IDLE;
-
-    // The Pi Pico pulses CS_N after every byte which is convenient for advancing our state.
-    // With another SPI controller, we would need to use a separate clock.
-    wire state_clk = spi_cs_n | spi_sclk;
 
     // SPI MODE0 reads/writes on the positive clock edge.  We transition the state machine
     // on the negative clock edge.
