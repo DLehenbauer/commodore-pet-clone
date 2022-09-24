@@ -42,7 +42,7 @@ module spi_buffer(
 
     always @(posedge byte_valid or posedge reset) begin
         if (reset) begin
-            count <= 1'b0;
+            count <= 0;
         end else if (byte_valid) begin
             rx[count] <= rx_byte;
             count <= count + 1'b1;

@@ -15,36 +15,86 @@
 `timescale 1ns / 1ps
 
 module tb();
+    reg sys_clk;
+
+    initial begin
+        sys_clk = 0;
+        forever begin
+            #31.25 sys_clk = ~sys_clk;
+        end
+    end
+
+    reg start_sclk = 1'b0;
     reg spi_sclk = 1'b0;
+
+    always @(posedge start_sclk) begin
+        while (start_sclk) begin
+            spi_sclk = 1'b1;
+            #500;
+            spi_sclk = 1'b0;
+            #500;
+        end
+    end
+
     reg spi_cs_n = 1'b1;
-
+    wire spi_rx;
     wire spi_tx;
-    reg spi_rx;
-
-    wire [16:0] pi_addr;
-    wire [7:0]  pi_data_out;
-    wire pi_rw_b;
-    reg pi_pending_in = 1'b0;
-    wire pi_pending_out;
-
-    wire [7:0] rx_byte;
-    reg  [7:0] tx_byte;
-    wire byte_valid;
+    reg  [7:0] tx;
+    wire tx_valid;
 
     spi_byte spi_byte_tx(
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_tx),
         .spi_tx(spi_rx),
-        .rx(rx_byte),
-        .tx(tx_byte),
-        .valid(byte_valid)
+        .tx(tx),
+        .valid(tx_valid)
     );
 
+    task begin_xfer;
+        spi_cs_n = 0;
+        #500;
+        start_sclk = 1'b1;
+    endtask
+
+    task xfer_bit;
+        @(posedge spi_sclk);
+        @(negedge spi_sclk);
+    endtask
+
+    integer bit_index;
+    bit expected_valid;
+
+    task xfer(
+        input [7:0] data
+    );
+        tx = data;
+
+        for (bit_index = 0; bit_index < 8; bit_index++) begin
+            xfer_bit();
+        end
+    endtask
+
+    task end_xfer;
+        start_sclk = 1'b0;
+        tx = 8'hxx;
+
+        #500;
+        spi_cs_n = 1;
+
+        #500;
+    endtask
+
+    wire [16:0] pi_addr;
+    wire [7:0]  pi_data_out;
+    wire pi_rw_b;
+    reg pi_pending_in = 1'b0;
+    wire pi_pending_out;
     reg pi_done_in = 1'b0;
     wire pi_done_out;
 
     pi_com pi_com(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -58,32 +108,6 @@ module tb();
         .pi_done_out(pi_done_out)
     );
 
-    task begin_xfer;
-        spi_cs_n = 1'b0;
-        #500;
-    endtask
-
-    integer bit_index;
-
-    task xfer_byte(
-        input [7:0] data
-    );
-        tx_byte = data;
-
-        for (bit_index = 0; bit_index < 8; bit_index++) begin
-            spi_sclk = 1'b1;
-            #500;
-            spi_sclk = 1'b0;
-            #500;
-        end
-    endtask
-
-    task end_xfer;
-        tx_byte = 8'hxx;
-        spi_cs_n = 1'b1;
-        #500;
-    endtask
-
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
@@ -91,19 +115,19 @@ module tb();
         #1 pi_pending_in = 1'b1;
 
         begin_xfer;
-        xfer_byte(8'h40);
+        xfer(8'h40);
         end_xfer;
 
         begin_xfer;
-        xfer_byte(8'h55);
+        xfer(8'h55);
         end_xfer;
 
         begin_xfer;
-        xfer_byte(8'h81);
+        xfer(8'h81);
         end_xfer;
         
         begin_xfer;
-        xfer_byte(8'h7e);
+        xfer(8'h7e);
         end_xfer;
 
         assert_equal(pi_pending_out, 1'b1, "pi_pending_out");
@@ -111,8 +135,9 @@ module tb();
         assert_equal(pi_data_out, 8'h7e, "pi_data_out");
         assert_equal(pi_rw_b, 1'b0, "pi_rw_b");
         
-        #100 pi_done_in = 1'b0;
-        #100 pi_pending_in = 1'b0;
-        #100 $finish;
+        #500 pi_done_in = 1'b1;
+        #500 pi_pending_in = 1'b0;
+        #500 pi_done_in = 1'b0;
+        #500 $finish;
     end
 endmodule

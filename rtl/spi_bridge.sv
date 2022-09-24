@@ -13,6 +13,8 @@
  */
 
 module pi_com(
+    input sys_clk,
+
     input spi_sclk,
     input spi_cs_n,
     input spi_rx,
@@ -28,7 +30,7 @@ module pi_com(
 );
     wire [7:0] rx [4];
     reg  [2:0] length;
-    wire buffer_valid;
+    wire buffer_valid_1;
 
     wire rw_b_in = rx[0][7];
     wire a16_in  = rx[0][6];
@@ -42,8 +44,23 @@ module pi_com(
         .spi_tx(spi_tx),
         .length(length),
         .rx(rx),
-        .valid(buffer_valid)
+        .valid(buffer_valid_1)
     );
+
+    reg buffer_valid_2 = 0;
+    reg buffer_valid_3 = 0;
+
+    always @(negedge sys_clk or negedge pi_pending_in) begin
+        if (!pi_pending_in) begin
+            buffer_valid_3 <= 0;
+            buffer_valid_2 <= 0;
+        end else begin
+            buffer_valid_3 <= buffer_valid_2;
+            buffer_valid_2 <= buffer_valid_1;
+        end
+    end
+
+    wire buffer_valid = buffer_valid_2 & ~buffer_valid_3;
 
     localparam CMD_WRITE = 0;
 
@@ -61,7 +78,7 @@ module pi_com(
 
     // SPI MODE0 reads/writes on the positive clock edge.  We transition the state machine
     // on the negative clock edge.
-    always @(posedge state_clk or negedge pi_pending_in) begin
+    always @(posedge sys_clk or negedge pi_pending_in) begin
         if (!pi_pending_in) begin
             state <= IDLE;
             pi_done_out <= 1'b0;

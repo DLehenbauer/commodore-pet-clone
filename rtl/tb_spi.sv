@@ -118,8 +118,8 @@ module tb();
     endtask
 
     task end_xfer;
-        start_sclk = 1'b0;
-        tx = 1'bx;
+        start_sclk = 0;
+        tx = 8'hxx;
 
         #500;
         spi_cs_n = 1;
