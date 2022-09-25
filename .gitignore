@@ -66,3 +66,9 @@ prgs/**
 # CMake build artifacts
 /sw/build
 /build
+
+# Dev contianer artifact?
+**/.buildNodeID
+
+# Omit roms
+fw/roms/*.h
