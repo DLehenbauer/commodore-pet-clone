@@ -1,8 +1,10 @@
 setlocal ENABLEDELAYEDEXPANSION
-:: iverilog -g2012 crtc.v tb_crtc.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 spi.v tb_spi.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 video.v bus.v tb_video.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 bus.v tb_bus.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 keyboard.v tb_keyboard.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 sync.v bus.v tb_sync.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 address_decoding.v tb_address_decoding.v tb_common.v && vvp a.out || exit /b !ERRORLEVEL!
+:: iverilog -g2012 tb_crtc.sv crtc.sv address_decoding.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_spi.sv spi.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_spi_buffer.sv spi_buffer.sv spi.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_spi_bridge.sv spi_bridge.sv spi_buffer.sv spi.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_video.sv video.sv bus.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_bus.sv bus.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_keyboard.sv keyboard.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_sync.sv sync.sv bus.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_address_decoding.sv address_decoding.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!

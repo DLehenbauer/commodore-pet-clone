@@ -5,6 +5,7 @@ set revision [lindex $quartus(args) 2]
 if [string match $module "quartus_asm"] {
     post_message "Programming device"
     qexec "quartus_pgm output_files/PET.cdf"
-    post_message "Restarting target"
-    qexec "ssh pi@rpi3.local \"sudo killall -9 main; nohup sudo ./main </dev/null >/dev/null 2>/dev/null &\""
+    
+    # post_message "Restarting target"
+    # qexec "ssh pi@rpi3.local \"sudo killall -9 main; nohup sudo ./main </dev/null >/dev/null 2>/dev/null &\""
 }

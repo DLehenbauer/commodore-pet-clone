@@ -40,7 +40,7 @@ module tb();
     );
 
     crtc ctrc(
-        .res_b(!reset),
+        .reset(reset),
 
         .crtc_select(crtc_enable),
         .bus_addr(bus_addr),
@@ -48,7 +48,6 @@ module tb();
         .cpu_write(cpu_write),
 
         .pi_addr(pi_addr),
-        .pi_data_in(pi_data),
         .pi_read(pi_read),
 
         .crtc_data_out(crtc_data_out),

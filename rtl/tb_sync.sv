@@ -47,7 +47,7 @@ module tb();
     initial begin
         clk16 = 0;
         forever begin
-            #62.5 clk16 = ~clk16;
+            #31.25 clk16 = ~clk16;
         end
     end
 

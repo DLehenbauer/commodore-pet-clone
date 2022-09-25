@@ -38,7 +38,7 @@
 
 set_global_assignment -name DEVICE EP2C5T144C8
 set_global_assignment -name FAMILY "Cyclone II"
-set_global_assignment -name TOP_LEVEL_ENTITY main
+set_global_assignment -name TOP_LEVEL_ENTITY top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:32:04  JULY 10, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
@@ -53,9 +53,6 @@ set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WE
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT EXTRA
 set_global_assignment -name OPTIMIZE_HOLD_TIMING "IO PATHS AND MINIMUM TPD PATHS"
 set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
@@ -63,13 +60,11 @@ set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
 set_global_assignment -name STRATIX_CONFIGURATION_DEVICE EPCS4
 set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name RESERVE_ASDO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (SystemVerilog)"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
 
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_res_b
-set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_res_b
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_irq_b
-set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_irq_b
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_nmi_b
-set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_nmi_b
+# Automatically program and reset target after assembly produces new .sof
+set_global_assignment -name POST_MODULE_SCRIPT_FILE "quartus_sh:scripts/PostModule.tcl"
 
 set_location_assignment PIN_3 -to P3_LED_D2
 set_location_assignment PIN_4 -to video
@@ -83,7 +78,6 @@ set_location_assignment PIN_24 -to hsync
 set_location_assignment PIN_25 -to cpu_rdy
 set_location_assignment PIN_26 -to P26_1V2
 set_location_assignment PIN_27 -to P27_GND
-set_location_assignment PIN_28 -to pi_rw_b
 set_location_assignment PIN_30 -to pi_done_b
 set_location_assignment PIN_31 -to phi2
 set_location_assignment PIN_40 -to pi_data[7]
@@ -94,22 +88,10 @@ set_location_assignment PIN_44 -to pi_data[5]
 set_location_assignment PIN_45 -to pi_data[1]
 set_location_assignment PIN_47 -to pi_data[4]
 set_location_assignment PIN_48 -to pi_data[0]
-set_location_assignment PIN_51 -to pi_addr[15]
-set_location_assignment PIN_52 -to pi_addr[7]
-set_location_assignment PIN_53 -to pi_addr[14]
-set_location_assignment PIN_55 -to pi_addr[6]
-set_location_assignment PIN_57 -to pi_addr[13]
-set_location_assignment PIN_58 -to pi_addr[5]
-set_location_assignment PIN_59 -to pi_addr[12]
-set_location_assignment PIN_60 -to pi_addr[4]
-set_location_assignment PIN_63 -to pi_addr[11]
-set_location_assignment PIN_64 -to pi_addr[3]
-set_location_assignment PIN_65 -to pi_addr[10]
-set_location_assignment PIN_67 -to pi_addr[2]
-set_location_assignment PIN_69 -to pi_addr[9]
-set_location_assignment PIN_70 -to pi_addr[1]
-set_location_assignment PIN_71 -to pi_addr[8]
-set_location_assignment PIN_72 -to pi_addr[0]
+set_location_assignment PIN_55 -to spi_sclk
+set_location_assignment PIN_58 -to spi_rx
+set_location_assignment PIN_60 -to spi_tx
+set_location_assignment PIN_64 -to spi_cs_n
 set_location_assignment PIN_73 -to P73_POR
 set_location_assignment PIN_74 -to audio
 set_location_assignment PIN_75 -to ram_oe_b
@@ -156,20 +138,26 @@ set_location_assignment PIN_142 -to bus_rw_b
 set_location_assignment PIN_143 -to io_oe_b
 set_location_assignment PIN_144 -to cpu_res_b
 
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (SystemVerilog)"
-
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
-set_global_assignment -name VERILOG_FILE video.v
-set_global_assignment -name VERILOG_FILE keyboard.v
-set_global_assignment -name VERILOG_FILE address_decoding.v
-set_global_assignment -name VERILOG_FILE bus.v
-set_global_assignment -name VERILOG_FILE sync.v
-set_global_assignment -name VERILOG_FILE crtc.v
-set_global_assignment -name SDC_FILE PET.sdc
-set_global_assignment -name SYSTEMVERILOG_FILE main.v
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_res_b
+set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_res_b
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_irq_b
+set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_irq_b
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_nmi_b
+set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_nmi_b
 set_global_assignment -name QIP_FILE pll.qip
-
-# Automatically program and reset target after assembly produces new .sof
-set_global_assignment -name POST_MODULE_SCRIPT_FILE "quartus_sh:scripts/PostModule.tcl"
-
+set_global_assignment -name SDC_FILE PET.sdc
+set_global_assignment -name SYSTEMVERILOG_FILE address_decoding.sv
+set_global_assignment -name SYSTEMVERILOG_FILE bus.sv
+set_global_assignment -name SYSTEMVERILOG_FILE crtc.sv
+set_global_assignment -name SYSTEMVERILOG_FILE keyboard.sv
+set_global_assignment -name SYSTEMVERILOG_FILE main.sv
+set_global_assignment -name SYSTEMVERILOG_FILE spi_bridge.sv
+set_global_assignment -name SYSTEMVERILOG_FILE spi_buffer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE spi.sv
+set_global_assignment -name SYSTEMVERILOG_FILE sync.sv
+set_global_assignment -name SYSTEMVERILOG_FILE top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE video.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

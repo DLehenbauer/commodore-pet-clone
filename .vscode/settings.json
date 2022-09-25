@@ -65,6 +65,7 @@
     },
     "files.exclude": {
         "rtl/*.v.bak": true,
+        "rtl/*.sv.bak": true,
         "rtl/*.out": true,
         "rtl/*.vcd": true,
         "rtl/db/**": true,

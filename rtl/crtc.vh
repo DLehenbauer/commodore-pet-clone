@@ -1,5 +1,5 @@
-//`ifndef _CRTC_VH_
-//`define _CRTC_VH_
+// This .vh file should be included inside each module definition that need these constants.
+// Therefore this .vh should not use `ifndef to gaurd against multiple inclusions.
 
 localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-displayed characters, minus one, per horizontal line.
                                         //       The frequency of HSYNC is thus determined by this register.
@@ -28,5 +28,3 @@ localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-display
                                         //       is used to position the displayed text in the vertical direction.
         
            R9_SCAN_LINE         = 9;    // [4:0] Number of scan lines per character row, including spacing.
-
-//`endif // _CRTC_VH_
