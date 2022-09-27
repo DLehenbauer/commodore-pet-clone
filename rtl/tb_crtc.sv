@@ -65,7 +65,7 @@ module tb();
         #1 cpu_write = 1'b1;
         #1 cpu_write = 0;
 
-        assert_equal(crtc_address_register, r, "crtc_address_register");
+        #1 assert_equal(crtc_address_register, r, "crtc_address_register");
     endtask
 
     task cpu_store(
@@ -76,8 +76,22 @@ module tb();
         #1 cpu_write = 1'b1;
         #1 cpu_write = 0;
 
-        assert_equal(crtc_r, value, "crtc_r");
+        #1 assert_equal(crtc_r, value, "crtc_r");
+
+        bus_data_in = 8'hxx;
+        bus_addr = 17'hxxxxx;
     endtask
+
+    // task cpu_load(
+    //     input [7:0] expected_value
+    // );
+    //     #1 bus_data_in = 8'hxx;
+    //     #1 bus_addr = 17'he881;
+    //     #1 cpu_read = 1'b1;
+    //     #1 assert_equal(bus_data_out, expected_value, "bus_data_out");
+    //     #1 cpu_read = 0;
+    //     bus_addr = 17'hxxxxx;
+    // endtask
 
     task pi_load(
         input [4:0] r,
@@ -86,10 +100,10 @@ module tb();
         pi_addr = 16'he8f0 | r;
 
         #1 pi_read = 1'b1;
-        assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
+        #1 assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
 
         #1 pi_read = 0;
-        assert_equal(crtc_data_out, expected_value, "crtc_data_out");
+        #1 assert_equal(crtc_data_out, expected_value, "crtc_data_out");
         assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
 
         #1 pi_addr = 16'h0;
@@ -106,25 +120,28 @@ module tb();
         #1 reset = 0;
 
         for (r = 0; r <= 15; r++) begin
-            #1 $display("[%t] Test: CPU select R%d", $time, r);
+            #1 $display("[%t] Test: CPU select R%0d", $time, r);
             cpu_select(/* r: */ r);
 
             value = 8'h80 | r;
 
-            #1 $display("[%t] Test: CPU store R%d = $%x", $time, r, value);
+            #1 $display("[%t] Test: CPU store R%0d = $%x", $time, r, value);
             cpu_store(/* value: */ value);
 
-            #1 $display("[%t] Test: Pi load R%d == $%x", $time, r, value);
+            // #1 $display("[%t] Test: CPU load R%0d = $%x", $time, r, value);
+            // cpu_load(/* expected_value: */ value);
+
+            #1 $display("[%t] Test: Pi load R%0d == $%x", $time, r, value);
             pi_load(r, value);
         end
 
         for (r = 16; r <= 17; r++) begin
-            #1 $display("[%t] Test: CPU select R%d", $time, r);
+            #1 $display("[%t] Test: CPU select R%0d", $time, r);
             cpu_select(/* r: */ r);
 
             value = 8'h80 | r;
 
-            #1 $display("[%t] Test: CPU store R%d = $%x", $time, r, value);
+            #1 $display("[%t] Test: CPU store R%0d = $%x", $time, r, value);
             cpu_store(/* value: */ value);
         end
 

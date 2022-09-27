@@ -31,7 +31,7 @@ module crtc(
 );
     `include "crtc.vh"
  
-    reg [7:0] r [16:0];
+    reg [7:0] r [17:0];
 
     assign crtc_r = r[crtc_address_register];
     
