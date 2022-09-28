@@ -82,5 +82,8 @@
     "cmake.buildBeforeRun": true,
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "verilog.linting.linter": "iverilog",
-    "verilog.linting.iverilog.arguments": "-g2012"
+    "verilog.linting.iverilog.arguments": "-g2012",
+    "cSpell.words": [
+        "Picoprobe"
+    ]
 }

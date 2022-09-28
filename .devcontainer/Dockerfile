@@ -51,8 +51,11 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     iverilog
 
 # Raspberry Pi Pico SDK
-RUN mkdir /opt/pico
+ARG PICO_PATH="/opt/pico"
+WORKDIR $PICO_PATH
 
+# Install cross toolchain for Raspberry Pi Pico.  Note that we also need native
+# the native toolchain in order to build the 'pioasm' and 'elf2uf2' tools.
 RUN apt-get update && apt-get -y install --no-install-recommends \
     build-essential \
     cmake \
@@ -60,14 +63,21 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     libnewlib-arm-none-eabi \
     libstdc++-arm-none-eabi-newlib
 
-ENV PICO_SDK_PATH="/opt/pico/pico-sdk"
-
-RUN cd /opt/pico && \
-    git clone -b master https://github.com/raspberrypi/pico-sdk.git && \
+# Get latest Raspberry Pi Pico SDK
+RUN git clone -b master https://github.com/raspberrypi/pico-sdk.git && \
     cd pico-sdk && \
     git submodule update --init
 
-# OpenOCD with Raspberry Pi Pico support
+ENV PICO_SDK_PATH="${PICO_PATH}/pico-sdk"
+
+# Get and build latest Raspberry Pi Pico examples
+RUN git clone -b master https://github.com/raspberrypi/pico-examples.git && \
+    cd pico-examples && \
+    mkdir build && \
+    cd build && \
+    cmake ..
+
+# Build OpenOCD with Picoprobe support
 RUN apt-get update && apt-get -y install --no-install-recommends \
     autoconf \
     automake \
@@ -75,16 +85,16 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     libftdi-dev \
     libtool \
     libusb-1.0-0-dev \
+    pkg-config \
     texinfo
 
-RUN cd /opt/pico && \
-    git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --depth=1 --no-single-branch && \
+RUN git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --depth=1 --no-single-branch && \
     cd openocd && \
     ./bootstrap && \
     ./configure --enable-picoprobe && \
     make -j4 && \
     sudo make install
 
-# Install minicom for UART communication with pico
+# Install minicom for UART communication with Pico
 RUN apt-get update && apt-get -y install --no-install-recommends \
     minicom
