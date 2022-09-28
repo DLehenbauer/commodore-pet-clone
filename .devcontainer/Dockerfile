@@ -75,6 +75,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     libftdi-dev \
     libtool \
     libusb-1.0-0-dev \
+    pkg-config \
     texinfo
 
 RUN cd /opt/pico && \

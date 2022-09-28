@@ -73,3 +73,5 @@ prgs/**
 
 # Omit roms
 fw/roms/*.h
+.vscode/.cortex-debug.peripherals.state.json
+.vscode/.cortex-debug.registers.state.json
