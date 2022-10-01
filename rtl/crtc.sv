@@ -26,27 +26,78 @@ module crtc(
     output reg [7:0] crtc_data_out,
     output           crtc_data_out_enable,
 
-    output reg [4:0] crtc_address_register,  // Internally selects R0..17.  Exposed for testing.
-    output     [7:0] crtc_r                  // Contents of currently selected R0..17.  Exposed for testing.
+    output reg [4:0] crtc_address_register,   // Internally selects R0..17.  Exposed for testing.
+    output     [7:0] crtc_r,                  // Contents of currently selected R0..17.  Exposed for testing.
+
+    output [7:0] h_total,
+    output [7:0] h_displayed,
+    output [7:0] h_sync_pos,
+    output [7:4] v_sync_width,
+    output [3:0] h_sync_width,
+    output [6:0] v_total,
+    output [4:0] v_line_adjust,
+    output [6:0] v_displayed,
+    output [6:0] v_sync_pos,
+    output [4:0] char_height
 );
-    `include "crtc.vh"
+    localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-displayed characters, minus one, per horizontal line.
+                                            //       The frequency of HSYNC is thus determined by this register.
+                
+               R1_H_DISPLAYED       = 1,    // [7:0] Number of displayed characters per horizontal line.
+                
+               R2_H_SYNC_POS        = 2,    // [7:0] Position of the HSYNC on the horizontal line, in terms of the character location number on the line.
+                                            //       The position of the HSYNC determines the left-to-right location of the displayed text on the video screen.
+                                            //       In this way, the side margins are adjusted.
+
+               R3_SYNC_WIDTH        = 3,    // [7:4] Width of VSYNC in scan lines
+                                            // [3:0] Width of HSYNC in character clock times
+
+               R4_V_TOTAL           = 4,    // [6:0] Total number of character rows in a frame, minus one. This register, along with R5,
+                                            //       determines the overall frame rate, which should be close to the line frequency to
+                                            //       ensure flicker-free appearance. If the frame time is adjusted to be longer than the
+                                            //       period of the line frequency, then /RES may be used to provide absolute synchronism.
+
+               R5_V_LINE_ADJUST     = 5,    // [4:0] Number of additional scan lines needed to complete an entire frame scan and is intended
+                                            //       as a fine adjustment for the video frame time.
+
+               R6_V_DISPLAYED       = 6,    // [6:0] Number of displayed character rows in each frame. In this way, the vertical size of the
+                                            //       displayed text is determined.
+            
+               R7_V_SYNC_POS        = 7,    // [6:0] Selects the character row time at which the VSYNC pulse is desired to occur and, thus,
+                                            //       is used to position the displayed text in the vertical direction.
+            
+               R9_SCAN_LINE         = 9;    // [4:0] Number of scan lines per character row, including spacing.
  
-    reg [7:0] r [16:0];
+    reg [7:0] r [17:0];
 
     assign crtc_r = r[crtc_address_register];
+
+    assign h_total = r[R0_H_TOTAL];
+    assign h_displayed = r[R1_H_DISPLAYED];
+    assign h_sync_pos = r[R2_H_SYNC_POS];
+    assign v_sync_width = r[R3_SYNC_WIDTH][7:4];
+    assign h_sync_width = r[R3_SYNC_WIDTH][3:0];
+    assign v_total = r[R4_V_TOTAL];
+    assign v_line_adjust = r[R5_V_LINE_ADJUST];
+    assign v_displayed = r[R6_V_DISPLAYED];
+    assign v_sync_pos = r[R7_V_SYNC_POS];
+    assign char_height = r[R9_SCAN_LINE];
     
     always @(negedge cpu_write or posedge reset) begin
         if (reset) begin
-            r[0] = 8'h31;
-            r[1] = 8'h28;
-            r[2] = 8'h29;
-            r[3] = 8'h0f;
-            r[4] = 8'h28;
-            r[5] = 8'h05;
-            r[6] = 8'h19;
-            r[7] = 8'h21;
+            // On reset, we initialize the CRTC register to produce the 15.625 KHz / 60 Hz timing
+            // of a non-CRTC PET.  These values are then overwritten during boot if a CRTC Edit
+            // ROM is used.
+            r[R0_H_TOTAL]           = 8'd63;
+            r[R1_H_DISPLAYED]       = 8'd40;
+            r[R2_H_SYNC_POS]        = 8'd48;
+            r[R3_SYNC_WIDTH]        = 8'h15;
+            r[R4_V_TOTAL]           = 7'd32;
+            r[R5_V_LINE_ADJUST]     = 5'd00;
+            r[R6_V_DISPLAYED]       = 7'd25;
+            r[R7_V_SYNC_POS]        = 7'd28;
             r[8] = 8'h00;
-            r[9] = 8'h07;
+            r[R9_SCAN_LINE]         = 5'd07;
             r[10] = 8'h00;
             r[11] = 8'h00;
             r[12] = 8'h10;

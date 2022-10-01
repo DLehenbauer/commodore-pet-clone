@@ -25,6 +25,7 @@ set cpu_strobe       [get_registers { main:main|timing:timing|bus:bus|state[7] }
 
 set pi_done [get_registers { main:main|timing:timing|sync:pi_sync|done }]
 set phi2 [get_ports { phi2 }]
+set spi_sclk [get_ports { spi_sclk }]
 
 # Clock constraints
 create_generated_clock -name "clk_8" \
@@ -71,6 +72,10 @@ create_generated_clock -name "phi2" \
     -source $cpu_strobe \
     $phi2
 
+create_clock -name "spi_sclk" \
+    -period 1MHz \
+    $spi_sclk
+    
 # create_generated_clock -name "pi_done" \
 #     -source $pi_select \
 #     -invert \

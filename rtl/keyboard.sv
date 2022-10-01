@@ -13,6 +13,8 @@
  */
  
  module keyboard(
+    input reset,
+ 
     input [15:0] pi_addr,
     input [7:0]  pi_data,
     input pi_write,
@@ -28,12 +30,25 @@
     output reg [7:0] kbd_data_out = 8'hff,
     output kbd_enable
 );
-    reg [7:0] kbd_matrix [9:0];
+    reg [7:0] kbd_matrix [9:0];   
     reg [3:0] current_kbd_row = 4'h0;
-
-    always @(negedge pi_write) begin
-        if (17'hE800 <= pi_addr && pi_addr <= 17'hE809) begin
-            kbd_matrix[pi_addr[3:0]] <= pi_data;
+    
+    always @(negedge pi_write or posedge reset) begin
+        if (reset) begin
+            kbd_matrix[0] = 8'hff;
+            kbd_matrix[1] = 8'hff;
+            kbd_matrix[2] = 8'hff;
+            kbd_matrix[3] = 8'hff;
+            kbd_matrix[4] = 8'hff;
+            kbd_matrix[5] = 8'hff;
+            kbd_matrix[6] = 8'hff;
+            kbd_matrix[7] = 8'hff;
+            kbd_matrix[8] = 8'hff;
+            kbd_matrix[9] = 8'hff;
+        end else begin
+            if (17'hE800 <= pi_addr && pi_addr <= 17'hE809) begin
+                kbd_matrix[pi_addr[3:0]] <= pi_data;
+            end
         end
     end
 
