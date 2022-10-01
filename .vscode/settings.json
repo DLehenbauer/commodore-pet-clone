@@ -61,7 +61,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "stdlib.h": "c"
     },
     "files.exclude": {
         "rtl/*.v.bak": true,

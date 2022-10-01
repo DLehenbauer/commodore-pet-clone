@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include "pico/stdlib.h"
-#include "pico/binary_info.h"
-#include "hardware/spi.h"
+#include "pch.h"
+#include "global.h"
+#include "roms.h"
+#include "usb/usb.h"
 
 #define PENDING_B_PIN 6
 #define DONE_B_PIN 7
@@ -82,9 +82,15 @@ void init() {
 
 int main() {
     init();
+    usb_init();
 
     while (true) {
-        sleep_ms(10000);
+        // Dispatch TinyUSB events
+        tuh_task();
+
+        for (uint8_t row = 0; row < sizeof(key_matrix); row++) {
+            pi_write(0xe800 + row, key_matrix[row]);
+        }
     }
 
     return 0;
