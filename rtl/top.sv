@@ -103,12 +103,12 @@ module top(
     // Audio
     assign audio = cb2 && diag;
 
-    spi_byte debug_byte(
-        .spi_cs_n(spi_cs_n),
-        .spi_sclk(spi_sclk),
-        .spi_rx(spi_rx),
-        .rx(pi_data)
-    );
+    // spi_byte debug_byte(
+    //    .spi_cs_n(spi_cs_n),
+    //    .spi_sclk(spi_sclk),
+    //    .spi_rx(spi_rx),
+    //    .rx(pi_data)
+    //);
 
     // assign pi_data[0] = spi_sclk;
     // assign pi_data[1] = spi_cs_n;
@@ -123,6 +123,7 @@ module top(
     wire pi_done_in;
 
     pi_com pi_com(
+        .sys_clk(clk16),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -133,7 +134,8 @@ module top(
         .pi_pending_in(pi_pending),
         .pi_pending_out(pi_pending_out),
         .pi_done_in(pi_done_in),
-        .pi_done_out(pi_done)
+        .pi_done_out(pi_done),
+        .state(pi_data[2:0])        // Expose external state for debugging
     );
     
     main main(

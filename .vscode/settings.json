@@ -72,7 +72,15 @@
         "rtl/incremental_db/**": true,
         "rtl/output_files/**": true
     },
-    "cmake.configureOnOpen": false,
+    // Disable UI that would attempt to launch Pico binary on host machine.
+    "cmake.statusbar.advanced": {
+        "debug": { "visibility": "hidden" },
+        "launch": { "visibility": "hidden" },
+        "build": { "visibility": "hidden" },
+        "buildTarget": { "visibility": "hidden" }
+    },
+    "cmake.buildBeforeRun": true,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "verilog.linting.linter": "iverilog",
     "verilog.linting.iverilog.arguments": "-g2012"
 }

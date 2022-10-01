@@ -23,7 +23,8 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-		"DavidAnson.vscode-markdownlint",
+        "DavidAnson.vscode-markdownlint",
+		"marus25.cortex-debug",
 		"ms-vscode.cpptools-extension-pack",
 		"mshr-h.veriloghdl",
 		"mutantdino.resourcemonitor",
@@ -31,8 +32,11 @@
 		"xaver.clang-format"
 	],
 
-    "runArgs": [ "--cap-add=SYS_ADMIN" ],
+    "runArgs": [
+        "--privileged",             // Required to access Picoprobe SWD from dev container
+        "--device=/dev/ttyACM0"     // Expose Picoprobe URT to dev container
+    ],
 
-    // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-    "remoteUser": "vscode"
+    // TODO: Figure out how to connect to Picoprobe as a non-root user.
+    // "remoteUser": "vscode"
 }
