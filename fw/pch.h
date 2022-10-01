@@ -14,9 +14,28 @@
 
 #pragma once
 
-#include <pico/stdlib.h>
-#include <pico/binary_info.h>
-#include <hardware/spi.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "hardware/clocks.h"
+#include "hardware/dma.h"
+#include "hardware/gpio.h"
+#include "hardware/irq.h"
+#include "hardware/spi.h"
+#include "hardware/structs/bus_ctrl.h"
+#include "hardware/structs/ssi.h"
+#include "hardware/sync.h"
+#include "hardware/vreg.h"
+#include "pico/binary_info.h"
+#include "pico/multicore.h"
+#include "pico/sem.h"
+#include "pico/stdlib.h"
+
+// PicoDVI
+#include "dvi.h"
+#include "dvi_serialiser.h"
+#include "common_dvi_pin_configs.h"
+#include "tmds_encode.h"
 
 // TinyUSB
 #include <bsp/board.h>

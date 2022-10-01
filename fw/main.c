@@ -2,6 +2,7 @@
 #include "global.h"
 #include "roms.h"
 #include "usb/usb.h"
+#include "dvi/dvi.h"
 
 #define PENDING_B_PIN 6
 #define DONE_B_PIN 7
@@ -80,9 +81,10 @@ void init() {
     set_cpu(/* reset: */ false, /* run: */ true);
 }
 
-int main() {
+int __not_in_flash("main") main() {
     init();
     usb_init();
+    video_init(rom_chars_8800);
 
     while (true) {
         // Dispatch TinyUSB events
@@ -93,5 +95,5 @@ int main() {
         }
     }
 
-    return 0;
+    __builtin_unreachable();
 }
