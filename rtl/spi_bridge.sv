@@ -68,8 +68,8 @@ module pi_com(
 
     localparam IDLE         = 3'd0,
                READ_CMD     = 3'd1,
-               WRITING      = 3'd2,
-               COMPLETING   = 3'd3,
+               READ_ARGS    = 3'd2,
+               XFER         = 3'd3,
                DONE         = 3'd4;
 
     // SPI MODE0 reads/writes on the positive clock edge.  We transition the state machine
@@ -91,11 +91,11 @@ module pi_com(
                     length <= 3'd1;
                 end
 
-                WRITING: begin
+                READ_ARGS: begin
                     length <= 3'd4;
                 end
 
-                COMPLETING: begin
+                XFER: begin
                     pi_rw_b         <= rw_b_in;
                     pi_addr         <= { a16_in, rx[1], rx[2] };
                     pi_data_out     <= rx[3];
@@ -125,18 +125,18 @@ module pi_com(
             READ_CMD: begin
                 if (buffer_valid) begin
                     case (cmd_in)
-                        CMD_WRITE: next_state <= WRITING;
+                        CMD_WRITE: next_state <= READ_ARGS;
                     endcase
                 end else next_state <= READ_CMD;
             end
 
-            WRITING: begin
-                if (buffer_valid) begin next_state <= COMPLETING;
-                end else next_state <= WRITING;
+            READ_ARGS: begin
+                if (buffer_valid) begin next_state <= XFER;
+                end else next_state <= READ_ARGS;
             end
 
-            COMPLETING: begin
-                if (!pi_done_in) next_state <= COMPLETING;
+            XFER: begin
+                if (!pi_done_in) next_state <= XFER;
                 else if (pi_done_in) next_state <= DONE;
             end
 
