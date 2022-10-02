@@ -72,16 +72,16 @@ module crtc(
 
     assign crtc_r = r[crtc_address_register];
 
-    assign h_total = r[R0_H_TOTAL];
-    assign h_displayed = r[R1_H_DISPLAYED];
-    assign h_sync_pos = r[R2_H_SYNC_POS];
-    assign v_sync_width = r[R3_SYNC_WIDTH][7:4];
-    assign h_sync_width = r[R3_SYNC_WIDTH][3:0];
-    assign v_total = r[R4_V_TOTAL];
-    assign v_line_adjust = r[R5_V_LINE_ADJUST];
-    assign v_displayed = r[R6_V_DISPLAYED];
-    assign v_sync_pos = r[R7_V_SYNC_POS];
-    assign char_height = r[R9_SCAN_LINE];
+    assign h_total       = r[R0_H_TOTAL];
+    assign h_displayed   = r[R1_H_DISPLAYED];
+    assign h_sync_pos    = r[R2_H_SYNC_POS];
+    assign v_sync_width  = r[R3_SYNC_WIDTH][7:4];
+    assign h_sync_width  = r[R3_SYNC_WIDTH][3:0];
+    assign v_total       = r[R4_V_TOTAL][6:0];
+    assign v_line_adjust = r[R5_V_LINE_ADJUST][4:0];
+    assign v_displayed   = r[R6_V_DISPLAYED][6:0];
+    assign v_sync_pos    = r[R7_V_SYNC_POS][6:0];
+    assign char_height   = r[R9_SCAN_LINE][4:0];
     
     always @(negedge cpu_write or posedge reset) begin
         if (reset) begin
