@@ -20,14 +20,13 @@ module spi_buffer(
     output spi_tx,
 
     output reg [7:0] rx [4],
-    input      [7:0] tx [4],
-    input      [2:0] length,
+    input [2:0] length,
+    input [7:0] tx_byte,
 
     output valid
 );
     reg [2:0] count = 0;
     wire [7:0] rx_byte;
-    wire [7:0] tx_byte = tx[count];
     wire byte_valid;
 
     spi_byte spi(
