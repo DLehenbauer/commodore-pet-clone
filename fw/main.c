@@ -19,7 +19,7 @@ void pi_write(uint16_t addr, uint8_t data) {
     uint8_t addr_hi = addr >> 8;
     uint8_t addr_lo = addr & 0xff;
 
-    uint8_t bytes [] = { 0x00, addr_hi, addr_lo, data };
+    uint8_t bytes [] = { 0x84, addr_hi, addr_lo, data };
 
     gpio_put(PENDING_B_PIN, 0);
     while(!gpio_get(DONE_B_PIN));
