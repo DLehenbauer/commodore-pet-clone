@@ -13,24 +13,55 @@
 #define SPI_RX_PIN 4
 #define SPI_CSN_PIN 5
 
-volatile uint32_t success = 0;
+uint8_t pi_read_next() {
+    const uint8_t tx[1] = { 0x22 };
+    uint8_t rx[sizeof(tx)];
 
-void pi_write(uint16_t addr, uint8_t data) {
-    uint8_t addr_hi = addr >> 8;
-    uint8_t addr_lo = addr & 0xff;
-
-    uint8_t bytes [] = { 0x84, addr_hi, addr_lo, data };
-
-    gpio_put(PENDING_B_PIN, 0);
     while(!gpio_get(DONE_B_PIN));
+    gpio_put(PENDING_B_PIN, 0);
 
-    spi_write_blocking(SPI_INSTANCE, bytes, sizeof(bytes));
+    spi_write_read_blocking(spi_default, tx, rx, sizeof(tx));
     
-    // Wait for the Pi to respond
     while(gpio_get(DONE_B_PIN));
     gpio_put(PENDING_B_PIN, 1);
 
-    success++;
+    return rx[0];
+}
+
+uint8_t pi_read(uint16_t addr) {
+    const uint8_t addr_hi = addr >> 8;
+    const uint8_t addr_lo = addr & 0xff;
+    const uint8_t tx[] = { 0x66, addr_hi, addr_lo };
+
+    while(!gpio_get(DONE_B_PIN));
+    gpio_put(PENDING_B_PIN, 0);
+
+    spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
+    
+    while(gpio_get(DONE_B_PIN));
+    gpio_put(PENDING_B_PIN, 1);
+
+    return pi_read_next();
+}
+
+void pi_write(uint16_t addr, uint8_t data) {
+    const uint8_t addr_hi = addr >> 8;
+    const uint8_t addr_lo = addr & 0xff;
+    const uint8_t tx [] = { 0x84, addr_hi, addr_lo, data };
+
+    while(!gpio_get(DONE_B_PIN));
+    gpio_put(PENDING_B_PIN, 0);
+
+    spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
+    
+    while(gpio_get(DONE_B_PIN));
+    gpio_put(PENDING_B_PIN, 1);
+
+    // uint8_t actual = pi_read(addr);
+    // if (actual != data) {
+    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
+    //     panic(0);
+    // }
 }
 
 void set_cpu(bool reset, bool run) {
@@ -67,7 +98,7 @@ void init() {
     gpio_set_function(SPI_CSN_PIN, GPIO_FUNC_SPI);
 
     set_cpu(/* reset: */ true, /* run: */ false);
-    set_cpu(/* reset: */ false, /* run: */ true);
+    set_cpu(/* reset: */ false, /* run: */ false);
 
     copy_rom(rom_chars_8800,  0x8800, sizeof(rom_chars_8800));
     copy_rom(rom_basic_b000,  0xb000, sizeof(rom_basic_b000));
