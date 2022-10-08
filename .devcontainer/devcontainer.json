@@ -38,5 +38,5 @@
     ],
 
     // TODO: Figure out how to connect to Picoprobe as a non-root user.
-    // "remoteUser": "vscode"
+    "remoteUser": "root"
 }
