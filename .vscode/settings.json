@@ -86,5 +86,6 @@
     "verilog.linting.iverilog.arguments": "-g2012",
     "cSpell.words": [
         "Picoprobe"
-    ]
+    ],
+    "editor.detectIndentation": false
 }
