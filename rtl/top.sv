@@ -129,13 +129,16 @@ module top(
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
         .pi_addr(pi_addr),
+        .pi_data_in(pi_rd_data),
         .pi_data_out(pi_wr_data),
         .pi_rw_b(pi_rw_b),
         .pi_pending_in(pi_pending),
         .pi_pending_out(pi_pending_out),
         .pi_done_in(pi_done_in),
         .pi_done_out(pi_done),
-        .state(pi_data[2:0])        // Expose external state for debugging
+         // Expose external state for debugging
+        .state(pi_data[2:0]),
+        .rx_count(pi_data[5:3])
     );
     
     main main(

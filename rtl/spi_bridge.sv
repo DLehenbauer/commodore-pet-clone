@@ -29,76 +29,45 @@ module pi_com(
     input pi_done_in,
     output reg pi_done_out = 1'b0,
     
-    output reg [2:0] state = IDLE           // Expose internal state for debugging
+    output reg [2:0] state = READ_CMD,  // Expose internal state for debugging
+    output [2:0] rx_count
 );
+    wire reset = !pi_pending_in;
+    
     wire [7:0] rx [4];
-    reg  [2:0] length;
-    wire buffer_valid_1;
 
     spi_buffer spi_buffer(
-        .reset(!pi_pending_in),
+        .reset(reset),
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
-        .length(length),
         .rx(rx),
-        .tx_byte(pi_data_in),
-        .valid(buffer_valid_1)
+        .rx_count(rx_count),
+        .tx_byte(pi_data_in)
     );
-
-    reg buffer_valid_2 = 0;
-    reg buffer_valid_3 = 0;
-
-    always @(negedge sys_clk or negedge pi_pending_in) begin
-        if (!pi_pending_in) begin
-            buffer_valid_3 <= 0;
-            buffer_valid_2 <= 0;
-        end else begin
-            buffer_valid_3 <= buffer_valid_2;
-            buffer_valid_2 <= buffer_valid_1;
-        end
-    end
-
-    wire buffer_valid = buffer_valid_2 & ~buffer_valid_3;
 
     wire cmd_a16        = rx[0][0];
     wire cmd_rw_b       = rx[0][1];
     wire cmd_set_addr   = rx[0][2];
     wire [2:0] cmd_len  = rx[0][7:5];
 
-    localparam IDLE         = 3'd0,
-               READ_CMD     = 3'd1,
-               READ_ARGS    = 3'd2,
-               XFER         = 3'd3,
-               DONE         = 3'd4;
+    localparam READ_CMD     = 3'd0,
+               READ_ARGS    = 3'd1,
+               XFER         = 3'd2,
+               DONE         = 3'd3;
 
-    always @(posedge sys_clk or negedge pi_pending_in) begin
-        if (!pi_pending_in) begin
-            state <= IDLE;
+    always @(posedge sys_clk or posedge reset) begin
+        if (reset) begin
             pi_done_out <= 1'b0;
             pi_pending_out <= 1'b0;
+            state <= READ_CMD;
         end else begin
             case (next_state)
-                IDLE: begin
-                    length <= 3'd0;
-                    pi_done_out <= 1'b0;
-                    pi_pending_out <= 1'b0;
-                end
-
-                READ_CMD: begin
-                    length <= 3'd1;
-                end
-
-                READ_ARGS: begin
-                    length <= cmd_len;
-                end
-
                 XFER: begin
                     pi_rw_b <= cmd_rw_b;
-                    pi_addr <= cmd_set_addr
-                        ? { cmd_a16, rx[1], rx[2] }
-                        : next_addr;
+                    pi_addr <= { cmd_a16, rx[1], rx[2] };
                     pi_data_out <= rx[3];
                     pi_pending_out <= 1'b1;
                 end
@@ -112,36 +81,22 @@ module pi_com(
         end
     end
 
-    reg [2:0] next_state = IDLE;
-
-    reg [16:0] next_addr;
-    
-    wire done = state == DONE;
-    always @(posedge done) begin
-        next_addr <= pi_addr + 1'b1;
-    end
+    reg [2:0] next_state = READ_CMD;
 
     always @(*) begin
         next_state <= 3'bxxx;
 
         case (state)
-            IDLE: begin
-                if (pi_pending_in) next_state <= READ_CMD;
-                else next_state <= IDLE;
-            end
-
             READ_CMD: begin
-                if (buffer_valid) begin
-                    next_state <= cmd_len == 3'd1
-                        ? XFER
-                        : READ_ARGS;
-                end else next_state <= READ_CMD;
+                next_state <= rx_count == 1'd1
+                    ? READ_ARGS
+                    : READ_CMD;
             end
 
             READ_ARGS: begin
-                if (buffer_valid) begin
-                    next_state <= XFER;
-                end else next_state <= READ_ARGS;
+                next_state <= rx_count == cmd_len
+                    ? XFER
+                    : READ_ARGS;
             end
 
             XFER: begin
