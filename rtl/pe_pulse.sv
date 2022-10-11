@@ -13,20 +13,27 @@
  */
 
 module pe_pulse (
-    input reset,
-    input clk,
-    input din,
-    output reg dout = 1'b0
+    input  logic reset,
+    input  logic clk,
+    input  logic din,
+    output logic dout = 1'b0
 );
-    reg [1:0] history = 2'b00;
+    logic din_1;  // metastable
+    logic din_2;
+    logic din_3;
 
-    always @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
-            history <= 2'b00;
             dout <= 1'b0;
+            din_1 <= 1'b0;
+            din_2 <= 1'b0;
+            din_3 <= 1'b0;
         end else begin
-            dout <= history[0] & ~history[1];
-            history <= { history[0], din };
+            dout <= din_3 == 1'b0 && din_2 == 1'b1;
+            
+            din_1 <= din;
+            din_2 <= din_1;
+            din_3 <= din_2;
         end
     end
 endmodule

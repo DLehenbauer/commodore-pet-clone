@@ -24,7 +24,7 @@ module pi_com(
     input [7:0] pi_data_in,
     output reg [7:0] pi_data_out,
     output reg pi_rw_b = 1'b1,
-    input pi_pending_in,                    // pi_pending_in also serves as a reset
+    input pi_pending_in,                // pi_pending_in also serves as a reset
     output reg pi_pending_out = 1'b0,
     input pi_done_in,
     output reg pi_done_out = 1'b0,

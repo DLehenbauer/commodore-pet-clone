@@ -26,9 +26,18 @@ module tb();
 
     `include "tb_spi_tx.vh"
 
+    spi_byte spi_byte_tx(
+        .sys_clk(sys_clk),
+        .spi_sclk(spi_sclk),
+        .spi_cs_n(spi_cs_n),
+        .spi_tx(spi_rx),
+        .tx(tx_byte)
+    );
+
     wire [7:0] rx [4];
 
-    wire valid;
+    wire [2:0] rx_count;
+    wire valid = rx_count == length;
 
     spi_buffer spi_buffer(
         .reset(reset),
@@ -37,8 +46,7 @@ module tb();
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .rx(rx),
-        .length(length),
-        .valid(valid)
+        .rx_count(rx_count)
     );
 
     integer byte_index;
