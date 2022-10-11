@@ -50,9 +50,15 @@ module spi_buffer(
         .valid(byte_valid)
     );
 
+    integer i;
+
     always @(posedge byte_valid or posedge reset) begin
         if (reset) begin
             rx_count <= 0;
+            
+            foreach (rx[i]) begin
+                rx[i] <= 8'hxx;
+            end
         end else begin
             rx[rx_count] <= rx_byte;
             rx_count <= rx_count + 1'b1;

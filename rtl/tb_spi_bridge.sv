@@ -95,15 +95,22 @@ module tb();
     endtask
 
     logic unsigned [7:0] bytes [];
+    logic unsigned [7:0] cmd;
+    logic unsigned [7:0] addr_hi;
+    logic unsigned [7:0] addr_lo;
 
     task write_at(
         input [16:0] addr,
         input [7:0] data
     );
+        cmd = { 7'b100_xx_1_0, addr[16] };
+        addr_hi = addr[15:8];
+        addr_lo = addr[7:0];
+
         bytes = '{
-            { 7'b100_xx_1_0, addr[16] },
-            addr[15:8],
-            addr[7:0],
+            cmd,
+            addr_hi,
+            addr_lo,
             data
         };
 
@@ -135,23 +142,60 @@ module tb();
     );
         pi_data_in <= data;
 
+        cmd = { 7'b011_xx_1_1, addr[16] };
+        addr_hi = addr[15:8];
+        addr_lo = addr[7:0];
+
         bytes = '{
-            { 7'b011_xx_1_1, addr[16] },
-            addr[15:8],
-            addr[7:0]
+            cmd,
+            addr_hi,
+            addr_lo
         };
 
-        $display("[%t]    read_at($%x) -> [%b, %x, %x]",
+        $display("[%t]    read_at($%x) -> [%%%b, $%x, $%x]",
             $time,
             addr,
-            data,
             bytes[0],
             bytes[1],
             bytes[2]);
 
         #1 pi_pending_in = 1'b1;
 
-        foreach(bytes[i]) begin
+        foreach (bytes[i]) begin
+            assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
+
+            begin_xfer;
+            xfer_byte(bytes[i]);
+            end_xfer;
+        end
+
+        check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
+        
+        #500 pi_done_in = 1'b1;
+        #500 pi_pending_in = 1'b0;
+        #500 pi_done_in = 1'b0;
+    endtask
+
+    task read_next(
+        input [16:0] addr,
+        input [7:0] data
+    );
+        pi_data_in <= data;
+
+        cmd = { 7'b001_xx_1_1, addr[16] };
+
+        bytes = '{
+            cmd
+        };
+
+        $display("[%t]    read_next($%x) -> [%%%b]",
+            $time,
+            addr,
+            bytes[0]);
+
+        #1 pi_pending_in = 1'b1;
+
+        foreach (bytes[i]) begin
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
             begin_xfer;
@@ -172,6 +216,7 @@ module tb();
 
         write_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
+        read_next(/* addr: */ 17'h8001, /* data: */ 8'h55);
 
         #500 $finish;
     end

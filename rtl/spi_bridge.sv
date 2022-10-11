@@ -59,53 +59,50 @@ module pi_com(
                DONE         = 3'd3;
 
     always @(posedge sys_clk or posedge reset) begin
-        if (reset) begin
-            pi_done_out <= 1'b0;
-            pi_pending_out <= 1'b0;
-            state <= READ_CMD;
-        end else begin
-            case (next_state)
-                XFER: begin
-                    pi_rw_b <= cmd_rw_b;
-                    pi_addr <= { cmd_a16, rx[1], rx[2] };
-                    pi_data_out <= rx[3];
-                    pi_pending_out <= 1'b1;
-                end
-
-                DONE: begin
-                    pi_done_out <= 1'b1;
-                end
-            endcase
-
-            state <= next_state;
-        end
+        if (reset) state <= READ_CMD;
+        else state <= next_state;
     end
 
     reg [2:0] next_state = READ_CMD;
+    reg [16:0] next_addr;
 
     always @(*) begin
-        next_state <= 3'bxxx;
+        next_state = 3'bxxx;
 
         case (state)
             READ_CMD: begin
-                next_state <= rx_count == 1'd1
+                pi_pending_out = 1'b0;
+                pi_done_out = 1'b0;
+
+                next_state = rx_count == 1'd1
                     ? READ_ARGS
                     : READ_CMD;
             end
 
             READ_ARGS: begin
-                next_state <= rx_count == cmd_len
+                next_addr = cmd_len == 3'd1
+                    ? pi_addr + 1'b1
+                    : { cmd_a16, rx[1], rx[2] };
+                
+                next_state = rx_count == cmd_len
                     ? XFER
                     : READ_ARGS;
             end
 
             XFER: begin
-                if (!pi_done_in) next_state <= XFER;
-                else if (pi_done_in) next_state <= DONE;
+                pi_rw_b = cmd_rw_b;
+                pi_addr = next_addr;
+                pi_data_out = rx[3];
+                pi_pending_out = 1'b1;
+
+                next_state = pi_done_in
+                    ? DONE
+                    : XFER;
             end
 
             DONE: begin
-                next_state <= DONE;
+                pi_done_out = 1'b1;
+                next_state = DONE;
             end
         endcase
     end
