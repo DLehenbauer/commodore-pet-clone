@@ -58,16 +58,20 @@ module pi_com(
                XFER         = 3'd2,
                DONE         = 3'd3;
 
-    always @(posedge sys_clk or posedge reset) begin
+    always_ff @(posedge sys_clk or posedge reset) begin
         if (reset) state <= READ_CMD;
         else state <= next_state;
     end
 
-    reg [2:0] next_state = READ_CMD;
-    reg [16:0] next_addr;
+    logic [2:0] next_state = READ_CMD;
 
-    always @(*) begin
+    always_comb begin
         next_state = 3'bxxx;
+        pi_rw_b = 1'b1;
+        pi_addr = 17'hxxxxx;
+        pi_data_out = 8'hxx;
+        pi_done_out = 1'b0;
+        pi_pending_out = 1'b0;
 
         case (state)
             READ_CMD: begin
@@ -80,10 +84,6 @@ module pi_com(
             end
 
             READ_ARGS: begin
-                next_addr = cmd_len == 3'd1
-                    ? pi_addr + 1'b1
-                    : { cmd_a16, rx[1], rx[2] };
-                
                 next_state = rx_count == cmd_len
                     ? XFER
                     : READ_ARGS;
@@ -91,7 +91,7 @@ module pi_com(
 
             XFER: begin
                 pi_rw_b = cmd_rw_b;
-                pi_addr = next_addr;
+                pi_addr = { cmd_a16, rx[1], rx[2] };
                 pi_data_out = rx[3];
                 pi_pending_out = 1'b1;
 

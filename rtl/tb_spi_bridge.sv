@@ -170,10 +170,6 @@ module tb();
         end
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
-        
-        #500 pi_done_in = 1'b1;
-        #500 pi_pending_in = 1'b0;
-        #500 pi_done_in = 1'b0;
     endtask
 
     task read_next(
@@ -204,10 +200,6 @@ module tb();
         end
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
-        
-        #500 pi_done_in = 1'b1;
-        #500 pi_pending_in = 1'b0;
-        #500 pi_done_in = 1'b0;
     endtask
 
     initial begin
@@ -217,6 +209,9 @@ module tb();
         write_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_next(/* addr: */ 17'h8001, /* data: */ 8'h55);
+        write_at(/* addr: */ 17'h8001, /* data: */ 8'h55);
+        read_at(/* addr: */ 17'h8001, /* data: */ 8'h55);
+        read_next(/* addr: */ 17'h8002, /* data: */ 8'h55);
 
         #500 $finish;
     end

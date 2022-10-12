@@ -12,28 +12,56 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
+// sync signal to different clock domain
+module sync2(
+    input  logic reset,
+    input  logic clk,
+    input  logic din,
+    output logic dout
+);
+    logic din1; // 1st stage ff output
+    
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) { dout, din1 } <= '0;
+        else { dout, din1 } <= { din1, din };
+    end
+endmodule
+
+// Pulse Generator
+module pulse(
+    input logic reset,
+    input logic clk,
+    input logic din,
+    output logic pulse,
+    output logic dout
+);
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) dout <= '0;
+        else dout <= din;
+    end
+
+    assign pulse = dout ^ din;
+endmodule
+
 module pe_pulse (
     input  logic reset,
     input  logic clk,
     input  logic din,
-    output logic dout = 1'b0
+    output logic dout
 );
-    logic din_1;  // metastable
-    logic din_2;
-    logic din_3;
+    logic dout1;
 
-    always_ff @(posedge clk or posedge reset) begin
-        if (reset) begin
-            dout <= 1'b0;
-            din_1 <= 1'b0;
-            din_2 <= 1'b0;
-            din_3 <= 1'b0;
-        end else begin
-            dout <= din_3 == 1'b0 && din_2 == 1'b1;
-            
-            din_1 <= din;
-            din_2 <= din_1;
-            din_3 <= din_2;
-        end
-    end
+    sync2 sync2(
+        .reset(reset),
+        .clk(clk),
+        .din(din),
+        .dout(dout1)
+    );
+
+    pulse pulse(
+        .reset(reset),
+        .clk(clk),
+        .din(dout1),
+        .pulse(dout)
+    );
 endmodule
