@@ -102,7 +102,7 @@ module main (
     // Pi
     input             pi_rw_b,
     input      [16:0] pi_addr,
-    inout       [7:0] pi_wr_data,   // Incoming data when Pi is writing
+    input       [7:0] pi_wr_data,   // Incoming data when Pi is writing
     output reg  [7:0] pi_rd_data,   // Outgoing data when Pi is reading
     input             pi_pending,
     output            pi_done,
