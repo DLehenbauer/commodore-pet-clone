@@ -12,15 +12,14 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-// sync signal to different clock domain
 module sync2(
     input  logic reset,
     input  logic clk,
-    input  logic din,
-    output logic dout
+    input  logic din,           // metastable
+    output logic dout = 0
 );
-    logic din1; // 1st stage ff output
-    
+    logic din1 = 0;
+
     always_ff @(posedge clk or posedge reset) begin
         if (reset) { dout, din1 } <= '0;
         else { dout, din1 } <= { din1, din };
@@ -32,15 +31,15 @@ module pulse(
     input logic reset,
     input logic clk,
     input logic din,
-    output logic pulse,
-    output logic dout
+    output logic pe,
+    output logic dout = 0
 );
     always_ff @(posedge clk or posedge reset) begin
         if (reset) dout <= '0;
         else dout <= din;
     end
 
-    assign pulse = dout ^ din;
+    assign pe = din & ~dout;
 endmodule
 
 module pe_pulse (
@@ -62,6 +61,6 @@ module pe_pulse (
         .reset(reset),
         .clk(clk),
         .din(dout1),
-        .pulse(dout)
+        .pe(dout)
     );
 endmodule

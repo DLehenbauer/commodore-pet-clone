@@ -109,9 +109,9 @@ module tb();
 
         bytes = '{
             cmd,
+            data,
             addr_hi,
-            addr_lo,
-            data
+            addr_lo
         };
 
         $display("[%t]    write_at($%x, $%x) -> [%%%b, $%x, $%x, $%x]",

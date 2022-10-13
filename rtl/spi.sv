@@ -42,7 +42,7 @@ module spi_byte (
 
     pe_pulse valid_pulse(
         .reset(spi_cs_n),
-        .clk(!sys_clk),
+        .clk(sys_clk),
         .din(done),
         .dout(valid)
     );
