@@ -13,26 +13,28 @@
  */
 
 module pi_com(
-    input sys_clk,
+    input  logic sys_clk,
 
-    input spi_sclk,
-    input spi_cs_n,
-    input spi_rx,
-    output spi_tx,
+    input  logic spi_sclk,
+    input  logic spi_cs_n,
+    input  logic spi_rx,
+    inout        spi_tx,
 
-    output reg [16:0] pi_addr,
-    input [7:0] pi_data_in,
-    output reg [7:0] pi_data_out,
-    output reg pi_rw_b = 1'b1,
-    input pi_pending_in,                // pi_pending_in also serves as a reset
-    output reg pi_pending_out = 1'b0,
-    input pi_done_in,
-    output reg pi_done_out = 1'b0,
+    output logic [16:0] pi_addr,
+    input  logic [7:0] pi_data_in,
+    output logic [7:0] pi_data_out,
+    output logic pi_rw_b = 1'b1,
+    input  logic pi_pending_in,                // pi_pending_in also serves as a reset
+    output logic pi_pending_out = 1'b0,
+    input  logic pi_done_in,
+    output logic pi_done_out = 1'b0,
     
-    output reg [2:0] state = READ_CMD   // Expose internal state for debugging
+      // Expose internal state for debugging
+    output logic [2:0] state = READ_CMD,
+    output logic [2:0] bit_index,
+    output logic rx_valid
 );
     wire reset = !pi_pending_in;
-    logic rx_valid;
     logic [7:0] rx;
     
     spi_byte spi_byte(
@@ -43,7 +45,8 @@ module pi_com(
         .spi_tx(spi_tx),
         .rx(rx),
         .tx(pi_data_in),
-        .valid(rx_valid)
+        .valid(rx_valid),
+        .bit_index(bit_index)
     );
 
     wire cmd_a16        = rx[0];
