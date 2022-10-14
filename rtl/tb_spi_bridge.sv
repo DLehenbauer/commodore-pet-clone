@@ -82,11 +82,12 @@ module tb();
             assert_equal(last_rx_byte, data, "last_rx_byte");
         end
 
-        #500 pi_done_in = 1'b1;        
+        pi_done_in = 1'b1;        
+        @(posedge sys_clk);
         @(posedge sys_clk);
         #1 assert_equal(pi_done_out, 1'b1, "pi_done_out");
 
-        #500 pi_pending_in = 1'b0;
+        pi_pending_in = 1'b0;
         @(posedge sys_clk);
         assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
         assert_equal(pi_done_out, 1'b0, "pi_done_out");
@@ -103,7 +104,7 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        cmd = { 7'b100_xx_1_0, addr[16] };
+        cmd = { 7'b100_xxx_0, addr[16] };
         addr_hi = addr[15:8];
         addr_lo = addr[7:0];
 
@@ -142,7 +143,7 @@ module tb();
     );
         pi_data_in <= data;
 
-        cmd = { 7'b011_xx_1_1, addr[16] };
+        cmd = { 7'b011_xxx_1, addr[16] };
         addr_hi = addr[15:8];
         addr_lo = addr[7:0];
 
@@ -178,7 +179,7 @@ module tb();
     );
         pi_data_in <= data;
 
-        cmd = { 7'b001_xx_1_1, addr[16] };
+        cmd = { 7'b001_xxx_1, addr[16] };
 
         bytes = '{
             cmd

@@ -60,92 +60,65 @@ module pi_com(
 
     always_ff @(posedge sys_clk or posedge reset) begin
         if (reset) begin
-            state       <= READ_CMD;
-            pi_addr     <= next_addr;
-            pi_data_out <= next_data;
-            pi_rw_b     <= next_rw_b;
-        end else begin
-            state       <= next_state;
-            pi_addr     <= next_addr;
-            pi_data_out <= next_data;
-            pi_rw_b     <= next_rw_b;
-        end
-    end
+            state           <= READ_CMD;
+            pi_done_out     <= 1'b0;
+            pi_pending_out  <= 1'b0;
+        end else begin            
+            case (state)
+                READ_CMD: begin
+                    pi_done_out     <= 1'b0;
+                    pi_pending_out  <= 1'b0;
+                    pi_rw_b         <= 1'b1;
 
-    logic [3:0] next_state = READ_CMD;
-    logic [16:0] next_addr;
-    logic [7:0] next_data;
-    logic next_rw_b;
-
-    always_comb begin
-        pi_done_out     = 1'b0;
-        pi_pending_out  = 1'b0;
-        next_state      = 4'bxxxx;
-        
-        next_addr       = pi_addr;
-        next_data       = pi_data_out;
-        next_rw_b       = pi_rw_b;
-        
-        case (state)
-            READ_CMD: begin
-                next_rw_b   = 1'b1;
-
-                if (!rx_valid) next_state = READ_CMD;
-                else begin
-                    if (cmd_len == 3'd1) begin
-                        next_addr   = pi_addr + 1'b1;
-                        next_state  = XFER;
-                    end else begin
-                        next_addr = { cmd_a16, 16'hxxxx };
-                        next_state = cmd_len == 3'd3
-                            ? READ_ADDR_HI_ARG
-                            : READ_DATA_ARG;
+                    if (rx_valid) begin
+                        if (cmd_len == 3'd1) begin
+                            pi_addr <= pi_addr + 1'b1;
+                            state   <= XFER;
+                        end else begin
+                            pi_addr <= { cmd_a16, 16'hxxxx };
+                            state   <= cmd_len == 3'd3
+                                ? READ_ADDR_HI_ARG
+                                : READ_DATA_ARG;
+                        end
                     end
                 end
-            end
 
-            READ_DATA_ARG: begin
-                next_rw_b  = 1'b0;
+                READ_DATA_ARG: begin
+                    pi_rw_b <= 1'b0;
 
-                if (!rx_valid) begin
-                    next_state = READ_DATA_ARG;
-                end else begin
-                    next_data  = rx;
-                    next_state = READ_ADDR_HI_ARG;
+                    if (rx_valid) begin
+                        pi_data_out <= rx;
+                        state       <= READ_ADDR_HI_ARG;
+                    end
                 end
-            end
 
-            READ_ADDR_HI_ARG: begin
-                if (!rx_valid) begin
-                    next_state = READ_ADDR_HI_ARG;
-                end else begin
-                    next_addr = { pi_addr[16], rx, 8'hxx };
-                    next_state = READ_ADDR_LO_ARG;
+                READ_ADDR_HI_ARG: begin
+                    if (rx_valid) begin
+                        pi_addr <= { pi_addr[16], rx, 8'hxx };
+                        state   <= READ_ADDR_LO_ARG;
+                    end
                 end
-            end
 
-            READ_ADDR_LO_ARG: begin
-                if (!rx_valid) begin
-                    next_state = READ_ADDR_LO_ARG;
-                end else begin
-                    next_addr = { pi_addr[16:8], rx };
-                    next_state = XFER;
+                READ_ADDR_LO_ARG: begin
+                    if (rx_valid) begin
+                        pi_addr <= { pi_addr[16:8], rx };
+                        state   <= XFER;
+                    end
                 end
-            end
 
-            XFER: begin
-                if (!pi_done_in) begin
-                    pi_pending_out = 1'b1;
-                    next_state = XFER;
-                end else begin
-                    next_state = DONE;
+                XFER: begin
+                    pi_pending_out <= 1'b1;
+
+                    if (pi_done_in) begin
+                        state <= DONE;
+                    end
                 end
-            end
 
-            DONE: begin
-                pi_done_out = 1'b1;
-                next_state = DONE;
-            end
-        endcase
+                DONE: begin
+                    pi_pending_out  <= 1'b0;
+                    pi_done_out     <= 1'b1;
+                end
+            endcase
+        end
     end
 endmodule

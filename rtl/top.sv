@@ -137,8 +137,7 @@ module top(
         .pi_done_in(pi_done_in),
         .pi_done_out(pi_done),
          // Expose external state for debugging
-        .state(pi_data[2:0]),
-        .rx_count(pi_data[5:3])
+        .state(pi_data[2:0])
     );
     
     main main(
