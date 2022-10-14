@@ -143,8 +143,11 @@ module top(
         .pi_pending_out(pi_pending_out),
         .pi_done_in(pi_done_in),
         .pi_done_out(pi_done),
-         // Expose external state for debugging
-        .state(pi_data[2:0])
+
+        // Expose external state for debugging
+        .state(pi_data[2:0]),
+        .bit_index(pi_data[5:3]),
+        .rx_valid(pi_data[6]),
     );
     
     main main(
