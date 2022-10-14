@@ -147,7 +147,7 @@ module top(
         // Expose external state for debugging
         .state(pi_data[2:0]),
         .bit_index(pi_data[5:3]),
-        .rx_valid(pi_data[6]),
+        .rx_valid(pi_data[6])
     );
     
     main main(

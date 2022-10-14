@@ -40,7 +40,7 @@ module pi_com(
     spi_byte spi_byte(
         .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
+        .spi_cs_n(!pi_pending_in),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
         .rx(rx),
@@ -54,19 +54,19 @@ module pi_com(
     wire cmd_set_addr   = rx[2];
     wire [2:0] cmd_len  = rx[7:5];
 
-    localparam READ_CMD          = 4'd0,
-               READ_DATA_ARG     = 4'd1,
-               READ_ADDR_HI_ARG  = 4'd2,
-               READ_ADDR_LO_ARG  = 4'd3,
-               XFER              = 4'd4,
-               DONE              = 4'd5;
+    localparam READ_CMD          = 3'd0,
+               READ_DATA_ARG     = 3'd1,
+               READ_ADDR_HI_ARG  = 3'd2,
+               READ_ADDR_LO_ARG  = 3'd3,
+               XFER              = 3'd4,
+               DONE              = 3'd5;
 
     always_ff @(posedge sys_clk or posedge reset) begin
         if (reset) begin
             state           <= READ_CMD;
             pi_done_out     <= 1'b0;
             pi_pending_out  <= 1'b0;
-        end else begin            
+        end else begin
             case (state)
                 READ_CMD: begin
                     pi_done_out     <= 1'b0;
