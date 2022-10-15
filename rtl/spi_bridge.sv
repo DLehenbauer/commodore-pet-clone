@@ -36,6 +36,7 @@ module pi_com(
 );
     wire reset = !pi_pending_in;
     logic [7:0] rx;
+    logic [7:0] tx;
     
     spi_byte spi_byte(
         .sys_clk(sys_clk),
@@ -44,7 +45,7 @@ module pi_com(
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
         .rx(rx),
-        .tx(pi_data_in),
+        .tx(tx),
         .valid(rx_valid),
         .bit_index(bit_index)
     );
@@ -120,6 +121,7 @@ module pi_com(
                 DONE: begin
                     pi_pending_out  <= 1'b0;
                     pi_done_out     <= 1'b1;
+                    tx              <= pi_data_in;
                 end
             endcase
         end
