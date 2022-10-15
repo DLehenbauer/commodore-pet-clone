@@ -98,3 +98,11 @@ RUN git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --depth
 # Install minicom for UART communication with Pico
 RUN apt-get update && apt-get -y install --no-install-recommends \
     minicom
+
+# Fix warnings from Cortex-Debug extension
+# (See https://forums.raspberrypi.com/viewtopic.php?t=333146)
+RUN apt-get update && apt-get -y install --no-install-recommends \
+        binutils-multiarch && \
+    cd /usr/bin && \
+    ln -s /usr/bin/objdump objdump-multiarch && \
+    ln -s /usr/bin/nm nm-multiarch

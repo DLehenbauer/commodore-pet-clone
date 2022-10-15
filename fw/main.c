@@ -47,7 +47,7 @@ uint8_t pi_read(uint16_t addr) {
 void pi_write(uint16_t addr, uint8_t data) {
     const uint8_t addr_hi = addr >> 8;
     const uint8_t addr_lo = addr & 0xff;
-    const uint8_t tx [] = { 0x84, addr_hi, addr_lo, data };
+    const uint8_t tx [] = { 0x84, data, addr_hi, addr_lo };
 
     while(!gpio_get(DONE_B_PIN));
     gpio_put(PENDING_B_PIN, 0);
@@ -57,11 +57,11 @@ void pi_write(uint16_t addr, uint8_t data) {
     while(gpio_get(DONE_B_PIN));
     gpio_put(PENDING_B_PIN, 1);
 
-    // uint8_t actual = pi_read(addr);
-    // if (actual != data) {
-    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
-    //     panic(0);
-    // }
+    uint8_t actual = pi_read(addr);
+    if (actual != data) {
+        printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
+        panic(0);
+    }
 }
 
 void set_cpu(bool reset, bool run) {
@@ -91,7 +91,7 @@ void init() {
     gpio_init(DONE_B_PIN);
     gpio_set_dir(DONE_B_PIN, GPIO_IN);
 
-    spi_init(SPI_INSTANCE, /* 1 MHz */ 1000 * 1000);
+    spi_init(SPI_INSTANCE, /* 2 MHz */ 2000 * 1000);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
