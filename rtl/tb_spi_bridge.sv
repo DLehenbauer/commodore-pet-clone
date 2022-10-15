@@ -15,82 +15,28 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg sys_clk;
-
-    initial begin
-        sys_clk = 0;
-        forever begin
-            #31.25 sys_clk = ~sys_clk;
-        end
-    end
-
-    reg start_sclk = 1'b0;
-    reg spi_sclk = 1'b0;
-
-    always @(posedge start_sclk) begin
-        while (start_sclk) begin
-            spi_sclk = 1'b1;
-            #500;
-            spi_sclk = 1'b0;
-            #500;
-        end
-    end
-
     reg spi_cs_n = 1'b1;
     wire spi_rx;
     wire spi_tx;
     wire [7:0] rx_byte;
-    reg  [7:0] tx_byte;
     wire spi_valid;
 
-    spi_byte spi_byte_xfer(
+    spi_byte spi_byte_tx(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_tx),
         .spi_tx(spi_rx),
-        .tx(tx_byte),
         .rx(rx_byte),
+        .tx(tx_byte),
         .valid(spi_valid)
     );
+
+    `include "tb_spi_tx.vh"
 
     reg [7:0] last_rx_byte;
 
     always @(posedge spi_valid) last_rx_byte <= rx_byte;
-
-    task begin_xfer;
-        spi_cs_n = 0;
-        #500;
-        start_sclk = 1'b1;
-    endtask
-
-    task xfer_bit;
-        @(posedge spi_sclk);
-        @(negedge spi_sclk);
-    endtask
-
-    integer bit_index;
-    bit expected_valid;
-
-    task xfer(
-        input [7:0] data
-    );
-        $display("[%t]        xfer($%x)", $time, data);
-        tx_byte = data;
-
-        for (bit_index = 0; bit_index < 8; bit_index++) begin
-            xfer_bit();
-        end
-    endtask
-
-    task end_xfer;
-        start_sclk = 1'b0;
-        tx_byte = 8'hxx;
-
-        #500;
-        spi_cs_n = 1;
-
-        #500;
-    endtask
 
     wire [16:0] pi_addr;
     reg [7:0] pi_data_in;
@@ -136,11 +82,12 @@ module tb();
             assert_equal(last_rx_byte, data, "last_rx_byte");
         end
 
-        #500 pi_done_in = 1'b1;        
+        pi_done_in = 1'b1;        
+        @(posedge sys_clk);
         @(posedge sys_clk);
         #1 assert_equal(pi_done_out, 1'b1, "pi_done_out");
 
-        #500 pi_pending_in = 1'b0;
+        pi_pending_in = 1'b0;
         @(posedge sys_clk);
         assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
         assert_equal(pi_done_out, 1'b0, "pi_done_out");
@@ -149,16 +96,23 @@ module tb();
     endtask
 
     logic unsigned [7:0] bytes [];
+    logic unsigned [7:0] cmd;
+    logic unsigned [7:0] addr_hi;
+    logic unsigned [7:0] addr_lo;
 
     task write_at(
         input [16:0] addr,
         input [7:0] data
     );
+        cmd = { 7'b100_xxx_0, addr[16] };
+        addr_hi = addr[15:8];
+        addr_lo = addr[7:0];
+
         bytes = '{
-            { 7'b100_xx_1_0, addr[16] },
-            addr[15:8],
-            addr[7:0],
-            data
+            cmd,
+            data,
+            addr_hi,
+            addr_lo
         };
 
         $display("[%t]    write_at($%x, $%x) -> [%%%b, $%x, $%x, $%x]",
@@ -176,7 +130,7 @@ module tb();
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
             begin_xfer;
-            xfer(bytes[i]);
+            xfer_byte(bytes[i]);
             end_xfer;
         end
 
@@ -189,35 +143,34 @@ module tb();
     );
         pi_data_in <= data;
 
+        cmd = { 7'b011_xxx_1, addr[16] };
+        addr_hi = addr[15:8];
+        addr_lo = addr[7:0];
+
         bytes = '{
-            { 7'b011_xx_1_1, addr[16] },
-            addr[15:8],
-            addr[7:0]
+            cmd,
+            addr_hi,
+            addr_lo
         };
 
-        $display("[%t]    read_at($%x) -> [%b, %x, %x]",
+        $display("[%t]    read_at($%x) -> [%%%b, $%x, $%x]",
             $time,
             addr,
-            data,
             bytes[0],
             bytes[1],
             bytes[2]);
 
         #1 pi_pending_in = 1'b1;
 
-        foreach(bytes[i]) begin
+        foreach (bytes[i]) begin
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
             begin_xfer;
-            xfer(bytes[i]);
+            xfer_byte(bytes[i]);
             end_xfer;
         end
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
-        
-        #500 pi_done_in = 1'b1;
-        #500 pi_pending_in = 1'b0;
-        #500 pi_done_in = 1'b0;
     endtask
 
     task read_next(
@@ -226,23 +179,24 @@ module tb();
     );
         pi_data_in <= data;
 
+        cmd = { 7'b001_xxx_1, addr[16] };
+
         bytes = '{
-            { 7'b001_xx_0_1, addr[16] }
+            cmd
         };
 
-        $display("[%t]    read_next() -> [%b]",
+        $display("[%t]    read_next($%x) -> [%%%b]",
             $time,
-            data,
             addr,
             bytes[0]);
 
         #1 pi_pending_in = 1'b1;
 
-        foreach(bytes[i]) begin
+        foreach (bytes[i]) begin
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
             begin_xfer;
-            xfer(bytes[i]);
+            xfer_byte(bytes[i]);
             end_xfer;
         end
 
@@ -256,6 +210,9 @@ module tb();
         write_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_next(/* addr: */ 17'h8001, /* data: */ 8'h55);
+        write_at(/* addr: */ 17'h8001, /* data: */ 8'h55);
+        read_at(/* addr: */ 17'h8001, /* data: */ 8'h55);
+        read_next(/* addr: */ 17'h8002, /* data: */ 8'h55);
 
         #500 $finish;
     end

@@ -15,15 +15,25 @@
 `timescale 1ns / 1ps
 
 module tb();
+    reg sys_clk;
+
+    initial begin
+        sys_clk = 0;
+        forever begin
+            #31.25 sys_clk = ~sys_clk;
+        end
+    end
+
     reg start_sclk = 1'b0;
     reg spi_sclk = 1'b0;
 
     always @(posedge start_sclk) begin
         while (start_sclk) begin
-            spi_sclk = 1'b1;
+            #250
+            spi_sclk <= 1'b1;
             #500;
-            spi_sclk = 1'b0;
-            #500;
+            spi_sclk <= 1'b0;
+            #250;
         end
     end
 
@@ -37,6 +47,7 @@ module tb();
     wire tx_valid;
 
     spi_byte spi_byte_tx(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_tx),
@@ -46,6 +57,7 @@ module tb();
     );
 
     spi_byte spi_byte_rx(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -61,24 +73,6 @@ module tb();
         assert_equal(tx_valid, expected, "tx_valid");
     endtask
 
-    always @(posedge spi_sclk) begin
-        $display("[%t]    'valid' must be 0 after rising edge of SCLK.", $time);
-        while (spi_sclk) begin
-            #1 check_valid(1'b0);
-        end
-    end
-
-    always @(negedge spi_sclk) begin
-        $display("[%t]    Completed bit %0d:", $time, bit_index);
-        $display("[%t]        'valid' must be 0 at falling edge of SCLK.", $time);
-        check_valid(0);
-
-        expected_valid = bit_index === 7;
-        $display("[%t]        'valid' must be %d after falling edge of SCLK.", $time, expected_valid);
-
-        #1 check_valid(expected_valid);
-    end
-
     always @(negedge spi_cs_n) begin
         $display("[%t]    'valid' must be reset by 'cs_n'.", $time);
         #1 check_valid(1'b0);
@@ -90,13 +84,7 @@ module tb();
         start_sclk = 1'b1;
     endtask
 
-    task xfer_bit;
-        @(posedge spi_sclk);
-        @(negedge spi_sclk);
-    endtask
-
     integer bit_index;
-    bit expected_valid;
 
     task xfer(
         input [7:0] data,
@@ -105,15 +93,17 @@ module tb();
         tx = data;
 
         for (bit_index = 0; bit_index < num_bits; bit_index++) begin
-            xfer_bit();
+            @(posedge spi_sclk);
         end
 
         if (num_bits == 8) begin
             $display("[%t]    Must receive byte $%x.", $time, data);
-            assert_equal(spi_sclk, 0, "spi_sclk");
             @(posedge rx_valid);
             assert_equal(rx, data, "rx");
-            assert_equal(spi_sclk, 0, "spi_sclk");
+            assert_equal(spi_sclk, 1, "spi_sclk");
+            @(negedge rx_valid);
+            assert_equal(spi_sclk, 1, "spi_sclk");
+            @(negedge spi_sclk);
         end
     endtask
 

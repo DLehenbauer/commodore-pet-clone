@@ -147,6 +147,7 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_irq_b
 set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_irq_b
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_nmi_b
 set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_nmi_b
+set_global_assignment -name SYSTEMVERILOG_FILE pe_pulse.sv
 set_global_assignment -name QIP_FILE pll.qip
 set_global_assignment -name SDC_FILE PET.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE address_decoding.sv

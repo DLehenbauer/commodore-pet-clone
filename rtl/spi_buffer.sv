@@ -14,22 +14,33 @@
 
 module spi_buffer(
     input reset,
+    input sys_clk,
     input spi_sclk,
     input spi_cs_n,
     input spi_rx,
     output spi_tx,
 
     output reg [7:0] rx [4],
-    input [2:0] length,
+    output reg [2:0] rx_count = 0,
+
     input [7:0] tx_byte,
 
-    output valid
+    output [7:0] rx0,
+    output [7:0] rx1,
+    output [7:0] rx2,
+    output [7:0] rx3
 );
-    reg [2:0] count = 0;
+    
     wire [7:0] rx_byte;
     wire byte_valid;
 
+    assign rx0 = rx[0];
+    assign rx1 = rx[1];
+    assign rx2 = rx[2];
+    assign rx3 = rx[3];
+
     spi_byte spi(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
@@ -39,14 +50,16 @@ module spi_buffer(
         .valid(byte_valid)
     );
 
-    always @(posedge byte_valid or posedge reset) begin
+    always @(posedge sys_clk or posedge reset) begin
         if (reset) begin
-            count <= 0;
+            rx_count <= 0;
+            rx[0] <= 8'hxx;
+            rx[1] <= 8'hxx;
+            rx[2] <= 8'hxx;
+            rx[3] <= 8'hxx;
         end else if (byte_valid) begin
-            rx[count] <= rx_byte;
-            count <= count + 1'b1;
+            rx[rx_count] <= rx_byte;
+            rx_count <= rx_count + 1'b1;
         end
     end
-
-    assign valid = count == length;
 endmodule

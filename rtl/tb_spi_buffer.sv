@@ -16,75 +16,38 @@
 
 module tb();
     reg reset    = 1'b1;
-    reg spi_sclk = 1'b0;
     reg spi_cs_n = 1'b1;
     wire spi_rx;
     wire spi_tx;
 
     wire [7:0] rx_byte;
-    reg  [7:0] tx_byte;
     reg  [2:0] length = 3'd4;
     wire rx_valid;
-    wire tx_valid;
+
+    `include "tb_spi_tx.vh"
 
     spi_byte spi_byte_tx(
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_tx),
         .spi_tx(spi_rx),
-        .tx(tx_byte),
-        .valid(tx_valid)
+        .tx(tx_byte)
     );
 
     wire [7:0] rx [4];
 
-    wire valid;
+    wire [2:0] rx_count;
+    wire valid = rx_count == length;
 
     spi_buffer spi_buffer(
         .reset(reset),
+        .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .rx(rx),
-        .length(length),
-        .valid(valid)
+        .rx_count(rx_count)
     );
-
-    task begin_xfer;
-        spi_cs_n = 1'b0;
-        #500;
-    endtask
-
-    integer bit_index;
-
-    task xfer_byte(
-        input [7:0] data
-    );
-        tx_byte = data;
-
-        for (bit_index = 0; bit_index < 8; bit_index++) begin
-            spi_sclk = 1'b1;
-            #500;
-            spi_sclk = 1'b0;
-            #500;
-        end
-    endtask
-
-    task end_xfer;
-        tx_byte = 8'hxx;
-        length = 3'bxxx;
-        spi_cs_n = 1'b1;
-
-        #1;
-
-        $display("[%t]    Verify buffer contents after spi_cs_n raised:", $time);
-        for (byte_index = 0; byte_index < length; byte_index++) begin
-            $display("[%t]        byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
-            assert_equal(rx[byte_index], bytes[byte_index], "rx");
-        end
-
-        #499;
-    endtask
 
     integer byte_index;
     logic unsigned [7:0] bytes [];
@@ -111,8 +74,9 @@ module tb();
         for (byte_index = start_index; byte_index < end_index; byte_index++) begin
             $display("[%t]    Send byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
             xfer_byte(bytes[byte_index]);
-            #1 assert_equal(rx[byte_index], bytes[byte_index], "rx");
         end
+
+        @(posedge valid);
 
         $display("[%t]    Verify buffer contents after transfer:", $time);
         for (byte_index = 0; byte_index < length; byte_index++) begin
