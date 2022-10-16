@@ -21,7 +21,7 @@ module sync2(
     logic din1 = 0;
 
     always_ff @(posedge clk or posedge reset) begin
-        if (reset) { dout, din1 } <= '0;
+        if (reset) { dout, din1 } <= 0;
         else { dout, din1 } <= { din1, din };
     end
 endmodule
@@ -32,35 +32,14 @@ module pulse(
     input logic clk,
     input logic din,
     output logic pe,
+    output logic ne,
     output logic dout = 0
 );
     always_ff @(posedge clk or posedge reset) begin
-        if (reset) dout <= '0;
+        if (reset) dout <= 0;
         else dout <= din;
     end
 
     assign pe = din & ~dout;
-endmodule
-
-module pe_pulse (
-    input  logic reset,
-    input  logic clk,
-    input  logic din,
-    output logic dout
-);
-    logic dout1;
-
-    sync2 sync2(
-        .reset(reset),
-        .clk(clk),
-        .din(din),
-        .dout(dout1)
-    );
-
-    pulse pulse(
-        .reset(reset),
-        .clk(clk),
-        .din(dout1),
-        .pe(dout)
-    );
+    assign ne = ~din & dout;
 endmodule
