@@ -57,11 +57,11 @@ void pi_write(uint16_t addr, uint8_t data) {
     while(gpio_get(DONE_B_PIN));
     gpio_put(PENDING_B_PIN, 1);
 
-    uint8_t actual = pi_read(addr);
-    if (actual != data) {
-        printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
-        panic(0);
-    }
+    // uint8_t actual = pi_read(addr);
+    // if (actual != data) {
+    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
+    //     panic(0);
+    // }
 }
 
 void set_cpu(bool reset, bool run) {
@@ -112,10 +112,10 @@ void init() {
     set_cpu(/* reset: */ false, /* run: */ true);
 }
 
-int __not_in_flash("main") main() {
+int /* __not_in_flash("main") */ main() {
     init();
     usb_init();
-    video_init(rom_chars_8800);
+    uint8_t* pCharBuf = video_init(rom_chars_8800);
 
     while (true) {
         // Dispatch TinyUSB events
@@ -123,6 +123,11 @@ int __not_in_flash("main") main() {
 
         for (uint8_t row = 0; row < sizeof(key_matrix); row++) {
             pi_write(0xe800 + row, key_matrix[row]);
+        }
+
+        pCharBuf[0] = pi_read(0x8000);
+        for (uint16_t i = 1; i < 1000; i++) {
+            pCharBuf[i] = pi_read_next();
         }
     }
 

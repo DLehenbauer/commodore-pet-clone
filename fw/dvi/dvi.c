@@ -88,7 +88,7 @@ void __not_in_flash("main") core1_main() {
 	__builtin_unreachable();
 }
 
-int __not_in_flash("main") video_init(uint8_t const* p_char_rom) {
+uint8_t* __not_in_flash("main") video_init(uint8_t const* p_char_rom) {
 	font_8x8 = p_char_rom;
 
 	vreg_set_voltage(VREG_VSEL);
@@ -121,7 +121,7 @@ int __not_in_flash("main") video_init(uint8_t const* p_char_rom) {
 	sem_init(&dvi_start_sem, 0, 1);
 	hw_set_bits(&bus_ctrl_hw->priority, BUSCTRL_BUS_PRIORITY_PROC1_BITS);
 	multicore_launch_core1(core1_main);
-
-
 	sem_release(&dvi_start_sem);
+
+    return charbuf;
 }
