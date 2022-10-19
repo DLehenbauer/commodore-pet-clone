@@ -10,6 +10,8 @@
 * VGA
   * [VGA Timings](http://martin.hinner.info/vga/timing.html)
   * [TinyVGA Timings](http://www.tinyvga.com/vga-timing)
+* DVI
+  * [CEA-861-D](https://ia903002.us.archive.org/1/items/CEA-861-D/CEA-861-D.pdf)
 * NTSC / PAL
   * [Timing Characteristics](http://www.kolumbus.fi/pami1/video/pal_ntsc.html)
 * CRTC
