@@ -27,11 +27,11 @@ if (TARGET tinyusb_device)
         "external/PicoDVI/software/assets"
         "external/PicoDVI/software/include")
 
-    target_compile_definitions(firmware PRIVATE
-        DVI_VERTICAL_REPEAT=1
-        DVI_N_TMDS_BUFFERS=3
-        DVI_1BPP_BIT_REVERSE=1
-        DVI_MONOCHROME_TMDS)
+    # target_compile_definitions(firmware PRIVATE
+    #     DVI_VERTICAL_REPEAT=1
+    #     DVI_N_TMDS_BUFFERS=3
+    #     DVI_1BPP_BIT_REVERSE=1
+    #     DVI_MONOCHROME_TMDS)
 
     target_precompile_headers(firmware PRIVATE pch.h)
 
