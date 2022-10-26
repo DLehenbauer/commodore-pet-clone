@@ -13,32 +13,32 @@
  */
 
 module crtc(
-    input reset,
+    input logic reset,
 
-    input            crtc_select,
-    input     [16:0] bus_addr,
-    input      [7:0] bus_data_in,
-    input            cpu_write,
+    input logic        crtc_select,
+    input logic [16:0] bus_addr,
+    input logic [7:0]  bus_data_in,
+    input logic        cpu_write,
 
-    input [15:0]     pi_addr,               // A0..4 select CRTC registers R0..17
-    input            pi_read,
+    input logic [15:0] pi_addr,               // A0..4 select CRTC registers R0..17
+    input logic        pi_read,
 
-    output reg [7:0] crtc_data_out,
-    output           crtc_data_out_enable,
+    output logic [7:0] crtc_data_out,
+    output logic       crtc_data_out_enable,
 
-    output reg [4:0] crtc_address_register,   // Internally selects R0..17.  Exposed for testing.
-    output     [7:0] crtc_r,                  // Contents of currently selected R0..17.  Exposed for testing.
+    output logic [4:0] crtc_address_register,   // Internally selects R0..17.  Exposed for testing.
+    output logic [7:0] crtc_r,                  // Contents of currently selected R0..17.  Exposed for testing.
 
-    output [7:0] h_total,
-    output [7:0] h_displayed,
-    output [7:0] h_sync_pos,
-    output [7:4] v_sync_width,
-    output [3:0] h_sync_width,
-    output [6:0] v_total,
-    output [4:0] v_line_adjust,
-    output [6:0] v_displayed,
-    output [6:0] v_sync_pos,
-    output [4:0] char_height
+    output logic [7:0] h_total,
+    output logic [7:0] h_displayed,
+    output logic [7:0] h_sync_pos,
+    output logic [3:0] v_sync_width,
+    output logic [3:0] h_sync_width,
+    output logic [6:0] v_total,
+    output logic [4:0] v_line_adjust,
+    output logic [6:0] v_displayed,
+    output logic [6:0] v_sync_pos,
+    output logic [4:0] char_height
 );
     localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-displayed characters, minus one, per horizontal line.
                                             //       The frequency of HSYNC is thus determined by this register.
@@ -68,7 +68,7 @@ module crtc(
             
                R9_SCAN_LINE         = 9;    // [4:0] Number of scan lines per character row, including spacing.
  
-    reg [7:0] r [17:0];
+    logic [7:0] r[17:0];
 
     assign crtc_r = r[crtc_address_register];
 
