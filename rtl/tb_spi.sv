@@ -15,46 +15,10 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg sys_clk;
+    `include "tb_spi_common.vh"
 
-    initial begin
-        sys_clk = 0;
-        forever begin
-            #31.25 sys_clk = ~sys_clk;
-        end
-    end
-
-    reg start_sclk = 1'b0;
-    reg spi_sclk = 1'b0;
-
-    always @(posedge start_sclk) begin
-        while (start_sclk) begin
-            #250
-            spi_sclk <= 1'b1;
-            #500;
-            spi_sclk <= 1'b0;
-            #250;
-        end
-    end
-
-    reg spi_cs_n = 1'b1;
-    wire spi_rx;
-    wire spi_tx;
-
-    wire [7:0] rx;
-    reg  [7:0] tx;
-    wire rx_valid;
-    wire tx_valid;
-
-    spi_byte spi_byte_tx(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_tx),
-        .spi_tx(spi_rx),
-        .tx(tx),
-        .valid(tx_valid)
-    );
+    logic [7:0] rx_byte;
+    logic rx_valid;
 
     spi_byte spi_byte_rx(
         .sys_clk(sys_clk),
@@ -62,7 +26,7 @@ module tb();
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
-        .rx(rx),
+        .rx_byte(rx_byte),
         .valid(rx_valid)
     );
 
@@ -78,43 +42,22 @@ module tb();
         #1 check_valid(1'b0);
     end
 
-    task begin_xfer;
-        spi_cs_n = 0;
-        #500;
-        start_sclk = 1'b1;
-    endtask
-
-    integer bit_index;
-
     task xfer(
         input [7:0] data,
+        input logic [7:0] next_tx = 8'hxx,
         input integer num_bits = 8
     );
-        tx = data;
-
-        for (bit_index = 0; bit_index < num_bits; bit_index++) begin
-            @(posedge spi_sclk);
-        end
+        xfer_bits(next_tx, num_bits);
 
         if (num_bits == 8) begin
             $display("[%t]    Must receive byte $%x.", $time, data);
             @(posedge rx_valid);
-            assert_equal(rx, data, "rx");
+            assert_equal(rx_byte, data, "rx_byte");
             assert_equal(spi_sclk, 1, "spi_sclk");
             @(negedge rx_valid);
             assert_equal(spi_sclk, 1, "spi_sclk");
             @(negedge spi_sclk);
         end
-    endtask
-
-    task end_xfer;
-        start_sclk = 0;
-        tx = 8'hxx;
-
-        #500;
-        spi_cs_n = 1;
-
-        #500;
     endtask
 
     integer i;
@@ -136,27 +79,30 @@ module tb();
 
         foreach (values[i]) begin
             $display("[%t] Test: Transfer single byte $%h.", $time, values[i]);
-            begin_xfer;
+
+            // MSB of 'tx_byte' is preloaded while spi_cs_n is high on rising edge of sys_clk.
+            begin_xfer(/* tx: */ values[i]);
             xfer(/* data: */ values[i]);
             end_xfer;
         end
 
 
         $display("[%t] Test: Transfer consecutive bytes $%h $%h.", $time, values[0], values[1]);
-        begin_xfer;
+
+        begin_xfer(/* tx: */ values[0]);
         foreach (values[i]) begin
-            xfer(/* data: */ values[i]);
+            xfer(/* tx: */ values[i], /* next_tx: */ values[i + 1]);
         end
         end_xfer;
 
         for (i = 0; i < 8; i++) begin
             $display("[%t] Test: Toggling cs_n after %0d bits resets spi state.", $time, i);
-            begin_xfer;
-            xfer(/* data: */ values[0], /* num_bits: */ i);
+            begin_xfer(/* tx: */ values[0]);
+            xfer(/* data: */ values[0], /* next_tx: */ 8'hxx, /* num_bits: */ i);
             end_xfer;
 
             $display("[%t] Test: Transfers correctly after toggling cs_n.", $time);
-            begin_xfer();
+            begin_xfer(/* tx: */ values[0]);
             xfer(/* data: */ values[0]);
             end_xfer();
         end

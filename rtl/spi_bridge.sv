@@ -31,12 +31,10 @@ module pi_com(
     
       // Expose internal state for debugging
     output logic [2:0] state = READ_CMD,
-    output logic [2:0] bit_index,
     output logic rx_valid
 );
     wire reset = !pi_pending_in;
     logic [7:0] rx;
-    logic [7:0] tx;
     
     spi_byte spi_byte(
         .sys_clk(sys_clk),
@@ -44,10 +42,9 @@ module pi_com(
         .spi_cs_n(!pi_pending_in),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
-        .rx(rx),
-        .tx(tx),
-        .valid(rx_valid),
-        .bit_index(bit_index)
+        .rx_byte(rx),
+        .tx_byte(pi_data_in),
+        .valid(rx_valid)
     );
 
     wire cmd_a16        = rx[0];
@@ -121,7 +118,6 @@ module pi_com(
                 DONE: begin
                     pi_pending_out  <= 1'b0;
                     pi_done_out     <= 1'b1;
-                    tx              <= pi_data_in;
                 end
             endcase
         end

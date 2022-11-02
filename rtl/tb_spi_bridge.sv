@@ -15,24 +15,20 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg spi_cs_n = 1'b1;
-    wire spi_rx;
     wire spi_tx;
     wire [7:0] rx_byte;
     wire spi_valid;
 
-    spi_byte spi_byte_tx(
+    spi_byte spi_byte_rx(
         .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_tx),
-        .spi_tx(spi_rx),
-        .rx(rx_byte),
-        .tx(tx_byte),
+        .rx_byte(rx_byte),
         .valid(spi_valid)
     );
 
-    `include "tb_spi_tx.vh"
+    `include "tb_spi_common.vh"
 
     reg [7:0] last_rx_byte;
 
@@ -129,8 +125,8 @@ module tb();
         foreach(bytes[i]) begin
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
-            begin_xfer;
-            xfer_byte(bytes[i]);
+            begin_xfer(bytes[i]);
+            xfer_bits(bytes[i]);
             end_xfer;
         end
 
@@ -141,7 +137,7 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        pi_data_in <= data;
+        pi_data_in = data;
 
         cmd = { 7'b011_xxx_1, addr[16] };
         addr_hi = addr[15:8];
@@ -165,8 +161,8 @@ module tb();
         foreach (bytes[i]) begin
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
-            begin_xfer;
-            xfer_byte(bytes[i]);
+            begin_xfer(bytes[i]);
+            xfer_bits(bytes[i]);
             end_xfer;
         end
 
@@ -177,7 +173,7 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        pi_data_in <= data;
+        pi_data_in = data;
 
         cmd = { 7'b001_xxx_1, addr[16] };
 
@@ -195,8 +191,8 @@ module tb();
         foreach (bytes[i]) begin
             assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
 
-            begin_xfer;
-            xfer_byte(bytes[i]);
+            begin_xfer(bytes[i]);
+            xfer_bits(bytes[i]);
             end_xfer;
         end
 
