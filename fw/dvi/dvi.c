@@ -7,63 +7,72 @@ uint8_t const* font_8x8;
 #define FONT_N_CHARS 95
 #define FONT_FIRST_ASCII 32
 
+// 720x480p @ 60 Hz (270 MHz)
+// Required by CEA for EDTV/HDTV displays.
+const struct dvi_timing __not_in_flash_func(dvi_timing_720x480p_60hz) = {
+	.h_sync_polarity   = false,
+	.h_front_porch     = 16,
+	.h_sync_width      = 62,
+	.h_back_porch      = 60,
+	.h_active_pixels   = 720,
 
-// Pick one:
-#define MODE_640x480_60Hz
-// #define MODE_800x600_60Hz
-// #define MODE_960x540p_60Hz
-// #define MODE_1280x720_30Hz
+	.v_sync_polarity   = false,
+	.v_front_porch     = 9,
+	.v_sync_width      = 6,
+	.v_back_porch      = 30,
+	.v_active_lines    = 480,
 
-#if defined(MODE_640x480_60Hz)
-// DVDD 1.2V (1.1V seems ok too)
-#define FRAME_WIDTH 640
+	.bit_clk_khz       = 270000
+};
+
+#define FRAME_WIDTH 720
 #define FRAME_HEIGHT 480
 #define VREG_VSEL VREG_VOLTAGE_1_20
-#define DVI_TIMING dvi_timing_640x480p_60hz
-
-#elif defined(MODE_800x600_60Hz)
-// DVDD 1.3V, going downhill with a tailwind
-#define FRAME_WIDTH 800
-#define FRAME_HEIGHT 600
-#define VREG_VSEL VREG_VOLTAGE_1_30
-#define DVI_TIMING dvi_timing_800x600p_60hz
-
-
-#elif defined(MODE_960x540p_60Hz)
-// DVDD 1.25V (slower silicon may need the full 1.3, or just not work)
-#define FRAME_WIDTH 960
-#define FRAME_HEIGHT 540
-#define VREG_VSEL VREG_VOLTAGE_1_25
-#define DVI_TIMING dvi_timing_960x540p_60hz
-
-#elif defined(MODE_1280x720_30Hz)
-// 1280x720p 30 Hz (nonstandard)
-// DVDD 1.25V (slower silicon may need the full 1.3, or just not work)
-#define FRAME_WIDTH 1280
-#define FRAME_HEIGHT 720
-#define VREG_VSEL VREG_VOLTAGE_1_25
-#define DVI_TIMING dvi_timing_1280x720p_30hz
-
-#else
-#error "Select a video mode!"
-#endif
-
-#define LED_PIN 16
+#define DVI_TIMING dvi_timing_720x480p_60hz
 
 struct dvi_inst dvi0;
 struct semaphore dvi_start_sem;
 
-#define CHAR_COLS (FRAME_WIDTH / FONT_CHAR_WIDTH)
-#define CHAR_ROWS (FRAME_HEIGHT / FONT_CHAR_HEIGHT)
+#define CHAR_COLS 40
+#define CHAR_ROWS 25
 char charbuf[CHAR_ROWS * CHAR_COLS];
 
-static inline void prepare_scanline(const char *chars, uint y) {
+static inline uint16_t stretch_x(uint16_t x) {
+    x = (x | (x << 4)) & 0x0F0F;
+    x = (x | (x << 2)) & 0x3333;
+    x = (x | (x << 1)) & 0x5555;
+
+    return x | (x << 1);
+}
+
+static inline void prepare_scanline(const char *chars, int y) {
 	static uint8_t scanbuf[FRAME_WIDTH / 8];
-	// First blit font into 1bpp scanline buffer, then encode scanbuf into tmdsbuf
-	for (uint i = 0; i < CHAR_COLS; ++i) {
-		uint c = chars[i + y / FONT_CHAR_HEIGHT * CHAR_COLS];
-		scanbuf[i] = font_8x8[c * FONT_CHAR_HEIGHT + (y % FONT_CHAR_HEIGHT)];
-	}
+
+    y -= 40;
+
+    if (y < 0 || y >= 400) {
+        memset(scanbuf, 0, sizeof(scanbuf));
+    } else {
+        y >>= 1;
+
+        // First blit font into 1bpp scanline buffer, then encode scanbuf into tmdsbuf
+        for (uint i = 0, x = 5; i < CHAR_COLS; i++) {
+            uint c = chars[i + y / FONT_CHAR_HEIGHT * CHAR_COLS];
+            
+            bool reverse = c & 0x80;
+            c &= 0x7f;
+
+            uint8_t p8 = font_8x8[c * FONT_CHAR_HEIGHT + (y % FONT_CHAR_HEIGHT)];
+            if (reverse) {
+                p8 ^= 0xff;
+            }
+            
+            const uint16_t p16 = stretch_x(p8);
+            scanbuf[x++] = p16 >> 8;
+            scanbuf[x++] = p16 & 0xff;
+    	}
+    }
+
 	uint32_t *tmdsbuf;
 	queue_remove_blocking(&dvi0.q_tmds_free, &tmdsbuf);
 	tmds_encode_1bpp((const uint32_t*)scanbuf, tmdsbuf, FRAME_WIDTH);
@@ -71,7 +80,7 @@ static inline void prepare_scanline(const char *chars, uint y) {
 }
 
 void core1_scanline_callback() {
-	static uint y = 1;
+    static uint y = 1;
 	prepare_scanline(charbuf, y);
 	y = (y + 1) % FRAME_HEIGHT;
 }
@@ -101,9 +110,6 @@ uint8_t* __not_in_flash("main") video_init(uint8_t const* p_char_rom) {
 #endif
 
 	setup_default_uart();
-
-	gpio_init(LED_PIN);
-	gpio_set_dir(LED_PIN, GPIO_OUT);
 
 	printf("Configuring DVI\n");
 
