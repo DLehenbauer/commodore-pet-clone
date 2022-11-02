@@ -73,7 +73,7 @@ create_generated_clock -name "phi2" \
     $phi2
 
 create_clock -name "spi_sclk" \
-    -period 1MHz \
+    -period 8MHz \
     $spi_sclk
     
 # create_generated_clock -name "pi_done" \

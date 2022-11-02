@@ -69,16 +69,16 @@ module bus(
     always @(count) begin
         next = 8'bxxxxxxxx;
         case (count)
-            0: next  = PI_SELECT;
-            1: next  = PI_STROBE;
-            2: next  = PI_SELECT;
-            3: next  = VIDEO_SELECT;
-            4: next  = VIDEO_RAM_STROBE;
-            5: next  = VIDEO_SELECT;
-            6: next  = VIDEO_ROM_STROBE;
-            7: next  = VIDEO_SELECT;
-            8: next  = VIDEO_SELECT;
-            9: next  = VIDEO_SELECT;
+            0:  next = PI_SELECT;
+            1:  next = PI_STROBE;
+            2:  next = PI_SELECT;
+            3:  next = VIDEO_SELECT;
+            4:  next = VIDEO_RAM_STROBE;
+            5:  next = VIDEO_SELECT;
+            6:  next = VIDEO_ROM_STROBE;
+            7:  next = VIDEO_SELECT;
+            8:  next = VIDEO_SELECT;
+            9:  next = VIDEO_SELECT;
             10: next = VIDEO_SELECT;
             11: next = VIDEO_SELECT;
             12: next = CPU_SELECT;

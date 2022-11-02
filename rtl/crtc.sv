@@ -13,32 +13,32 @@
  */
 
 module crtc(
-    input reset,
+    input logic reset,
 
-    input            crtc_select,
-    input     [16:0] bus_addr,
-    input      [7:0] bus_data_in,
-    input            cpu_write,
+    input logic        crtc_select,
+    input logic [16:0] bus_addr,
+    input logic [7:0]  bus_data_in,
+    input logic        cpu_write,
 
-    input [15:0]     pi_addr,               // A0..4 select CRTC registers R0..17
-    input            pi_read,
+    input logic [15:0] pi_addr,               // A0..4 select CRTC registers R0..17
+    input logic        pi_read,
 
-    output reg [7:0] crtc_data_out,
-    output           crtc_data_out_enable,
+    output logic [7:0] crtc_data_out,
+    output logic       crtc_data_out_enable,
 
-    output reg [4:0] crtc_address_register,   // Internally selects R0..17.  Exposed for testing.
-    output     [7:0] crtc_r,                  // Contents of currently selected R0..17.  Exposed for testing.
+    output logic [4:0] crtc_address_register,   // Internally selects R0..17.  Exposed for testing.
+    output logic [7:0] crtc_r,                  // Contents of currently selected R0..17.  Exposed for testing.
 
-    output [7:0] h_total,
-    output [7:0] h_displayed,
-    output [7:0] h_sync_pos,
-    output [7:4] v_sync_width,
-    output [3:0] h_sync_width,
-    output [6:0] v_total,
-    output [4:0] v_line_adjust,
-    output [6:0] v_displayed,
-    output [6:0] v_sync_pos,
-    output [4:0] char_height
+    output logic [7:0] h_total,
+    output logic [7:0] h_displayed,
+    output logic [7:0] h_sync_pos,
+    output logic [3:0] v_sync_width,
+    output logic [3:0] h_sync_width,
+    output logic [6:0] v_total,
+    output logic [4:0] v_line_adjust,
+    output logic [6:0] v_displayed,
+    output logic [6:0] v_sync_pos,
+    output logic [4:0] char_height
 );
     localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-displayed characters, minus one, per horizontal line.
                                             //       The frequency of HSYNC is thus determined by this register.
@@ -68,7 +68,7 @@ module crtc(
             
                R9_SCAN_LINE         = 9;    // [4:0] Number of scan lines per character row, including spacing.
  
-    reg [7:0] r [17:0];
+    logic [7:0] r[17:0];
 
     assign crtc_r = r[crtc_address_register];
 
@@ -127,4 +127,142 @@ module crtc(
     end
 
     assign crtc_data_out_enable = pi_crtc_select;
+endmodule
+
+module crtc_sync_gen(
+    input logic cclk_i,                         // 1 MHz character clock
+    input logic reset_i,                        // System reset
+
+    input  logic [13:0] screen_addr_i,          // Display start address
+
+    input logic [7:0] h_char_total_i,           // Total width of scanline in character cols (-1)
+    input logic [7:0] h_char_displayed_i,       // Number of character cols displayed per row
+    input logic [7:0] h_sync_start_i,           // Position of horizontal sync pulse in character cols
+    input logic [3:0] h_sync_width_i,           // Width of horizontal sync pulse in character cols 
+
+    input logic [4:0] v_char_pixel_size_i,      // Height of one character in pixels (-1)
+    input logic [7:0] v_char_total_i,           // Total height of frame in character rows (-1)
+    input logic [7:0] v_char_displayed_i,       // Number character rows displayed per frame
+    input logic [7:0] v_sync_start_i,           // Position of vertical sync pulse in character rows
+    input logic [3:0] v_sync_width_i,           // Width of vertical sync pulse in character rows
+    input logic [4:0] v_adjust_i,               // Fine vertical adjustment in scanlines
+
+    output logic display_enable_o,
+    output logic h_sync_o,
+    output logic v_sync_o,
+
+    output logic [13:0] ma_o,                   // Refresh address lines
+    output logic [4:0] ra_o                     // Raster address lines
+);
+    logic [7:0] h_col_ctr_d, h_col_ctr_q;
+    logic h_start, h_end;
+    logic h_display_d, h_display_q;
+    logic [3:0] h_sync_ctr_d, h_sync_ctr_q;
+    logic h_sync_d;
+
+    logic [4:0] v_scanline_ctr_d;
+    logic [6:0] v_row_ctr_d, v_row_ctr_q;
+    logic v_start, v_end;
+    logic v_display_d, v_display_q;
+    logic [3:0] v_sync_ctr_d, v_sync_ctr_q;
+    logic v_sync_d;
+
+    logic [13:0] row_addr_d, row_addr_q;
+    logic [13:0] ma_d;
+
+    always_comb begin
+        // Horizontal character counter & start of line pulse
+        h_start = h_col_ctr_q == h_char_total_i;
+        if (h_start) h_col_ctr_d = '0;
+        else h_col_ctr_d = h_col_ctr_q + 1'b1;
+
+        // Horizontal display enable
+        h_end = h_col_ctr_d == h_char_displayed_i;
+        if (h_end) h_display_d = '0;
+        else if (h_start) h_display_d = 1'b1;
+        else h_display_d = h_display_q;
+
+        // Horizontal sync
+        if (h_sync_ctr_d == h_sync_width_i) h_sync_d = 1'b0;
+        else if (h_col_ctr_d == h_sync_start_i) h_sync_d = 1'b1;
+        else h_sync_d = h_sync_o;
+
+        // Horizontal sync width counter
+        if (h_sync_d) h_sync_ctr_d = h_sync_ctr_q + 1'b1;
+        else h_sync_ctr_d = '0;
+
+        v_scanline_ctr_d = ra_o;
+        v_row_ctr_d      = v_row_ctr_q;
+        v_display_d      = v_display_q;
+        v_start          = v_row_ctr_q == v_char_total_i;
+        v_end            = '0;
+        v_sync_ctr_d     = v_sync_ctr_q;
+        v_sync_d         = v_sync_o;
+        row_addr_d       = row_addr_q;
+
+        if (h_start) begin
+            // Vertical scanline counter
+            if (ra_o == v_char_pixel_size_i) begin
+                v_scanline_ctr_d = '0;
+
+                // Vertical row counter
+                if (v_start) begin
+                    v_row_ctr_d = '0;
+                    row_addr_d  = screen_addr_i;
+                end else begin
+                    v_row_ctr_d = v_row_ctr_q + 1'b1;
+                    row_addr_d  = row_addr_q + h_char_displayed_i;
+                end
+
+                // Vertical display enable
+                v_end = v_row_ctr_d == v_char_displayed_i;
+                if (v_end) v_display_d = '0;
+                else if (v_start) v_display_d = 1'b1;
+
+                // Vertical sync
+                if (v_sync_ctr_d == v_sync_width_i) v_sync_d = 1'b0;
+                else if (v_row_ctr_d == v_sync_start_i) v_sync_d = 1'b1;
+                else v_sync_d = v_sync_o;
+
+                // Horizontal sync width counter
+                if (v_sync_d) v_sync_ctr_d = v_sync_ctr_q + 1'b1;
+                else v_sync_ctr_d = '0;
+            end else begin
+                v_scanline_ctr_d = ra_o + 1'b1;
+            end
+        end
+
+        if (h_start) ma_d = row_addr_d;
+        else ma_d = ma_o + 1'b1;
+    end
+
+    always_ff @(negedge cclk_i or posedge reset_i) begin
+        if (reset_i) begin
+            h_col_ctr_q      <= '0;
+            h_display_q      <= 1'b1;
+            h_sync_ctr_q     <= '0;
+            h_sync_o         <= '0;
+            ra_o             <= '0;
+            v_row_ctr_q      <= '0;
+            v_display_q      <= 1'b1;
+            v_sync_ctr_q     <= '0;
+            v_sync_o         <= '0;
+            row_addr_q       <= screen_addr_i;
+            ma_o             <= '0;
+        end else begin
+            h_col_ctr_q      <= h_col_ctr_d;
+            h_display_q      <= h_display_d;
+            h_sync_ctr_q     <= h_sync_ctr_d;
+            h_sync_o         <= h_sync_d;
+            ra_o             <= v_scanline_ctr_d;
+            v_row_ctr_q      <= v_row_ctr_d;
+            v_display_q      <= v_display_d;
+            v_sync_ctr_q     <= v_sync_ctr_d;
+            v_sync_o         <= v_sync_d;
+            row_addr_q       <= row_addr_d;
+            ma_o             <= ma_d;
+        end
+    end
+
+    assign display_enable_o = h_display_q && v_display_q;
 endmodule
