@@ -144,8 +144,8 @@ module main (
     wire clk8;
     wire io_read;
     wire video_select;
-    wire video_ram_strobe;
-    wire video_rom_strobe;
+    logic video_ram_clk;
+    logic video_rom_clk;
 
     wire reset = reset_in;
 
@@ -161,8 +161,8 @@ module main (
         .io_select(io_select),
         .io_read(io_read),
         .video_select(video_select),
-        .video_ram_strobe(video_ram_strobe),
-        .video_rom_strobe(video_rom_strobe),
+        .video_ram_strobe(video_ram_clk),
+        .video_rom_strobe(video_rom_clk),
         .pi_rw_b(pi_rw_b),
         .pi_select(pi_select),
         .pi_read(pi_read),
@@ -240,15 +240,15 @@ module main (
     wire [11:0] video_addr;
 
     video v(
-        .pixel_clk(clk8),
-        .reset(reset),
-        .addr_out(video_addr),
-        .data_in(bus_data),
-        .video_ram_strobe(video_ram_strobe),
-        .video_rom_strobe(video_rom_strobe),
-        .video_out(video),
-        .h_sync(hsync),
-        .v_sync(vsync)
+        .clk8_i(clk8),
+        .reset_i(reset),
+        .bus_addr_o(video_addr),
+        .bus_data_i(bus_data),
+        .video_ram_clk_i(video_ram_clk),
+        .video_rom_clk_i(video_rom_clk),
+        .video_o(video),
+        .h_sync_o(hsync),
+        .v_sync_o(vsync)
     );
     
     // Address Decoding
