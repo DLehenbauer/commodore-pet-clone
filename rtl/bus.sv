@@ -13,7 +13,7 @@
  */
 
 module bus(
-    input clk16,
+    input  clk16,
     output clk8,
     output pi_select,
     output pi_strobe,
