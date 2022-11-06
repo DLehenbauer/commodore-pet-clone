@@ -50,6 +50,8 @@ Current CRTC bugs:
   * [Operation](http://www.6502.org/users/andre/hwinfo/crtc/crtc.html)
   * [Internals](http://www.6502.org/users/andre/hwinfo/crtc/internals/index.html)
   * [Wikipedia](https://en.wikipedia.org/wiki/Motorola_6845)
+  * [Register Values](https://github.com/sjgray/cbm-edit-rom/blob/master/docs/CRTC%20Registers.txt)
   * Datasheet
     * [Rockwell R6545](http://archive.6502.org/datasheets/rockwell_r6545-1_crtc.pdf)
     * [Motorolla MC6845](http://m.www.datasheets.pl/elementy_czynne/IC/MC6845.pdf)
+    * [C6845 CRT Controller IP](https://colorcomputerarchive.com/repo/Documents/Datasheets/SY6845E-C6845%20CRT%20Controller%20(CAST).pdf)
