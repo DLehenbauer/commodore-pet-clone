@@ -69,8 +69,8 @@ module crtc(
             
                R9_SCAN_LINE         = 9,    // [4:0] Number of scan lines per character row, including spacing.
 
-               R12_SCR_ADDR_HI      = 12,   // [4:0]
-               R13_SCR_ADDR_LO      = 13;   // [8:0]
+               R12_DISPLAY_START_HI = 12,   // [5:0] High 6 bits of 14 bit display address (starting address of screen_addr_o[13:8]).
+               R13_DISPLAY_START_LO = 13;   // [7:0] Low 8 bits of 14 bit display address (starting address of screen_addr_o[7:0]).
  
     logic [7:0] r[17:0];
 
@@ -86,7 +86,7 @@ module crtc(
     assign v_displayed   = r[R6_V_DISPLAYED][6:0];
     assign v_sync_pos    = r[R7_V_SYNC_POS][6:0];
     assign char_height   = r[R9_SCAN_LINE][4:0];
-    assign screen_addr_o = { r[R12_SCR_ADDR_HI][4:0], r[R13_SCR_ADDR_LO] };
+    assign screen_addr_o = { r[R12_DISPLAY_START_HI][5:0], r[R13_DISPLAY_START_LO] };
     
     always @(negedge cpu_write or posedge reset) begin
         if (reset) begin
@@ -105,8 +105,8 @@ module crtc(
             r[R9_SCAN_LINE]         = 5'd07;
             r[10] = 8'h00;
             r[11] = 8'h00;
-            r[R12_SCR_ADDR_HI]      = 8'h10;
-            r[R12_SCR_ADDR_LO]      = 8'h00;
+            r[R12_DISPLAY_START_HI] = 8'h10;
+            r[R13_DISPLAY_START_LO] = 8'h00;
             r[14] = 8'h00;
             r[15] = 8'h00;
             r[16] = 8'h00;
