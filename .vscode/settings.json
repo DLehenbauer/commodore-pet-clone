@@ -87,5 +87,6 @@
     "cSpell.words": [
         "Picoprobe"
     ],
-    "editor.detectIndentation": false
+    "editor.detectIndentation": false,
+    "cmake.configureOnOpen": false
 }

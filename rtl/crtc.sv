@@ -20,7 +20,7 @@ module crtc(
     input logic [7:0]  bus_data_in,
     input logic        cpu_write,
 
-    input logic [15:0] pi_addr,               // A0..4 select CRTC registers R0..17
+    input logic [16:0] pi_addr,               // A0..4 select CRTC registers R0..17
     input logic        pi_read,
 
     output logic [7:0] crtc_data_out,
@@ -38,7 +38,8 @@ module crtc(
     output logic [4:0] v_line_adjust,
     output logic [6:0] v_displayed,
     output logic [6:0] v_sync_pos,
-    output logic [4:0] char_height
+    output logic [4:0] char_height,
+    output logic [13:0] screen_addr_o
 );
     localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-displayed characters, minus one, per horizontal line.
                                             //       The frequency of HSYNC is thus determined by this register.
@@ -66,11 +67,14 @@ module crtc(
                R7_V_SYNC_POS        = 7,    // [6:0] Selects the character row time at which the VSYNC pulse is desired to occur and, thus,
                                             //       is used to position the displayed text in the vertical direction.
             
-               R9_SCAN_LINE         = 9;    // [4:0] Number of scan lines per character row, including spacing.
+               R9_SCAN_LINE         = 9,    // [4:0] Number of scan lines per character row, including spacing.
+
+               R12_SCR_ADDR_HI      = 12,   // [4:0]
+               R13_SCR_ADDR_LO      = 13;   // [8:0]
  
     logic [7:0] r[17:0];
 
-    assign crtc_r = r[crtc_address_register];
+    assign crtc_r        = r[crtc_address_register];
 
     assign h_total       = r[R0_H_TOTAL];
     assign h_displayed   = r[R1_H_DISPLAYED];
@@ -82,6 +86,7 @@ module crtc(
     assign v_displayed   = r[R6_V_DISPLAYED][6:0];
     assign v_sync_pos    = r[R7_V_SYNC_POS][6:0];
     assign char_height   = r[R9_SCAN_LINE][4:0];
+    assign screen_addr_o = { r[R12_SCR_ADDR_HI][4:0], r[R13_SCR_ADDR_LO] };
     
     always @(negedge cpu_write or posedge reset) begin
         if (reset) begin
@@ -100,8 +105,8 @@ module crtc(
             r[R9_SCAN_LINE]         = 5'd07;
             r[10] = 8'h00;
             r[11] = 8'h00;
-            r[12] = 8'h10;
-            r[13] = 8'h00;
+            r[R12_SCR_ADDR_HI]      = 8'h10;
+            r[R12_SCR_ADDR_LO]      = 8'h00;
             r[14] = 8'h00;
             r[15] = 8'h00;
             r[16] = 8'h00;
@@ -265,4 +270,43 @@ module crtc_sync_gen(
     end
 
     assign display_enable_o = h_display_q && v_display_q;
+endmodule
+
+module dotgen(
+    input  reset_i,
+    input  logic pixel_clk_i,
+    input  logic [7:0] pixels_i,
+    input  logic reverse_video_i,
+    input  logic display_enabled_i,
+    output logic video_o
+);
+    logic [2:0] pixel_ctr_d, pixel_ctr_q;
+    logic [7:0] sr_out_d, sr_out_q;
+    logic       reverse_video_d, reverse_video_q;
+
+    always_comb begin
+        pixel_ctr_d = pixel_ctr_q + 1'b1;
+        
+        if (pixel_ctr_d == '0) begin
+            sr_out_d = pixels_i;
+            reverse_video_d = reverse_video_i;
+        end else begin
+            sr_out_d = { sr_out_q[6:0], 1'b0 };
+            reverse_video_d = reverse_video_q;
+        end
+    end
+
+    always @(posedge pixel_clk_i or posedge reset_i) begin
+        if (reset_i) begin
+            pixel_ctr_q     <= '0;
+            sr_out_q        <= pixels_i;
+            reverse_video_q <= '0;
+        end else begin
+            pixel_ctr_q     <= pixel_ctr_d;
+            sr_out_q        <= sr_out_d;
+            reverse_video_q <= reverse_video_d;
+        end
+    end
+
+    assign video_o = display_enabled_i & (sr_out_q[7] ^ reverse_video_q);
 endmodule
