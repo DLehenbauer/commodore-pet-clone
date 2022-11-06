@@ -1,13 +1,15 @@
 # Compatibility Notes
+
 ## NPA Demo
 
-```
+```text
 (C:$e0c1) load "d:\pet\npa.prg" 0
 Loading d:\pet\npa.prg from 0401 to 7E94 (7A94 bytes)
 ```
 
 ### Uses VRAM mirroring to detect 40 vs. 80 columns
-```
+
+```text
 .C:0517  A9 21       LDA #$21
 .C:0519  8D 00 84    STA $8400
 .C:051c  A9 20       LDA #$20
@@ -18,7 +20,8 @@ Loading d:\pet\npa.prg from 0401 to 7E94 (7A94 bytes)
 ```
 
 ### Uses timing to detect 50 vs. 60 Hz
-```
+
+```text
 .C:055e  AC 44 E8    LDY $E844
 .C:0561  AE 45 E8    LDX $E845
 .C:0564  AD D7 05    LDA $05D7

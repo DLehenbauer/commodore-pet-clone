@@ -12,7 +12,7 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-reg sys_clk;
+bit sys_clk;
 
 initial begin
     sys_clk = 0;
@@ -21,8 +21,8 @@ initial begin
     end
 end
 
-reg start_sclk = 1'b0;
-reg spi_sclk = 1'b0;
+bit start_sclk = 1'b0;
+bit spi_sclk = 1'b0;
 
 always @(posedge start_sclk) begin
     while (start_sclk) begin
@@ -34,10 +34,15 @@ always @(posedge start_sclk) begin
     end
 end
 
-reg [7:0] tx_byte;
-wire tx_valid;
+bit spi_cs_n = 1'b1;
 
-task begin_xfer;
+task begin_xfer(
+    input byte tx
+);
+    // MSB of 'tx_byte' is preloaded while spi_cs_n is high on rising edge of sys_clk.
+    tx_byte = tx;
+    @(posedge sys_clk);
+
     spi_cs_n = 0;
     #500;
     start_sclk = 1'b1;
@@ -45,23 +50,38 @@ endtask
 
 integer bit_index;
 
-task xfer_byte(
-    input [7:0] data,
+task xfer_bits(
+    input logic [7:0] next_tx = 8'hxx,
     input integer num_bits = 8
 );
-    tx_byte = data;
-
     for (bit_index = 0; bit_index < num_bits; bit_index++) begin
         @(posedge spi_sclk);
+
+        // 'tx_byte' is loaded on falling edge of spi_sclk when the last bit is transfered.
+        // However, we update 'tx_byte' after every bit to verify that 'tx_byte' is held
+        // between loads.
+        tx_byte = next_tx;
     end
 endtask
 
 task end_xfer;
     start_sclk = 0;
-    tx_byte = 8'hxx;
 
     #500;
     spi_cs_n = 1;
 
     #500;
 endtask
+
+logic       spi_rx;
+logic       tx_valid;
+logic [7:0] tx_byte = 8'hxx;
+
+spi_byte spi_byte_tx(
+    .sys_clk(sys_clk),
+    .spi_sclk(spi_sclk),
+    .spi_cs_n(spi_cs_n),
+    .spi_tx(spi_rx),
+    .tx_byte(tx_byte),
+    .valid(tx_valid)
+);

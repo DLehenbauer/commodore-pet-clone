@@ -48,7 +48,7 @@
         {
             "name": "PicoDVI Example Debug",
             "cwd": "${workspaceRoot}",
-            "executable": "/workspaces/commodore-pet-clone/fw/external/PicoDVI/software/build/apps/mandelbrot/mandelbrot.elf",
+            "executable": "/workspaces/commodore-pet-clone/fw/external/PicoDVI/software/build/apps/hello_dvi/hello_dvi.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",

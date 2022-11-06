@@ -45,8 +45,8 @@ module spi_buffer(
         .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
-        .rx(rx_byte),
-        .tx(tx_byte),
+        .rx_byte(rx_byte),
+        .tx_byte(tx_byte),
         .valid(byte_valid)
     );
 

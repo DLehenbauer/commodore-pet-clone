@@ -15,26 +15,13 @@
 `timescale 1ns / 1ps
 
 module tb();
-    reg reset    = 1'b1;
-    reg spi_cs_n = 1'b1;
-    wire spi_rx;
-    wire spi_tx;
+    `include "tb_spi_common.vh"
 
+    reg reset    = 1'b1;
+    wire [7:0] rx [4];
     wire [7:0] rx_byte;
     reg  [2:0] length = 3'd4;
     wire rx_valid;
-
-    `include "tb_spi_tx.vh"
-
-    spi_byte spi_byte_tx(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_tx(spi_rx),
-        .tx(tx_byte)
-    );
-
-    wire [7:0] rx [4];
 
     wire [2:0] rx_count;
     wire valid = rx_count == length;
@@ -71,9 +58,13 @@ module tb();
 
         length = end_index;
 
+        begin_xfer(/* tx: */ bytes[start_index]);
+
         for (byte_index = start_index; byte_index < end_index; byte_index++) begin
             $display("[%t]    Send byte[%0d] == %x", $time, byte_index, bytes[byte_index]);
-            xfer_byte(bytes[byte_index]);
+            
+            xfer_bits(bytes[byte_index]);
+            tx_byte = bytes[byte_index + 1];
         end
 
         @(posedge valid);
@@ -94,7 +85,6 @@ module tb();
 
         $display("[%t] Test: Transfer [$aa, $55, $cc, $33]", $time);
 
-        begin_xfer;
         xfer(/* start: */ 3'd0, /* end: */ 3'd4, 8'haa, 8'h55, 8'hcc, 8'h33);
         end_xfer;
 
@@ -102,7 +92,6 @@ module tb();
         #500 reset = 1'b0;
 
         $display("[%t] Test: Transfer [$0f, $f0, $00, $ff]", $time);
-        begin_xfer;
         xfer(/* start: */ 3'd0, /* end: */ 3'd4, 8'h0f, 8'hf0, 8'h00, 8'hff);
         end_xfer;
 
@@ -110,7 +99,6 @@ module tb();
         #500 reset = 1'b0;
 
         $display("[%t] Test: Transfer [$01], then extend to [$02, $03, $04] ", $time);
-        begin_xfer;
         xfer(/* start: */ 3'd0, /* end: */ 3'd1, 8'h01, 8'hxx, 8'hxx, 8'hxx);
         xfer(/* start: */ 3'd1, /* end: */ 3'd4, 8'h01, 8'h02, 8'h03, 8'h04);
         end_xfer;

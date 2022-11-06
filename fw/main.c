@@ -91,7 +91,7 @@ void init() {
     gpio_init(DONE_B_PIN);
     gpio_set_dir(DONE_B_PIN, GPIO_IN);
 
-    spi_init(SPI_INSTANCE, /* 2 MHz */ 2000 * 1000);
+    spi_init(SPI_INSTANCE, /* 8 MHz */ 8 * 1000 * 1000);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
@@ -112,7 +112,7 @@ void init() {
     set_cpu(/* reset: */ false, /* run: */ true);
 }
 
-int /* __not_in_flash("main") */ main() {
+int main() {
     init();
     usb_init();
     uint8_t* pCharBuf = video_init(rom_chars_8800);
