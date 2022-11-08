@@ -241,6 +241,7 @@ module main (
 
     video v(
         .clk8_i(clk8),
+        .cclk_i(video_select),
         .reset_i(reset),
         .bus_addr_o(video_addr),
         .bus_data_i(bus_data),

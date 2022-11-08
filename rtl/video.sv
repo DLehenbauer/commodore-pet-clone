@@ -1,3 +1,56 @@
+module h_sync_gen(
+    input logic reset_i,
+    input logic cclk_i,
+
+    input logic [4:0] char_pixel_size_i,    // Width/height of one character in pixels (-1)
+    input logic [7:0] char_total_i,         // Total characters per scanline/frame (-1)
+    input logic [7:0] char_displayed_i,     // Number characters displayed per row/col
+    input logic [7:0] sync_start_i,         // Character offset at which sync pulse begins
+    input logic [3:0] sync_width_i,         // Width of sync pulse in characters
+    input logic [4:0] adjust_i,             // Fine adjustment in pixels
+
+    output logic active_o,                  // Within the visible pertion of the display
+    output logic sync_o                     // Produced sync pulse
+);
+    localparam ACTIVE = 0,          // Within visible portion of display
+               FRONT  = 1,          // Blank prior to sync pulse
+               SYNC   = 2,          // Sync pulse high
+               BACK   = 3,          // Blank following sync pulse
+               ADJUST = 4;          // Fine adjustment
+
+    logic [2:0] state, next_state;
+    logic [7:0] char_counter;       // Current character (row/col)
+
+    always_ff @(posedge cclk_i or posedge reset_i) begin
+        if (reset_i) begin
+            char_counter <= 0;
+            state <= ACTIVE;
+        end else begin
+            if (char_counter == char_total_i) begin
+                char_counter <= 0;
+                state <= ACTIVE;
+            end else begin
+                char_counter <= next_char;
+                state <= next_state;
+            end
+        end
+    end
+
+    logic [7:0] next_char;
+    assign next_char = char_counter + 1'b1;
+
+    always_comb begin
+        if (next_char == sync_start_i + sync_width_i) next_state = BACK;
+        else if (next_char == sync_start_i) next_state = SYNC;
+        else if (next_char == char_displayed_i) next_state = FRONT;
+        else next_state = state;
+    end
+
+    assign active_o = state == ACTIVE;
+    assign sync_o   = state == SYNC;
+endmodule
+
+
 module sync_gen(
     input logic reset_i,
     input logic clk_i,
@@ -32,7 +85,7 @@ module sync_gen(
     always_ff @(posedge clk_i or posedge reset_i) begin
         if (reset_i) pixel_ctr_q <= 0;
         else pixel_ctr_q <= pixel_ctr_d;
-    end;
+    end
 
     logic [7:0] char_counter;       // Current character (row/col)
 
@@ -172,6 +225,7 @@ endmodule
 module video_gen(
     input logic reset_i,
     input logic pixel_clk_i,              // Pixel clock (40 col = 8 MHz)
+    input logic cclk_i,
     
     output logic [11:0] bus_addr_o,
     input  logic [7:0]  bus_data_i,
@@ -200,12 +254,24 @@ module video_gen(
 
     output logic video_o
 );
-    logic col_start;
-    logic col_end;
+    logic [4:0] pixel_ctr_d, pixel_ctr_q;
 
-    sync_gen h_sync_gen(
+    logic cclk;
+    assign cclk = pixel_ctr_q == 5'd7;
+
+    always_comb begin
+        if (cclk) pixel_ctr_d = 0;
+        else pixel_ctr_d = pixel_ctr_q + 1'b1;
+    end
+    
+    always_ff @(posedge pixel_clk_i or posedge reset_i) begin
+        if (reset_i) pixel_ctr_q <= 0;
+        else pixel_ctr_q <= pixel_ctr_d;
+    end
+
+    h_sync_gen h_sync_gen(
         .reset_i(reset_i),
-        .clk_i(pixel_clk_i),
+        .cclk_i(cclk),
         .char_pixel_size_i(5'd7),
         .char_total_i(h_char_total_i),
         .char_displayed_i(h_char_displayed_i),
@@ -213,11 +279,9 @@ module video_gen(
         .sync_width_i(h_sync_width_i),
         .adjust_i(5'd0),
         .active_o(h_active_o),
-        .sync_o(h_sync_o),
-        .last_o(col_end)
+        .sync_o(h_sync_o)
     );
 
-    logic row_start;
     logic row_end;
 
     sync_gen v_sync_gen(
@@ -237,7 +301,7 @@ module video_gen(
     dot_gen dot_gen(
         .reset_i(reset_i),
         .pixel_clk_i(pixel_clk_i),
-        .col_end_i(col_end),
+        .col_end_i(cclk),
         .h_sync_i(h_sync_o),
         .h_active_i(h_active_o),
         .v_sync_i(v_sync_o),
@@ -253,7 +317,8 @@ endmodule
 
 module video(
     input  logic        reset_i,
-    input  logic        clk8_i,
+    input  logic        clk8_i,         // 40 col = 8 MHz pixel clock
+    input  logic        cclk_i,         // Character clock always 1 MHz
     
     output logic [11:0] bus_addr_o,
     input  logic [7:0]  bus_data_i,
@@ -299,6 +364,7 @@ module video(
     video_gen vg(
         .reset_i(reset_i),
         .pixel_clk_i(pixel_clk),
+        .cclk_i(cclk_i),
         
         .bus_addr_o(bus_addr_o),
         .bus_data_i(bus_data_i),
