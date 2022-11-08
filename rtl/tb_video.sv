@@ -87,6 +87,7 @@ module tb();
     video_gen vg(
         .reset_i(reset),
         .pixel_clk_i(pixel_clk),
+        .cclk_i(video_select),
 
         .bus_addr_o(bus_addr),
         .bus_data_i(bus_data),

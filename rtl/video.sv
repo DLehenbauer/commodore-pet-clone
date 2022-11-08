@@ -50,7 +50,6 @@ module h_sync_gen(
     assign sync_o   = state == SYNC;
 endmodule
 
-
 module sync_gen(
     input logic reset_i,
     input logic clk_i,
@@ -124,6 +123,7 @@ module dot_gen(
     input logic video_ram_clk_i,
     input logic video_rom_clk_i,
 
+    input logic [7:0] h_char_displayed_i,
     input logic col_end_i,
     input logic h_active_i,
     input logic h_sync_i,
@@ -151,7 +151,7 @@ module dot_gen(
         end else if (v_sync_i) begin
             row_addr <= 0;
         end else begin
-            row_addr <= row_addr + 11'd40;
+            row_addr <= row_addr + h_char_displayed_i;
         end
     end
 
@@ -301,6 +301,7 @@ module video_gen(
     dot_gen dot_gen(
         .reset_i(reset_i),
         .pixel_clk_i(pixel_clk_i),
+        .h_char_displayed_i(h_char_displayed_i),
         .col_end_i(cclk),
         .h_sync_i(h_sync_o),
         .h_active_i(h_active_o),
