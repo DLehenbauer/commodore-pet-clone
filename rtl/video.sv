@@ -13,9 +13,6 @@ module sync_gen(
     output logic active_o,                  // Within the visible pertion of the display
     output logic sync_o                     // Produced sync pulse
 );
-    logic [4:0] pixel_counter;      // X/Y pixel position within current character
-    logic [7:0] char_counter;       // Current character (row/col)
-
     localparam ACTIVE = 0,          // Within visible portion of display
                FRONT  = 1,          // Blank prior to sync pulse
                SYNC   = 2,          // Sync pulse high
@@ -24,15 +21,26 @@ module sync_gen(
 
     logic [2:0] state, next_state;
 
-    assign last_o = pixel_counter == char_pixel_size_i;
+    logic [4:0] pixel_ctr_d, pixel_ctr_q;
+    assign last_o = pixel_ctr_q == char_pixel_size_i;
+
+    always_comb begin
+        if (last_o) pixel_ctr_d = 0;
+        else pixel_ctr_d = pixel_ctr_q + 1'b1;
+    end
+    
+    always_ff @(posedge clk_i or posedge reset_i) begin
+        if (reset_i) pixel_ctr_q <= 0;
+        else pixel_ctr_q <= pixel_ctr_d;
+    end;
+
+    logic [7:0] char_counter;       // Current character (row/col)
 
     always_ff @(posedge clk_i or posedge reset_i) begin
         if (reset_i) begin
-            pixel_counter <= 0;
             char_counter <= 0;
             state <= ACTIVE;
         end else if (last_o) begin
-            pixel_counter <= 0;
             if (char_counter == char_total_i) begin
                 char_counter <= 0;
                 state <= ACTIVE;
@@ -40,8 +48,6 @@ module sync_gen(
                 char_counter <= next_char;
                 state <= next_state;
             end
-        end else begin
-            pixel_counter <= pixel_counter + 1'b1;
         end
     end
 
