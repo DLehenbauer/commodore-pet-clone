@@ -9,7 +9,6 @@ module sync_gen(
     input logic [3:0] sync_width_i,         // Width of sync pulse in characters
     input logic [4:0] adjust_i,             // Fine adjustment in pixels
 
-    output logic first_o,                   // First pixel/scanline of row/col
     output logic last_o,                    // Last pixel/scanline of row/col
     output logic active_o,                  // Within the visible pertion of the display
     output logic sync_o                     // Produced sync pulse
@@ -25,7 +24,6 @@ module sync_gen(
 
     logic [2:0] state, next_state;
 
-    assign first_o = pixel_counter == 0;
     assign last_o = pixel_counter == char_pixel_size_i;
 
     always_ff @(posedge clk_i or posedge reset_i) begin
@@ -184,7 +182,7 @@ module video_gen(
     input logic [6:0] v_char_displayed_i, // Displayed characters per column
     input logic [6:0] v_sync_start_i,     // Start of vsync pulse (in characters)
     input logic [3:0] v_sync_width_i,     // Width of vsync pulse (in characters), 0 = 16
-    input logic [4:0] v_adjust_i,         // Fine vertical adjustment in scanlines
+    input logic [4:0] v_adjust_i,         // Fi vertical adjustment in scanlines
 
     input logic [13:0] display_start_i,
 
@@ -210,7 +208,6 @@ module video_gen(
         .adjust_i(5'd0),
         .active_o(h_active_o),
         .sync_o(h_sync_o),
-        .first_o(col_start),
         .last_o(col_end)
     );
 
@@ -228,7 +225,6 @@ module video_gen(
         .adjust_i(v_adjust_i),
         .active_o(v_active_o),
         .sync_o(v_sync_o),
-        .first_o(row_start),
         .last_o(row_end)
     );
 
