@@ -105,6 +105,8 @@ module tb();
         .v_sync_width_i(v_sync_width),
         .v_adjust_i(v_adjust),
 
+        .display_start_i(14'h0000),
+
         .h_sync_o(h_sync),
         .h_active_o(h_active),
         

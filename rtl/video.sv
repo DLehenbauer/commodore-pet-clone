@@ -186,6 +186,8 @@ module video_gen(
     input logic [3:0] v_sync_width_i,     // Width of vsync pulse (in characters), 0 = 16
     input logic [4:0] v_adjust_i,         // Fine vertical adjustment in scanlines
 
+    input logic [13:0] display_start_i,
+
     output logic h_active_o,
     output logic h_sync_o,
 
@@ -279,8 +281,8 @@ module video(
         r[R9_SCAN_LINE]         <= 5'd07;
         r[10]                   <= 8'h00;
         r[11]                   <= 8'h00;
-        r[12]                   <= 8'h10;
-        r[13]                   <= 8'h00;
+        r[R12_DISPLAY_START_HI] <= 8'h10;
+        r[R13_DISPLAY_START_LO] <= 8'h00;
         r[14]                   <= 8'h00;
         r[15]                   <= 8'h00;
         r[16]                   <= 8'h00;
@@ -312,6 +314,8 @@ module video(
         .v_sync_start_i(r[R7_V_SYNC_POS][6:0]),
         .v_sync_width_i(r[R3_SYNC_WIDTH][7:4]),
         .v_adjust_i(r[R5_V_LINE_ADJUST][4:0]),
+
+        .display_start_i({ r[R12_DISPLAY_START_HI][5:0], r[R13_DISPLAY_START_LO] }),
 
         .h_sync_o(h_sync_o),
         .h_active_o(h_active),

@@ -27,4 +27,7 @@ localparam R0_H_TOTAL           = 0,    // [7:0] Total displayed and non-display
            R7_V_SYNC_POS        = 7,    // [6:0] Selects the character row time at which the VSYNC pulse is desired to occur and, thus,
                                         //       is used to position the displayed text in the vertical direction.
         
-           R9_SCAN_LINE         = 9;    // [4:0] Number of scan lines per character row, including spacing.
+           R9_SCAN_LINE         = 9,    // [4:0] Number of scan lines per character row, including spacing.
+           
+           R12_DISPLAY_START_HI = 12,   // [5:0] High 6 bits of 14 bit display address (starting address of screen_addr_o[13:8]).
+           R13_DISPLAY_START_LO = 13;   // [7:0] Low 8 bits of 14 bit display address (starting address of screen_addr_o[7:0]).
