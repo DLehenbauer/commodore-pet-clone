@@ -126,13 +126,10 @@ module dot_gen(
     input logic [13:0] ma_i,
     input logic [4:0] ra_i,
     
-    input logic [7:0] h_char_displayed_i,
     input logic col_end_i,
     input logic h_active_i,
-    input logic h_sync_i,
     
     input logic v_active_i,
-    input logic v_sync_i,
     input logic row_end_i,
 
     output logic [11:0] bus_addr_o,     // 2KB video ram ($000-7FF) or 2KB character rom ($800-FFF)
@@ -140,25 +137,8 @@ module dot_gen(
 
     output logic video_o
 );
-    logic [10:0] row_addr;
-
     logic active;
     assign active = h_active_i & v_active_i;
-    
-    logic next_line;
-    assign next_line = row_end_i & active;
-
-    always_ff @(posedge next_line or posedge v_sync_i or posedge reset_i) begin
-        if (reset_i) begin
-            row_addr <= 0;
-        end else if (v_sync_i) begin
-            row_addr <= 0;
-        end else begin
-            row_addr <= row_addr + h_char_displayed_i;
-        end
-    end
-
-    logic [10:0] char_addr;
     
     logic [7:0] pixels_out;
     logic reverse_video;
@@ -174,7 +154,7 @@ module dot_gen(
                 pixels_out[7:0] <= { pixels_out[6:0], 1'b0 };
             end
         end
-    end    
+    end
     
     assign video_o = (pixels_out[7] ^ reverse_video) & active;
 
@@ -199,16 +179,6 @@ module dot_gen(
     end
 
     logic [7:0] next_char_out;
-
-    always_ff @(posedge video_ram_clk_i or posedge reset_i) begin
-        if (reset_i) begin
-            char_addr <= 0;
-        end else if (video_ram_clk_i) begin
-            char_addr <= active
-                ? char_addr + 1'b1
-                : row_addr;
-        end
-    end
 
     assign bus_addr_o = video_rom_clk_i
         ? { 2'b10, next_char_out[6:0], char_y_counter[2:0] }
@@ -365,11 +335,8 @@ module video_gen(
     dot_gen dot_gen(
         .reset_i(reset_i),
         .pixel_clk_i(pixel_clk_i),
-        .h_char_displayed_i(h_char_displayed_i),
         .col_end_i(cclk),
-        .h_sync_i(h_sync_o),
         .h_active_i(h_active_o),
-        .v_sync_i(v_sync_o),
         .v_active_i(v_active_o),
         .row_end_i(row_end),
         .ma_i(ma_q),
