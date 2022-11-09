@@ -298,6 +298,67 @@ module video_gen(
         .last_o(row_end)
     );
 
+    logic [7:0]  col_ctr_d, col_ctr_q;
+    logic [13:0] ma_d, ma_q;
+    logic [13:0] row_addr_d, row_addr_q;
+    logic [6:0]  row_ctr_d, row_ctr_q;
+    logic [4:0]  scanline_ctr_d, scanline_ctr_q;
+
+    logic last_col;
+    assign last_col = col_ctr_q == h_char_total_i;
+
+    logic last_line;
+    assign last_line = scanline_ctr_q == v_char_height_i;
+
+    logic last_row;
+    assign last_row = row_ctr_q == v_char_total_i;
+
+    always_comb begin
+        row_ctr_d = row_ctr_q;
+        scanline_ctr_d = scanline_ctr_q;
+        row_addr_d = row_addr_q;
+        col_ctr_d = col_ctr_q + 1'b1;
+        ma_d = ma_q + 1'b1;
+
+        if (last_col) begin
+            col_ctr_d = '0;
+
+            if (last_line) begin
+                scanline_ctr_d = '0;
+
+                if (last_row) begin
+                    row_ctr_d = '0;
+                    row_addr_d = display_start_i;
+                end else begin
+                    row_ctr_d = row_ctr_d + 1'b1;
+                    row_addr_d = row_addr_d + h_char_displayed_i;
+                end
+            end else begin
+                scanline_ctr_d = scanline_ctr_d + 1'b1;
+            end
+
+            ma_d = row_addr_d;
+        end
+    end
+
+    always_ff @(posedge cclk_i or posedge reset_i) begin
+        if (reset_i) begin
+            col_ctr_q       <= '0;
+            ma_q            <= display_start_i;
+            row_ctr_q       <= '0;
+            row_addr_q      <= display_start_i;
+            scanline_ctr_q  <= '0;
+        end else begin
+            col_ctr_q       <= col_ctr_d;
+            ma_q            <= ma_d;
+            row_ctr_q       <= row_ctr_d;
+            row_addr_q      <= row_addr_d;
+            scanline_ctr_q  <= scanline_ctr_d;
+        end
+    end
+
+    assign ba_o = { 1'b0, ma_q[10:0] };
+
     dot_gen dot_gen(
         .reset_i(reset_i),
         .pixel_clk_i(pixel_clk_i),
