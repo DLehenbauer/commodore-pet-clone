@@ -123,6 +123,9 @@ module dot_gen(
     input logic video_ram_clk_i,
     input logic video_rom_clk_i,
 
+    input logic [13:0] ma_i,
+    input logic [4:0] ra_i,
+    
     input logic [7:0] h_char_displayed_i,
     input logic col_end_i,
     input logic h_active_i,
@@ -209,7 +212,7 @@ module dot_gen(
 
     assign bus_addr_o = video_rom_clk_i
         ? { 2'b10, next_char_out[6:0], char_y_counter[2:0] }
-        : { 1'b0, char_addr };
+        : { 1'b0, ma_i[10:0] };
 
     always_ff @(negedge video_ram_clk_i) begin
         next_char_out <= bus_data_i;
@@ -369,6 +372,8 @@ module video_gen(
         .v_sync_i(v_sync_o),
         .v_active_i(v_active_o),
         .row_end_i(row_end),
+        .ma_i(ma_q),
+        .ra_i(scanline_ctr_q),
         .bus_addr_o(bus_addr_o),
         .bus_data_i(bus_data_i),
         .video_ram_clk_i(video_ram_clk_i),
