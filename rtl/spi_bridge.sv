@@ -48,8 +48,6 @@ module pi_com(
     );
 
     wire cmd_a16        = rx[0];
-    wire cmd_rw_b       = rx[1];
-    wire cmd_set_addr   = rx[2];
     wire [2:0] cmd_len  = rx[7:5];
 
     localparam READ_CMD          = 3'd0,

@@ -330,8 +330,6 @@ module video_gen(
         end
     end
 
-    assign ba_o = { 1'b0, ma_q[10:0] };
-
     dot_gen dot_gen(
         .reset_i(reset_i),
         .pixel_clk_i(pixel_clk_i),
