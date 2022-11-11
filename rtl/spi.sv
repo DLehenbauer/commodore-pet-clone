@@ -15,7 +15,7 @@
 module spi_byte (
     input  logic sys_clk,        // FPGA clock
 
-    input  logic spi_cs_n,       // CS_N also functions as a syncronous reset
+    input  logic spi_cs_n,       // CS_N also functions as a synchronous reset
     input  logic spi_sclk,       // SCLK must be low before falling edge of CS_N
     input  logic spi_rx,
     output logic spi_tx,
