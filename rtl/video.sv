@@ -303,11 +303,11 @@ module video_gen(
                     row_ctr_d = '0;
                     row_addr_d = display_start_i;
                 end else begin
-                    row_ctr_d = row_ctr_d + 1'b1;
-                    row_addr_d = row_addr_d + h_char_displayed_i;
+                    row_ctr_d = row_ctr_q + 1'b1;
+                    row_addr_d = row_addr_q + h_char_displayed_i;
                 end
             end else begin
-                scanline_ctr_d = scanline_ctr_d + 1'b1;
+                scanline_ctr_d = scanline_ctr_q + 1'b1;
             end
 
             ma_d = row_addr_d;
