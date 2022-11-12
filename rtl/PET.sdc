@@ -17,7 +17,7 @@ set clk_8            [get_registers { main:main|timing:timing|bus:bus|count[0] }
 
 set pi_select        [get_registers { main:main|timing:timing|bus:bus|state[0] }]
 set pi_strobe        [get_registers { main:main|timing:timing|bus:bus|state[1] }]
-# set video_select     [get_registers { main:main|timing:timing|bus:bus|state[2] }]
+set video_select     [get_registers { main:main|timing:timing|bus:bus|state[2] }]
 set video_ram_strobe [get_registers { main:main|timing:timing|bus:bus|state[3] }]
 set video_rom_strobe [get_registers { main:main|timing:timing|bus:bus|state[4] }]
 set cpu_select       [get_registers { main:main|timing:timing|bus:bus|state[5] }]
@@ -44,10 +44,10 @@ create_generated_clock -name "pi_strobe" \
     -edges {3 5 35} \
     $pi_strobe
 
-# create_generated_clock -name "video_select" \
-#     -source $clk_16 \
-#     -edges {7 25 39} \
-#     $video_select
+create_generated_clock -name "video_select" \
+    -source $clk_16 \
+    -edges {7 25 39} \
+    $video_select
     
 create_generated_clock -name "video_ram_strobe" \
     -source $clk_16 \

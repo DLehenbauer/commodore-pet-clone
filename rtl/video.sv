@@ -278,13 +278,14 @@ module video_gen(
     logic [4:0]  scanline_ctr_d, scanline_ctr_q;
 
     logic last_col;
-    assign last_col = col_ctr_q == h_char_total_i;
-
     logic last_line;
-    assign last_line = scanline_ctr_q == v_char_height_i;
-
     logic last_row;
-    assign last_row = row_ctr_q == v_char_total_i;
+
+    always_ff @(posedge cclk_i) begin
+        last_col  <= col_ctr_d == h_char_total_i;
+        last_line <= scanline_ctr_d == v_char_height_i;
+        last_row  <= row_ctr_d == v_char_total_i;
+    end
 
     always_comb begin
         row_ctr_d = row_ctr_q;
