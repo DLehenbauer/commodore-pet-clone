@@ -25,8 +25,8 @@ set io_select        [get_registers { main:main|timing:timing|bus:bus|state[6] }
 set cpu_strobe       [get_registers { main:main|timing:timing|bus:bus|state[7] }]
 
 set pi_done [get_registers { main:main|timing:timing|sync:pi_sync|done }]
-set phi2 [get_ports { phi2 }]
-set spi_sclk [get_ports { spi_sclk }]
+set cpu_clk [get_ports { clk_cpu_o }]
+set spi_sclk [get_ports { spi_sclk_i }]
 
 # Clock constraints
 create_generated_clock -name "clk_8" \
@@ -74,9 +74,9 @@ create_generated_clock -name "cpu_strobe" \
     -edges {29 31 61} \
     $cpu_strobe
 
-create_generated_clock -name "phi2" \
+create_generated_clock -name "cpu_clk" \
     -source $cpu_strobe \
-    $phi2
+    $cpu_clk
 
 create_clock -name "spi_sclk" \
     -period 8MHz \
@@ -94,27 +94,27 @@ derive_pll_clocks -create_base_clocks
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
 # tBVD
-set_input_delay -min -clock [get_clocks { phi2 }]  0 [get_ports { bus_addr[*] bus_rw_b }]
-set_input_delay -max -clock [get_clocks { phi2 }] 30 [get_ports { bus_addr[*] bus_rw_b }]
+set_input_delay -min -clock [get_clocks { cpu_clk }]  0 [get_ports { bus_addr_io[*] bus_rw_nio }]
+set_input_delay -max -clock [get_clocks { cpu_clk }] 30 [get_ports { bus_addr_io[*] bus_rw_nio }]
 
 # tMDS
-set_input_delay -min -clock [get_clocks { phi2 }]  0 [get_ports { bus_data[*] }]
-set_input_delay -max -clock [get_clocks { phi2 }] 40 [get_ports { bus_data[*] }]
+set_input_delay -min -clock [get_clocks { cpu_clk }]  0 [get_ports { bus_data_io[*] }]
+set_input_delay -max -clock [get_clocks { cpu_clk }] 40 [get_ports { bus_data_io[*] }]
 
 # PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 
-set_output_delay -min -clock { phi2 }  0 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
-set_output_delay -max -clock { phi2 } -8 [get_ports { via_cs2_b pia2_cs2_b pia1_cs2_b }]
+set_output_delay -min -clock { cpu_clk }  0 [get_ports { via_cs2_no pia2_cs2_no pia1_cs2_no }]
+set_output_delay -max -clock { cpu_clk } -8 [get_ports { via_cs2_no pia2_cs2_no pia1_cs2_no }]
 
 # SRAM
 # https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf
 
-set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] ram_addr[*] bus_data[*] }]
-set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b bus_addr[*] ram_addr[*] bus_data[*] }]
+set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
+set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
 
-set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_b ram_oe_b ram_we_b ram_addr[*] }]
-set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_b ram_oe_b ram_we_b ram_addr[*] }]
+set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
+set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
 
 # RPi
 

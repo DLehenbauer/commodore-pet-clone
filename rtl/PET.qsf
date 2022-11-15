@@ -67,19 +67,19 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_
 set_global_assignment -name POST_MODULE_SCRIPT_FILE "quartus_sh:scripts/PostModule.tcl"
 
 set_location_assignment PIN_3 -to P3_LED_D2
-set_location_assignment PIN_4 -to video
-set_location_assignment PIN_8 -to vsync
+set_location_assignment PIN_4 -to video_o
+set_location_assignment PIN_8 -to vsync_o
 set_location_assignment PIN_7 -to P7_LED_D4
 set_location_assignment PIN_9 -to P9_LED_D5
 set_location_assignment PIN_17 -to P17_50MHz
-set_location_assignment PIN_18 -to pi_clk
-set_location_assignment PIN_22 -to pi_pending_b
-set_location_assignment PIN_24 -to hsync
-set_location_assignment PIN_25 -to cpu_rdy
+set_location_assignment PIN_18 -to mcu_clk
+set_location_assignment PIN_22 -to spi_pending_ni
+set_location_assignment PIN_24 -to hsync_o
+set_location_assignment PIN_25 -to cpu_ready_o
 set_location_assignment PIN_26 -to P26_1V2
 set_location_assignment PIN_27 -to P27_GND
-set_location_assignment PIN_30 -to pi_done_b
-set_location_assignment PIN_31 -to phi2
+set_location_assignment PIN_30 -to spi_done_no
+set_location_assignment PIN_31 -to clk_cpu_o
 set_location_assignment PIN_40 -to pi_data[7]
 set_location_assignment PIN_41 -to pi_data[3]
 set_location_assignment PIN_42 -to pi_data[6]
@@ -88,66 +88,65 @@ set_location_assignment PIN_44 -to pi_data[5]
 set_location_assignment PIN_45 -to pi_data[1]
 set_location_assignment PIN_47 -to pi_data[4]
 set_location_assignment PIN_48 -to pi_data[0]
-set_location_assignment PIN_55 -to spi_sclk
-set_location_assignment PIN_58 -to spi_rx
-set_location_assignment PIN_60 -to spi_tx
-set_location_assignment PIN_64 -to spi_cs_n
+set_location_assignment PIN_55 -to spi_sclk_i
+set_location_assignment PIN_58 -to spi_rx_i
+set_location_assignment PIN_60 -to spi_tx_io
+set_location_assignment PIN_64 -to spi_cs_ni
 set_location_assignment PIN_73 -to P73_POR
-set_location_assignment PIN_74 -to audio
-set_location_assignment PIN_75 -to ram_oe_b
-set_location_assignment PIN_76 -to ram_we_b
-set_location_assignment PIN_79 -to ram_ce_b
-set_location_assignment PIN_80 -to ram_addr[10]
-set_location_assignment PIN_81 -to ram_addr[11]
-set_location_assignment PIN_86 -to cpu_irq_b
-set_location_assignment PIN_87 -to cpu_be
-set_location_assignment PIN_89 -to diag
-set_location_assignment PIN_90 -to cb2
-set_location_assignment PIN_91 -to gfx
-set_location_assignment PIN_92 -to cpu_nmi_b
-set_location_assignment PIN_93 -to bus_data[3]
-set_location_assignment PIN_94 -to bus_data[7]
-set_location_assignment PIN_96 -to bus_data[2]
-set_location_assignment PIN_97 -to bus_data[6]
-set_location_assignment PIN_99 -to bus_data[1]
-set_location_assignment PIN_100 -to bus_data[5]
-set_location_assignment PIN_101 -to bus_data[0]
-set_location_assignment PIN_103 -to bus_data[4]
-set_location_assignment PIN_104 -to cpu_sync
-set_location_assignment PIN_112 -to bus_addr[0]
-set_location_assignment PIN_113 -to bus_addr[8]
-set_location_assignment PIN_114 -to bus_addr[1]
-set_location_assignment PIN_115 -to bus_addr[9]
-set_location_assignment PIN_118 -to bus_addr[2]
-set_location_assignment PIN_119 -to bus_addr[10]
-set_location_assignment PIN_120 -to bus_addr[3]
-set_location_assignment PIN_121 -to bus_addr[11]
-set_location_assignment PIN_122 -to bus_addr[4]
-set_location_assignment PIN_125 -to bus_addr[12]
-set_location_assignment PIN_126 -to bus_addr[5]
-set_location_assignment PIN_129 -to bus_addr[13]
-set_location_assignment PIN_132 -to bus_addr[6]
-set_location_assignment PIN_133 -to bus_addr[14]
-set_location_assignment PIN_134 -to bus_addr[7]
-set_location_assignment PIN_135 -to bus_addr[15]
-set_location_assignment PIN_136 -to via_cs2_b
-set_location_assignment PIN_137 -to bus_addr[16]
-set_location_assignment PIN_139 -to pia1_cs2_b
-set_location_assignment PIN_141 -to pia2_cs2_b
-set_location_assignment PIN_142 -to bus_rw_b
-set_location_assignment PIN_143 -to io_oe_b
-set_location_assignment PIN_144 -to cpu_res_b
+set_location_assignment PIN_74 -to audio_o
+set_location_assignment PIN_75 -to ram_oe_no
+set_location_assignment PIN_76 -to ram_we_no
+set_location_assignment PIN_79 -to ram_ce_no
+set_location_assignment PIN_80 -to ram_addr_o[10]
+set_location_assignment PIN_81 -to ram_addr_o[11]
+set_location_assignment PIN_86 -to cpu_irq_nio
+set_location_assignment PIN_87 -to cpu_en_no
+set_location_assignment PIN_89 -to diag_i
+set_location_assignment PIN_90 -to cb2_i
+set_location_assignment PIN_91 -to gfx_i
+set_location_assignment PIN_92 -to cpu_nmi_nio
+set_location_assignment PIN_93 -to bus_data_io[3]
+set_location_assignment PIN_94 -to bus_data_io[7]
+set_location_assignment PIN_96 -to bus_data_io[2]
+set_location_assignment PIN_97 -to bus_data_io[6]
+set_location_assignment PIN_99 -to bus_data_io[1]
+set_location_assignment PIN_100 -to bus_data_io[5]
+set_location_assignment PIN_101 -to bus_data_io[0]
+set_location_assignment PIN_103 -to bus_data_io[4]
+set_location_assignment PIN_104 -to cpu_sync_i
+set_location_assignment PIN_112 -to bus_addr_io[0]
+set_location_assignment PIN_113 -to bus_addr_io[8]
+set_location_assignment PIN_114 -to bus_addr_io[1]
+set_location_assignment PIN_115 -to bus_addr_io[9]
+set_location_assignment PIN_118 -to bus_addr_io[2]
+set_location_assignment PIN_119 -to bus_addr_io[10]
+set_location_assignment PIN_120 -to bus_addr_io[3]
+set_location_assignment PIN_121 -to bus_addr_io[11]
+set_location_assignment PIN_122 -to bus_addr_io[4]
+set_location_assignment PIN_125 -to bus_addr_io[12]
+set_location_assignment PIN_126 -to bus_addr_io[5]
+set_location_assignment PIN_129 -to bus_addr_io[13]
+set_location_assignment PIN_132 -to bus_addr_io[6]
+set_location_assignment PIN_133 -to bus_addr_io[14]
+set_location_assignment PIN_134 -to bus_addr_io[7]
+set_location_assignment PIN_135 -to bus_addr_io[15]
+set_location_assignment PIN_136 -to via_cs2_no
+set_location_assignment PIN_137 -to bus_addr_io[16]
+set_location_assignment PIN_139 -to pia1_cs2_no
+set_location_assignment PIN_141 -to pia2_cs2_no
+set_location_assignment PIN_142 -to bus_rw_nio
+set_location_assignment PIN_143 -to io_oe_no
+set_location_assignment PIN_144 -to cpu_res_naio
 
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_res_b
-set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_res_b
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_irq_b
-set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_irq_b
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_nmi_b
-set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_nmi_b
-set_global_assignment -name SYSTEMVERILOG_FILE pe_pulse.sv
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_res_naio
+set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_res_naio
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_irq_nio
+set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_irq_nio
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to cpu_nmi_nio
+set_instance_assignment -name AUTO_OPEN_DRAIN_PINS ON -to cpu_nmi_nio
 set_global_assignment -name QIP_FILE pll.qip
 set_global_assignment -name SDC_FILE PET.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE address_decoding.sv
@@ -155,6 +154,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE bus.sv
 set_global_assignment -name SYSTEMVERILOG_FILE crtc.sv
 set_global_assignment -name SYSTEMVERILOG_FILE keyboard.sv
 set_global_assignment -name SYSTEMVERILOG_FILE main.sv
+set_global_assignment -name SYSTEMVERILOG_FILE pe_pulse.sv
 set_global_assignment -name SYSTEMVERILOG_FILE spi_bridge.sv
 set_global_assignment -name SYSTEMVERILOG_FILE spi_buffer.sv
 set_global_assignment -name SYSTEMVERILOG_FILE spi.sv

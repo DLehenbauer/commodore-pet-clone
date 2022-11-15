@@ -18,7 +18,7 @@ module pi_com(
     input  logic spi_sclk,
     input  logic spi_cs_n,
     input  logic spi_rx,
-    inout        spi_tx,
+    inout  wire  spi_tx,
 
     output logic [16:0] pi_addr,
     input  logic [7:0] pi_data_in,
