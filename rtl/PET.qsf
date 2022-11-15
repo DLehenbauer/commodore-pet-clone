@@ -71,7 +71,7 @@ set_location_assignment PIN_4 -to video_o
 set_location_assignment PIN_8 -to vsync_o
 set_location_assignment PIN_7 -to P7_LED_D4
 set_location_assignment PIN_9 -to P9_LED_D5
-set_location_assignment PIN_17 -to P17_50MHz
+set_location_assignment PIN_17 -to clk_50_i
 set_location_assignment PIN_18 -to mcu_clk
 set_location_assignment PIN_22 -to spi_pending_ni
 set_location_assignment PIN_24 -to hsync_o
