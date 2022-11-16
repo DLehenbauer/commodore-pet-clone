@@ -14,7 +14,7 @@
 
 module pi_ctl(
     input pi_write,
-    input [15:0] pi_addr,
+    input [16:0] pi_addr,
     input [7:0] pi_data,
     output res_b,
     output rdy

@@ -182,7 +182,7 @@ module main (
         .pi_addr(pi_addr),
         .pi_data(pi_wr_data),
         .pi_write(pi_write),
-        .bus_addr(bus_addr_io),
+        .bus_addr(bus_addr_io[1:0]),
         .bus_data_in(bus_data_io),
         .bus_rw_b(bus_rw_nio),
         .pia1_enabled_in(pia1_enable_before_kbd),

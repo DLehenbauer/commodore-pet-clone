@@ -15,7 +15,7 @@
  module keyboard(
     input reset,
  
-    input [15:0] pi_addr,
+    input [16:0] pi_addr,
     input [7:0]  pi_data,
     input pi_write,
 
