@@ -5,3 +5,4 @@
 * [Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!](http://www.sunburst-design.com/papers/CummingsSNUG2000SJ_NBA.pdf)
 * [Clock Domain Crossing (CDC) Design & Verification Techniques Using SystemVerilog](http://www.sunburst-design.com/papers/CummingsSNUG2008Boston_CDC.pdf)
 * [How I Write FSMs in RTL](https://tomverbeure.github.io/2020/05/01/How-I-Write-FSMs-in-RTL.html)
+* [lowRISC Verilog Coding Style Guide](https://github.com/MiekH/lowRISC-style-guides/blob/master/VerilogCodingStyle.md)
