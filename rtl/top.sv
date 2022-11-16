@@ -88,10 +88,6 @@ module top(
     // input logic  P81_1V2              // VCC 1.2Vfor EP2C8.  On EP2C5, remove "Zero ohm" resistor to use pin used as normal.
     // inout logic P144_KEY              // Push to ground.  Requires internal pullup on FPGA if used.
 );
-    logic pi_pending, pi_done;
-    assign pi_pending  = !spi_pending_ni;
-    assign spi_done_no = !pi_done;
-
     logic res_n = 1'b0;
     logic irq_n = 1'b1;
     logic nmi_n = 1'b1;
@@ -126,39 +122,14 @@ module top(
     // assign debug_o[1] = spi_cs_n;
     // assign debug_o[2] = spi_rx;
     // assign debug_o[3] = spi_tx;
-
-    logic pi_rw_b;
-    logic [16:0] pi_addr;
-    logic [7:0] pi_wr_data;          // Incoming data when Pi is writing
-    logic [7:0] pi_rd_data;          // Outgoing data when Pi is reading
-    logic pi_pending_out;
-    logic pi_done_in;
-
-    pi_com pi_com(
-        .sys_clk(clk16),
-        .spi_sclk(spi_sclk_i),
-        .spi_cs_n(spi_cs_ni),
-        .spi_rx(spi_rx_i),
-        .spi_tx(spi_tx_io),
-        .pi_addr(pi_addr),
-        .pi_data_in(pi_rd_data),
-        .pi_data_out(pi_wr_data),
-        .pi_rw_b(pi_rw_b),
-        .pi_pending_in(pi_pending),
-        .pi_pending_out(pi_pending_out),
-        .pi_done_in(pi_done_in),
-        .pi_done_out(pi_done),
-
-        // Expose internal state for debugging
-        .state(debug_o[2:0]),
-        .rx_valid(debug_o[6])
-    );
     
     main main(
-        .pi_rw_b(pi_rw_b),
-        .pi_addr({ 1'b0, pi_addr }),
-        .pi_wr_data(pi_wr_data),    // Incoming data when Pi is writing
-        .pi_rd_data(pi_rd_data),    // Outgoing data when Pi is reading
+        .spi_sclk_i(spi_sclk_i),
+        .spi_cs_ni(spi_cs_ni),
+        .spi_rx_i(spi_rx_i),
+        .spi_tx_io(spi_tx_io),
+        .spi_pending_ni(spi_pending_ni),
+        .spi_done_no(spi_done_no),
         .bus_rw_b(bus_rw_nio),
         .bus_addr(bus_addr_io),
         .bus_data(bus_data_io),
@@ -167,8 +138,6 @@ module top(
         .phi2(clk_cpu_o),
         .ram_oe_b(ram_oe_no),
         .ram_we_b(ram_we_no),
-        .pi_pending(pi_pending_out),
-        .pi_done(pi_done_in),
         .reset_in(!cpu_res_naio),
         .res_b_out(res_n),
         .cpu_rdy(cpu_ready_o),
@@ -182,6 +151,7 @@ module top(
         .gfx(gfx_i),
         .hsync(hsync_o),
         .vsync(vsync_o),
-        .video(video_o)
+        .video(video_o),
+        .debug_o(debug_o)
     );
 endmodule

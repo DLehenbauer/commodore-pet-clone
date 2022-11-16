@@ -91,6 +91,8 @@ module pi_ctl(
 endmodule
 
 module main (
+    output logic [7:0] debug_o,
+
     // System Bus
     inout bus_rw_b,             // CPU 34          : 0 = CPU writing, 1 = CPU reading
     inout [16:0] bus_addr,      // CPU 9-20, 22-25 : System address bus
@@ -99,13 +101,17 @@ module main (
     output [11:10] ram_addr,    // RAM: Intercept A11/A10 to mirror VRAM.  Must remove zero ohm
                                 //      resistors at R9 and R10.
 
-    // Pi
-    input             pi_rw_b,
-    input      [16:0] pi_addr,
-    input       [7:0] pi_wr_data,   // Incoming data when Pi is writing
-    output reg  [7:0] pi_rd_data,   // Outgoing data when Pi is reading
-    input             pi_pending,
-    output            pi_done,
+    // SPI
+    input  logic spi_sclk_i,            // RPi 23 : GPIO 11
+    input  logic spi_cs_ni,             // RPi 24 : GPIO 8
+    input  logic spi_rx_i,              // RPi 19 : GPIO 10
+
+    // TODO: Should be 'inout'
+    output wire  spi_tx_io,             // RPi 21 : GPIO 9
+
+    input  logic spi_pending_ni,        // RPi  2 : Pending read/write request from RPi
+    output logic spi_done_no,           // RPi  3 : Request completed and pi_data held while still pending.
+
 
     // Timing
     input clk16,                // 16 MHz master clock
@@ -133,6 +139,37 @@ module main (
     output vsync,
     output video
 );
+    logic pi_pending, pi_done;
+    assign pi_pending  = !spi_pending_ni;
+    assign spi_done_no = !pi_done;
+
+    logic pi_rw_b;
+    logic [16:0] pi_addr;
+    logic [7:0] pi_wr_data;          // Incoming data when Pi is writing
+    logic [7:0] pi_rd_data;          // Outgoing data when Pi is reading
+    logic pi_pending_out;
+    logic pi_done_in;
+
+    pi_com pi_com(
+        .sys_clk(clk16),
+        .spi_sclk(spi_sclk_i),
+        .spi_cs_n(spi_cs_ni),
+        .spi_rx(spi_rx_i),
+        .spi_tx(spi_tx_io),
+        .pi_addr(pi_addr),
+        .pi_data_in(pi_rd_data),
+        .pi_data_out(pi_wr_data),
+        .pi_rw_b(pi_rw_b),
+        .pi_pending_in(pi_pending),
+        .pi_pending_out(pi_pending_out),
+        .pi_done_in(pi_done_in),
+        .pi_done_out(pi_done),
+
+        // Expose internal state for debugging
+        .state(debug_o[2:0]),
+        .rx_valid(debug_o[6])
+    );
+
     wire cpu_enable;
     wire cpu_read;
     wire cpu_write;
@@ -167,8 +204,8 @@ module main (
         .pi_select(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
-        .pi_pending(pi_pending),
-        .pi_done(pi_done)
+        .pi_pending(pi_pending_out),
+        .pi_done(pi_done_in)
     );
     
     pi_ctl ctl(
