@@ -67,7 +67,7 @@ module top(
     output logic video_o,
 
     // DEBUG
-    output logic [7:0] pi_data,
+    output logic [7:0] debug_o,
     
     // Reserved by DevBoard
     // (See http://land-boards.com/blwiki/index.php?title=Cyclone_II_EP2C5_Mini_Dev_Board#I.2FO_Pin_Mapping)
@@ -119,13 +119,13 @@ module top(
     //    .spi_cs_n(spi_cs_n),
     //    .spi_sclk(spi_sclk),
     //    .spi_rx(spi_rx),
-    //    .rx(pi_data)
+    //    .rx(debug_o)
     //);
 
-    // assign pi_data[0] = spi_sclk;
-    // assign pi_data[1] = spi_cs_n;
-    // assign pi_data[2] = spi_rx;
-    // assign pi_data[3] = spi_tx;
+    // assign debug_o[0] = spi_sclk;
+    // assign debug_o[1] = spi_cs_n;
+    // assign debug_o[2] = spi_rx;
+    // assign debug_o[3] = spi_tx;
 
     logic pi_rw_b;
     logic [16:0] pi_addr;
@@ -150,8 +150,8 @@ module top(
         .pi_done_out(pi_done),
 
         // Expose internal state for debugging
-        .state(pi_data[2:0]),
-        .rx_valid(pi_data[6])
+        .state(debug_o[2:0]),
+        .rx_valid(debug_o[6])
     );
     
     main main(
