@@ -4,26 +4,26 @@
 #include "usb/usb.h"
 #include "dvi/dvi.h"
 
-#define PENDING_B_PIN 6
 #define DONE_B_PIN 7
 
 #define SPI_INSTANCE spi0
 #define SPI_SCK_PIN 2
 #define SPI_TX_PIN 3
 #define SPI_RX_PIN 4
-#define SPI_CSN_PIN 5
+// #define SPI_CSN_PIN 5
+#define SPI_CSN_PIN 6
 
 uint8_t pi_read_next() {
     const uint8_t tx[1] = { 0x22 };
     uint8_t rx[sizeof(tx)];
 
-    while(!gpio_get(DONE_B_PIN));
-    gpio_put(PENDING_B_PIN, 0);
+    while (!gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 0);
 
     spi_write_read_blocking(spi_default, tx, rx, sizeof(tx));
     
-    while(gpio_get(DONE_B_PIN));
-    gpio_put(PENDING_B_PIN, 1);
+    while (gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 1);
 
     return rx[0];
 }
@@ -33,13 +33,13 @@ uint8_t pi_read(uint16_t addr) {
     const uint8_t addr_lo = addr & 0xff;
     const uint8_t tx[] = { 0x66, addr_hi, addr_lo };
 
-    while(!gpio_get(DONE_B_PIN));
-    gpio_put(PENDING_B_PIN, 0);
+    while (!gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 0);
 
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
     
-    while(gpio_get(DONE_B_PIN));
-    gpio_put(PENDING_B_PIN, 1);
+    while (gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 1);
 
     return pi_read_next();
 }
@@ -49,13 +49,13 @@ void pi_write(uint16_t addr, uint8_t data) {
     const uint8_t addr_lo = addr & 0xff;
     const uint8_t tx [] = { 0x84, data, addr_hi, addr_lo };
 
-    while(!gpio_get(DONE_B_PIN));
-    gpio_put(PENDING_B_PIN, 0);
+    while (!gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 0);
 
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
     
-    while(gpio_get(DONE_B_PIN));
-    gpio_put(PENDING_B_PIN, 1);
+    while (gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 1);
 
     // uint8_t actual = pi_read(addr);
     // if (actual != data) {
@@ -83,9 +83,15 @@ void copy_rom(const uint8_t const* pRom, uint16_t start, uint16_t byteLength) {
 void init() {
     stdio_init_all();
 
-    gpio_init(PENDING_B_PIN);
-    gpio_set_dir(PENDING_B_PIN, GPIO_OUT);
-    gpio_put(PENDING_B_PIN, 1);
+    // To save an IO pin, we use CS_N to frame multibyte commands.  This requires us to
+    // drive CS_N from software since RP2040's hardware CS_N deasserts between bytes.
+    //
+    // Therefore we configure SPI_CSN_PIN as GPIO_OUT rather than GPIO_FUNC_SPI.
+    //
+    // (See https://github.com/raspberrypi/pico-sdk/issues/88)
+    gpio_init(SPI_CSN_PIN);
+    gpio_set_dir(SPI_CSN_PIN, GPIO_OUT);
+    gpio_put(SPI_CSN_PIN, 1);
     sleep_ms(1);
     
     gpio_init(DONE_B_PIN);
@@ -95,7 +101,6 @@ void init() {
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI_CSN_PIN, GPIO_FUNC_SPI);
 
     set_cpu(/* reset: */ true, /* run: */ false);
     set_cpu(/* reset: */ false, /* run: */ false);
