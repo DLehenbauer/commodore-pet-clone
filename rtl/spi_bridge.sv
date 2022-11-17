@@ -16,7 +16,7 @@ module pi_com(
     input  logic sys_clk,
 
     input  logic spi_sclk,
-    input  logic spi_cs_n,
+    input  logic spi_cs_n,      // Also serves as an asynchronous reset for the FSM
     input  logic spi_rx,
     inout  wire  spi_tx,
 
@@ -24,7 +24,6 @@ module pi_com(
     input  logic [7:0] pi_data_in,
     output logic [7:0] pi_data_out,
     output logic pi_rw_b = 1'b1,
-    input  logic pi_pending_in,                // pi_pending_in also serves as a reset
     output logic pi_pending_out = 1'b0,
     input  logic pi_done_in,
     output logic pi_done_out = 1'b0,
@@ -33,13 +32,13 @@ module pi_com(
     output logic [2:0] state = READ_CMD,
     output logic rx_valid
 );
-    wire reset = !pi_pending_in;
+    wire reset = spi_cs_n;
     logic [7:0] rx;
     
     spi_byte spi_byte(
         .sys_clk(sys_clk),
         .spi_sclk(spi_sclk),
-        .spi_cs_n(!pi_pending_in),
+        .spi_cs_n(spi_cs_n),
         .spi_rx(spi_rx),
         .spi_tx(spi_tx),
         .rx_byte(rx),

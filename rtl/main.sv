@@ -13,7 +13,7 @@
  */
 
 module main (
-    output logic [7:0]  debug_o,
+    output logic [7:0]   debug_o,
 
     // System Bus
     inout  wire          bus_rw_nio,    // CPU 34          : 0 = CPU writing, 1 = CPU reading
@@ -31,7 +31,6 @@ module main (
     // TODO: Should be 'inout'
     output wire  spi_tx_io,             // RPi 21 : GPIO 9
 
-    input  logic spi_pending_ni,        // RPi  2 : Pending read/write request from RPi
     output logic spi_done_no,           // RPi  3 : Request completed and pi_data held while still pending.
 
     // Timing
@@ -60,8 +59,7 @@ module main (
     output logic v_sync_o,
     output logic video_o
 );
-    logic pi_pending, pi_done;
-    assign pi_pending  = !spi_pending_ni;
+    logic pi_done;
     assign spi_done_no = !pi_done;
 
     logic pi_rw_b;
@@ -81,15 +79,19 @@ module main (
         .pi_data_in(pi_rd_data),
         .pi_data_out(pi_wr_data),
         .pi_rw_b(pi_rw_b),
-        .pi_pending_in(pi_pending),
         .pi_pending_out(pi_pending_out),
         .pi_done_in(pi_done_in),
-        .pi_done_out(pi_done),
-
-        // Expose internal state for debugging
-        .state(debug_o[2:0]),
-        .rx_valid(debug_o[6])
+        .pi_done_out(pi_done)
     );
+    
+    assign debug_o[0] = spi_sclk_i;
+    assign debug_o[1] = spi_cs_ni;
+    assign debug_o[2] = spi_rx_i;
+    assign debug_o[3] = spi_tx_io;
+    assign debug_o[4] = spi_sclk_i;
+    assign debug_o[5] = spi_cs_ni;
+    assign debug_o[6] = spi_rx_i;
+    assign debug_o[7] = spi_tx_io;
 
     logic cpu_enable;
     logic cpu_read;
