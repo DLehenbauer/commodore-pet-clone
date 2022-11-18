@@ -36,14 +36,14 @@ module pi_com(
     logic [7:0] rx;
     
     spi_byte spi_byte(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_rx),
-        .spi_tx(spi_tx),
-        .rx_byte(rx),
-        .tx_byte(pi_data_in),
-        .valid(rx_valid)
+        .clk_sys_i(sys_clk),
+        .spi_sclk_i(spi_sclk),
+        .spi_cs_ni(spi_cs_n),
+        .spi_rx_i(spi_rx),
+        .spi_tx_o(spi_tx),
+        .rx_byte_o(rx),
+        .tx_byte_i(pi_data_in),
+        .valid_o(rx_valid)
     );
 
     wire cmd_a16        = rx[0];
