@@ -59,29 +59,29 @@ module main (
 
     output logic [7:0] debug_o
 );
-    logic pi_done;
-    assign spi_done_no = !pi_done;
+    logic spi_done;
+    assign spi_done_no = !spi_done;
 
-    logic pi_rw_b;
-    logic [16:0] pi_addr;
-    logic [7:0] pi_wr_data;          // Incoming data when Pi is writing
-    logic [7:0] pi_rd_data;          // Outgoing data when Pi is reading
-    logic pi_pending_out;
-    logic pi_done_in;
+    logic spi_rw_n;
+    logic [16:0] spi_addr;
+    logic [7:0] spi_wr_data;          // Incoming data when Pi is writing
+    logic [7:0] spi_rd_data;          // Outgoing data when Pi is reading
+    logic spi_pending_out;
+    logic spi_done_in;
 
-    pi_com pi_com(
-        .sys_clk(clk_16_i),
-        .spi_sclk(spi_sclk_i),
-        .spi_cs_n(spi_cs_ni),
-        .spi_rx(spi_rx_i),
-        .spi_tx(spi_tx_io),
-        .pi_addr(pi_addr),
-        .pi_data_in(pi_rd_data),
-        .pi_data_out(pi_wr_data),
-        .pi_rw_b(pi_rw_b),
-        .pi_pending_out(pi_pending_out),
-        .pi_done_in(pi_done_in),
-        .pi_done_out(pi_done)
+    spi_bridge spi_bridge(
+        .clk_sys_i(clk_16_i),
+        .spi_sclk_i(spi_sclk_i),
+        .spi_cs_ni(spi_cs_ni),
+        .spi_rx_i(spi_rx_i),
+        .spi_tx_io(spi_tx_io),
+        .spi_addr_o(spi_addr),
+        .spi_data_i(spi_rd_data),
+        .spi_data_o(spi_wr_data),
+        .spi_rw_no(spi_rw_n),
+        .spi_pending_o(spi_pending_out),
+        .spi_done_i(spi_done_in),
+        .spi_done_o(spi_done)
     );
     
     assign debug_o[0] = spi_sclk_i;
@@ -123,17 +123,17 @@ module main (
         .video_select(video_select),
         .video_ram_strobe(video_ram_clk),
         .video_rom_strobe(video_rom_clk),
-        .pi_rw_b(pi_rw_b),
+        .pi_rw_b(spi_rw_n),
         .pi_select(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
-        .pi_pending(pi_pending_out),
-        .pi_done(pi_done_in)
+        .pi_pending(spi_pending_out),
+        .pi_done(spi_done_in)
     );
     
     pi_ctl ctl(
-        .pi_addr(pi_addr),
-        .pi_data(pi_wr_data),
+        .pi_addr(spi_addr),
+        .pi_data(spi_wr_data),
         .pi_write(pi_write),
         .res_b(cpu_res_nao),
         .rdy(cpu_ready_o)
@@ -148,7 +148,7 @@ module main (
         .bus_addr(bus_addr_io),
         .bus_data_in(bus_data_io),
         .cpu_write(cpu_write),
-        .pi_addr(pi_addr),
+        .pi_addr(spi_addr),
         .pi_read(pi_read),
         .crtc_data_out(crtc_data_out),
         .crtc_data_out_enable(crtc_data_out_enable)
@@ -181,8 +181,8 @@ module main (
     
     keyboard keyboard(
         .reset(reset),
-        .pi_addr(pi_addr),
-        .pi_data(pi_wr_data),
+        .pi_addr(spi_addr),
+        .pi_data(spi_wr_data),
         .pi_write(pi_write),
         .bus_addr(bus_addr_io[1:0]),
         .bus_data_in(bus_data_io),
@@ -233,9 +233,9 @@ module main (
     assign ram_we_no = !ram_we;
 
     always @(negedge pi_read)
-        if (pi_addr == 16'he80e) pi_rd_data <= { 7'h0, gfx_i };
-        else if (crtc_data_out_enable) pi_rd_data <= crtc_data_out;
-        else pi_rd_data <= bus_data_io;
+        if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
+        else if (crtc_data_out_enable) spi_rd_data <= crtc_data_out;
+        else spi_rd_data <= bus_data_io;
     
     assign bus_rw_nio = cpu_enable
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
@@ -245,7 +245,7 @@ module main (
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr_o[11:10] =
         pi_select
-            ? pi_addr[11:10]            // Give RPi access to full RAM
+            ? spi_addr[11:10]            // Give RPi access to full RAM
             : video_select
                 ? video_addr[11:10]
                 : is_mirrored
@@ -253,14 +253,14 @@ module main (
                     : bus_addr_io[11:10];
     
     assign bus_addr_io = pi_select
-        ? pi_addr                       // RPi is reading/writing, and therefore driving addr
+        ? spi_addr                      // RPi is reading/writing, and therefore driving addr
         : video_select
             ? { 5'b01000, video_addr }
             : {1'b0, 16'bZ};            // CPU is reading/writing, and therefore driving addr
 
     assign bus_data_io =
         pi_write
-            ? pi_wr_data               // RPi is writing, and therefore driving data
+            ? spi_wr_data               // RPi is writing, and therefore driving data
             : kbd_enable                // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
                 ? kbd_data_out          // Return USB keyboard state for PIA 1 Port B ($E812)
                 : 8'bZ;                 // CPU is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
