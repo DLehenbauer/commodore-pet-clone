@@ -26,7 +26,7 @@ module spi_byte (
     output logic valid_o = 1'b0     // 'rx_byte' valid pulse is high for one period of clk_sys_i.
 );
     // Signals crossing clock domain
-    logic spi_cs_n_q;
+    logic spi_cs_nq;
     logic spi_sclk_q;
     logic spi_rx_q;
     logic spi_tx_d;
@@ -56,7 +56,7 @@ module spi_byte (
         rx_byte_d   = rx_byte_o;
         valid_d     = '0;
 
-        if (spi_cs_n_q) begin
+        if (spi_cs_nq) begin
             bit_count_d = '0;
 
             // Reset 'valid' pulse
@@ -98,7 +98,7 @@ module spi_byte (
         bit_count_q <= bit_count_d;
         sr_q        <= sr_d;
 
-        spi_cs_n_q  <= spi_cs_ni;
+        spi_cs_nq  <= spi_cs_ni;
         spi_sclk_q  <= spi_sclk_i;
         spi_sclk_q2 <= spi_sclk_q;
         spi_rx_q    <= spi_rx_i;
