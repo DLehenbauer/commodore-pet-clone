@@ -13,8 +13,6 @@
  */
 
 module main (
-    output logic [7:0]   debug_o,
-
     // System Bus
     inout  wire          bus_rw_nio,    // CPU 34          : 0 = CPU writing, 1 = CPU reading
     inout  wire  [16:0]  bus_addr_io,   // CPU 9-20, 22-25 : System address bus
@@ -57,7 +55,9 @@ module main (
     input  logic gfx_i,
     output logic h_sync_o,
     output logic v_sync_o,
-    output logic video_o
+    output logic video_o,
+
+    output logic [7:0] debug_o
 );
     logic pi_done;
     assign spi_done_no = !pi_done;
@@ -213,11 +213,11 @@ module main (
     );
     
     // Address Decoding
-    assign cpu_en_no   = cpu_enable && cpu_ready_o;
+    assign cpu_en_no   = cpu_enable  && cpu_ready_o;
     wire   pia1_cs     = pia1_enable && cpu_en_no;
     wire   pia2_cs     = pia2_enable && cpu_en_no;
-    wire   via_cs      = via_enable && cpu_en_no;
-    wire   io_oe       = io_enable && cpu_en_no;
+    wire   via_cs      = via_enable  && cpu_en_no;
+    wire   io_oe       = io_enable   && cpu_en_no;
 
     assign pia1_cs2_no = !pia1_cs;
     assign pia2_cs2_no = !pia2_cs;
