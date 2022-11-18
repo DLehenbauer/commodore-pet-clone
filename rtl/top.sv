@@ -109,18 +109,6 @@ module top(
     
     // Audio
     assign audio_o = cb2_i & diag_i;
-
-    // spi_byte debug_byte(
-    //    .spi_cs_n(spi_cs_n),
-    //    .spi_sclk(spi_sclk),
-    //    .spi_rx(spi_rx),
-    //    .rx(debug_o)
-    //);
-
-    // assign debug_o[0] = spi_sclk;
-    // assign debug_o[1] = spi_cs_n;
-    // assign debug_o[2] = spi_rx;
-    // assign debug_o[3] = spi_tx;
     
     main main(
         .spi_sclk_i(spi_sclk_i),
