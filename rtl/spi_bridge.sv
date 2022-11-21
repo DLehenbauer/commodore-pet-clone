@@ -16,13 +16,13 @@ module spi_bridge(
     input  logic clk_sys_i,
 
     input  logic spi_sclk_i,
-    input  logic spi_cs_ni,      // Also serves as an asynchronous reset for the FSM
+    input  logic spi_cs_ni,      // Also serves as a synchronous reset for the FSM
     input  logic spi_rx_i,
     inout  wire  spi_tx_io,
 
     output logic [16:0] spi_addr_o,
-    input  logic [7:0] spi_data_i,
-    output logic [7:0] spi_data_o,
+    input  logic  [7:0] spi_data_i,
+    output logic  [7:0] spi_data_o,
     output logic spi_rw_no = 1'b1,
     output logic spi_pending_o = 1'b0,
     input  logic spi_done_i,

@@ -98,7 +98,7 @@ module top(
 
     assign P3_LED_D2 = spi_cs_ni;
     assign P7_LED_D4 = spi_done_no;
-    assign P9_LED_D5 = cpu_res_naio;
+    assign P9_LED_D5 = res_n ? cpu_res_naio : 1'b0;
     
     logic clk_16;     // 16 MHz clock from PLL
     

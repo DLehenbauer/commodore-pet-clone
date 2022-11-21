@@ -98,7 +98,7 @@ module spi_byte (
         bit_count_q <= bit_count_d;
         sr_q        <= sr_d;
 
-        spi_cs_nq  <= spi_cs_ni;
+        spi_cs_nq   <= spi_cs_ni;
         spi_sclk_q  <= spi_sclk_i;
         spi_sclk_q2 <= spi_sclk_q;
         spi_rx_q    <= spi_rx_i;
