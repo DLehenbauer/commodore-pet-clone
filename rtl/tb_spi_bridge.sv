@@ -13,50 +13,161 @@
  */
 
 `timescale 1ns / 1ps
+`include "assert.svh"
+
+module spi_driver (
+    input  logic clk_sys_i,
+    output logic spi_sclk_o,
+    output logic spi_cs_no,
+    output logic spi_tx_o
+);
+    bit start_sclk = '0;
+
+    always @(posedge start_sclk) begin
+        while (start_sclk) begin
+            #250
+            spi_sclk_o <= '1;
+            #500;
+            spi_sclk_o <= '0;
+            #250;
+        end
+    end
+
+    task reset;
+        spi_cs_no = '0;
+        @(posedge clk_sys_i);
+        spi_sclk_o = '0;
+        spi_cs_no = '1;
+        @(posedge clk_sys_i);
+    endtask
+
+    task begin_xfer(
+        input byte tx_i
+    );
+        assert(spi_cs_no == 1'b1);
+
+        // MSB of 'tx_byte' is preloaded while spi_cs_no is high on rising edge of clk_sys.
+        tx_byte = tx_i;
+        @(posedge clk_sys_i);
+
+        spi_cs_no = '0;
+        #500;
+        start_sclk = '1;
+    endtask
+
+    integer bit_index;
+
+    task xfer_bits(
+        input logic [7:0] next_tx = 8'hxx,
+        input integer num_bits = 8
+    );
+        for (bit_index = 0; bit_index < num_bits; bit_index++) begin
+            @(posedge spi_sclk_o);
+
+            // 'tx_byte' is loaded on falling edge of spi_sclk_o when the last bit is transfered.
+            // However, we update 'tx_byte' after every bit to verify that 'tx_byte' is held
+            // between loads.
+            tx_byte = next_tx;
+        end
+    endtask
+
+    task end_xfer(
+        input bit next_cs_ni = 1'b1
+    );
+        `assert_equal(spi_cs_no, 1'b0);
+
+        start_sclk = 0;
+
+        #500;
+        spi_cs_no = next_cs_ni;
+
+        #500;
+    endtask
+
+    task xfer_bytes(
+        input byte tx[]
+    );
+        integer i;
+        
+        // string s;
+        // s = "";
+        // foreach (tx[i]) s = { s, $sformatf("%h ", tx[i]) };
+        // $display("[%t] SPI Send: [ %s]", $time, s);
+
+        // 'tx_byte' is continuously preloaded from falling edge of CS_N.
+        spi_driver.begin_xfer(tx[0]);
+
+        foreach(tx[i]) begin
+            // 'next_tx' is the next byte to load on the 8th falling edge of SCLK.
+            spi_driver.xfer_bits(tx[i + 1]);
+        end
+    endtask
+
+    logic       tx_valid;
+    logic [7:0] tx_byte = 8'hxx;
+
+    spi_byte spi_byte_tx(
+        .clk_sys_i(clk_sys_i),
+        .spi_sclk_i(spi_sclk_o),
+        .spi_cs_ni(spi_cs_no),
+        .spi_tx_o(spi_tx_o),
+        .tx_byte_i(tx_byte),
+        .valid_o(tx_valid)
+    );
+endmodule
 
 module tb();
-    wire spi_tx;
-    wire [7:0] rx_byte;
-    wire spi_valid;
+    bit clk_sys = '0;
+    initial forever #31.25 clk_sys = ~clk_sys;
 
-    spi_byte spi_byte_rx(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_tx),
-        .rx_byte(rx_byte),
-        .valid(spi_valid)
+    logic spi_sclk;
+    logic spi_cs_n;
+    logic spi_rx;
+
+    spi_driver spi_driver(
+        .clk_sys_i(clk_sys),
+        .spi_sclk_o(spi_sclk),
+        .spi_cs_no(spi_cs_n),
+        .spi_tx_o(spi_rx)
     );
 
-    `include "tb_spi_common.vh"
+    logic spi_tx;
+    logic [7:0] rx_byte;
+    logic spi_valid;
 
-    reg [7:0] last_rx_byte;
+    spi_byte spi_byte_rx(
+        .clk_sys_i(clk_sys),
+        .spi_sclk_i(spi_sclk),
+        .spi_cs_ni(spi_cs_n),
+        .spi_rx_i(spi_tx),
+        .rx_byte_o(rx_byte),
+        .valid_o(spi_valid)
+    );
 
+    logic [7:0] last_rx_byte;
     always @(posedge spi_valid) last_rx_byte <= rx_byte;
 
-    wire [16:0] pi_addr;
-    reg [7:0] pi_data_in;
-    wire [7:0] pi_data_out;
-    wire pi_rw_b;
-    reg pi_pending_in = 1'b0;
-    wire pi_pending_out;
-    reg pi_done_in = 1'b0;
-    wire pi_done_out;
+    logic [16:0] spi_addr;
+    logic [7:0] spi_data_in;
+    logic [7:0] spi_data_out;
+    logic spi_rw_b;
+    logic spi_pending_out;
+    logic spi_done_in = 1'b0;
+    logic spi_done_out;
 
-    pi_com pi_com(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_rx),
-        .spi_tx(spi_tx),
-        .pi_addr(pi_addr),
-        .pi_data_in(pi_data_in),
-        .pi_data_out(pi_data_out),
-        .pi_rw_b(pi_rw_b),
-        .pi_pending_in(pi_pending_in),
-        .pi_pending_out(pi_pending_out),
-        .pi_done_in(pi_done_in),
-        .pi_done_out(pi_done_out)
+    spi_bridge spi_bridge(
+        .clk_sys_i(clk_sys),
+        .spi_sclk_i(spi_sclk),
+        .spi_cs_ni(spi_cs_n),
+        .spi_rx_i(spi_rx),
+        .spi_tx_io(spi_tx),
+        .spi_addr_o(spi_addr),
+        .spi_data_i(spi_data_in),
+        .spi_data_o(spi_data_out),
+        .spi_rw_no(spi_rw_b),
+        .spi_pending_o(spi_pending_out),
+        .spi_done_i(spi_done_in),
+        .spi_done_o(spi_done_out)
     );
 
     task check(
@@ -65,70 +176,70 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        $display("[%t]    expect(pending: %d, rw_b: %d, addr: $%x, data: $%x)",
-            $time, pi_pending_out, pi_rw_b, pi_addr, pi_data_out);
+        `assert_equal(spi_done_in, '0);
 
-        assert_equal(pi_pending_out, pending, "pi_pending_out");
-        assert_equal(pi_rw_b, rw_b, "pi_rw_b");
-        assert_equal(pi_addr, addr, "pi_addr");
+        $display("[%t]    expect(pending: %d, rw_b: %d, addr: $%x, data: $%x)",
+            $time, spi_pending_out, spi_rw_b, spi_addr, spi_data_out);
+
+        `assert_equal(spi_pending_out, pending);
+        `assert_equal(spi_rw_b, rw_b);
+        `assert_equal(spi_addr, addr);
 
         if (!rw_b) begin
-            assert_equal(pi_data_out, data, "pi_data_out");
+            `assert_equal(spi_data_out, data);
         end else begin
-            assert_equal(last_rx_byte, data, "last_rx_byte");
+            `assert_equal(last_rx_byte, data);
         end
 
-        pi_done_in = 1'b1;        
-        @(posedge sys_clk);
-        @(posedge sys_clk);
-        #1 assert_equal(pi_done_out, 1'b1, "pi_done_out");
+        spi_done_in = 1'b1;
+        @(posedge clk_sys);
+        @(posedge clk_sys);
+        #1 `assert_equal(spi_done_out, 1'b1);
 
-        pi_pending_in = 1'b0;
-        @(posedge sys_clk);
-        assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
-        assert_equal(pi_done_out, 1'b0, "pi_done_out");
+        spi_driver.end_xfer;
 
-        pi_done_in = 1'b0;
+        @(posedge clk_sys);
+        `assert_equal(spi_pending_out, 1'b0);
+        `assert_equal(spi_done_out, 1'b0);
+
+        spi_done_in = '0;
+        spi_driver.reset;
     endtask
 
-    logic unsigned [7:0] bytes [];
-    logic unsigned [7:0] cmd;
-    logic unsigned [7:0] addr_hi;
-    logic unsigned [7:0] addr_lo;
+    task send(
+        byte tx[]
+    );
+        integer i;
+        string s;
+
+        s = $sformatf(" %%%b ", tx[0]);
+        for (i = 1; i < tx.size(); i++) begin
+            s = { s, $sformatf("%h ", tx[i]) };
+        end
+
+        $display("[%t]    send -> [%s]", $time, s);
+        spi_driver.xfer_bytes(tx);
+        spi_driver.end_xfer(/* next_cs_ni: */ 1'b0);
+    endtask
 
     task write_at(
         input [16:0] addr,
         input [7:0] data
     );
+        logic unsigned [7:0] cmd;
+        logic unsigned [7:0] addr_hi;
+        logic unsigned [7:0] addr_lo;
+
         cmd = { 7'b100_xxx_0, addr[16] };
         addr_hi = addr[15:8];
         addr_lo = addr[7:0];
 
-        bytes = '{
+        send('{
             cmd,
             data,
             addr_hi,
             addr_lo
-        };
-
-        $display("[%t]    write_at($%x, $%x) -> [%%%b, $%x, $%x, $%x]",
-            $time,
-            addr,
-            data,
-            bytes[0],
-            bytes[1],
-            bytes[2],
-            bytes[3]);
-
-        #1 pi_pending_in = 1'b1;
-
-        foreach(bytes[i]) begin
-            assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
-
-            begin_xfer(bytes[i]);
-            xfer_bits(bytes[i]);
-            end_xfer;
-        end
+        });
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b0, /* addr: */ addr, /* data: */ data);
     endtask
@@ -137,34 +248,21 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        pi_data_in = data;
+        logic unsigned [7:0] cmd;
+        logic unsigned [7:0] addr_hi;
+        logic unsigned [7:0] addr_lo;
+
+        spi_data_in = data;
 
         cmd = { 7'b011_xxx_1, addr[16] };
         addr_hi = addr[15:8];
         addr_lo = addr[7:0];
 
-        bytes = '{
+        send('{
             cmd,
             addr_hi,
             addr_lo
-        };
-
-        $display("[%t]    read_at($%x) -> [%%%b, $%x, $%x]",
-            $time,
-            addr,
-            bytes[0],
-            bytes[1],
-            bytes[2]);
-
-        #1 pi_pending_in = 1'b1;
-
-        foreach (bytes[i]) begin
-            assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
-
-            begin_xfer(bytes[i]);
-            xfer_bits(bytes[i]);
-            end_xfer;
-        end
+        });
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
     endtask
@@ -173,28 +271,15 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        pi_data_in = data;
+        logic unsigned [7:0] cmd;
+
+        spi_data_in = data;
 
         cmd = { 7'b001_xxx_1, addr[16] };
 
-        bytes = '{
+        send('{
             cmd
-        };
-
-        $display("[%t]    read_next($%x) -> [%%%b]",
-            $time,
-            addr,
-            bytes[0]);
-
-        #1 pi_pending_in = 1'b1;
-
-        foreach (bytes[i]) begin
-            assert_equal(pi_pending_out, 1'b0, "pi_pending_out");
-
-            begin_xfer(bytes[i]);
-            xfer_bits(bytes[i]);
-            end_xfer;
-        end
+        });
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
     endtask
@@ -202,6 +287,8 @@ module tb();
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
+
+        spi_driver.reset;
 
         write_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
