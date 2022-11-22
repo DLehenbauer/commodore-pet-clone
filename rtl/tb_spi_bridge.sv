@@ -85,7 +85,7 @@ module spi_driver (
     endtask
 
     task xfer_bytes(
-        input byte tx[]
+        input logic unsigned [7:0] tx[]
     );
         integer i;
         
@@ -207,7 +207,7 @@ module tb();
     endtask
 
     task send(
-        byte tx[]
+        logic unsigned [7:0] tx[]
     );
         integer i;
         string s;
@@ -222,23 +222,27 @@ module tb();
         spi_driver.end_xfer(/* next_cs_ni: */ 1'b0);
     endtask
 
+    function [7:0] cmd(input bit rw_n, input bit set_addr, input logic [16:0] addr);
+        return { rw_n, set_addr, 5'bxxxxx, addr[16] };
+    endfunction
+
+    function [7:0] addr_hi(input logic [16:0] addr);
+        return addr[15:8];
+    endfunction
+
+    function [7:0] addr_lo(input logic [16:0] addr);
+        return addr[7:0];
+    endfunction
+
     task write_at(
         input [16:0] addr,
         input [7:0] data
     );
-        logic unsigned [7:0] cmd;
-        logic unsigned [7:0] addr_hi;
-        logic unsigned [7:0] addr_lo;
-
-        cmd = { 7'b100_xxx_0, addr[16] };
-        addr_hi = addr[15:8];
-        addr_lo = addr[7:0];
-
         send('{
-            cmd,
+            cmd( /* rw_n: */ 1'b0, /* set_addr: */ 1'b1, addr ),
             data,
-            addr_hi,
-            addr_lo
+            addr_hi(addr),
+            addr_lo(addr)
         });
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b0, /* addr: */ addr, /* data: */ data);
@@ -248,20 +252,12 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        logic unsigned [7:0] cmd;
-        logic unsigned [7:0] addr_hi;
-        logic unsigned [7:0] addr_lo;
-
         spi_data_in = data;
 
-        cmd = { 7'b011_xxx_1, addr[16] };
-        addr_hi = addr[15:8];
-        addr_lo = addr[7:0];
-
         send('{
-            cmd,
-            addr_hi,
-            addr_lo
+            cmd( /* rw_n: */ 1'b1, /* set_addr: */ 1'b1, addr ),
+            addr_hi(addr),
+            addr_lo(addr)
         });
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
@@ -271,14 +267,10 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        logic unsigned [7:0] cmd;
-
         spi_data_in = data;
 
-        cmd = { 7'b001_xxx_1, addr[16] };
-
         send('{
-            cmd
+            cmd( /* rw_n: */ 1'b1, /* set_addr: */ 1'b0, addr )
         });
 
         check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);

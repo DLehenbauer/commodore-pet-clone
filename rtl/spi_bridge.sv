@@ -46,8 +46,8 @@ module spi_bridge(
         .valid_o(rx_valid)
     );
 
-    wire       cmd_a16 = rx[0];
-    wire [2:0] cmd_len = rx[7:5];
+    logic cmd_rw_n;
+    logic cmd_rd_a;
 
     localparam READ_CMD          = 3'd0,
                READ_DATA_ARG     = 3'd1,
@@ -66,27 +66,28 @@ module spi_bridge(
                 READ_CMD: begin
                     spi_done_o     <= 1'b0;
                     spi_pending_o  <= 1'b0;
-                    spi_rw_no      <= 1'b1;
 
                     if (rx_valid) begin
-                        if (cmd_len == 3'd1) begin
-                            spi_addr_o <= spi_addr_o + 1'b1;
-                            state   <= XFER;
-                        end else begin
-                            spi_addr_o <= { cmd_a16, 16'hxxxx };
-                            state      <= cmd_len == 3'd3
-                                ? READ_ADDR_HI_ARG
-                                : READ_DATA_ARG;
-                        end
+                        spi_rw_no      <= rx[7];
+                        cmd_rd_a       <= rx[6];
+
+                        // If CMD sets address capture A16 from rx[0] now.
+                        if (rx[6]) spi_addr_o <= { rx[0], 16'hxxxx };
+
+                        casez(rx)
+                            8'b0???????: state <= READ_DATA_ARG;
+                            8'b11??????: state <= READ_ADDR_HI_ARG;
+                            default:     state <= XFER;
+                        endcase
                     end
                 end
 
                 READ_DATA_ARG: begin
-                    spi_rw_no <= 1'b0;
-
                     if (rx_valid) begin
                         spi_data_o <= rx;
-                        state      <= READ_ADDR_HI_ARG;
+                        state <= cmd_rd_a
+                            ? READ_ADDR_HI_ARG
+                            : XFER;
                     end
                 end
 
@@ -108,6 +109,7 @@ module spi_bridge(
                     spi_pending_o <= 1'b1;
 
                     if (spi_done_i) begin
+                        spi_addr_o <= spi_addr_o + 1'b1;
                         state <= DONE;
                     end
                 end
