@@ -21,13 +21,13 @@ module tb();
     logic rx_valid;
 
     spi_byte spi_byte_rx(
-        .sys_clk(sys_clk),
-        .spi_sclk(spi_sclk),
-        .spi_cs_n(spi_cs_n),
-        .spi_rx(spi_rx),
-        .spi_tx(spi_tx),
-        .rx_byte(rx_byte),
-        .valid(rx_valid)
+        .clk_sys_i(clk_sys),
+        .spi_sclk_i(spi_sclk),
+        .spi_cs_ni(spi_cs_n),
+        .spi_rx_i(spi_rx),
+        .spi_tx_o(spi_tx),
+        .rx_byte_o(rx_byte),
+        .valid_o(rx_valid)
     );
 
     task check_valid(
@@ -71,16 +71,18 @@ module tb();
         #1 check_valid(1'b0);
 
         $display("[%t] Test: Toggle cs_n after power on.", $time);
-        values = new [4];
         values = '{
             8'b11011010,
             8'b01011011
         };
 
+        // 'spi_byte' loads CS_N on rising edge of clk_sys
+        @(posedge clk_sys);
+
         foreach (values[i]) begin
             $display("[%t] Test: Transfer single byte $%h.", $time, values[i]);
 
-            // MSB of 'tx_byte' is preloaded while spi_cs_n is high on rising edge of sys_clk.
+            // MSB of 'tx_byte' is preloaded while spi_cs_n is high on rising edge of clk_sys.
             begin_xfer(/* tx: */ values[i]);
             xfer(/* data: */ values[i]);
             end_xfer;

@@ -12,12 +12,12 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-bit sys_clk;
+bit clk_sys;
 
 initial begin
-    sys_clk = 0;
+    clk_sys = 0;
     forever begin
-        #31.25 sys_clk = ~sys_clk;
+        #31.25 clk_sys = ~clk_sys;
     end
 end
 
@@ -39,9 +39,9 @@ bit spi_cs_n = 1'b1;
 task begin_xfer(
     input byte tx
 );
-    // MSB of 'tx_byte' is preloaded while spi_cs_n is high on rising edge of sys_clk.
+    // MSB of 'tx_byte' is preloaded while spi_cs_n is high on rising edge of clk_sys.
     tx_byte = tx;
-    @(posedge sys_clk);
+    @(posedge clk_sys);
 
     spi_cs_n = 0;
     #500;
@@ -78,10 +78,10 @@ logic       tx_valid;
 logic [7:0] tx_byte = 8'hxx;
 
 spi_byte spi_byte_tx(
-    .sys_clk(sys_clk),
-    .spi_sclk(spi_sclk),
-    .spi_cs_n(spi_cs_n),
-    .spi_tx(spi_rx),
-    .tx_byte(tx_byte),
-    .valid(tx_valid)
+    .clk_sys_i(clk_sys),
+    .spi_sclk_i(spi_sclk),
+    .spi_cs_ni(spi_cs_n),
+    .spi_tx_o(spi_rx),
+    .tx_byte_i(tx_byte),
+    .valid_o(tx_valid)
 );
