@@ -12,9 +12,22 @@
 #define SPI_RX_PIN 4
 // #define SPI_CSN_PIN 5
 #define SPI_CSN_PIN 6
+#define CPU_RESB_PIN 28
 
-uint8_t pi_read_next() {
-    const uint8_t tx[1] = { 0x22 };
+void cpu_reset() {
+    gpio_set_dir(CPU_RESB_PIN, GPIO_OUT);
+    gpio_put(CPU_RESB_PIN, 0);
+    sleep_ms(1);
+    gpio_set_dir(CPU_RESB_PIN, GPIO_IN);
+}
+
+#define SPI_CMD_READ_AT    0xC0
+#define SPI_CMD_READ_NEXT  0x80
+#define SPI_CMD_WRITE_AT   0x40
+#define SPI_CMD_WRITE_NEXT 0x00
+
+uint8_t spi_read_next() {
+    const uint8_t tx[1] = { SPI_CMD_READ_NEXT };
     uint8_t rx[sizeof(tx)];
 
     while (!gpio_get(DONE_B_PIN));
@@ -28,10 +41,11 @@ uint8_t pi_read_next() {
     return rx[0];
 }
 
-uint8_t pi_read(uint16_t addr) {
+uint8_t spi_read_at(uint32_t addr) {
+    const uint8_t cmd = SPI_CMD_READ_AT | addr >> 16;
     const uint8_t addr_hi = addr >> 8;
     const uint8_t addr_lo = addr & 0xff;
-    const uint8_t tx[] = { 0x66, addr_hi, addr_lo };
+    const uint8_t tx[] = { cmd, addr_hi, addr_lo };
 
     while (!gpio_get(DONE_B_PIN));
     gpio_put(SPI_CSN_PIN, 0);
@@ -40,14 +54,10 @@ uint8_t pi_read(uint16_t addr) {
     
     while (gpio_get(DONE_B_PIN));
     gpio_put(SPI_CSN_PIN, 1);
-
-    return pi_read_next();
 }
 
-void pi_write(uint16_t addr, uint8_t data) {
-    const uint8_t addr_hi = addr >> 8;
-    const uint8_t addr_lo = addr & 0xff;
-    const uint8_t tx [] = { 0x84, data, addr_hi, addr_lo };
+void spi_write_next(uint8_t data) {
+    const uint8_t tx [] = { SPI_CMD_WRITE_NEXT, data };
 
     while (!gpio_get(DONE_B_PIN));
     gpio_put(SPI_CSN_PIN, 0);
@@ -57,31 +67,66 @@ void pi_write(uint16_t addr, uint8_t data) {
     while (gpio_get(DONE_B_PIN));
     gpio_put(SPI_CSN_PIN, 1);
 
-    // uint8_t actual = pi_read(addr);
+    // uint8_t actual = spi_read_at(addr);
     // if (actual != data) {
     //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
     //     panic(0);
     // }
 }
 
+void spi_write_at(uint32_t addr, uint8_t data) {
+    const uint8_t cmd = SPI_CMD_WRITE_AT | addr >> 16;
+    const uint8_t addr_hi = addr >> 8;
+    const uint8_t addr_lo = addr & 0xff;
+    const uint8_t tx [] = { cmd, data, addr_hi, addr_lo };
+
+    while (!gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 0);
+
+    spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
+    
+    while (gpio_get(DONE_B_PIN));
+    gpio_put(SPI_CSN_PIN, 1);
+
+    // uint8_t actual = spi_read_at(addr);
+    // if (actual != data) {
+    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
+    //     panic(0);
+    // }
+}
+
+void spi_read(uint32_t start, uint32_t byteLength, uint8_t* pDest) {
+    spi_read_at(start);
+
+    while (byteLength--) {
+        *pDest++ = spi_read_next();
+    }
+}
+
+void spi_write(const uint8_t const* pSrc, uint32_t start, uint32_t byteLength) {
+    const uint8_t* p = pSrc;
+    
+    if (byteLength--) {
+        spi_write_at(start, *p++);
+
+        while (byteLength--) {
+            spi_write_next(*p++);
+        }
+    }
+}
+
 void set_cpu(bool reset, bool run) {
-    pi_write(0xE80F,
+    spi_write_at(0xE80F,
         (reset ? 0 : (1 << 0))          // res_b
         | (run ? (1 << 1) : 0));        // rdy
     
     sleep_ms(1);
 }
 
-void copy_rom(const uint8_t const* pRom, uint16_t start, uint16_t byteLength) {
-    const uint8_t* pSrc = pRom;
-    int end = start + byteLength;
-    for (int addr = start; addr < end; addr++) {
-        pi_write(addr, *pSrc++);
-    }
-}
-
 void init() {
     stdio_init_all();
+
+    gpio_set_dir(CPU_RESB_PIN, GPIO_IN);
 
     // To save an IO pin, we use CS_N to frame multibyte commands.  This requires us to
     // drive CS_N from software since RP2040's hardware CS_N deasserts between bytes.
@@ -105,12 +150,12 @@ void init() {
     set_cpu(/* reset: */ true, /* run: */ false);
     set_cpu(/* reset: */ false, /* run: */ false);
 
-    copy_rom(rom_chars_8800,  0x8800, sizeof(rom_chars_8800));
-    copy_rom(rom_basic_b000,  0xb000, sizeof(rom_basic_b000));
-    copy_rom(rom_basic_c000,  0xc000, sizeof(rom_basic_c000));
-    copy_rom(rom_basic_d000,  0xd000, sizeof(rom_basic_d000));
-    copy_rom(rom_edit_e000,   0xe000, sizeof(rom_edit_e000));
-    copy_rom(rom_kernal_f000, 0xf000, sizeof(rom_kernal_f000));
+    spi_write(rom_chars_8800,  0x8800, sizeof(rom_chars_8800));
+    spi_write(rom_basic_b000,  0xb000, sizeof(rom_basic_b000));
+    spi_write(rom_basic_c000,  0xc000, sizeof(rom_basic_c000));
+    spi_write(rom_basic_d000,  0xd000, sizeof(rom_basic_d000));
+    spi_write(rom_edit_e000,   0xe000, sizeof(rom_edit_e000));
+    spi_write(rom_kernal_f000, 0xf000, sizeof(rom_kernal_f000));
 
     // Reset and resume CPU
     set_cpu(/* reset: */ true, /* run: */ false);
@@ -126,14 +171,8 @@ int main() {
         // Dispatch TinyUSB events
         tuh_task();
 
-        for (uint8_t row = 0; row < sizeof(key_matrix); row++) {
-            pi_write(0xe800 + row, key_matrix[row]);
-        }
-
-        pCharBuf[0] = pi_read(0x8000);
-        for (uint16_t i = 1; i < 1000; i++) {
-            pCharBuf[i] = pi_read_next();
-        }
+        spi_write(key_matrix, /* start */ 0xe800, sizeof(key_matrix));
+        spi_read(/* start: */ 0x8000, /* byteLength: */ 1000, pCharBuf);
     }
 
     __builtin_unreachable();
