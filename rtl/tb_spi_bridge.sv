@@ -133,7 +133,7 @@ module tb();
 
     logic spi_tx;
     logic [7:0] rx_byte;
-    logic spi_valid;
+    logic rx_valid;
 
     spi_byte spi_byte_rx(
         .clk_sys_i(clk_sys),
@@ -141,17 +141,17 @@ module tb();
         .spi_cs_ni(spi_cs_n),
         .spi_rx_i(spi_tx),
         .rx_byte_o(rx_byte),
-        .valid_o(spi_valid)
+        .valid_o(rx_valid)
     );
 
     logic [7:0] last_rx_byte;
-    always @(posedge spi_valid) last_rx_byte <= rx_byte;
+    always @(posedge rx_valid) last_rx_byte <= rx_byte;
 
     logic [16:0] spi_addr;
     logic [7:0] spi_data_in;
     logic [7:0] spi_data_out;
     logic spi_rw_b;
-    logic spi_pending_out;
+    logic spi_valid;
     logic spi_done_in = 1'b0;
     logic spi_done_out;
 
@@ -165,7 +165,7 @@ module tb();
         .spi_data_i(spi_data_in),
         .spi_data_o(spi_data_out),
         .spi_rw_no(spi_rw_b),
-        .spi_pending_o(spi_pending_out),
+        .spi_valid_o(spi_valid),
         .spi_done_i(spi_done_in),
         .spi_done_o(spi_done_out)
     );
@@ -179,9 +179,9 @@ module tb();
         `assert_equal(spi_done_in, '0);
 
         $display("[%t]    expect(pending: %d, rw_b: %d, addr: $%x, data: $%x)",
-            $time, spi_pending_out, spi_rw_b, spi_addr, spi_data_out);
+            $time, spi_valid, spi_rw_b, spi_addr, spi_data_out);
 
-        `assert_equal(spi_pending_out, pending);
+        `assert_equal(spi_valid, pending);
         `assert_equal(spi_rw_b, rw_b);
         `assert_equal(spi_addr, addr);
 
@@ -199,7 +199,7 @@ module tb();
         spi_driver.end_xfer;
 
         @(posedge clk_sys);
-        `assert_equal(spi_pending_out, 1'b0);
+        `assert_equal(spi_valid, 1'b0);
         `assert_equal(spi_done_out, 1'b0);
 
         spi_done_in = '0;

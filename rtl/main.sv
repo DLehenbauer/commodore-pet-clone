@@ -64,9 +64,9 @@ module main (
 
     logic        spi_rw_n;
     logic [16:0] spi_addr;
-    logic  [7:0] spi_wr_data;          // Incoming data when Pi is writing
-    logic  [7:0] spi_rd_data;          // Outgoing data when Pi is reading
-    logic        spi_pending_out;
+    logic  [7:0] spi_wr_data;   // Incoming data when Pi is writing
+    logic  [7:0] spi_rd_data;   // Outgoing data when Pi is reading
+    logic        spi_valid;     // Command pending: spi_addr, _data, and _rw_n are valid
     logic        spi_done_in;
 
     spi_bridge spi_bridge(
@@ -79,7 +79,7 @@ module main (
         .spi_data_i(spi_rd_data),
         .spi_data_o(spi_wr_data),
         .spi_rw_no(spi_rw_n),
-        .spi_pending_o(spi_pending_out),
+        .spi_valid_o(spi_valid),
         .spi_done_i(spi_done_in),
         .spi_done_o(spi_done_out)
     );
@@ -127,7 +127,7 @@ module main (
         .pi_select(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
-        .pi_pending(spi_pending_out),
+        .pi_pending(spi_valid),
         .pi_done(spi_done_in)
     );
     

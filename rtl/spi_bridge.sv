@@ -23,10 +23,10 @@ module spi_bridge(
     output logic [16:0] spi_addr_o,
     input  logic  [7:0] spi_data_i,
     output logic  [7:0] spi_data_o,
-    output logic spi_rw_no = 1'b1,
-    output logic spi_pending_o = 1'b0,
+    output logic spi_rw_no   = 1'b1,
+    output logic spi_valid_o = 1'b0,
     input  logic spi_done_i,
-    output logic spi_done_o = 1'b0,
+    output logic spi_done_o  = 1'b0,
     
     // Expose internal state for debugging
     output logic [2:0] state = READ_CMD,
@@ -58,18 +58,18 @@ module spi_bridge(
 
     always_ff @(posedge clk_sys_i or posedge reset) begin
         if (reset) begin
-            state          <= READ_CMD;
-            spi_done_o     <= 1'b0;
-            spi_pending_o  <= 1'b0;
+            state       <= READ_CMD;
+            spi_done_o  <= 1'b0;
+            spi_valid_o <= 1'b0;
         end else begin
             case (state)
                 READ_CMD: begin
-                    spi_done_o     <= 1'b0;
-                    spi_pending_o  <= 1'b0;
+                    spi_done_o  <= 1'b0;
+                    spi_valid_o <= 1'b0;
 
                     if (rx_valid) begin
-                        spi_rw_no      <= rx[7];
-                        cmd_rd_a       <= rx[6];
+                        spi_rw_no <= rx[7];
+                        cmd_rd_a  <= rx[6];
 
                         // If CMD sets address capture A16 from rx[0] now.
                         if (rx[6]) spi_addr_o <= { rx[0], 16'hxxxx };
@@ -106,7 +106,7 @@ module spi_bridge(
                 end
 
                 XFER: begin
-                    spi_pending_o <= 1'b1;
+                    spi_valid_o <= 1'b1;
 
                     if (spi_done_i) begin
                         spi_addr_o <= spi_addr_o + 1'b1;
@@ -115,8 +115,8 @@ module spi_bridge(
                 end
 
                 DONE: begin
-                    spi_pending_o <= 1'b0;
-                    spi_done_o    <= 1'b1;
+                    spi_valid_o <= 1'b0;
+                    spi_done_o  <= 1'b1;
                 end
             endcase
         end
