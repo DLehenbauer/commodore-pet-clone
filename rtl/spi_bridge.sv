@@ -25,8 +25,8 @@ module spi_bridge(
     output logic  [7:0] spi_data_o,
     output logic spi_rw_no   = 1'b1,
     output logic spi_valid_o = 1'b0,
-    input  logic spi_done_i,
-    output logic spi_done_o  = 1'b0,
+    input  logic spi_ready_i,
+    output logic spi_ready_o  = 1'b0,
     
     // Expose internal state for debugging
     output logic [2:0] state = READ_CMD,
@@ -59,12 +59,12 @@ module spi_bridge(
     always_ff @(posedge clk_sys_i or posedge reset) begin
         if (reset) begin
             state       <= READ_CMD;
-            spi_done_o  <= 1'b0;
+            spi_ready_o <= 1'b0;
             spi_valid_o <= 1'b0;
         end else begin
             case (state)
                 READ_CMD: begin
-                    spi_done_o  <= 1'b0;
+                    spi_ready_o <= 1'b0;
                     spi_valid_o <= 1'b0;
 
                     if (rx_valid) begin
@@ -108,7 +108,7 @@ module spi_bridge(
                 XFER: begin
                     spi_valid_o <= 1'b1;
 
-                    if (spi_done_i) begin
+                    if (spi_ready_i) begin
                         spi_addr_o <= spi_addr_o + 1'b1;
                         state <= DONE;
                     end
@@ -116,7 +116,7 @@ module spi_bridge(
 
                 DONE: begin
                     spi_valid_o <= 1'b0;
-                    spi_done_o  <= 1'b1;
+                    spi_ready_o  <= 1'b1;
                 end
             endcase
         end

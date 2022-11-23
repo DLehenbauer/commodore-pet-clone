@@ -152,8 +152,8 @@ module tb();
     logic [7:0] spi_data_out;
     logic spi_rw_b;
     logic spi_valid;
-    logic spi_done_in = 1'b0;
-    logic spi_done_out;
+    logic spi_ready_in = 1'b0;
+    logic spi_ready_out;
 
     spi_bridge spi_bridge(
         .clk_sys_i(clk_sys),
@@ -166,8 +166,8 @@ module tb();
         .spi_data_o(spi_data_out),
         .spi_rw_no(spi_rw_b),
         .spi_valid_o(spi_valid),
-        .spi_done_i(spi_done_in),
-        .spi_done_o(spi_done_out)
+        .spi_ready_i(spi_ready_in),
+        .spi_ready_o(spi_ready_out)
     );
 
     task check(
@@ -176,7 +176,7 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        `assert_equal(spi_done_in, '0);
+        `assert_equal(spi_ready_in, '0);
 
         $display("[%t]    expect(pending: %d, rw_b: %d, addr: $%x, data: $%x)",
             $time, spi_valid, spi_rw_b, spi_addr, spi_data_out);
@@ -191,18 +191,18 @@ module tb();
             `assert_equal(last_rx_byte, data);
         end
 
-        spi_done_in = 1'b1;
+        spi_ready_in = 1'b1;
         @(posedge clk_sys);
         @(posedge clk_sys);
-        #1 `assert_equal(spi_done_out, 1'b1);
+        #1 `assert_equal(spi_ready_out, 1'b1);
 
         spi_driver.end_xfer;
 
         @(posedge clk_sys);
         `assert_equal(spi_valid, 1'b0);
-        `assert_equal(spi_done_out, 1'b0);
+        `assert_equal(spi_ready_out, 1'b0);
 
-        spi_done_in = '0;
+        spi_ready_in = '0;
         spi_driver.reset;
     endtask
 

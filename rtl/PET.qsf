@@ -78,7 +78,7 @@ set_location_assignment PIN_24 -to h_sync_o
 set_location_assignment PIN_25 -to cpu_ready_o
 set_location_assignment PIN_26 -to P26_1V2
 set_location_assignment PIN_27 -to P27_GND
-set_location_assignment PIN_30 -to spi_done_no
+set_location_assignment PIN_30 -to spi_ready_no
 set_location_assignment PIN_31 -to clk_cpu_o
 set_location_assignment PIN_40 -to debug_o[7]
 set_location_assignment PIN_41 -to debug_o[3]

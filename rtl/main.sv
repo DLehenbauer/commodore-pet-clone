@@ -29,7 +29,7 @@ module main (
     // TODO: Should be 'inout'
     output wire  spi_tx_io,             // RPi 21 : GPIO 9
 
-    output logic spi_done_no,           // RPi  3 : Request completed and pi_data held while still pending.
+    output logic spi_ready_no,          // RPi  3 : Request completed and pi_data held while still pending.
 
     // Timing
     input  logic clk_16_i,              // 16 MHz main clock
@@ -59,15 +59,15 @@ module main (
 
     output logic [7:0] debug_o
 );
-    logic spi_done_out;
-    assign spi_done_no = !spi_done_out;
+    logic spi_ready_out;
+    assign spi_ready_no = !spi_ready_out;
 
     logic        spi_rw_n;
     logic [16:0] spi_addr;
     logic  [7:0] spi_wr_data;   // Incoming data when Pi is writing
     logic  [7:0] spi_rd_data;   // Outgoing data when Pi is reading
     logic        spi_valid;     // Command pending: spi_addr, _data, and _rw_n are valid
-    logic        spi_done_in;
+    logic        spi_ready_in;
 
     spi_bridge spi_bridge(
         .clk_sys_i(clk_16_i),
@@ -80,8 +80,8 @@ module main (
         .spi_data_o(spi_wr_data),
         .spi_rw_no(spi_rw_n),
         .spi_valid_o(spi_valid),
-        .spi_done_i(spi_done_in),
-        .spi_done_o(spi_done_out)
+        .spi_ready_i(spi_ready_in),
+        .spi_ready_o(spi_ready_out)
     );
     
     assign debug_o[0] = spi_sclk_i;
@@ -128,7 +128,7 @@ module main (
         .pi_read(pi_read),
         .pi_write(pi_write),
         .pi_pending(spi_valid),
-        .pi_done(spi_done_in)
+        .pi_done(spi_ready_in)
     );
     
     pi_ctl ctl(
