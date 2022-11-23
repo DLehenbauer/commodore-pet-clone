@@ -24,12 +24,12 @@ module spi_bridge(
     input  logic  [7:0] spi_data_i,
     output logic  [7:0] spi_data_o,
     output logic spi_rw_no   = 1'b1,
-    output logic spi_valid_o = 1'b0,
+    output logic spi_valid_o,
     input  logic spi_ready_i,
-    output logic spi_ready_o  = 1'b0,
+    output logic spi_ready_o,
     
     // Expose internal state for debugging
-    output logic [2:0] state = READ_CMD,
+    output logic [3:0] state = READ_CMD,
     output logic rx_valid
 );
     wire reset = spi_cs_ni;
@@ -49,24 +49,23 @@ module spi_bridge(
     logic cmd_rw_n;
     logic cmd_rd_a;
 
-    localparam READ_CMD          = 3'd0,
-               READ_DATA_ARG     = 3'd1,
-               READ_ADDR_HI_ARG  = 3'd2,
-               READ_ADDR_LO_ARG  = 3'd3,
-               XFER              = 3'd4,
-               DONE              = 3'd5;
+    //                                RV
+    localparam READ_CMD          = 4'b0000,
+               READ_DATA_ARG     = 4'b0001,
+               READ_ADDR_HI_ARG  = 4'b0010,
+               READ_ADDR_LO_ARG  = 4'b0011,
+               XFER              = 4'b0100,
+               DONE              = 4'b1000;
+
+    assign spi_valid_o = state[2];
+    assign spi_ready_o = state[3];
 
     always_ff @(posedge clk_sys_i or posedge reset) begin
         if (reset) begin
-            state       <= READ_CMD;
-            spi_ready_o <= 1'b0;
-            spi_valid_o <= 1'b0;
+            state <= READ_CMD;
         end else begin
-            case (state)
+            unique case (state)
                 READ_CMD: begin
-                    spi_ready_o <= 1'b0;
-                    spi_valid_o <= 1'b0;
-
                     if (rx_valid) begin
                         spi_rw_no <= rx[7];
                         cmd_rd_a  <= rx[6];
@@ -74,7 +73,7 @@ module spi_bridge(
                         // If CMD sets address capture A16 from rx[0] now.
                         if (rx[6]) spi_addr_o <= { rx[0], 16'hxxxx };
 
-                        casez(rx)
+                        unique casez(rx)
                             8'b0???????: state <= READ_DATA_ARG;
                             8'b11??????: state <= READ_ADDR_HI_ARG;
                             default:     state <= XFER;
@@ -106,18 +105,13 @@ module spi_bridge(
                 end
 
                 XFER: begin
-                    spi_valid_o <= 1'b1;
-
                     if (spi_ready_i) begin
                         spi_addr_o <= spi_addr_o + 1'b1;
                         state <= DONE;
                     end
                 end
 
-                DONE: begin
-                    spi_valid_o <= 1'b0;
-                    spi_ready_o  <= 1'b1;
-                end
+                default: /* DONE */;
             endcase
         end
     end
