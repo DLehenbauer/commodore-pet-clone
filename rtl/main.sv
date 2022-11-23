@@ -59,15 +59,15 @@ module main (
 
     output logic [7:0] debug_o
 );
-    logic spi_done;
-    assign spi_done_no = !spi_done;
+    logic spi_done_out;
+    assign spi_done_no = !spi_done_out;
 
-    logic spi_rw_n;
+    logic        spi_rw_n;
     logic [16:0] spi_addr;
-    logic [7:0] spi_wr_data;          // Incoming data when Pi is writing
-    logic [7:0] spi_rd_data;          // Outgoing data when Pi is reading
-    logic spi_pending_out;
-    logic spi_done_in;
+    logic  [7:0] spi_wr_data;          // Incoming data when Pi is writing
+    logic  [7:0] spi_rd_data;          // Outgoing data when Pi is reading
+    logic        spi_pending_out;
+    logic        spi_done_in;
 
     spi_bridge spi_bridge(
         .clk_sys_i(clk_16_i),
@@ -81,7 +81,7 @@ module main (
         .spi_rw_no(spi_rw_n),
         .spi_pending_o(spi_pending_out),
         .spi_done_i(spi_done_in),
-        .spi_done_o(spi_done)
+        .spi_done_o(spi_done_out)
     );
     
     assign debug_o[0] = spi_sclk_i;
