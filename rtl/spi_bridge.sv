@@ -32,7 +32,6 @@ module spi_bridge(
     output logic [3:0] state = READ_CMD,
     output logic rx_valid
 );
-    wire reset = spi_cs_ni;
     logic [7:0] rx;
     
     spi_byte spi_byte(
@@ -60,8 +59,8 @@ module spi_bridge(
     assign spi_valid_o = state[2];
     assign spi_ready_o = state[3];
 
-    always_ff @(posedge clk_sys_i or posedge reset) begin
-        if (reset) begin
+    always_ff @(posedge clk_sys_i or posedge spi_cs_ni) begin
+        if (spi_cs_ni) begin
             state <= READ_CMD;
         end else begin
             unique case (state)
