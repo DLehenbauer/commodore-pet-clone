@@ -132,11 +132,13 @@ module main (
     );
     
     pi_ctl ctl(
-        .pi_addr(spi_addr),
-        .pi_data(spi_wr_data),
-        .pi_write(pi_write),
-        .res_b(cpu_res_nao),
-        .rdy(cpu_ready_o)
+        .clk_i(clk8),
+        .spi_rw_n(spi_rw_n),
+        .spi_addr_i(spi_addr),
+        .spi_data_i(spi_wr_data),
+        .spi_enable_i(spi_valid),   // TODO: Use spi_enable
+        .cpu_res_no(cpu_res_nao),
+        .cpu_ready_o(cpu_ready_o)
     );
 
     logic [7:0] crtc_data_out;

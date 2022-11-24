@@ -13,21 +13,25 @@
  */
 
 module pi_ctl(
-    input pi_write,
-    input [16:0] pi_addr,
-    input [7:0] pi_data,
-    output res_b,
-    output rdy
+    input  logic clk_i,
+    input  logic spi_rw_n,
+    input  logic [16:0] spi_addr_i,
+    input  logic [7:0] spi_data_i,
+    input  logic spi_enable_i,
+    output logic cpu_res_no,
+    output logic cpu_ready_o
 );
-    localparam RES_B = 0,
-               RDY   = 1;
+    localparam RES_N = 0,
+               READY = 1;
 
-    reg [1:0] state = 2'b00;
+    logic [1:0] state = 2'b00;
 
-    always @(negedge pi_write) begin
-        if (pi_addr === 16'hE80F) state <= pi_data[1:0];
+    always @(posedge clk_i) begin
+        if (spi_enable_i) begin
+            if (spi_addr_i == 16'hE80F) state <= spi_data_i[1:0];
+        end
     end
     
-    assign res_b = state[RES_B];
-    assign rdy   = state[RDY];
+    assign cpu_res_no  = state[RES_N];
+    assign cpu_ready_o = state[READY];
 endmodule
