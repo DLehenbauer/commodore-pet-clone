@@ -12,26 +12,17 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-#include "pch.h"
+#include "test.h"
 #include "driver.h"
-#include "global.h"
-#include "pet.h"
-#include "roms.h"
-#include "usb/usb.h"
-#include "dvi/dvi.h"
 
-void init() {
-    stdio_init_all();
-    driver_init();
-    usb_init();
-    video_init(rom_chars_8800);
+void test_init() {
+    set_cpu(/* reset: */ true, /* run: */ false);
+    sleep_ms(1);
+
+    set_cpu(/* reset: */ false, /* run: */ false);
+    sleep_ms(1);
 }
 
-int main() {
-    init();
+void test_display() {
 
-    pet_reset();
-    pet_main();
-
-    __builtin_unreachable();
 }

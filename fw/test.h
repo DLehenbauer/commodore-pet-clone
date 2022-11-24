@@ -12,26 +12,9 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
+#pragma once
+
 #include "pch.h"
-#include "driver.h"
-#include "global.h"
-#include "pet.h"
-#include "roms.h"
-#include "usb/usb.h"
-#include "dvi/dvi.h"
 
-void init() {
-    stdio_init_all();
-    driver_init();
-    usb_init();
-    video_init(rom_chars_8800);
-}
-
-int main() {
-    init();
-
-    pet_reset();
-    pet_main();
-
-    __builtin_unreachable();
-}
+void test_init();
+void test_display();

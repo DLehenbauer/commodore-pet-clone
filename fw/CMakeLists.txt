@@ -9,9 +9,11 @@ if (TARGET tinyusb_device)
 
     add_executable(firmware
         driver.c
+        dvi/dvi.c
         global.c
         main.c
-        dvi/dvi.c
+        pet.c
+        test.c
         usb/hid_app.c
         usb/keyboard.c
         usb/usb.c
