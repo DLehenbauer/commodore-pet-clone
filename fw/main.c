@@ -14,11 +14,12 @@
 
 #include "pch.h"
 #include "driver.h"
+#include "dvi/dvi.h"
 #include "global.h"
 #include "pet.h"
 #include "roms.h"
+// #include "test.h"
 #include "usb/usb.h"
-#include "dvi/dvi.h"
 
 void init() {
     stdio_init_all();
@@ -32,6 +33,9 @@ int main() {
 
     pet_reset();
     pet_main();
+
+    // test_init();
+    // test_display();
 
     __builtin_unreachable();
 }
