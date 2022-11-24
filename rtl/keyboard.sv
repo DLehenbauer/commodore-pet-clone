@@ -13,25 +13,25 @@
  */
  
  module keyboard(
-    input reset,
+    input  logic reset,
  
-    input [16:0] pi_addr,
-    input [7:0]  pi_data,
-    input pi_write,
+    input  logic [16:0] pi_addr,
+    input  logic  [7:0] pi_data,
+    input  logic        pi_write,
 
-    input [1:0] bus_addr,
-    input [7:0] bus_data_in,
-    input bus_rw_b,
+    input  logic [1:0] bus_addr,
+    input  logic [7:0] bus_data_in,
+    input  logic bus_rw_b,
 
-    input pia1_enabled_in,
-    input io_read,
-    input cpu_write,
+    input  logic pia1_enabled_in,
+    input  logic io_read,
+    input  logic cpu_write,
 
-    output reg [7:0] kbd_data_out = 8'hff,
-    output kbd_enable
+    output logic [7:0] kbd_data_out = 8'hff,
+    output logic kbd_enable
 );
-    reg [7:0] kbd_matrix [9:0];   
-    reg [3:0] current_kbd_row = 4'h0;
+    logic [7:0] kbd_matrix [9:0];   
+    logic [3:0] current_kbd_row = '0;
     
     always @(negedge pi_write or posedge reset) begin
         if (reset) begin
