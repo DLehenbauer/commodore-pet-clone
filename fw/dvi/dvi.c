@@ -1,4 +1,5 @@
 #include "../pch.h"
+#include "../global.h"
 #include "dvi.h"
 
 uint8_t const* font_8x8;
@@ -55,7 +56,6 @@ struct semaphore dvi_start_sem;
 
 #define CHAR_COLS 40
 #define CHAR_ROWS 25
-char charbuf[CHAR_ROWS * CHAR_COLS];
 
 static inline uint16_t __not_in_flash_func(stretch_x)(uint16_t x) {
     x = (x | (x << 4)) & 0x0F0F;
@@ -206,7 +206,7 @@ static inline void __not_in_flash_func(prepare_scanline)(const char *chars, int1
 
 void __not_in_flash_func(core1_scanline_callback)() {
     static uint y = 1;
-	prepare_scanline(charbuf, y);
+	prepare_scanline(video_char_buffer, y);
 	y = (y + 1) % FRAME_HEIGHT;
 }
 
@@ -221,7 +221,7 @@ void core1_main() {
 	__builtin_unreachable();
 }
 
-uint8_t* video_init(uint8_t const* p_char_rom) {
+void video_init(uint8_t const* p_char_rom) {
 	font_8x8 = p_char_rom;
 
 	vreg_set_voltage(VREG_VSEL);
@@ -238,14 +238,12 @@ uint8_t* video_init(uint8_t const* p_char_rom) {
 	dvi_init(&dvi0, next_striped_spin_lock_num(), next_striped_spin_lock_num());
 
 	printf("Prepare first scanline\n");
-    memset(charbuf, 0, sizeof(charbuf));
-	prepare_scanline(charbuf, 0);
+    memset(video_char_buffer, 0, sizeof(video_char_buffer));
+	prepare_scanline(video_char_buffer, 0);
 
 	printf("Core 1 start\n");
 	sem_init(&dvi_start_sem, 0, 1);
 	hw_set_bits(&bus_ctrl_hw->priority, BUSCTRL_BUS_PRIORITY_PROC1_BITS);
 	multicore_launch_core1(core1_main);
 	sem_release(&dvi_start_sem);
-
-    return charbuf;
 }

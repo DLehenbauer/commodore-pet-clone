@@ -41,14 +41,14 @@ void init() {
 int main() {
     init();
     usb_init();
-    uint8_t* pCharBuf = video_init(rom_chars_8800);
+    video_init(rom_chars_8800);
 
     while (true) {
         // Dispatch TinyUSB events
         tuh_task();
 
         spi_write(key_matrix, /* start */ 0xe800, sizeof(key_matrix));
-        spi_read(/* start: */ 0x8000, /* byteLength: */ 1000, pCharBuf);
+        spi_read(/* start: */ 0x8000, /* byteLength: */ 1000, video_char_buffer);
     }
 
     __builtin_unreachable();

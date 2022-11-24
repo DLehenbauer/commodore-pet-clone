@@ -12,3 +12,5 @@ uint8_t key_matrix[10] = {
     /* row 8: */ 0xff,
     /* row 9: */ 0xff,
 };
+
+uint8_t video_char_buffer[VIDEO_CHAR_BUFFER_BYTE_SIZE];
