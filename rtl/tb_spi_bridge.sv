@@ -116,7 +116,7 @@ module spi_driver (
     );
 endmodule
 
-module tb();
+module spi_bridge_tb();
     bit clk_sys = '0;
     initial forever #31.25 clk_sys = ~clk_sys;
 
@@ -153,7 +153,8 @@ module tb();
     logic spi_rw_b;
     logic spi_valid;
     logic spi_ready_in = 1'b0;
-    logic spi_ready_out;
+    logic spi_ready_out_n;
+    wire spi_ready_out = !spi_ready_out_n;
 
     spi_bridge spi_bridge(
         .clk_sys_i(clk_sys),
@@ -167,7 +168,7 @@ module tb();
         .spi_rw_no(spi_rw_b),
         .spi_valid_o(spi_valid),
         .spi_ready_i(spi_ready_in),
-        .spi_ready_o(spi_ready_out)
+        .spi_ready_no(spi_ready_out_n)
     );
 
     task check(
@@ -282,13 +283,26 @@ module tb();
 
         spi_driver.reset;
 
+        $display("[%t] BEGIN: %m", $time);
+        $display("[%t] Test: write_at($8000, $55)", $time);
         write_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
+
+        $display("[%t] Test: read_at($8000) -> $55", $time);
         read_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
+
+        $display("[%t] Test: read_next() -> [$8001, $55]", $time);
         read_next(/* addr: */ 17'h8001, /* data: */ 8'h55);
+
+        $display("[%t] Test: write_at($8001, $55)", $time);
         write_at(/* addr: */ 17'h8001, /* data: */ 8'h55);
+
+        $display("[%t] Test: read_at($8001) -> $55", $time);
         read_at(/* addr: */ 17'h8001, /* data: */ 8'h55);
+
+        $display("[%t] Test: read_next() -> [$8002, $55]", $time);
         read_next(/* addr: */ 17'h8002, /* data: */ 8'h55);
 
-        #500 $finish;
+        #500 $display("[%t] END: %m", $time);
+        $finish;
     end
 endmodule

@@ -26,7 +26,7 @@ module spi_bridge(
     output logic spi_rw_no   = 1'b1,
     output logic spi_valid_o,
     input  logic spi_ready_i,
-    output logic spi_ready_o,
+    output logic spi_ready_no,
     
     // Expose internal state for debugging
     output logic [3:0] state = READ_CMD,
@@ -56,8 +56,8 @@ module spi_bridge(
                XFER              = 4'b0100,
                DONE              = 4'b1000;
 
-    assign spi_valid_o = state[2];
-    assign spi_ready_o = state[3];
+    assign spi_valid_o  =  state[2];
+    assign spi_ready_no = !state[3];
 
     always_ff @(posedge clk_sys_i or posedge spi_cs_ni) begin
         if (spi_cs_ni) begin
