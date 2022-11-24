@@ -59,18 +59,24 @@ void driver_init() {
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
 }
 
+void cmd_start() {
+    while (!gpio_get(READY_B_PIN));
+    gpio_put(SPI_CSN_PIN, 0);
+}
+
+void cmd_end() {
+    while (gpio_get(READY_B_PIN));
+    gpio_put(SPI_CSN_PIN, 1);
+}
+
 uint8_t spi_read_next() {
     const uint8_t tx[1] = { SPI_CMD_READ_NEXT };
     uint8_t rx[sizeof(tx)];
 
-    while (!gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 0);
-
+    cmd_start();
     spi_write_read_blocking(spi_default, tx, rx, sizeof(tx));
+    cmd_end();
     
-    while (gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 1);
-
     return rx[0];
 }
 
@@ -80,26 +86,18 @@ uint8_t spi_read_at(uint32_t addr) {
     const uint8_t addr_lo = addr & 0xff;
     const uint8_t tx[] = { cmd, addr_hi, addr_lo };
 
-    while (!gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 0);
-
+    cmd_start();
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
-    
-    while (gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 1);
+    cmd_end();
 }
 
 void spi_write_next(uint8_t data) {
     const uint8_t tx [] = { SPI_CMD_WRITE_NEXT, data };
 
-    while (!gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 0);
-
+    cmd_start();
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
+    cmd_end();
     
-    while (gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 1);
-
     // uint8_t actual = spi_read_at(addr);
     // if (actual != data) {
     //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
@@ -113,13 +111,9 @@ void spi_write_at(uint32_t addr, uint8_t data) {
     const uint8_t addr_lo = addr & 0xff;
     const uint8_t tx [] = { cmd, data, addr_hi, addr_lo };
 
-    while (!gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 0);
-
+    cmd_start();
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
-    
-    while (gpio_get(READY_B_PIN));
-    gpio_put(SPI_CSN_PIN, 1);
+    cmd_end();
 
     // uint8_t actual = spi_read_at(addr);
     // if (actual != data) {
