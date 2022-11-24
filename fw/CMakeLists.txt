@@ -8,6 +8,7 @@ if (TARGET tinyusb_device)
     set(TINYUSB_FAMILY_PROJECT_NAME_PREFIX "tinyusb_host_")
 
     add_executable(firmware
+        driver.c
         global.c
         main.c
         dvi/dvi.c
