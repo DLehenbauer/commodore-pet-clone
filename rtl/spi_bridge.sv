@@ -23,7 +23,7 @@ module spi_bridge(
     output logic [16:0] spi_addr_o,
     input  logic  [7:0] spi_data_i,
     output logic  [7:0] spi_data_o,
-    output logic spi_rw_no   = 1'b1,
+    output logic spi_rw_no = 1'b1,
     output logic spi_valid_o,
     input  logic spi_ready_i,
     output logic spi_ready_o,
@@ -45,7 +45,6 @@ module spi_bridge(
         .valid_o(rx_valid)
     );
 
-    logic cmd_rw_n;
     logic cmd_rd_a;
 
     //                                RV
