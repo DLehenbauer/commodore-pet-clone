@@ -69,16 +69,6 @@ void cmd_end() {
     gpio_put(SPI_CSN_PIN, 1);
 }
 
-uint8_t spi_read_next() {
-    const uint8_t tx[1] = { SPI_CMD_READ_NEXT };
-    uint8_t rx[sizeof(tx)];
-
-    cmd_start();
-    spi_write_read_blocking(spi_default, tx, rx, sizeof(tx));
-    cmd_end();
-    
-    return rx[0];
-}
 
 uint8_t spi_read_at(uint32_t addr) {
     const uint8_t cmd = SPI_CMD_READ_AT | addr >> 16;
@@ -91,18 +81,23 @@ uint8_t spi_read_at(uint32_t addr) {
     cmd_end();
 }
 
-void spi_write_next(uint8_t data) {
-    const uint8_t tx [] = { SPI_CMD_WRITE_NEXT, data };
+uint8_t spi_read_next() {
+    const uint8_t tx[1] = { SPI_CMD_READ_NEXT };
+    uint8_t rx[sizeof(tx)];
 
     cmd_start();
-    spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
+    spi_write_read_blocking(spi_default, tx, rx, sizeof(tx));
     cmd_end();
     
-    // uint8_t actual = spi_read_at(addr);
-    // if (actual != data) {
-    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
-    //     panic(0);
-    // }
+    return rx[0];
+}
+
+void spi_read(uint8_t* pDest, uint32_t src, uint32_t byteLength) {
+    spi_read_at(src);
+
+    while (byteLength--) {
+        *pDest++ = spi_read_next();
+    }
 }
 
 void spi_write_at(uint32_t addr, uint8_t data) {
@@ -122,19 +117,25 @@ void spi_write_at(uint32_t addr, uint8_t data) {
     // }
 }
 
-void spi_read(uint32_t start, uint32_t byteLength, uint8_t* pDest) {
-    spi_read_at(start);
+void spi_write_next(uint8_t data) {
+    const uint8_t tx [] = { SPI_CMD_WRITE_NEXT, data };
 
-    while (byteLength--) {
-        *pDest++ = spi_read_next();
-    }
+    cmd_start();
+    spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
+    cmd_end();
+    
+    // uint8_t actual = spi_read_at(addr);
+    // if (actual != data) {
+    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
+    //     panic(0);
+    // }
 }
 
-void spi_write(const uint8_t const* pSrc, uint32_t start, uint32_t byteLength) {
+void spi_write(uint32_t dest, const uint8_t const* pSrc, uint32_t byteLength) {
     const uint8_t* p = pSrc;
     
     if (byteLength--) {
-        spi_write_at(start, *p++);
+        spi_write_at(dest, *p++);
 
         while (byteLength--) {
             spi_write_next(*p++);

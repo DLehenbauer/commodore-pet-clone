@@ -21,12 +21,12 @@ void pet_reset() {
     set_cpu(/* reset: */ true, /* run: */ false);
     set_cpu(/* reset: */ false, /* run: */ false);
 
-    spi_write(rom_chars_8800,  0x8800, sizeof(rom_chars_8800));
-    spi_write(rom_basic_b000,  0xb000, sizeof(rom_basic_b000));
-    spi_write(rom_basic_c000,  0xc000, sizeof(rom_basic_c000));
-    spi_write(rom_basic_d000,  0xd000, sizeof(rom_basic_d000));
-    spi_write(rom_edit_e000,   0xe000, sizeof(rom_edit_e000));
-    spi_write(rom_kernal_f000, 0xf000, sizeof(rom_kernal_f000));
+    spi_write(/* dest: */ 0x8800, /* pSrc: */ rom_chars_8800,  sizeof(rom_chars_8800));
+    spi_write(/* dest: */ 0xb000, /* pSrc: */ rom_basic_b000,  sizeof(rom_basic_b000));
+    spi_write(/* dest: */ 0xc000, /* pSrc: */ rom_basic_c000,  sizeof(rom_basic_c000));
+    spi_write(/* dest: */ 0xd000, /* pSrc: */ rom_basic_d000,  sizeof(rom_basic_d000));
+    spi_write(/* dest: */ 0xe000, /* pSrc: */ rom_edit_e000,   sizeof(rom_edit_e000));
+    spi_write(/* dest: */ 0xf000, /* pSrc: */ rom_kernal_f000, sizeof(rom_kernal_f000));
 
     // Reset and resume CPU
     set_cpu(/* reset: */ true, /* run: */ false);
@@ -38,7 +38,7 @@ void pet_main() {
         // Dispatch TinyUSB events
         tuh_task();
 
-        spi_write(key_matrix, /* start */ 0xe800, sizeof(key_matrix));
-        spi_read(/* start: */ 0x8000, /* byteLength: */ 1000, video_char_buffer);
+        spi_write(/* dest */ 0xe800, /* pSrc: */ key_matrix, /* byteLength: */ sizeof(key_matrix));
+        spi_read(/* pDest: */ video_char_buffer, /* src: */ 0x8000, /* byteLength: */ 1000);
     }
 }
