@@ -74,7 +74,7 @@ module spi_driver (
     task end_xfer(
         input bit next_cs_ni = 1'b1
     );
-        `assert_equal(spi_cs_no, 1'b0);
+        `assert_equal(spi_cs_no, '0);
 
         start_sclk = 0;
 
@@ -116,27 +116,48 @@ module spi_driver (
     );
 endmodule
 
-module tb();
-    bit clk_sys = '0;
-    initial forever #31.25 clk_sys = ~clk_sys;
-
+module spi_bridge_driver (
+    input  logic        clk_sys_i,
+    output logic [16:0] spi_addr_o,
+    input  logic  [7:0] spi_data_i,
+    output logic  [7:0] spi_data_o,
+    output logic        spi_rw_no,
+    output logic        spi_valid_o,
+    output logic        spi_ready_i = '0,
+    output logic        spi_ready_o
+);
     logic spi_sclk;
     logic spi_cs_n;
     logic spi_rx;
+    logic spi_tx;
 
     spi_driver spi_driver(
-        .clk_sys_i(clk_sys),
+        .clk_sys_i(clk_sys_i),
         .spi_sclk_o(spi_sclk),
         .spi_cs_no(spi_cs_n),
         .spi_tx_o(spi_rx)
     );
 
-    logic spi_tx;
+    spi_bridge spi_bridge(
+        .clk_sys_i(clk_sys_i),
+        .spi_sclk_i(spi_sclk),
+        .spi_cs_ni(spi_cs_n),
+        .spi_rx_i(spi_rx),
+        .spi_tx_io(spi_tx),
+        .spi_addr_o(spi_addr_o),
+        .spi_data_i(spi_data_i),
+        .spi_data_o(spi_data_o),
+        .spi_rw_no(spi_rw_no),
+        .spi_valid_o(spi_valid_o),
+        .spi_ready_i(spi_ready_i),
+        .spi_ready_o(spi_ready_o)
+    );
+
     logic [7:0] rx_byte;
     logic rx_valid;
 
     spi_byte spi_byte_rx(
-        .clk_sys_i(clk_sys),
+        .clk_sys_i(clk_sys_i),
         .spi_sclk_i(spi_sclk),
         .spi_cs_ni(spi_cs_n),
         .spi_rx_i(spi_tx),
@@ -147,28 +168,9 @@ module tb();
     logic [7:0] last_rx_byte;
     always @(posedge rx_valid) last_rx_byte <= rx_byte;
 
-    logic [16:0] spi_addr;
-    logic [7:0] spi_data_in;
-    logic [7:0] spi_data_out;
-    logic spi_rw_b;
-    logic spi_valid;
-    logic spi_ready_in = 1'b0;
-    logic spi_ready_out;
-
-    spi_bridge spi_bridge(
-        .clk_sys_i(clk_sys),
-        .spi_sclk_i(spi_sclk),
-        .spi_cs_ni(spi_cs_n),
-        .spi_rx_i(spi_rx),
-        .spi_tx_io(spi_tx),
-        .spi_addr_o(spi_addr),
-        .spi_data_i(spi_data_in),
-        .spi_data_o(spi_data_out),
-        .spi_rw_no(spi_rw_b),
-        .spi_valid_o(spi_valid),
-        .spi_ready_i(spi_ready_in),
-        .spi_ready_o(spi_ready_out)
-    );
+    task reset;
+        spi_driver.reset;
+    endtask
 
     task check(
         input pending,
@@ -176,33 +178,31 @@ module tb();
         input [16:0] addr,
         input [7:0] data
     );
-        `assert_equal(spi_ready_in, '0);
+        `assert_equal(spi_ready_i, '0);
 
         $display("[%t]    expect(pending: %d, rw_b: %d, addr: $%x, data: $%x)",
-            $time, spi_valid, spi_rw_b, spi_addr, spi_data_out);
+            $time, spi_valid_o, spi_rw_no, spi_addr_o, spi_data_o);
 
-        `assert_equal(spi_valid, pending);
-        `assert_equal(spi_rw_b, rw_b);
-        `assert_equal(spi_addr, addr);
+        `assert_equal(spi_valid_o, pending);
+        `assert_equal(spi_rw_no, rw_b);
+        `assert_equal(spi_addr_o, addr);
 
         if (!rw_b) begin
-            `assert_equal(spi_data_out, data);
-        end else begin
-            `assert_equal(last_rx_byte, data);
+            `assert_equal(spi_data_o, data);
         end
 
-        spi_ready_in = 1'b1;
-        @(posedge clk_sys);
-        @(posedge clk_sys);
-        #1 `assert_equal(spi_ready_out, 1'b1);
+        spi_ready_i = 1'b1;
+        @(posedge clk_sys_i);
+        @(posedge clk_sys_i);
+        #1 `assert_equal(spi_ready_o, 1'b1);
 
         spi_driver.end_xfer;
 
-        @(posedge clk_sys);
-        `assert_equal(spi_valid, 1'b0);
-        `assert_equal(spi_ready_out, 1'b0);
+        @(posedge clk_sys_i);
+        `assert_equal(spi_valid_o, '0);
+        `assert_equal(spi_ready_o, '0);
 
-        spi_ready_in = '0;
+        spi_ready_i = '0;
         spi_driver.reset;
     endtask
 
@@ -219,7 +219,7 @@ module tb();
 
         $display("[%t]    send -> [%s]", $time, s);
         spi_driver.xfer_bytes(tx);
-        spi_driver.end_xfer(/* next_cs_ni: */ 1'b0);
+        spi_driver.end_xfer(/* next_cs_ni: */ '0);
     endtask
 
     function [7:0] cmd(input bit rw_n, input bit set_addr, input logic [16:0] addr);
@@ -234,54 +234,108 @@ module tb();
         return addr[7:0];
     endfunction
 
-    task write_at(
-        input [16:0] addr,
-        input [7:0] data
-    );
-        send('{
-            cmd( /* rw_n: */ 1'b0, /* set_addr: */ 1'b1, addr ),
-            data,
-            addr_hi(addr),
-            addr_lo(addr)
-        });
+    logic [16:0] last_addr;
 
-        check(/* pending: */ 1'b1, /* rw_b: */ 1'b0, /* addr: */ addr, /* data: */ data);
+    task write_at(
+        input [16:0] addr_i,
+        input [7:0] data_i
+    );
+        logic [7:0] c;
+        logic [7:0] ah;
+        logic [7:0] al;
+
+        c = cmd(/* rw_n: */ '0, /* set_addr: */ 1'b1, addr_i);
+        ah = addr_hi(addr_i);
+        al = addr_lo(addr_i);
+        last_addr = addr_i;
+
+        send('{ c, data_i, ah, al });
+
+        check(/* pending: */ 1'b1, /* rw_b: */ '0, addr_i, data_i);
     endtask
 
     task read_at(
-        input [16:0] addr,
-        input [7:0] data
+        input [16:0] addr_i
     );
-        spi_data_in = data;
+        logic [7:0] c;
+        logic [7:0] ah;
+        logic [7:0] al;
+        last_addr = addr_i;
 
-        send('{
-            cmd( /* rw_n: */ 1'b1, /* set_addr: */ 1'b1, addr ),
-            addr_hi(addr),
-            addr_lo(addr)
-        });
+        c = cmd(/* rw_n: */ 1'b1, /* set_addr: */ 1'b1, addr_i);
+        ah = addr_hi(addr_i);
+        al = addr_lo(addr_i);
 
-        check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
+        send('{ c, ah, al });
+
+        check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, addr_i, /* data: */ 8'hxx);
+    endtask
+
+    task read_next;
+        logic [7:0] c;
+        c = cmd(/* rw_n: */ 1'b1, /* set_addr: */ '0, /* addr_i: */ 17'hxxxxx);
+
+        last_addr = last_addr + 1'b1;
+
+        send('{ c });
+
+        check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, last_addr, /* data: */ 8'hxx);
+    endtask
+endmodule
+
+module tb();
+    bit clk_sys = '0;
+    initial forever #31.25 clk_sys = ~clk_sys;
+
+    logic [16:0] spi_addr;
+    logic  [7:0] spi_data_in;
+    logic  [7:0] spi_data_out;
+    logic        spi_rw_n;
+    logic        spi_valid;
+    logic        spi_ready_in;
+    logic        spi_ready_out;
+
+    spi_bridge_driver driver(
+        .clk_sys_i(clk_sys),
+        .spi_addr_o(spi_addr),
+        .spi_data_i(spi_data_in),
+        .spi_data_o(spi_data_out),
+        .spi_rw_no(spi_rw_n),
+        .spi_valid_o(spi_valid),
+        .spi_ready_i(spi_ready_in),
+        .spi_ready_o(spi_ready_out)
+    );
+
+    task write_at(
+        input [16:0] addr_i,
+        input [7:0] data_i
+    );
+        driver.write_at(/* addr_i: */ addr_i, /* data_i: */ data_i);
+    endtask
+
+    task read_at(
+        input [16:0] addr_i,
+        input  [7:0] data_i
+    );
+        spi_data_in = data_i;
+        driver.read_at(addr_i);
+        `assert_equal(driver.last_rx_byte, data_i);
     endtask
 
     task read_next(
-        input [16:0] addr,
-        input [7:0] data
+        input [16:0] addr_i,
+        input [7:0] data_i
     );
-        spi_data_in = data;
-
-        send('{
-            cmd( /* rw_n: */ 1'b1, /* set_addr: */ 1'b0, addr )
-        });
-
-        check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, /* addr: */ addr, /* data: */ data);
+        spi_data_in = data_i;
+        driver.read_next(addr_i);
+        `assert_equal(driver.last_rx_byte, data_i);
     endtask
 
     initial begin
         $dumpfile("out.vcd");
         $dumpvars;
 
-        spi_driver.reset;
-
+        driver.reset;
         write_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_at(/* addr: */ 17'h8000, /* data: */ 8'h55);
         read_next(/* addr: */ 17'h8001, /* data: */ 8'h55);
