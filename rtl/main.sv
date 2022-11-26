@@ -83,6 +83,15 @@ module main (
         .spi_ready_i(spi_ready_in),
         .spi_ready_o(spi_ready_out)
     );
+
+    logic clk_8;
+    logic spi_enable;
+
+    timing2 timing2(
+        .clk_16_i(clk_16_i),
+        .clk_8_o(clk_8),
+        .spi_enable_o(spi_enable)
+    );
     
     assign debug_o[0] = spi_sclk_i;
     assign debug_o[1] = spi_cs_ni;
@@ -106,8 +115,6 @@ module main (
     logic video_select;
     logic video_ram_clk;
     logic video_rom_clk;
-
-    wire reset = cpu_res_ai;
 
     // Timing
     timing timing(
@@ -136,7 +143,7 @@ module main (
         .spi_rw_n(spi_rw_n),
         .spi_addr_i(spi_addr),
         .spi_data_i(spi_wr_data),
-        .spi_enable_i(spi_valid),   // TODO: Use spi_enable
+        .spi_enable_i(spi_enable & spi_valid),
         .cpu_res_no(cpu_res_nao),
         .cpu_ready_o(cpu_ready_o)
     );
@@ -145,7 +152,7 @@ module main (
     logic crtc_data_out_enable;
 
     crtc ctrc(
-        .reset(reset),
+        .reset(cpu_res_ai),
         .crtc_select(crtc_enable),
         .bus_addr(bus_addr_io),
         .bus_data_in(bus_data_io),
@@ -182,7 +189,7 @@ module main (
     logic kbd_enable;
     
     keyboard keyboard(
-        .reset(reset),
+        .reset(cpu_res_ai),
         .pi_addr(spi_addr),
         .pi_data(spi_wr_data),
         .pi_write(pi_write),
@@ -204,7 +211,7 @@ module main (
     video v(
         .clk8_i(clk8),
         .cclk_i(video_select),
-        .reset_i(reset),
+        .reset_i(cpu_res_ai),
         .bus_addr_o(video_addr),
         .bus_data_i(bus_data_io),
         .video_ram_clk_i(video_ram_clk),
@@ -246,7 +253,7 @@ module main (
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr_o[11:10] =
-        pi_select
+        spi_enable
             ? spi_addr[11:10]            // Give RPi access to full RAM
             : video_select
                 ? video_addr[11:10]
@@ -254,14 +261,14 @@ module main (
                     ? 2'b00             // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
                     : bus_addr_io[11:10];
     
-    assign bus_addr_io = pi_select
+    assign bus_addr_io = spi_enable
         ? spi_addr                      // RPi is reading/writing, and therefore driving addr
         : video_select
             ? { 5'b01000, video_addr }
-            : {1'b0, 16'bZ};            // CPU is reading/writing, and therefore driving addr
+            : { 1'b0, 16'bZ };          // CPU is reading/writing, and therefore driving addr
 
     assign bus_data_io =
-        pi_write
+        spi_enable & !spi_rw_n
             ? spi_wr_data               // RPi is writing, and therefore driving data
             : kbd_enable                // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
                 ? kbd_data_out          // Return USB keyboard state for PIA 1 Port B ($E812)
