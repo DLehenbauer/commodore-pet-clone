@@ -90,6 +90,7 @@ module main (
     timing2 timing2(
         .clk_16_i(clk_16_i),
         .clk_8_o(clk_8),
+        .clk_cpu_o(clk_cpu_o),
         .spi_enable_o(spi_enable)
     );
     
@@ -120,7 +121,6 @@ module main (
     timing timing(
         .clk(clk_16_i),
         .clk8(clk8),
-        .phi2(clk_cpu_o),
         .bus_rw_b(bus_rw_nio),
         .cpu_enable(cpu_enable),
         .cpu_read(cpu_read),

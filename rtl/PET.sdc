@@ -24,13 +24,11 @@ set enable_5         [get_registers { main:main|timing2:timing2|enable[5] }]
 set enable_6         [get_registers { main:main|timing2:timing2|enable[6] }]
 set enable_7         [get_registers { main:main|timing2:timing2|enable[7] }]
 
-set cpu_clk  [get_ports { clk_cpu_o }]
+set clk_cpu  [get_ports { clk_cpu_o }]
 set spi_sclk [get_ports { spi_sclk_i }]
 
 # New clocks
-create_generated_clock -name "clk_8p" -source $clk_16 -edges { 1 3 5 } $clk_8p
 create_generated_clock -name "clk_8n" -source $clk_16 -edges { 4 6 8 } $clk_8n
-
 create_generated_clock -name "enable_0" -source $clk_8n -edges { 15 17 31 } $enable_0
 create_generated_clock -name "enable_1" -source $clk_8n -edges {  1  3 17 } $enable_1
 create_generated_clock -name "enable_2" -source $clk_8n -edges {  3  5 19 } $enable_2
@@ -39,6 +37,9 @@ create_generated_clock -name "enable_4" -source $clk_8n -edges {  7  9 23 } $ena
 create_generated_clock -name "enable_5" -source $clk_8n -edges {  9 11 25 } $enable_5
 create_generated_clock -name "enable_6" -source $clk_8n -edges { 11 13 27 } $enable_6
 create_generated_clock -name "enable_7" -source $clk_8n -edges { 13 15 29 } $enable_7
+
+create_generated_clock -name "clk_8p"  -source $clk_16 -edges {  1  3  5 } $clk_8p
+create_generated_clock -name "clk_cpu" -source $clk_8p -edges { 15 16 31 } $clk_cpu
 
 # Clock constraints
 set clk_8            [get_registers { main:main|timing:timing|bus:bus|count[0] }]
@@ -97,10 +98,6 @@ create_generated_clock -name "cpu_strobe" \
     -edges {29 31 61} \
     $cpu_strobe
 
-create_generated_clock -name "cpu_clk" \
-    -source $cpu_strobe \
-    $cpu_clk
-
 create_clock -name "spi_sclk" \
     -period 8MHz \
     $spi_sclk
@@ -117,18 +114,18 @@ derive_pll_clocks -create_base_clocks
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
 # tBVD
-set_input_delay -min -clock [get_clocks { cpu_clk }]  0 [get_ports { bus_addr_io[*] bus_rw_nio }]
-set_input_delay -max -clock [get_clocks { cpu_clk }] 30 [get_ports { bus_addr_io[*] bus_rw_nio }]
+set_input_delay -min -clock [get_clocks { clk_cpu }]  0 [get_ports { bus_addr_io[*] bus_rw_nio }]
+set_input_delay -max -clock [get_clocks { clk_cpu }] 30 [get_ports { bus_addr_io[*] bus_rw_nio }]
 
 # tMDS
-set_input_delay -min -clock [get_clocks { cpu_clk }]  0 [get_ports { bus_data_io[*] }]
-set_input_delay -max -clock [get_clocks { cpu_clk }] 40 [get_ports { bus_data_io[*] }]
+set_input_delay -min -clock [get_clocks { clk_cpu }]  0 [get_ports { bus_data_io[*] }]
+set_input_delay -max -clock [get_clocks { clk_cpu }] 40 [get_ports { bus_data_io[*] }]
 
 # PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 
-set_output_delay -min -clock { cpu_clk }  0 [get_ports { via_cs2_no pia2_cs2_no pia1_cs2_no }]
-set_output_delay -max -clock { cpu_clk } -8 [get_ports { via_cs2_no pia2_cs2_no pia1_cs2_no }]
+set_output_delay -min -clock { clk_cpu }  0 [get_ports { via_cs2_no pia2_cs2_no pia1_cs2_no }]
+set_output_delay -max -clock { clk_cpu } -8 [get_ports { via_cs2_no pia2_cs2_no pia1_cs2_no }]
 
 # SRAM
 # https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf
