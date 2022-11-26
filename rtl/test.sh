@@ -9,8 +9,9 @@ iverilog -g2012 \
     pe_pulse.sv \
     spi.sv \
     spi_bridge.sv \
-    spi_buffer.sv \
+    spi_driver.sv \
     sync.sv \
     timing.sv \
-    video.sv
-vvp a.out
+    timing2.sv \
+    video.sv \
+&& vvp a.out

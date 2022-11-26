@@ -18,17 +18,42 @@ module tb();
     logic clk_16_i = 0;
     initial forever #31.25 clk_16_i = ~clk_16_i;
 
+    logic        spi_sclk;
+    logic        spi_cs_n;
+    logic        spi_rx;
+    logic        spi_tx;
+
+    logic [16:0] spi_addr;
+    logic  [7:0] spi_rd_data;
+    logic  [7:0] spi_wr_data;
+    logic        spi_rw_n;
+    logic        spi_valid;
+    logic        spi_ready_in;
+    logic        spi_ready_out;
+
+    spi_bridge_driver driver (
+        .clk_sys_i(clk_16_i),
+
+        .spi_sclk_o(spi_sclk),
+        .spi_cs_no(spi_cs_n),
+        .spi_rx_o(spi_rx),
+
+        .spi_addr_o(spi_addr),
+        .spi_data_i(spi_rd_data),
+        .spi_data_o(spi_wr_data),
+        .spi_rw_no(spi_rw_n),
+        .spi_valid_o(spi_valid),
+        .spi_ready_i(spi_ready_in),
+        .spi_ready_o(spi_ready_out)
+    );
+
     logic [7:0]   debug_o;
     wire          bus_rw_nio;
     wire  [16:0]  bus_addr_io;
     wire   [7:0]  bus_data_io;
     logic [11:10] ram_addr_o;
-    logic spi_sclk_i;
-    logic spi_cs_ni;
-    logic spi_rx_i;
-    wire  spi_tx_io;
     logic spi_pending_ni;
-    logic spi_done_no;
+    logic spi_ready_no;
     logic clk_cpu_o;
     logic ram_oe_no;
     logic ram_we_no;
@@ -57,12 +82,11 @@ module tb();
         .ram_addr_o(ram_addr_o),
 
         // SPI
-        .spi_sclk_i(spi_sclk_i),
-        .spi_cs_ni(spi_cs_ni),
-        .spi_rx_i(spi_rx_i),
-        .spi_tx_io(spi_tx_io),
-        .spi_pending_ni(spi_pending_ni),
-        .spi_done_no(spi_done_no),
+        .spi_sclk_i(spi_sclk),
+        .spi_cs_ni(spi_cs_n),
+        .spi_rx_i(spi_rx),
+        .spi_tx_io(spi_tx),
+        .spi_ready_no(spi_ready_no),
 
         // Timing
         .clk_16_i(clk_16_i),
@@ -103,6 +127,8 @@ module tb();
         $display("[%t] Test Begin", $time);
 
         reset();
+
+        driver.read_at(17'h0e880);
 
         $display("[%t] Test Complete", $time);
         $finish;
