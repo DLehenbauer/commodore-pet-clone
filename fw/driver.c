@@ -14,22 +14,13 @@
 
 #include "driver.h"
 
-#define CPU_RESB_PIN 28
-#define READY_B_PIN 7
-
 #define SPI_INSTANCE spi0
 #define SPI_SCK_PIN 2
 #define SPI_TX_PIN 3
 #define SPI_RX_PIN 4
 // #define SPI_CSN_PIN 5
 #define SPI_CSN_PIN 6
-
-void cpu_reset() {
-    gpio_set_dir(CPU_RESB_PIN, GPIO_OUT);
-    gpio_put(CPU_RESB_PIN, 0);
-    sleep_ms(1);
-    gpio_set_dir(CPU_RESB_PIN, GPIO_IN);
-}
+#define SPI_READY_B_PIN 7
 
 #define SPI_CMD_READ_AT    0xC0
 #define SPI_CMD_READ_NEXT  0x80
@@ -37,8 +28,6 @@ void cpu_reset() {
 #define SPI_CMD_WRITE_NEXT 0x00
 
 void driver_init() {
-    gpio_set_dir(CPU_RESB_PIN, GPIO_IN);
-
     // To save an IO pin, we use CS_N to frame multibyte commands.  This requires us to
     // drive CS_N from software since RP2040's hardware CS_N deasserts between bytes.
     //
@@ -50,8 +39,8 @@ void driver_init() {
     gpio_put(SPI_CSN_PIN, 1);
     sleep_ms(1);
     
-    gpio_init(READY_B_PIN);
-    gpio_set_dir(READY_B_PIN, GPIO_IN);
+    gpio_init(SPI_READY_B_PIN);
+    gpio_set_dir(SPI_READY_B_PIN, GPIO_IN);
 
     spi_init(SPI_INSTANCE, /* 8 MHz */ 8 * 1000 * 1000);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
@@ -60,15 +49,14 @@ void driver_init() {
 }
 
 void cmd_start() {
-    while (!gpio_get(READY_B_PIN));
+    while (!gpio_get(SPI_READY_B_PIN));
     gpio_put(SPI_CSN_PIN, 0);
 }
 
 void cmd_end() {
-    while (gpio_get(READY_B_PIN));
+    while (gpio_get(SPI_READY_B_PIN));
     gpio_put(SPI_CSN_PIN, 1);
 }
-
 
 uint8_t spi_read_at(uint32_t addr) {
     const uint8_t cmd = SPI_CMD_READ_AT | addr >> 16;
