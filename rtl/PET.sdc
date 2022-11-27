@@ -41,7 +41,7 @@ create_generated_clock -name "cpu_en"   -source $clk_8n -edges { 13 15 29 } $cpu
 create_generated_clock -name "clk_8p"   -source $clk_16 -edges {  1  3  5 } $clk_8p
 create_generated_clock -name "clk_cpu"  -source $clk_8p -edges { 15 16 31 } $clk_cpu
 
-create_clock -name "spi_sclk" -period 8MHz $spi_sclk
+create_clock -name "spi_sclk" -period 4MHz $spi_sclk
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks

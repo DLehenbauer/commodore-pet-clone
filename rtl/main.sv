@@ -70,7 +70,7 @@ module main (
     logic        spi_ready_in;
 
     spi_bridge spi_bridge(
-        .clk_sys_i(clk_16_i),
+        .clk_sys_i(clk_8),
         .spi_sclk_i(spi_sclk_i),
         .spi_cs_ni(spi_cs_ni),
         .spi_rx_i(spi_rx_i),
