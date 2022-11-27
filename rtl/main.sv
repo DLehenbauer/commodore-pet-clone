@@ -113,9 +113,6 @@ module main (
     
     logic clk8;
     logic io_read;
-    logic video_select;
-    logic video_ram_clk;
-    logic video_rom_clk;
 
     // Timing
     timing timing(
@@ -127,15 +124,18 @@ module main (
         .cpu_write(cpu_write),
         .io_select(io_select),
         .io_read(io_read),
-        .video_select(video_select),
-        .video_ram_strobe(video_ram_clk),
-        .video_rom_strobe(video_rom_clk),
         .pi_rw_b(spi_rw_n),
         .pi_select(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
         .pi_pending(spi_valid),
         .pi_done(spi_ready_in)
+    );
+
+    video1 video1(
+        .clk_16_i(clk_16_i),
+        .h_sync_o(h_sync_o),
+        .v_sync_o(v_sync_o)
     );
     
     pi_ctl ctl(
@@ -148,26 +148,10 @@ module main (
         .cpu_ready_o(cpu_ready_o)
     );
 
-    logic [7:0] crtc_data_out;
-    logic crtc_data_out_enable;
-
-    crtc ctrc(
-        .reset(cpu_res_ai),
-        .crtc_select(crtc_enable),
-        .bus_addr(bus_addr_io),
-        .bus_data_in(bus_data_io),
-        .cpu_write(cpu_write),
-        .pi_addr(spi_addr),
-        .pi_read(pi_read),
-        .crtc_data_out(crtc_data_out),
-        .crtc_data_out_enable(crtc_data_out_enable)
-    );
-    
     logic ram_enable;
     logic pia1_enable_before_kbd;
     logic pia2_enable;
     logic via_enable;
-    logic crtc_enable;
     logic io_enable_before_kbd;
 
     logic is_readonly;
@@ -180,7 +164,6 @@ module main (
         .pia1_enable(pia1_enable_before_kbd),
         .pia2_enable(pia2_enable),
         .via_enable(via_enable),
-        .crtc_enable(crtc_enable),
         .is_readonly(is_readonly),
         .is_mirrored(is_mirrored)
     );
@@ -205,22 +188,7 @@ module main (
 
     wire pia1_enable = pia1_enable_before_kbd && !kbd_enable;
     wire io_enable = io_enable_before_kbd && !kbd_enable;
-    
-    logic [11:0] video_addr;
-
-    video v(
-        .clk8_i(clk8),
-        .cclk_i(video_select),
-        .reset_i(cpu_res_ai),
-        .bus_addr_o(video_addr),
-        .bus_data_i(bus_data_io),
-        .video_ram_clk_i(video_ram_clk),
-        .video_rom_clk_i(video_rom_clk),
-        .video_o(video_o),
-        .h_sync_o(h_sync_o),
-        .v_sync_o(v_sync_o)
-    );
-    
+       
     // Address Decoding
     assign cpu_en_no   = cpu_enable  && cpu_ready_o;
     wire   pia1_cs     = pia1_enable && cpu_en_no;
@@ -233,8 +201,8 @@ module main (
     assign via_cs2_no  = !via_cs;
     assign io_oe_no    = !io_oe;
 
-    wire ram_ce = ram_enable || (!cpu_enable && !crtc_data_out_enable);
-    wire ram_oe =  pi_read   || video_select || (cpu_read  && cpu_en_no);
+    wire ram_ce = ram_enable || !cpu_enable;
+    wire ram_oe =  pi_read   || (cpu_read  && cpu_en_no);
     wire ram_we = pi_write   || (cpu_write && cpu_en_no && !is_readonly);
 
     assign ram_ce_no = !ram_ce;
@@ -243,7 +211,6 @@ module main (
 
     always @(negedge pi_read)
         if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
-        else if (crtc_data_out_enable) spi_rd_data <= crtc_data_out;
         else spi_rd_data <= bus_data_io;
     
     assign bus_rw_nio = cpu_enable
@@ -255,17 +222,13 @@ module main (
     assign ram_addr_o[11:10] =
         spi_enable
             ? spi_addr[11:10]            // Give RPi access to full RAM
-            : video_select
-                ? video_addr[11:10]
-                : is_mirrored
-                    ? 2'b00             // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
-                    : bus_addr_io[11:10];
+            : is_mirrored
+                ? 2'b00                  // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
+                : bus_addr_io[11:10];
     
     assign bus_addr_io = spi_enable
         ? spi_addr                      // RPi is reading/writing, and therefore driving addr
-        : video_select
-            ? { 5'b01000, video_addr }
-            : { 1'b0, 16'bZ };          // CPU is reading/writing, and therefore driving addr
+        : { 1'b0, 16'bZ };              // CPU is reading/writing, and therefore driving addr
 
     assign bus_data_io =
         spi_enable & !spi_rw_n
