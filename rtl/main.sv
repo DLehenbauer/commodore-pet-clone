@@ -85,20 +85,28 @@ module main (
     );
 
     logic clk_8;
-    logic spi_enable;
+    logic spi_en;
+    logic cpu_sel;
+    logic cpu_en;
 
     timing2 timing2(
         .clk_16_i(clk_16_i),
         .clk_8_o(clk_8),
         .clk_cpu_o(clk_cpu_o),
-        .spi_enable_o(spi_enable)
+        .spi_enable_o(spi_en),
+        .cpu_select_o(cpu_sel),
+        .cpu_enable_o(cpu_en)
     );
+
+    wire spi_wr_en = spi_en  && spi_valid && !spi_rw_n;
+    wire cpu_rd_en = cpu_sel &&  bus_rw_n;
+    wire cpu_wr_en = cpu_en  && !bus_rw_n;
     
-    assign debug_o[0] = spi_sclk_i;
-    assign debug_o[1] = spi_cs_ni;
-    assign debug_o[2] = spi_rx_i;
-    assign debug_o[3] = spi_tx_io;
-    assign debug_o[4] = spi_sclk_i;
+    assign debug_o[0] = clk_8;
+    assign debug_o[1] = spi_en;
+    assign debug_o[2] = cpu_sel;
+    assign debug_o[3] = cpu_en;
+    assign debug_o[4] = clk8;
     assign debug_o[5] = spi_cs_ni;
     assign debug_o[6] = spi_rx_i;
     assign debug_o[7] = spi_tx_io;
@@ -139,11 +147,10 @@ module main (
     );
     
     pi_ctl ctl(
-        .clk_i(clk8),
-        .spi_rw_n(spi_rw_n),
+        .clk_bus_i(clk_8),
         .spi_addr_i(spi_addr),
         .spi_data_i(spi_wr_data),
-        .spi_enable_i(spi_enable & spi_valid),
+        .spi_wr_en_i(spi_wr_en),
         .cpu_res_no(cpu_res_nao),
         .cpu_ready_o(cpu_ready_o)
     );
@@ -220,18 +227,18 @@ module main (
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr_o[11:10] =
-        spi_enable
+        spi_en
             ? spi_addr[11:10]            // Give RPi access to full RAM
             : is_mirrored
                 ? 2'b00                  // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
                 : bus_addr_io[11:10];
     
-    assign bus_addr_io = spi_enable
+    assign bus_addr_io = spi_en
         ? spi_addr                      // RPi is reading/writing, and therefore driving addr
         : { 1'b0, 16'bZ };              // CPU is reading/writing, and therefore driving addr
 
     assign bus_data_io =
-        spi_enable & !spi_rw_n
+        spi_wr_en
             ? spi_wr_data               // RPi is writing, and therefore driving data
             : kbd_enable                // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
                 ? kbd_data_out          // Return USB keyboard state for PIA 1 Port B ($E812)
