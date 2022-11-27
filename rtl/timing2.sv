@@ -16,9 +16,12 @@ module timing2(
     input  logic clk_16_i,
     output logic clk_8_o = '0,
     output logic clk_cpu_o,
+    input  logic spi_valid_i,
     output logic spi_enable_o,
+    output logic spi_ready_o,
     output logic video_ram_enable_o,
     output logic video_rom_enable_o,
+    input  logic cpu_valid_i,
     output logic cpu_select_o,
     output logic cpu_enable_o
 );
@@ -69,14 +72,22 @@ module timing2(
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
     //    enable7   _______________________________________________________/‾‾‾‾‾‾‾\____
 
-    logic [7:0] enable = 8'h01;
-    always_ff @(posedge clk_8n) enable <= { enable[6:0], enable[7] };
+    logic [7:0] enable_d, enable = 8'h01;
 
-    assign spi_enable_o        = enable[0];
+    always_comb begin
+        enable_d = { enable[6:0], enable[7] };
+    end
+    
+    always_ff @(posedge clk_8n) begin
+        spi_enable_o <= spi_valid_i  && enable_d[0];
+        spi_ready_o  <= spi_enable_o;
+        cpu_select_o <= cpu_valid_i  && (enable_d[6] || enable_d[7]);
+        cpu_enable_o <= cpu_select_o && enable_d[7];
+        enable       <= enable_d;
+    end
+
     assign video_ram_enable_o  = enable[1];
     assign video_rom_enable_o  = enable[2];
-    assign cpu_select_o        = enable[6] | enable[7];
-    assign cpu_enable_o        = enable[7];
     
     // Generate 'clk_cpu' for the 6502:
     //
