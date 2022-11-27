@@ -87,7 +87,6 @@ module main (
     logic clk_8;
     logic spi_en;
     logic cpu_sel;
-    logic cpu_en;
 
     timing2 timing2(
         .clk_16_i(clk_16_i),
@@ -98,31 +97,22 @@ module main (
         .spi_ready_o(spi_ready_in),
         .cpu_valid_i(cpu_ready_o),
         .cpu_select_o(cpu_sel),
-        .cpu_enable_o(cpu_en)
+        .cpu_enable_o(cpu_en_o)
     );
 
-    wire spi_rd_en = spi_en  &&  spi_rw_n;
-    wire spi_wr_en = spi_en  && !spi_rw_n;
-    wire cpu_rd_en = cpu_sel &&  bus_rw_nio;
-    wire cpu_wr_en = cpu_en  && !bus_rw_nio;
+    wire spi_rd_en = spi_en &&  spi_rw_n;
+    wire spi_wr_en = spi_en && !spi_rw_n;
+    wire cpu_rd_en = cpu_en_o &&  bus_rw_nio;
+    wire cpu_wr_en = cpu_en_o && !bus_rw_nio;
     
     assign debug_o[0] = clk_8;
     assign debug_o[1] = spi_en;
     assign debug_o[2] = cpu_sel;
-    assign debug_o[3] = cpu_en;
+    assign debug_o[3] = cpu_en_o;
     assign debug_o[4] = spi_sclk_i;
     assign debug_o[5] = spi_cs_ni;
     assign debug_o[6] = spi_rx_i;
     assign debug_o[7] = spi_tx_io;
-
-    logic cpu_write;
-
-    // Timing
-    timing timing(
-        .clk(clk_16_i),
-        .bus_rw_b(bus_rw_nio),
-        .cpu_write(cpu_write)
-    );
 
     video1 video1(
         .clk_16_i(clk_16_i),
@@ -181,7 +171,6 @@ module main (
     wire io_enable = io_enable_before_kbd && !kbd_enable;
        
     // Address Decoding
-    assign cpu_en_o    = cpu_en      && cpu_ready_o;
     wire   pia1_cs     = pia1_enable && cpu_en_o;
     wire   pia2_cs     = pia2_enable && cpu_en_o;
     wire   via_cs      = via_enable  && cpu_en_o;
@@ -192,9 +181,9 @@ module main (
     assign via_cs2_no  = !via_cs;
     assign io_oe_no    = !io_oe;
 
-    wire ram_ce = ram_enable || !cpu_en;
-    wire ram_oe =  spi_rd_en || (cpu_rd_en  && cpu_en_o);
-    wire ram_we =  spi_wr_en || (cpu_write && cpu_en_o && !is_readonly);
+    wire ram_ce = ram_enable || !cpu_sel;
+    wire ram_oe =  spi_rd_en || cpu_rd_en;
+    wire ram_we =  spi_wr_en || (cpu_wr_en && clk_cpu_o && !is_readonly);
 
     assign ram_ce_no = !ram_ce;
     assign ram_oe_no = !ram_oe;
@@ -202,12 +191,12 @@ module main (
 
     always @(negedge clk_8) begin
         if (spi_rd_en) begin
-        if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
-        else spi_rd_data <= bus_data_io;
+            if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
+            else spi_rd_data <= bus_data_io;
         end
     end
     
-    assign bus_rw_nio = cpu_en
+    assign bus_rw_nio = cpu_en_o
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
         : !spi_wr_en;           // RPi is reading/writing and therefore driving rw_b
     

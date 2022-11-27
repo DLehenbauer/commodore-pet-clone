@@ -43,19 +43,6 @@ create_generated_clock -name "clk_cpu"  -source $clk_8p -edges { 15 16 31 } $clk
 
 create_clock -name "spi_sclk" -period 8MHz $spi_sclk
 
-# Old clock constraints
-set cpu_strobe       [get_registers { main:main|timing:timing|bus:bus|state[7] }]
-
-create_generated_clock -name "cpu_strobe" \
-    -source $clk_16 \
-    -edges {29 31 61} \
-    $cpu_strobe
-    
-# create_generated_clock -name "pi_done" \
-#     -source $pi_select \
-#     -invert \
-#     $pi_done
-
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
 
