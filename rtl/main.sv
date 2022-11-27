@@ -108,7 +108,7 @@ module main (
     assign debug_o[1] = spi_en;
     assign debug_o[2] = cpu_sel;
     assign debug_o[3] = cpu_en;
-    assign debug_o[4] = clk8;
+    assign debug_o[4] = spi_sclk_i;
     assign debug_o[5] = spi_cs_ni;
     assign debug_o[6] = spi_rx_i;
     assign debug_o[7] = spi_tx_io;
@@ -116,26 +116,17 @@ module main (
     logic cpu_enable;
     logic cpu_read;
     logic cpu_write;
-    logic io_select;
-    logic pi_select;
     logic pi_read;
     logic pi_write;
-    
-    logic clk8;
-    logic io_read;
 
     // Timing
     timing timing(
         .clk(clk_16_i),
-        .clk8(clk8),
         .bus_rw_b(bus_rw_nio),
         .cpu_enable(cpu_enable),
         .cpu_read(cpu_read),
         .cpu_write(cpu_write),
-        .io_select(io_select),
-        .io_read(io_read),
         .pi_rw_b(spi_rw_n),
-        .pi_select(pi_select),
         .pi_read(pi_read),
         .pi_write(pi_write),
         .pi_pending(spi_valid),
