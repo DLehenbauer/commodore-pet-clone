@@ -100,7 +100,7 @@ set_location_assignment PIN_79 -to ram_ce_no
 set_location_assignment PIN_80 -to ram_addr_o[10]
 set_location_assignment PIN_81 -to ram_addr_o[11]
 set_location_assignment PIN_86 -to cpu_irq_nio
-set_location_assignment PIN_87 -to cpu_en_no
+set_location_assignment PIN_87 -to cpu_en_o
 set_location_assignment PIN_89 -to diag_i
 set_location_assignment PIN_90 -to cb2_i
 set_location_assignment PIN_91 -to gfx_i

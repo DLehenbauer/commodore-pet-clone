@@ -44,8 +44,8 @@ module main (
     input  logic cpu_sync_i,
 
     // Address Decoding
-    output logic cpu_en_no,             // CPU 36 : 1 = High impedance,  0 = enabled (be)
-    output logic ram_ce_no,             // RAM 22 : 0 = enabled (ce_b),  1 = High impedance
+    output logic cpu_en_o,              // CPU 36 (BE)   : 0 = High impedance, 1 = Enabled
+    output logic ram_ce_no,             // RAM 22 (CE_B) : 0 = Enabled, 1 = High impedance
     output logic pia1_cs2_no,
     output logic pia2_cs2_no,
     output logic via_cs2_no,
@@ -199,11 +199,11 @@ module main (
     wire io_enable = io_enable_before_kbd && !kbd_enable;
        
     // Address Decoding
-    assign cpu_en_no   = cpu_enable  && cpu_ready_o;
-    wire   pia1_cs     = pia1_enable && cpu_en_no;
-    wire   pia2_cs     = pia2_enable && cpu_en_no;
-    wire   via_cs      = via_enable  && cpu_en_no;
-    wire   io_oe       = io_enable   && cpu_en_no;
+    assign cpu_en_o    = cpu_enable  && cpu_ready_o;
+    wire   pia1_cs     = pia1_enable && cpu_en_o;
+    wire   pia2_cs     = pia2_enable && cpu_en_o;
+    wire   via_cs      = via_enable  && cpu_en_o;
+    wire   io_oe       = io_enable   && cpu_en_o;
 
     assign pia1_cs2_no = !pia1_cs;
     assign pia2_cs2_no = !pia2_cs;
@@ -211,8 +211,8 @@ module main (
     assign io_oe_no    = !io_oe;
 
     wire ram_ce = ram_enable || !cpu_enable;
-    wire ram_oe =  pi_read   || (cpu_read  && cpu_en_no);
-    wire ram_we = pi_write   || (cpu_write && cpu_en_no && !is_readonly);
+    wire ram_oe =  pi_read   || (cpu_read  && cpu_en_o);
+    wire ram_we = pi_write   || (cpu_write && cpu_en_o && !is_readonly);
 
     assign ram_ce_no = !ram_ce;
     assign ram_oe_no = !ram_oe;
