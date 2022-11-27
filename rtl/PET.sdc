@@ -44,13 +44,7 @@ create_generated_clock -name "clk_cpu"  -source $clk_8p -edges { 15 16 31 } $clk
 create_clock -name "spi_sclk" -period 8MHz $spi_sclk
 
 # Old clock constraints
-set cpu_select       [get_registers { main:main|timing:timing|bus:bus|state[5] }]
 set cpu_strobe       [get_registers { main:main|timing:timing|bus:bus|state[7] }]
-
-create_generated_clock -name "cpu_select" \
-    -source $clk_16 \
-    -edges {25 33 57} \
-    $cpu_select
 
 create_generated_clock -name "cpu_strobe" \
     -source $clk_16 \

@@ -115,16 +115,12 @@ module main (
     assign debug_o[6] = spi_rx_i;
     assign debug_o[7] = spi_tx_io;
 
-    logic cpu_enable;
-    logic cpu_read;
     logic cpu_write;
 
     // Timing
     timing timing(
         .clk(clk_16_i),
         .bus_rw_b(bus_rw_nio),
-        .cpu_enable(cpu_enable),
-        .cpu_read(cpu_read),
         .cpu_write(cpu_write)
     );
 
@@ -185,7 +181,7 @@ module main (
     wire io_enable = io_enable_before_kbd && !kbd_enable;
        
     // Address Decoding
-    assign cpu_en_o    = cpu_enable  && cpu_ready_o;
+    assign cpu_en_o    = cpu_en      && cpu_ready_o;
     wire   pia1_cs     = pia1_enable && cpu_en_o;
     wire   pia2_cs     = pia2_enable && cpu_en_o;
     wire   via_cs      = via_enable  && cpu_en_o;
@@ -196,8 +192,8 @@ module main (
     assign via_cs2_no  = !via_cs;
     assign io_oe_no    = !io_oe;
 
-    wire ram_ce = ram_enable || !cpu_enable;
-    wire ram_oe =  spi_rd_en || (cpu_read  && cpu_en_o);
+    wire ram_ce = ram_enable || !cpu_en;
+    wire ram_oe =  spi_rd_en || (cpu_rd_en  && cpu_en_o);
     wire ram_we =  spi_wr_en || (cpu_write && cpu_en_o && !is_readonly);
 
     assign ram_ce_no = !ram_ce;
@@ -208,7 +204,7 @@ module main (
         if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
         else spi_rd_data <= bus_data_io;
     
-    assign bus_rw_nio = cpu_enable
+    assign bus_rw_nio = cpu_en
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
         : !spi_wr_en;           // RPi is reading/writing and therefore driving rw_b
     
