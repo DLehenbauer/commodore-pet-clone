@@ -16,6 +16,7 @@ module timing2(
     input  logic clk_16_i,
     output logic clk_8_o = '0,
     output logic clk_cpu_o,
+    input  logic spi_valid_i,
     output logic spi_enable_o,
     output logic video_ram_enable_o,
     output logic video_rom_enable_o,
@@ -70,9 +71,12 @@ module timing2(
     //    enable7   _______________________________________________________/‾‾‾‾‾‾‾\____
 
     logic [7:0] enable = 8'h01;
-    always_ff @(posedge clk_8n) enable <= { enable[6:0], enable[7] };
+    
+    always_ff @(posedge clk_8n) begin
+        spi_enable_o <= enable[7] && spi_valid_i;
+        enable       <= { enable[6:0], enable[7] };
+    end
 
-    assign spi_enable_o        = enable[0];
     assign video_ram_enable_o  = enable[1];
     assign video_rom_enable_o  = enable[2];
     assign cpu_select_o        = enable[6] | enable[7];

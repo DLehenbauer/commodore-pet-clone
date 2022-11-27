@@ -93,14 +93,15 @@ module main (
         .clk_16_i(clk_16_i),
         .clk_8_o(clk_8),
         .clk_cpu_o(clk_cpu_o),
+        .spi_valid_i(spi_valid),
         .spi_enable_o(spi_en),
         .cpu_select_o(cpu_sel),
         .cpu_enable_o(cpu_en)
     );
 
-    wire spi_wr_en = spi_en  && spi_valid && !spi_rw_n;
-    wire cpu_rd_en = cpu_sel &&  bus_rw_n;
-    wire cpu_wr_en = cpu_en  && !bus_rw_n;
+    wire spi_wr_en = spi_en  && !spi_rw_n;
+    wire cpu_rd_en = cpu_sel &&  bus_rw_nio;
+    wire cpu_wr_en = cpu_en  && !bus_rw_nio;
     
     assign debug_o[0] = clk_8;
     assign debug_o[1] = spi_en;
@@ -179,18 +180,18 @@ module main (
     logic kbd_enable;
     
     keyboard keyboard(
-        .reset(cpu_res_ai),
-        .pi_addr(spi_addr),
-        .pi_data(spi_wr_data),
-        .pi_write(pi_write),
-        .bus_addr(bus_addr_io[1:0]),
-        .bus_data_in(bus_data_io),
-        .bus_rw_b(bus_rw_nio),
-        .pia1_enabled_in(pia1_enable_before_kbd),
-        .io_read(io_read),
-        .cpu_write(cpu_write),
-        .kbd_data_out(kbd_data_out),
-        .kbd_enable(kbd_enable)
+        .clk_bus_i(clk_8),
+        .reset_i(cpu_res_ai),
+        .spi_addr_i(spi_addr),
+        .spi_data_i(spi_wr_data),
+        .spi_wr_en_i(spi_wr_en),
+        .bus_addr_i(bus_addr_io[1:0]),
+        .bus_data_i(bus_data_io),
+        .pia1_en_i(pia1_enable_before_kbd),
+        .cpu_rd_en_i(cpu_rd_en),
+        .cpu_wr_en_i(cpu_wr_en),
+        .kbd_data_o(kbd_data_out),
+        .kbd_en_o(kbd_enable)
     );
 
     wire pia1_enable = pia1_enable_before_kbd && !kbd_enable;

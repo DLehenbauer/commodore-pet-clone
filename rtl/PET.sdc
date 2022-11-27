@@ -22,7 +22,7 @@ set enable_3         [get_registers { main:main|timing2:timing2|enable[3] }]
 set enable_4         [get_registers { main:main|timing2:timing2|enable[4] }]
 set enable_5         [get_registers { main:main|timing2:timing2|enable[5] }]
 set enable_6         [get_registers { main:main|timing2:timing2|enable[6] }]
-set enable_7         [get_registers { main:main|timing2:timing2|enable[7] }]
+set cpu_en           [get_registers { main:main|timing2:timing2|enable[7] }]
 
 set clk_cpu  [get_ports { clk_cpu_o }]
 set spi_sclk [get_ports { spi_sclk_i }]
@@ -36,7 +36,7 @@ create_generated_clock -name "enable_3" -source $clk_8n -edges {  5  7 21 } $ena
 create_generated_clock -name "enable_4" -source $clk_8n -edges {  7  9 23 } $enable_4
 create_generated_clock -name "enable_5" -source $clk_8n -edges {  9 11 25 } $enable_5
 create_generated_clock -name "enable_6" -source $clk_8n -edges { 11 13 27 } $enable_6
-create_generated_clock -name "enable_7" -source $clk_8n -edges { 13 15 29 } $enable_7
+create_generated_clock -name "cpu_en"   -source $clk_8n -edges { 13 15 29 } $cpu_en
 
 create_generated_clock -name "clk_8p"   -source $clk_16 -edges {  1  3  5 } $clk_8p
 create_generated_clock -name "clk_cpu"  -source $clk_8p -edges { 15 16 31 } $clk_cpu
@@ -48,7 +48,6 @@ set clk_8            [get_registers { main:main|timing:timing|bus:bus|count[0] }
 set pi_select        [get_registers { main:main|timing:timing|bus:bus|state[0] }]
 set pi_strobe        [get_registers { main:main|timing:timing|bus:bus|state[1] }]
 set cpu_select       [get_registers { main:main|timing:timing|bus:bus|state[5] }]
-set io_select        [get_registers { main:main|timing:timing|bus:bus|state[6] }]
 set cpu_strobe       [get_registers { main:main|timing:timing|bus:bus|state[7] }]
 set pi_done          [get_registers { main:main|timing:timing|sync:pi_sync|done }]
 
@@ -71,11 +70,6 @@ create_generated_clock -name "cpu_select" \
     -source $clk_16 \
     -edges {25 33 57} \
     $cpu_select
-
-create_generated_clock -name "io_select" \
-    -source $clk_16 \
-    -edges {27 33 59} \
-    $io_select
 
 create_generated_clock -name "cpu_strobe" \
     -source $clk_16 \
@@ -114,8 +108,8 @@ set_output_delay -max -clock { clk_cpu } -8 [get_ports { via_cs2_no pia2_cs2_no 
 set_output_delay -add_delay -min -clock { pi_select } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
 set_output_delay -add_delay -max -clock { pi_select } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
 
-set_output_delay -add_delay -min -clock { io_select } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
-set_output_delay -add_delay -max -clock { io_select } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
+set_output_delay -add_delay -min -clock { cpu_en } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
+set_output_delay -add_delay -max -clock { cpu_en } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
 
 # RPi
 

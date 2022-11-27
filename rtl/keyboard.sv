@@ -13,28 +13,30 @@
  */
  
  module keyboard(
-    input  logic reset,
+    input  logic clk_bus_i,
+    input  logic reset_i,
  
-    input  logic [16:0] pi_addr,
-    input  logic  [7:0] pi_data,
-    input  logic        pi_write,
+    input  logic [16:0] spi_addr_i,
+    input  logic  [7:0] spi_data_i,
+    input  logic        spi_wr_en_i,
 
-    input  logic [1:0] bus_addr,
-    input  logic [7:0] bus_data_in,
-    input  logic bus_rw_b,
+    input  logic [1:0] bus_addr_i,
+    input  logic [7:0] bus_data_i,
 
-    input  logic pia1_enabled_in,
-    input  logic io_read,
-    input  logic cpu_write,
+    input  logic pia1_en_i,
+    input  logic cpu_rd_en_i,
+    input  logic cpu_wr_en_i,
 
-    output logic [7:0] kbd_data_out = 8'hff,
-    output logic kbd_enable
+    output logic [7:0] kbd_data_o = 8'hff,
+    output logic kbd_en_o
 );
     logic [7:0] kbd_matrix [9:0];   
     logic [3:0] current_kbd_row = '0;
     
-    always @(negedge pi_write or posedge reset) begin
-        if (reset) begin
+    wire spi_wr_matrix = spi_wr_en_i && 17'hE800 <= spi_addr_i && spi_addr_i <= 17'hE809;
+    
+    always @(posedge clk_bus_i or posedge reset_i) begin
+        if (reset_i) begin
             kbd_matrix[0] = 8'hff;
             kbd_matrix[1] = 8'hff;
             kbd_matrix[2] = 8'hff;
@@ -46,8 +48,8 @@
             kbd_matrix[8] = 8'hff;
             kbd_matrix[9] = 8'hff;
         end else begin
-            if (17'hE800 <= pi_addr && pi_addr <= 17'hE809) begin
-                kbd_matrix[pi_addr[3:0]] <= pi_data;
+            if (spi_wr_matrix) begin
+                kbd_matrix[spi_addr_i[3:0]] <= spi_data_i;
             end
         end
     end
@@ -57,20 +59,20 @@
                PORTB = 2'd2,
                CRB   = 2'd3;
 
-    wire writing_port_a = cpu_write && pia1_enabled_in && bus_addr == PORTA;
+    wire writing_port_a = cpu_wr_en_i && pia1_en_i && bus_addr_i == PORTA;
 
     // Save the selected keyboard row when the CPU writes to port A ($E810)
-    always @(negedge writing_port_a) begin
-        current_kbd_row = bus_data_in[3:0];
+    always @(negedge clk_bus_i) begin
+        if (writing_port_a) current_kbd_row = bus_data_i[3:0];
     end
 
-    wire reading_port_b = io_read && pia1_enabled_in && bus_addr == PORTB;
+    wire reading_port_b = cpu_rd_en_i && pia1_en_i && bus_addr_i == PORTB;
 
-    always @(posedge reading_port_b) begin
-        kbd_data_out <= kbd_matrix[current_kbd_row];
+    always @(posedge clk_bus_i) begin
+        if (reading_port_b) kbd_data_o <= kbd_matrix[current_kbd_row];
     end
 
     // Intercept reads to port B ($E812) only when the cached key matrix has a pressed key.
     // Otherwise, reads should go to PIA1 so that the standard PET keyboard also works.
-    assign kbd_enable = reading_port_b && kbd_data_out != 8'hff;
+    assign kbd_en_o = reading_port_b && kbd_data_o != 8'hff;
 endmodule
