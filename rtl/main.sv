@@ -200,9 +200,12 @@ module main (
     assign ram_oe_no = !ram_oe;
     assign ram_we_no = !ram_we;
 
-    always @(negedge spi_rd_en)
+    always @(negedge clk_8) begin
+        if (spi_rd_en) begin
         if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
         else spi_rd_data <= bus_data_io;
+        end
+    end
     
     assign bus_rw_nio = cpu_en
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
