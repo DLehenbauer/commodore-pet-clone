@@ -95,6 +95,7 @@ module main (
         .clk_cpu_o(clk_cpu_o),
         .spi_valid_i(spi_valid),
         .spi_enable_o(spi_en),
+        .spi_ready_o(spi_ready_in),
         .cpu_valid_i(cpu_ready_o),
         .cpu_select_o(cpu_sel),
         .cpu_enable_o(cpu_en)
@@ -124,10 +125,7 @@ module main (
         .bus_rw_b(bus_rw_nio),
         .cpu_enable(cpu_enable),
         .cpu_read(cpu_read),
-        .cpu_write(cpu_write),
-        .pi_rw_b(spi_rw_n),
-        .pi_pending(spi_valid),
-        .pi_done(spi_ready_in)
+        .cpu_write(cpu_write)
     );
 
     video1 video1(

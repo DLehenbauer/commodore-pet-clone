@@ -18,6 +18,7 @@ module timing2(
     output logic clk_cpu_o,
     input  logic spi_valid_i,
     output logic spi_enable_o,
+    output logic spi_ready_o,
     output logic video_ram_enable_o,
     output logic video_rom_enable_o,
     input  logic cpu_valid_i,
@@ -79,6 +80,7 @@ module timing2(
     
     always_ff @(posedge clk_8n) begin
         spi_enable_o <= spi_valid_i  && enable_d[0];
+        spi_ready_o  <= spi_enable_o;
         cpu_select_o <= cpu_valid_i  && (enable_d[6] || enable_d[7]);
         cpu_enable_o <= cpu_select_o && enable_d[7];
         enable       <= enable_d;
