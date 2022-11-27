@@ -100,6 +100,7 @@ module main (
         .cpu_enable_o(cpu_en)
     );
 
+    wire spi_rd_en = spi_en  &&  spi_rw_n;
     wire spi_wr_en = spi_en  && !spi_rw_n;
     wire cpu_rd_en = cpu_sel &&  bus_rw_nio;
     wire cpu_wr_en = cpu_en  && !bus_rw_nio;
@@ -116,8 +117,6 @@ module main (
     logic cpu_enable;
     logic cpu_read;
     logic cpu_write;
-    logic pi_read;
-    logic pi_write;
 
     // Timing
     timing timing(
@@ -127,8 +126,6 @@ module main (
         .cpu_read(cpu_read),
         .cpu_write(cpu_write),
         .pi_rw_b(spi_rw_n),
-        .pi_read(pi_read),
-        .pi_write(pi_write),
         .pi_pending(spi_valid),
         .pi_done(spi_ready_in)
     );
@@ -202,20 +199,20 @@ module main (
     assign io_oe_no    = !io_oe;
 
     wire ram_ce = ram_enable || !cpu_enable;
-    wire ram_oe =  pi_read   || (cpu_read  && cpu_en_o);
-    wire ram_we = pi_write   || (cpu_write && cpu_en_o && !is_readonly);
+    wire ram_oe =  spi_rd_en || (cpu_read  && cpu_en_o);
+    wire ram_we =  spi_wr_en || (cpu_write && cpu_en_o && !is_readonly);
 
     assign ram_ce_no = !ram_ce;
     assign ram_oe_no = !ram_oe;
     assign ram_we_no = !ram_we;
 
-    always @(negedge pi_read)
+    always @(negedge spi_rd_en)
         if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
         else spi_rd_data <= bus_data_io;
     
     assign bus_rw_nio = cpu_enable
         ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
-        : !pi_write;            // RPi is reading/writing and therefore driving rw_b
+        : !spi_wr_en;           // RPi is reading/writing and therefore driving rw_b
     
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
