@@ -22,6 +22,7 @@
 #define SPI_CSN_PIN 6
 #define SPI_READY_B_PIN 7
 
+#define SPI_MHZ            4
 #define SPI_CMD_READ_AT    0xC0
 #define SPI_CMD_READ_NEXT  0x80
 #define SPI_CMD_WRITE_AT   0x40
@@ -42,7 +43,7 @@ void driver_init() {
     gpio_init(SPI_READY_B_PIN);
     gpio_set_dir(SPI_READY_B_PIN, GPIO_IN);
 
-    spi_init(SPI_INSTANCE, /* 8 MHz */ 8 * 1000 * 1000);
+    spi_init(SPI_INSTANCE, SPI_MHZ * 1000 * 1000);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
