@@ -15,6 +15,7 @@
 module timing2(
     input  logic clk_16_i,
     output logic clk_8_o = '0,
+    output logic clk_8n_o = 1'b1,
     output logic clk_cpu_o,
     input  logic spi_valid_i,
     output logic spi_enable_o,
@@ -46,9 +47,8 @@ module timing2(
     // Note: edge # = count * 2 + 1
     //       { rise edge #, fall edge #, rise edge # + 32 }
 
-    logic clk_8n = 1'b1;
-    always_ff @(posedge clk_16_i) clk_8_o <= ~clk_8_o;
-    always_ff @(negedge clk_16_i) clk_8n  <= ~clk_8_o;
+    always_ff @(posedge clk_16_i) clk_8_o  <= ~clk_8_o;
+    always_ff @(negedge clk_16_i) clk_8n_o <= ~clk_8_o;
 
     // We initialize enable 8'b00000001 and rotate left on each positive edge of 'clk_8n'.
     //
@@ -78,7 +78,7 @@ module timing2(
         enable_d = { enable[6:0], enable[7] };
     end
     
-    always_ff @(posedge clk_8n) begin
+    always_ff @(posedge clk_8n_o) begin
         spi_enable_o <= spi_valid_i  && enable_d[0];
         spi_ready_o  <= spi_enable_o;
         cpu_select_o <= cpu_valid_i  && (enable_d[6] || enable_d[7]);

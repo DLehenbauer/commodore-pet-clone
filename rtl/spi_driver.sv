@@ -263,6 +263,19 @@ module spi_bridge_driver (
         check(/* pending: */ 1'b1, /* rw_b: */ '0, addr_i, data_i);
     endtask
 
+    task write_next(
+        input [7:0] data_i
+    );
+        logic [7:0] c;
+        c = cmd(/* rw_n: */ '0, /* set_addr: */ 1'b0, 17'hxxxxx);
+
+        last_addr = last_addr + 1'b1;
+
+        send('{ c, data_i });
+
+        check(/* pending: */ 1'b1, /* rw_b: */ '0, last_addr, data_i);
+    endtask
+
     task read_at(
         input [16:0] addr_i
     );

@@ -14,7 +14,7 @@
 set clk_16           { pll|altpll_component|pll|clk[0] }
                                  
 set clk_8p           [get_registers { main:main|timing2:timing2|clk_8_o }]
-set clk_8n           [get_registers { main:main|timing2:timing2|clk_8n }]
+set clk_8n           [get_registers { main:main|timing2:timing2|clk_8n_o }]
 set spi_en           [get_registers { main:main|timing2:timing2|enable[0] }]
 set enable_1         [get_registers { main:main|timing2:timing2|enable[1] }]
 set enable_2         [get_registers { main:main|timing2:timing2|enable[2] }]
@@ -71,8 +71,3 @@ set_output_delay -add_delay -max -clock { spi_en } 7 [get_ports { ram_ce_no ram_
 
 set_output_delay -add_delay -min -clock { cpu_en } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
 set_output_delay -add_delay -max -clock { cpu_en } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
-
-# RPi
-
-# set_output_delay -min -clock { pi_done } -7 [get_ports { pi_data[*] }]
-# set_output_delay -max -clock { pi_done } -7 [get_ports { pi_data[*] }]

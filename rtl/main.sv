@@ -70,7 +70,7 @@ module main (
     logic        spi_ready_in;
 
     spi_bridge spi_bridge(
-        .clk_sys_i(clk_8),
+        .clk_sys_i(clk_8n),
         .spi_sclk_i(spi_sclk_i),
         .spi_cs_ni(spi_cs_ni),
         .spi_rx_i(spi_rx_i),
@@ -85,12 +85,14 @@ module main (
     );
 
     logic clk_8;
+    logic clk_8n;
     logic spi_en;
     logic cpu_sel;
 
     timing2 timing2(
         .clk_16_i(clk_16_i),
         .clk_8_o(clk_8),
+        .clk_8n_o(clk_8n),
         .clk_cpu_o(clk_cpu_o),
         .spi_valid_i(spi_valid),
         .spi_enable_o(spi_en),
@@ -191,7 +193,7 @@ module main (
 
     always @(negedge clk_8) begin
         if (spi_rd_en) begin
-            if (spi_addr == 16'he80e) spi_rd_data <= { 7'h0, gfx_i };
+            if (spi_addr == 17'h0e80f) spi_rd_data <= { 7'h0, gfx_i };
             else spi_rd_data <= bus_data_io;
         end
     end
