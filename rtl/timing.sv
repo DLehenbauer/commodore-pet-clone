@@ -12,60 +12,92 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-module timing(
-    input clk,
-    output clk8,
-    output phi2,
-    input  bus_rw_b,
-    output cpu_enable,
-    output cpu_read,
-    output cpu_write,
-    output io_select,
-    output io_read,
-    output video_select,
-    output video_ram_strobe,
-    output video_rom_strobe,
-    input  pi_rw_b,
-    output pi_select,
-    output pi_read,
-    output pi_write,
-    input  pi_pending,
-    output pi_done
+module timing2(
+    input  logic clk_16_i,
+    output logic clk_8_o = '0,
+    output logic clk_8n_o = 1'b1,
+    output logic clk_cpu_o,
+    input  logic spi_valid_i,
+    output logic spi_enable_o,
+    output logic spi_ready_o,
+    output logic video_ram_enable_o,
+    output logic video_rom_enable_o,
+    input  logic cpu_valid_i,
+    output logic cpu_select_o,
+    output logic cpu_enable_o
 );
-    wire pi_enable;
+    // Generate two 8 MHz clocks that are offset by 270 degrees:
+    //
+    //   'clk_8n' rotates ownership of the bus in round robin fashion.
+    //   'clk_8p' is the bus clock.
+    //
+    // Note that 'clk_8p' pulses are centered between enable transitions, creating ~31ns
+    // of setup/hold time.
+    //
+    //               1 . 3 . 5 . 7 . 9 .11 .13 .15 .17 .19 .21 .23 .25 .27 .29 .31 . 1 .
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    //     clk_16   _/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    //     clk_8n   ‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    //     enable   ​̅_​̅_​̅_​0̅​̅_​̅_​̅_X​_​̅_​̅_​̅1​̅_​̅_​̅_X_​̅_​̅_​̅2​̅_​̅_​̅_X_​̅_​̅_​̅3​̅_​̅_​̅_X_​̅_​̅_​̅4​̅_​̅_​̅_X_​̅_​̅_​̅5​̅_​̅_​̅_X_​̅_​̅_​̅6​̅_​̅_​̅_X_​̅_​̅_​̅7​̅_​̅_​̅_X_​̅_​̅_​̅0 
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    //     clk_8p   _/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾
+    //
+    // Note: edge # = count * 2 + 1
+    //       { rise edge #, fall edge #, rise edge # + 32 }
 
-    bus bus(
-        .clk16(clk),
-        .clk8(clk8),
-        .pi_select(pi_select),
-        .pi_strobe(pi_enable),
-        .video_select(video_select),
-        .video_ram_strobe(video_ram_strobe),
-        .video_rom_strobe(video_rom_strobe),
-        .cpu_select(cpu_enable),
-        .io_select(io_select),
-        .cpu_strobe(phi2)
-    );
+    always_ff @(posedge clk_16_i) clk_8_o  <= ~clk_8_o;
+    always_ff @(negedge clk_16_i) clk_8n_o <= ~clk_8_o;
 
-    assign cpu_read  =  bus_rw_b && phi2;
-    assign cpu_write = !bus_rw_b && phi2;
+    // We initialize enable 8'b00000001 and rotate left on each positive edge of 'clk_8n'.
+    //
+    //                16   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //     clk_8n   ‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable0   ‾‾‾‾‾‾‾\_______________________________________________________/‾‾‾‾
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable1   _______/‾‾‾‾‾‾‾\____________________________________________________
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable2   _______________/‾‾‾‾‾‾‾\____________________________________________
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable3   _______________________/‾‾‾‾‾‾‾\____________________________________
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable4   _______________________________/‾‾‾‾‾‾‾\____________________________
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable5   _______________________________________/‾‾‾‾‾‾‾\____________________
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable6   _______________________________________________/‾‾‾‾‾‾‾\____________
+    //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    enable7   _______________________________________________________/‾‾‾‾‾‾‾\____
 
-    // io_read signals that the FPGA should drive 'bus_data' when intercepting reads
-    // from the CPU (e.g., for keyboard).  It transitions to high after the CPU is enabled
-    // and the bus_addr/bus_rw_b are valid, but before the positive edge of the CPU clock
-    // (i.e., phi2).
-    assign io_read = bus_rw_b && io_select;
+    logic [7:0] enable_d, enable = 8'h01;
 
-    wire pi_strobe;
+    always_comb begin
+        enable_d = { enable[6:0], enable[7] };
+    end
+    
+    always_ff @(posedge clk_8n_o) begin
+        spi_enable_o <= spi_valid_i  && enable_d[0];
+        spi_ready_o  <= spi_enable_o;
+        cpu_select_o <= cpu_valid_i  && (enable_d[6] || enable_d[7]);
+        cpu_enable_o <= cpu_select_o && enable_d[7];
+        enable       <= enable_d;
+    end
 
-    sync pi_sync(
-        .select(pi_select),
-        .enable(pi_enable),
-        .pending(pi_pending),
-        .done(pi_done),
-        .strobe(pi_strobe)
-    );
+    assign video_ram_enable_o  = enable[1];
+    assign video_rom_enable_o  = enable[2];
+    
+    // Generate 'clk_cpu' for the 6502:
+    //
+    //               1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16   1
+    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //     clk_8p   _/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾
+    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    // cpu_enable   _______________________________________________________/‾‾‾‾‾‾‾\____
+    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
+    //    clk_cpu   _________________________________________________________/‾‾‾\______
 
-    assign pi_read  =  pi_rw_b && pi_strobe;
-    assign pi_write = !pi_rw_b && pi_strobe;
+    assign clk_cpu_o = clk_8_o & cpu_enable_o;
 endmodule

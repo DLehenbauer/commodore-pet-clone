@@ -161,7 +161,6 @@ set_global_assignment -name SYSTEMVERILOG_FILE spi_buffer.sv
 set_global_assignment -name SYSTEMVERILOG_FILE spi.sv
 set_global_assignment -name SYSTEMVERILOG_FILE sync.sv
 set_global_assignment -name SYSTEMVERILOG_FILE timing.sv
-set_global_assignment -name SYSTEMVERILOG_FILE timing2.sv
 set_global_assignment -name SYSTEMVERILOG_FILE top.sv
 set_global_assignment -name SYSTEMVERILOG_FILE video.sv
 set_global_assignment -name SYSTEMVERILOG_FILE video1.sv
