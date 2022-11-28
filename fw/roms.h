@@ -25,3 +25,6 @@ static const uint8_t __attribute__((aligned(4), section(".data" ".rom_edit_e000"
 static const uint8_t __attribute__((aligned(4), section(".data" ".rom_kernal_f000"))) rom_kernal_f000[] = {
     #include "roms/kernal-4.901465-22.h"
 };
+
+static const uint8_t const* p_video_font_000 = rom_chars_8800;
+static const uint8_t const* p_video_font_400 = rom_chars_8800 + 0x400;
