@@ -39,6 +39,11 @@ void pet_main() {
         tuh_task();
 
         spi_write(/* dest */ 0xe800, /* pSrc: */ key_matrix, /* byteLength: */ sizeof(key_matrix));
+        
+        spi_read_at(0xe80f);
+        uint8_t flags = spi_read_next();
+        p_video_font = flags & 0x01 ? p_video_font_400 : p_video_font_000;
+
         spi_read(/* pDest: */ video_char_buffer, /* src: */ 0x8000, /* byteLength: */ 1000);
     }
 }

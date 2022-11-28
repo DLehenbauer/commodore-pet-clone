@@ -98,12 +98,6 @@ void spi_write_at(uint32_t addr, uint8_t data) {
     cmd_start();
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
     cmd_end();
-
-    // uint8_t actual = spi_read_at(addr);
-    // if (actual != data) {
-    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
-    //     panic(0);
-    // }
 }
 
 void spi_write_next(uint8_t data) {
@@ -112,12 +106,6 @@ void spi_write_next(uint8_t data) {
     cmd_start();
     spi_write_blocking(SPI_INSTANCE, tx, sizeof(tx));
     cmd_end();
-    
-    // uint8_t actual = spi_read_at(addr);
-    // if (actual != data) {
-    //     printf("$%04x: Expected $%02x, but got $%02x\n", addr, data, actual);
-    //     panic(0);
-    // }
 }
 
 void spi_write(uint32_t dest, const uint8_t const* pSrc, uint32_t byteLength) {

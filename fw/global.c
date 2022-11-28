@@ -1,4 +1,5 @@
 #include "global.h"
+#include "roms.h"
 
 uint8_t key_matrix[10] = {
     /* row 0: */ 0xff,
@@ -14,3 +15,5 @@ uint8_t key_matrix[10] = {
 };
 
 uint8_t video_char_buffer[VIDEO_CHAR_BUFFER_BYTE_SIZE];
+
+uint8_t const* p_video_font;

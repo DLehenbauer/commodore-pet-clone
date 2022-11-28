@@ -17,7 +17,6 @@
 #include "dvi/dvi.h"
 #include "global.h"
 #include "pet.h"
-#include "roms.h"
 // #include "test.h"
 #include "usb/usb.h"
 
@@ -25,7 +24,7 @@ void init() {
     stdio_init_all();
     driver_init();
     usb_init();
-    video_init(rom_chars_8800);
+    video_init();
 }
 
 int main() {

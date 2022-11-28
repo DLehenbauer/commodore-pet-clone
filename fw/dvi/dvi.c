@@ -2,7 +2,6 @@
 #include "../global.h"
 #include "dvi.h"
 
-uint8_t const* font_8x8;
 #define FONT_CHAR_WIDTH 8
 #define FONT_CHAR_HEIGHT 8
 
@@ -151,7 +150,7 @@ static inline void prepare_scanline(const char *chars, int y) {
             bool reverse = c & 0x80;
             c &= 0x7f;
 
-            uint8_t p8 = font_8x8[c * FONT_CHAR_HEIGHT + (y % FONT_CHAR_HEIGHT)];
+            uint8_t p8 = p_video_font[c * FONT_CHAR_HEIGHT + (y % FONT_CHAR_HEIGHT)];
             if (reverse) {
                 p8 ^= 0xff;
             }
@@ -182,7 +181,7 @@ static inline void __not_in_flash_func(prepare_scanline)(const char *chars, int1
             bool reverse = ch & 0x80;
             ch &= 0x7f;
 
-            uint8_t p8 = font_8x8[ch * FONT_CHAR_HEIGHT + (y % FONT_CHAR_HEIGHT)];
+            uint8_t p8 = p_video_font[ch * FONT_CHAR_HEIGHT + (y % FONT_CHAR_HEIGHT)];
             if (reverse) {
                 p8 ^= 0xff;
             }
@@ -221,9 +220,7 @@ void core1_main() {
 	__builtin_unreachable();
 }
 
-void video_init(uint8_t const* p_char_rom) {
-	font_8x8 = p_char_rom;
-
+void video_init() {
 	vreg_set_voltage(VREG_VSEL);
 	sleep_ms(10);
  	set_sys_clock_khz(DVI_TIMING.bit_clk_khz, true);
