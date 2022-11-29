@@ -1,4 +1,11 @@
+# EP2
+
+## Resources
+
+* [TimeQuest User Guide](https://www.intel.com/content/dam/support/us/en/programmable/support-resources/fpga-wiki/asset02/timequest-user-guide.pdf)
+
 ## Clock In
+
 Pin | Fn
 -|-
 17|50 MHz source
@@ -11,6 +18,7 @@ Pin | Fn
 91|
 
 ## Clock Out
+
 Pin | Pn
 -|-
 31|PLL1_OUTp
@@ -19,6 +27,7 @@ Pin | Pn
 104|PLL2_OUTn
 
 ## Reserved
+
 [EP2C5 Mini Dev Board](http://land-boards.com/blwiki/index.php?title=Cyclone_II_EP2C5_Mini_Dev_Board#I.2FO_Pin_Mapping)
 
 Pin | Function | Notes
