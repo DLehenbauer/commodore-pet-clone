@@ -46,6 +46,20 @@ create_clock -name "spi_sclk" -period 4MHz $spi_sclk
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
 
+# Cyclone II family does not support jitter analysis
+# derive_clock_uncertainty
+
+# set_input_delay: Specify data valid window on input ports
+#
+#  clk  ____/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+#           |<- min ->|   |
+#           |<--- max --->|
+#
+#  data        prev   >---<    next
+#
+#  min - (hold)  ns that previous data is held following clock edge
+#  max - (setup) ns until next data is valid following clock edge
+
 # CPU
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
@@ -57,6 +71,18 @@ set_input_delay -max -clock [get_clocks { clk_cpu }] 30 [get_ports { bus_addr_io
 set_input_delay -min -clock [get_clocks { clk_cpu }]  0 [get_ports { bus_data_io[*] }]
 set_input_delay -max -clock [get_clocks { clk_cpu }] 40 [get_ports { bus_data_io[*] }]
 
+# set_output_delay:
+#
+#           |<------------ period ----------->|
+#  clk  ____/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\________________/‾‾‾‾‾
+#           |<- min ->|   
+#                        |<------- max ------>|
+#
+#  data       prev    >--<        next
+#
+#  min - (hold)  ns that previous data is held following clock edge
+#  max - (setup) 'priod - ns' until data is valid following clock edge.
+
 # PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 
@@ -66,8 +92,8 @@ set_output_delay -max -clock { clk_cpu } -8 [get_ports { via_cs2_no pia2_cs2_no 
 # SRAM
 # https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf
 
-set_output_delay -add_delay -min -clock { spi_en } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
-set_output_delay -add_delay -max -clock { spi_en } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
+set_output_delay -add_delay -min -clock { spi_en } 0 [get_ports { io_oe_no ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
+set_output_delay -add_delay -max -clock { spi_en } 7 [get_ports { io_oe_no ram_ce_no ram_oe_no ram_we_no bus_addr_io[*] ram_addr_o[*] bus_data_io[*] }]
 
-set_output_delay -add_delay -min -clock { cpu_en } 0 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
-set_output_delay -add_delay -max -clock { cpu_en } 7 [get_ports { ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
+set_output_delay -add_delay -min -clock { cpu_en } 0 [get_ports { io_oe_no ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
+set_output_delay -add_delay -max -clock { cpu_en } 7 [get_ports { io_oe_no ram_ce_no ram_oe_no ram_we_no ram_addr_o[*] }]
