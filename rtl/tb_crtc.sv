@@ -13,30 +13,30 @@
  */
 
 `timescale 1ns / 1ps
+`include "assert.svh"
 
 module tb();
-    reg reset = 0;
+    logic        reset       = '0;
 
-    reg [16:0] bus_addr    = 17'hxxxxx;
-    reg [7:0]  bus_data_in = 8'h0;
-    reg        bus_rw_b    = 0;
+    logic [16:0] bus_addr    = 'x;
+    logic [7:0]  bus_data_in = '0;
+    logic        bus_rw_n    = '0;
 
-    reg cpu_read = 0;
-    reg cpu_write = 0;
+    logic        cpu_read    = '0;
+    logic        cpu_write   = '0;
 
-    reg [15:0] pi_addr  = 16'hxxxx;
-    reg [7:0]  pi_data  = 8'hxx;
-    reg        pi_read = 0;
+    logic [15:0] spi_addr    = 'x;
+    logic        spi_read    = '0;
 
-    wire [7:0] crtc_data_out;
-    wire       crtc_data_out_enable;
+    logic [7:0] crtc_data_out;
+    logic       crtc_data_out_enable;
 
-    wire [4:0] crtc_address_register;
-    wire [7:0] crtc_r;
+    logic [4:0] crtc_address_register;
+    logic [7:0] crtc_r;
 
     address_decoding address_decoding(
-        .addr(bus_addr),
-        .crtc_enable(crtc_enable)
+        .bus_addr_i(bus_addr),
+        .crtc_en_o(crtc_enable)
     );
 
     crtc ctrc(
@@ -47,8 +47,8 @@ module tb();
         .bus_data_in(bus_data_in),
         .cpu_write(cpu_write),
 
-        .pi_addr(pi_addr),
-        .pi_read(pi_read),
+        .pi_addr(spi_addr),
+        .pi_read(spi_read),
 
         .crtc_data_out(crtc_data_out),
         .crtc_data_out_enable(crtc_data_out_enable),
@@ -58,59 +58,59 @@ module tb();
     );
 
     task cpu_select(
-        input [4:0] r
+        input logic [4:0] r
     );
         #1 bus_data_in = { 3'b000, r };
         #1 bus_addr = 17'he880;
         #1 cpu_write = 1'b1;
         #1 cpu_write = 0;
 
-        #1 assert_equal(crtc_address_register, r, "crtc_address_register");
+        #1 `assert_equal(crtc_address_register, r);
     endtask
 
     task cpu_store(
-        input [7:0] value
+        input logic [7:0] value
     );
         #1 bus_data_in = value;
         #1 bus_addr = 17'he881;
         #1 cpu_write = 1'b1;
         #1 cpu_write = 0;
 
-        #1 assert_equal(crtc_r, value, "crtc_r");
+        #1 `assert_equal(crtc_r, value);
 
         bus_data_in = 8'hxx;
-        bus_addr = 17'hxxxxx;
+        bus_addr    = 17'hxxxxx;
     endtask
 
     // task cpu_load(
-    //     input [7:0] expected_value
+    //     input logic [7:0] expected_value
     // );
     //     #1 bus_data_in = 8'hxx;
     //     #1 bus_addr = 17'he881;
     //     #1 cpu_read = 1'b1;
-    //     #1 assert_equal(bus_data_out, expected_value, "bus_data_out");
+    //     #1 `assert_equal(bus_data_out, expected_value);
     //     #1 cpu_read = 0;
     //     bus_addr = 17'hxxxxx;
     // endtask
 
-    task pi_load(
-        input [4:0] r,
-        input [7:0] expected_value
+    task spi_load(
+        input logic [4:0] r,
+        input logic [7:0] expected_value
     );
-        pi_addr = 16'he8f0 | r;
+        spi_addr = 16'he8f0 | r;
 
-        #1 pi_read = 1'b1;
-        #1 assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
+        #1 spi_read = 1'b1;
+        #1 `assert_equal(crtc_data_out_enable, 1);
 
-        #1 pi_read = 0;
-        #1 assert_equal(crtc_data_out, expected_value, "crtc_data_out");
-        assert_equal(crtc_data_out_enable, 1, "crtc_data_out_enable");
+        #1 spi_read = 0;
+        #1 `assert_equal(crtc_data_out, expected_value);
+        `assert_equal(crtc_data_out_enable, 1);
 
-        #1 pi_addr = 16'h0;
+        #1 spi_addr = 16'h0;
     endtask
 
     integer r;
-    reg [7:0] value;
+    logic [7:0] value;
 
     initial begin
         $dumpfile("out.vcd");
@@ -131,8 +131,8 @@ module tb();
             // #1 $display("[%t] Test: CPU load R%0d = $%x", $time, r, value);
             // cpu_load(/* expected_value: */ value);
 
-            #1 $display("[%t] Test: Pi load R%0d == $%x", $time, r, value);
-            pi_load(r, value);
+            #1 $display("[%t] Test: SPI load R%0d == $%x", $time, r, value);
+            spi_load(r, value);
         end
 
         for (r = 16; r <= 17; r++) begin
