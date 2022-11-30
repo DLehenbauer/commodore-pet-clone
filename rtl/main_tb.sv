@@ -61,7 +61,7 @@ module tb();
     logic cpu_res_nao;
     logic cpu_ready_o;
     logic cpu_sync_i;
-    logic cpu_en_no;
+    logic cpu_en_o;
     logic ram_ce_no;
     logic pia1_cs2_no;
     logic pia2_cs2_no;
@@ -101,7 +101,7 @@ module tb();
         .cpu_sync_i(cpu_sync_i),
 
         // Address Decoding
-        .cpu_en_no(cpu_en_no),
+        .cpu_en_o(cpu_en_o),
         .ram_ce_no(ram_ce_no),
         .pia1_cs2_no(pia1_cs2_no),
         .pia2_cs2_no(pia2_cs2_no),

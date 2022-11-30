@@ -12,6 +12,5 @@ iverilog -g2012 \
     spi_driver.sv \
     sync.sv \
     timing.sv \
-    timing2.sv \
-    video.sv \
+    video1.sv \
 && vvp a.out

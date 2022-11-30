@@ -8,4 +8,4 @@ iverilog -g2012 tb_video.sv video.sv bus.sv tb_common.sv && vvp a.out || exit /b
 iverilog -g2012 tb_bus.sv bus.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
 iverilog -g2012 tb_keyboard.sv keyboard.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
 iverilog -g2012 tb_sync.sv sync.sv bus.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
-iverilog -g2012 tb_address_decoding.sv address_decoding.sv tb_common.sv && vvp a.out || exit /b !ERRORLEVEL!
+iverilog -g2012 tb_address_decoding.sv address_decoding.sv && vvp a.out || exit /b !ERRORLEVEL!

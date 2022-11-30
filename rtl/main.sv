@@ -140,15 +140,15 @@ module main (
     logic is_readonly;
     logic is_mirrored;
     
-    address_decoding decode1(
-        .addr(bus_addr_io),
-        .ram_enable(ram_enable),
-        .io_enable(io_enable_before_kbd),
-        .pia1_enable(pia1_enable_before_kbd),
-        .pia2_enable(pia2_enable),
-        .via_enable(via_enable),
-        .is_readonly(is_readonly),
-        .is_mirrored(is_mirrored)
+    address_decoding address_decoding(
+        .bus_addr_i(bus_addr_io),
+        .ram_en_o(ram_enable),
+        .io_en_o(io_enable_before_kbd),
+        .pia1_en_o(pia1_enable_before_kbd),
+        .pia2_en_o(pia2_enable),
+        .via_en_o(via_enable),
+        .is_readonly_o(is_readonly),
+        .is_mirrored_o(is_mirrored)
     );
 
     logic [7:0] kbd_data_out;
