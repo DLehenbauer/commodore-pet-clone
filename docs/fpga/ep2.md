@@ -2,6 +2,7 @@
 
 ## Resources
 
+* [Quartus II TimeQuest Timing Analyzer Cookbook](https://embedders.org/system/files/mnl_timequest_cookbook.pdf)
 * [TimeQuest User Guide](https://www.intel.com/content/dam/support/us/en/programmable/support-resources/fpga-wiki/asset02/timequest-user-guide.pdf)
 
 ## Clock In
