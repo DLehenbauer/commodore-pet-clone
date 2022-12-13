@@ -75,7 +75,7 @@ uint8_t spi_read_next() {
     uint8_t rx[sizeof(tx)];
 
     cmd_start();
-    spi_write_read_blocking(spi_default, tx, rx, sizeof(tx));
+    spi_write_read_blocking(SPI_INSTANCE, tx, rx, sizeof(tx));
     cmd_end();
     
     return rx[0];

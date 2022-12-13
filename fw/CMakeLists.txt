@@ -19,6 +19,9 @@ if (TARGET tinyusb_device)
         usb/usb.c
     )
 
+    # See https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf#errata-e5
+    # target_compile_definitions(firmware PRIVATE PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
+
     # To change the default serial config for all apps, pass e.g.
     #   cmake -DDVI_DEFAULT_SERIAL_CONFIG=pimoroni_demo_hdmi_cfg ..
     # then rebuild. This is applied via target_compile_definitions on each app

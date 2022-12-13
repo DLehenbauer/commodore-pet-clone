@@ -74,8 +74,6 @@ void test_display() {
     v_line(/* x: */ 39, /* start_y: */ 1, /* end_y: */ 23, /* ch: */ 103);
     fill(/* start_x: */ 1, /* start_y: */ 1, /* end_x: */ 38, /* end_y: */ 23, /* ch: */ 32);
 
-    char_test(2, 2);
-
     sync_display();
 
     while (true) {
