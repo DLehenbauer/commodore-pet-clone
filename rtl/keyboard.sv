@@ -30,6 +30,11 @@
     output logic [7:0] kbd_data_o = 8'hff,
     output logic kbd_en_o
 );
+    localparam PORTA = 2'd0,
+               CRA   = 2'd1,
+               PORTB = 2'd2,
+               CRB   = 2'd3;
+
     logic [7:0] kbd_matrix [16];   
     logic [3:0] current_kbd_row = '0;
     
@@ -50,11 +55,6 @@
         else if (writing_port_a) current_kbd_row <= bus_data_i[3:0];
         else kbd_data_o <= kbd_matrix[current_kbd_row];
     end
-
-    localparam PORTA = 2'd0,
-               CRA   = 2'd1,
-               PORTB = 2'd2,
-               CRB   = 2'd3;
 
     wire reading_port_b = cpu_rd_en_i && pia1_en_i && bus_addr_i == PORTB;
 

@@ -82,15 +82,35 @@ derive_pll_clocks -create_base_clocks
 # CPU
 # https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
     
-# Inputs from CPU governed by address setup/hold (tAH, tADS): A0-A15, MLB, R/W, SYNC, VPB
-set cpu_addr_ports [get_ports { bus_addr_io[*] bus_rw_nio }]
-set_input_delay -clock [get_clocks { clk_cpu }] -clock_fall -min 10 $cpu_addr_ports
-set_input_delay -clock [get_clocks { clk_cpu }] -clock_fall -max 40 $cpu_addr_ports
+# Inputs from CPU governed by address setup/hold (tAH, tADS): A[15:0], MLB, R/W, SYNC, VPB
+#
+# cpu_clk    ‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____
+#                :                                 :
+#                |<- tAH ->|                       |<- tAH ->|
+#                |<- tADS --->|
+#            ==============>--<==============================>
 
-# Inputs from CPU governed by write data delay/hold (tDHW, tMDS)
+set cpu_addr_ports [get_ports { bus_addr_io[*] bus_rw_nio }]
+set cpu_tAH 10
+set cpu_tADS 40
+
+set_input_delay -clock clk_cpu -clock_fall -min $cpu_tAH $cpu_addr_ports
+set_input_delay -clock clk_cpu -clock_fall -max $cpu_tADS $cpu_addr_ports
+
+# Inputs from CPU governed by write data delay/hold (tDHW, tMDS): D[7:0]
+#
+# cpu_clk    ‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____________
+#                :                :                :
+#                |<- tDHW ->|     :                |<- tDHW ->|
+#                                 |<- tMDS ->|
+#            ===============>----------------<================>-
+
 set cpu_data_ports [get_ports { bus_data_io[*] }]
-set_input_delay -clock [get_clocks { clk_cpu }] -min [expr { -(10 + 1000 / 16) }] $cpu_data_ports
-set_input_delay -clock [get_clocks { clk_cpu }] -max 10 $cpu_data_ports
+set cpu_tDHW 10
+set cpu_tMDS 40
+
+set_input_delay -clock clk_cpu -min [expr { ($cpu_tDHW - (1000 / 16)) }] $cpu_data_ports
+set_input_delay -clock clk_cpu -max $cpu_tMDS $cpu_data_ports
 
 # set_output_delay:
 #
@@ -105,27 +125,54 @@ set_input_delay -clock [get_clocks { clk_cpu }] -max 10 $cpu_data_ports
 #  max - (setup) 'priod - ns' until data is valid following clock edge.
 
 # Outputs to CPU governed by read data hold/setup (tDHR, tDSR)
-set_output_delay -clock [get_clocks { clk_cpu }] -clock_fall -min 10 $cpu_data_ports -add_delay
-set_output_delay -clock [get_clocks { clk_cpu }] -clock_fall -max 15 $cpu_data_ports -add_delay
+#
+#  cpu_clk     ____/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\________________/‾‾‾‾‾
+#                                   :
+#                                   |<- tDHR -> |
+#                        |<- tDSR ->|
+#             -----------<====================>------------
+
+set cpu_tDHR 10
+set cpu_tDSR 15
+set_output_delay -clock clk_cpu -clock_fall -min $cpu_tDHR $cpu_data_ports -add_delay
+set_output_delay -clock clk_cpu -clock_fall -max $cpu_tDSR $cpu_data_ports -add_delay
 
 # PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 # https://www.westerndesigncenter.com/wdc/documentation/w65c22.pdf (pg. 42)
 
-# Outputs to IO governed by address hold/setup (tCAW, tACW)
+# TODO: Add io_oe to cs2 requirements?
+# Outputs to IO governed by address hold/setup (tCA*, tAC*): cs2, io_oe
+#
+# cpu_clk    ______________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\________________/‾‾‾‾‾
+#                          :                :
+#                          :                |<- tCA* ->|
+#               |<- tAC* ->|
+#            ---<======================================>-----------
+
 set io_sel_ports [get_ports { \
-    bus_addr_io[3] \
-    bus_addr_io[2] \
-    bus_addr_io[1] \
-    bus_addr_io[0] \
     io_oe_no \
     via_cs2_no \
     pia2_cs2_no \
     pia1_cs2_no \
 }]
 
-set_output_delay -clock { clk_cpu } -min [expr { -(10 + 1000 / 16) }] $io_sel_ports -add_delay
-set_output_delay -clock { clk_cpu } -max 10 $io_sel_ports -add_delay
+set io_tAC 10
+set io_tCA 10
+set_output_delay -clock { clk_cpu } -min [expr { ($io_tAC - (1000 / 16)) }] $io_sel_ports -add_delay
+set_output_delay -clock { clk_cpu } -max $io_tAC $io_sel_ports -add_delay
 
 # SRAM
 # https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf (pg. 4-6)
+
+
+
+#cpu_en_o
+#cpu_ready_o
+#cpu_res_naio
+#ram_addr_o[10]
+#ram_addr_o[11]
+#ram_ce_no
+#ram_oe_no
+#ram_we_no
+#spi_ready_no
