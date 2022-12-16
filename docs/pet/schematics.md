@@ -1,6 +1,6 @@
 # PET Universal Board v2
 
-**Original:** [Zimmers.net](http://www.zimmers.net/anonftp/pub/cbm/schematics/computers/pet/univ2/index.html)
+**Original:** [Zimmers.net](http://www.zimmers.net/anonftp/pub/cbm/schematics/computers/pet/univ2/index.html) and [www.commodore.ca](https://www.commodore.ca/manuals/funet/cbm/schematics/computers/pet/8032/index.html)
 
 ## CPU & Memory Expansion
 
