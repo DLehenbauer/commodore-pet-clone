@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 add_subdirectory("external/PicoDVI/software/libdvi")
+add_subdirectory("external/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI")
 
 if (TARGET tinyusb_device)
     set(FAMILY rp2040)
@@ -13,6 +14,7 @@ if (TARGET tinyusb_device)
         global.c
         main.c
         pet.c
+        sd/sd.c
         test.c
         usb/hid_app.c
         usb/keyboard.c
@@ -31,7 +33,8 @@ if (TARGET tinyusb_device)
 
     include_directories(
         "external/PicoDVI/software/assets"
-        "external/PicoDVI/software/include")
+        "external/PicoDVI/software/include"
+        "external/no-OS-FatFS-SD-SPI-RPi-Pico/FatFS_SPI/include")
 
     # target_compile_definitions(firmware PRIVATE
     #     DVI_VERTICAL_REPEAT=1
@@ -53,7 +56,8 @@ if (TARGET tinyusb_device)
         hardware_spi
         tinyusb_host
         tinyusb_board
-        libdvi)
+        libdvi
+        FatFs_SPI)
 
     # create map/bin/hex/uf2 file etc.
     pico_add_extra_outputs(firmware)
