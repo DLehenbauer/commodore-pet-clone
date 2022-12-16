@@ -41,3 +41,9 @@
 [![](img/8032090-4.png)](https://raw.githubusercontent.com/DLehenbauer/commodore-pet-clone/main/docs/pet/img/8032090-4.png)
 [![](img/8032090-5.png)](https://raw.githubusercontent.com/DLehenbauer/commodore-pet-clone/main/docs/pet/img/8032090-5.png)
 [![](img/8032090-7.png)](https://raw.githubusercontent.com/DLehenbauer/commodore-pet-clone/main/docs/pet/img/8032090-7.png)
+
+## Notes
+
+* Fonts:
+  * Corbel Bold, 26pt
+  * BV Boli Bold, 24pt
