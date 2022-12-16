@@ -15,7 +15,8 @@
 
 ### SRAM
 
-* [Alliance Memory AS6C1008-55PCN](https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf)
+* [AS6C1008-55PCN](https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf)
+* [IS61WV1288EEBLL](https://www.issi.com/WW/pdf/61-64WV1288EEBLL.pdf)
 
 ### 6545 CRTC
 
