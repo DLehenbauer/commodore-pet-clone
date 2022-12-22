@@ -65,9 +65,6 @@ module top(
     output logic v_sync_o,
     output logic video_o,
 
-    // DEBUG
-    output logic [7:0] debug_o,
-    
     // Reserved by DevBoard
     // (See http://land-boards.com/blwiki/index.php?title=Cyclone_II_EP2C5_Mini_Dev_Board#I.2FO_Pin_Mapping)
     output logic P3_LED_D2,           // Low to Light LED
@@ -137,7 +134,6 @@ module top(
         .gfx_i(gfx_i),
         .h_sync_o(h_sync_o),
         .v_sync_o(v_sync_o),
-        .video_o(video_o),
-        .debug_o(debug_o)
+        .video_o(video_o)
     );
 endmodule

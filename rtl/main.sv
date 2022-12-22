@@ -55,9 +55,7 @@ module main (
     input  logic gfx_i,
     output logic h_sync_o,
     output logic v_sync_o,
-    output logic video_o,
-
-    output logic [7:0] debug_o
+    output logic video_o
 );
     logic spi_ready_out;
     assign spi_ready_no = !spi_ready_out;
@@ -107,15 +105,6 @@ module main (
     wire cpu_rd_en = cpu_en_o &&  bus_rw_nio;
     wire cpu_wr_en = cpu_en_o && !bus_rw_nio;
     
-    assign debug_o[0] = clk_8;
-    assign debug_o[1] = spi_en;
-    assign debug_o[2] = cpu_sel;
-    assign debug_o[3] = cpu_en_o;
-    assign debug_o[4] = spi_sclk_i;
-    assign debug_o[5] = spi_cs_ni;
-    assign debug_o[6] = spi_rx_i;
-    assign debug_o[7] = spi_tx_io;
-
     video1 video1(
         .clk_16_i(clk_16_i),
         .h_sync_o(h_sync_o),
@@ -183,7 +172,7 @@ module main (
     assign via_cs2_no  = !via_cs;
     assign io_oe_no    = !io_oe;
 
-    wire ram_ce = ram_enable || !cpu_sel;
+    wire ram_ce = 1'b1;
     wire ram_oe =  spi_rd_en || cpu_rd_en;
     wire ram_we =  spi_wr_en || (cpu_wr_en && clk_cpu_o && !is_readonly);
 
