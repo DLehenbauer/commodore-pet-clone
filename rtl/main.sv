@@ -172,7 +172,7 @@ module main (
     assign via_cs2_no  = !via_cs;
     assign io_oe_no    = !io_oe;
 
-    wire ram_ce = 1'b1;
+    wire ram_ce = ram_enable || !cpu_sel;
     wire ram_oe =  spi_rd_en || cpu_rd_en;
     wire ram_we =  spi_wr_en || (cpu_wr_en && clk_cpu_o && !is_readonly);
 
