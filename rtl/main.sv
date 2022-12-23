@@ -25,9 +25,7 @@ module main (
     input  logic spi_sclk_i,            // RPi 23 : GPIO 11
     input  logic spi_cs_ni,             // RPi 24 : GPIO 8
     input  logic spi_rx_i,              // RPi 19 : GPIO 10
-
-    // TODO: Should be 'inout'
-    output wire  spi_tx_io,             // RPi 21 : GPIO 9
+    inout  wire  spi_tx_io,             // RPi 21 : GPIO 9 (High-Z when SPI CS is deasserted)
 
     output logic spi_ready_no,          // RPi  3 : Request completed and pi_data held while still pending.
 
