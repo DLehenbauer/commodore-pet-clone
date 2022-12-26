@@ -117,8 +117,14 @@ module top(
         .ram_addr_o(ram_addr_o),
         .clk_16_i(clk_16),
         .clk_cpu_o(clk_cpu_o),
+// Correct:
         .ram_oe_no(ram_oe_no),
         .ram_we_no(ram_we_no),
+
+// Bodge:
+//        .ram_oe_no(ram_we_no),
+//        .ram_we_no(ram_oe_no),
+
         .cpu_res_ai(!cpu_res_naio),
         .cpu_res_nao(res_n),
         .cpu_ready_o(cpu_ready_o),
