@@ -10,8 +10,8 @@
         "copper_text_thickness": 0.3,
         "copper_text_upright": false,
         "courtyard_line_width": 0.049999999999999996,
-        "dimension_precision": 4,
-        "dimension_units": 2,
+        "dimension_precision": 3,
+        "dimension_units": 3,
         "dimensions": {
           "arrow_length": 1270000,
           "extension_offset": 500000,
@@ -26,7 +26,7 @@
         "fab_text_size_v": 1.0,
         "fab_text_thickness": 0.15,
         "fab_text_upright": false,
-        "other_line_width": 0.09999999999999999,
+        "other_line_width": 0.15,
         "other_text_italic": false,
         "other_text_size_h": 1.0,
         "other_text_size_v": 1.0,
@@ -45,7 +45,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.508
+          "min_clearance": 0.19999999999999998
         }
       },
       "diff_pair_dimensions": [
@@ -106,24 +106,23 @@
         "allow_blind_buried_vias": false,
         "allow_microvias": false,
         "max_error": 0.005,
-        "min_clearance": 0.0,
-        "min_copper_edge_clearance": 0.049999999999999996,
-        "min_hole_clearance": 0.25,
-        "min_hole_to_hole": 0.25,
+        "min_clearance": 0.127,
+        "min_copper_edge_clearance": 0.19999999999999998,
+        "min_hole_clearance": 0.254,
+        "min_hole_to_hole": 0.5,
         "min_microvia_diameter": 0.19999999999999998,
         "min_microvia_drill": 0.09999999999999999,
         "min_silk_clearance": 0.0,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.19999999999999998,
-        "min_via_annular_width": 0.049999999999999996,
-        "min_via_diameter": 0.39999999999999997,
+        "min_track_width": 0.127,
+        "min_via_annular_width": 0.13,
+        "min_via_diameter": 0.5,
         "use_height_for_length_calcs": true
       },
       "track_widths": [
         0.0,
-        0.56,
-        1.27,
-        1.8
+        0.2,
+        0.4
       ],
       "via_dimensions": [
         {
@@ -131,16 +130,8 @@
           "drill": 0.0
         },
         {
-          "diameter": 0.5,
+          "diameter": 0.6,
           "drill": 0.3
-        },
-        {
-          "diameter": 1.27,
-          "drill": 0.762
-        },
-        {
-          "diameter": 1.778,
-          "drill": 0.889
         }
       ],
       "zones_allow_external_fillets": false,
@@ -379,9 +370,143 @@
         "name": "Default",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.25,
-        "via_diameter": 0.8,
-        "via_drill": 0.4,
+        "track_width": 0.4,
+        "via_diameter": 0.7,
+        "via_drill": 0.3,
+        "wire_width": 6.0
+      },
+      {
+        "bus_width": 12.0,
+        "clearance": 0.13,
+        "diff_pair_gap": 0.13,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "DVI",
+        "nets": [
+          "/MAGIC/MCU/DVI_CK+",
+          "/MAGIC/MCU/DVI_CK-",
+          "/MAGIC/MCU/DVI_D0+",
+          "/MAGIC/MCU/DVI_D0-",
+          "/MAGIC/MCU/DVI_D1+",
+          "/MAGIC/MCU/DVI_D1-",
+          "/MAGIC/MCU/DVI_D2+",
+          "/MAGIC/MCU/DVI_D2-",
+          "/MAGIC/MCU/MCU_DVI_CK+",
+          "/MAGIC/MCU/MCU_DVI_CK-",
+          "/MAGIC/MCU/MCU_DVI_D0+",
+          "/MAGIC/MCU/MCU_DVI_D0-",
+          "/MAGIC/MCU/MCU_DVI_D1+",
+          "/MAGIC/MCU/MCU_DVI_D1-",
+          "/MAGIC/MCU/MCU_DVI_D2+",
+          "/MAGIC/MCU/MCU_DVI_D2-"
+        ],
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6.0
+      },
+      {
+        "bus_width": 12.0,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.13,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "MCU",
+        "nets": [
+          "/MAGIC/MCU/BOOTSEL",
+          "/MAGIC/MCU/DVI_CEC",
+          "/MAGIC/MCU/DVI_SCL",
+          "/MAGIC/MCU/DVI_SDA",
+          "/MAGIC/MCU/I2C0_SCL",
+          "/MAGIC/MCU/I2C0_SDA",
+          "/MAGIC/MCU/I2C1_SCL",
+          "/MAGIC/MCU/I2C1_SDA",
+          "/MAGIC/MCU/MCU_CEC",
+          "/MAGIC/MCU/MCU_USB_D+",
+          "/MAGIC/MCU/MCU_USB_D-",
+          "/MAGIC/MCU/QSPI_SCLK",
+          "/MAGIC/MCU/QSPI_SD0",
+          "/MAGIC/MCU/QSPI_SD1",
+          "/MAGIC/MCU/QSPI_SD2",
+          "/MAGIC/MCU/QSPI_SD3",
+          "/MAGIC/MCU/QSPI_~{CS}",
+          "/MAGIC/MCU/RUN",
+          "/MAGIC/MCU/SD_DETECT",
+          "/MAGIC/MCU/SD_~{CS}",
+          "/MAGIC/MCU/SPI0_RX",
+          "/MAGIC/MCU/SPI0_SCLK",
+          "/MAGIC/MCU/SPI0_TX",
+          "/MAGIC/MCU/SPI0_~{CS}",
+          "/MAGIC/MCU/SPI1_RX",
+          "/MAGIC/MCU/SPI1_SCLK",
+          "/MAGIC/MCU/SPI1_TX",
+          "/MAGIC/MCU/SPI1_~{CS}",
+          "/MAGIC/MCU/SPI1_~{READY}",
+          "/MAGIC/MCU/SWCLK",
+          "/MAGIC/MCU/SWD",
+          "/MAGIC/MCU/UART0_RX",
+          "/MAGIC/MCU/UART0_TX",
+          "/MAGIC/MCU/XIN",
+          "/MAGIC/MCU/XOUT"
+        ],
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6.0
+      },
+      {
+        "bus_width": 12.0,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "PWR",
+        "nets": [
+          "+6V",
+          "+9V_Unreg",
+          "/CASS/CASS_A_MOTOR",
+          "/CASS/CASS_B_MOTOR",
+          "GNDPWR"
+        ],
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.27,
+        "via_diameter": 1.27,
+        "via_drill": 0.508,
+        "wire_width": 6.0
+      },
+      {
+        "bus_width": 12.0,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.15,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.8,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "USB",
+        "nets": [
+          "/MAGIC/MCU/USB_D+",
+          "/MAGIC/MCU/USB_D-"
+        ],
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
         "wire_width": 6.0
       }
     ],
@@ -487,6 +612,10 @@
     [
       "1dc0595f-3832-49f8-98ab-9c5f13feffce",
       "VIDEO"
+    ],
+    [
+      "b70241ab-8a5c-42d5-a1ab-8f4bc50a1197",
+      "MCU"
     ]
   ],
   "text_variables": {}
