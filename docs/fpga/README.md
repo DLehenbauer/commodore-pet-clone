@@ -1,10 +1,5 @@
 # FPGA
 
-* [PS32 Lite Schematics](https://github.com/PiStorm/pistorm32-lite-hardware/blob/main/PDF/ps32_lite_rev_a_public_schematic.pdf)
-* [AN006: Configuring Trion FPGAs](https://www.efinixinc.com/docs/an006-configuring-trion-fpgas-v5.4.pdf)
-* [AN038: Programming with MCU and JTAG](https://www.efinixinc.com/docs/an038-programming-with-mcu-and-jtag-v1.0.pdf)
-
-
 ## Verilog
 
 * [Advanced Synthesis Cookbook](https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/manual/stx_cookbook.pdf) ([samples](http://www.altera.com/literature/manual/cookbook.zip))
