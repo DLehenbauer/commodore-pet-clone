@@ -13,16 +13,8 @@
  */
 
 #include "driver.h"
+#include "hw.h"
 
-#define SPI_INSTANCE spi0
-#define SPI_SCK_PIN 2
-#define SPI_TX_PIN 3
-#define SPI_RX_PIN 4
-// #define SPI_CSN_PIN 5
-#define SPI_CSN_PIN 6
-#define SPI_READY_B_PIN 7
-
-#define SPI_MHZ            4
 #define SPI_CMD_READ_AT    0xC0
 #define SPI_CMD_READ_NEXT  0x80
 #define SPI_CMD_WRITE_AT   0x40
