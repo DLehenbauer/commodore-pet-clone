@@ -12,36 +12,17 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-#include "pch.h"
-#include "driver.h"
-#include "dvi/dvi.h"
-#include "global.h"
-#include "pet.h"
-#include "sd/sd.h"
-//#include "test.h"
-#include "usb/usb.h"
+#define SPI_INSTANCE spi1
+#define SPI_SCK_PIN 14
+#define SPI_TX_PIN 15
+#define SPI_RX_PIN 12
+#define SPI_CSN_PIN 13
+#define SPI_READY_B_PIN 27
+#define SPI_MHZ 4
 
-void init() {
-    stdio_init_all();
-
-    printf("PET init\n");
-    fflush(stdout);
-
-    driver_init();
-    // init_sd();
-    usb_init();
-    video_init();
-}
-
-int main() {
-    init();
-
-    pet_reset();
-    pet_main();
-
-    // test_init();
-    // test_ram();
-    // test_display();
-
-    __builtin_unreachable();
-}
+#define SD_SPI_INSTANCE SPI_INSTANCE
+#define SD_CLK_GP SPI_SCK_PIN
+#define SD_CMD_GP SPI_TX_PIN
+#define SD_DAT_GP SPI_RX_PIN
+#define SD_CSN_GP 9
+#define SD_DETECT 8

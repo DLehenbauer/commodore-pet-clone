@@ -62,7 +62,14 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "*.ipp": "cpp",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "rtc.h": "c",
+        "hw_config.h": "c",
+        "sd.h": "c",
+        "f_util.h": "c",
+        "ff.h": "c",
+        "diskio.h": "c",
+        "hw.h": "c"
     },
     "files.exclude": {
         "rtl/*.v.bak": true,
