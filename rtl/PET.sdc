@@ -79,39 +79,6 @@ derive_pll_clocks -create_base_clocks
 #  min - (hold)  ns that previous data is held following clock edge
 #  max - (setup) ns until next data is valid following clock edge
 
-# CPU
-# https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
-    
-# Inputs from CPU governed by address setup/hold (tAH, tADS): A[15:0], MLB, R/W, SYNC, VPB
-#
-# cpu_clk    ‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____
-#                :                                 :
-#                |<- tAH ->|                       |<- tAH ->|
-#                |<- tADS --->|
-#            ==============>--<==============================>
-
-set cpu_addr_ports [get_ports { bus_addr_io[*] bus_rw_nio }]
-set cpu_tAH 10
-set cpu_tADS 40
-
-set_input_delay -clock clk_cpu -clock_fall -min $cpu_tAH $cpu_addr_ports
-set_input_delay -clock clk_cpu -clock_fall -max $cpu_tADS $cpu_addr_ports
-
-# Inputs from CPU governed by write data delay/hold (tDHW, tMDS): D[7:0]
-#
-# cpu_clk    ‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____________
-#                :                :                :
-#                |<- tDHW ->|     :                |<- tDHW ->|
-#                                 |<- tMDS ->|
-#            ===============>----------------<================>-
-
-set cpu_data_ports [get_ports { bus_data_io[*] }]
-set cpu_tDHW 10
-set cpu_tMDS 40
-
-set_input_delay -clock clk_cpu -min [expr { ($cpu_tDHW - (1000 / 16)) }] $cpu_data_ports
-set_input_delay -clock clk_cpu -max $cpu_tMDS $cpu_data_ports
-
 # set_output_delay:
 #
 #           |<------------ period ----------->|
@@ -124,6 +91,39 @@ set_input_delay -clock clk_cpu -max $cpu_tMDS $cpu_data_ports
 #  min - (hold)  ns that previous data is held following clock edge
 #  max - (setup) 'priod - ns' until data is valid following clock edge.
 
+# CPU
+# https://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf (pg. 25)
+    
+# Inputs from CPU governed by address setup/hold (tAH, tADS): A[15:0], MLB, R/W, SYNC, VPB
+#
+# cpu_clk    ‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____
+#                :                                 :
+#                |<- tAH ->|                       |<- tAH ->|
+#                |<- tADS --->|
+#            ==============>--<==============================>
+
+set bus_addr_ports [get_ports { bus_addr_io[*] bus_rw_nio }]
+set cpu_tAH 10
+set cpu_tADS 40
+
+set_input_delay -clock clk_cpu -clock_fall -min $cpu_tAH $bus_addr_ports
+set_input_delay -clock clk_cpu -clock_fall -max $cpu_tADS $bus_addr_ports
+
+# Inputs from CPU governed by write data delay/hold (tDHW, tMDS): D[7:0]
+#
+# cpu_clk    ‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____________
+#                :                :                :
+#                |<- tDHW ->|     :                |<- tDHW ->|
+#                                 |<- tMDS ->|
+#            ===============>----------------<================>-
+
+set bus_data_ports [get_ports { bus_data_io[*] }]
+set cpu_tDHW 10
+set cpu_tMDS 40
+
+set_input_delay -clock clk_cpu -min [expr { ($cpu_tDHW - (1000 / 16)) }] $bus_data_ports
+set_input_delay -clock clk_cpu -max $cpu_tMDS $bus_data_ports
+
 # Outputs to CPU governed by read data hold/setup (tDHR, tDSR)
 #
 #  cpu_clk     ____/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\________________/‾‾‾‾‾
@@ -134,15 +134,26 @@ set_input_delay -clock clk_cpu -max $cpu_tMDS $cpu_data_ports
 
 set cpu_tDHR 10
 set cpu_tDSR 15
-set_output_delay -clock clk_cpu -clock_fall -min $cpu_tDHR $cpu_data_ports -add_delay
-set_output_delay -clock clk_cpu -clock_fall -max $cpu_tDSR $cpu_data_ports -add_delay
+set_output_delay -clock clk_cpu -clock_fall -min $cpu_tDHR $bus_data_ports -add_delay
+set_output_delay -clock clk_cpu -clock_fall -max $cpu_tDSR $bus_data_ports -add_delay
+
+# IO
+# Data delay to IO chips added by transciever / level-shifters is ~7ns in both directions
+# Transition in/out of high-Z is bounded at ~10ns
+# https://www.ti.com/lit/ds/symlink/sn74lvc4245a.pdf
+
+set io_tPHL 7
+set io_tPZ 10
+
+set io_oe_port [get_ports { io_oe_no }]
+set_output_delay -clock { clk_cpu } -min [expr { ($io_tPZ - (1000 / 16)) }] $io_oe_port -add_delay
+set_output_delay -clock { clk_cpu } -max $io_tPZ $io_oe_port -add_delay
 
 # PIA/VIA
 # https://www.westerndesigncenter.com/wdc/documentation/w65c21.pdf (pg. 8)
 # https://www.westerndesigncenter.com/wdc/documentation/w65c22.pdf (pg. 42)
 
-# TODO: Add io_oe to cs2 requirements?
-# Outputs to IO governed by address hold/setup (tCA*, tAC*): cs2, io_oe
+# Outputs to IO governed by address hold/setup (tCA*, tAC*): cs2
 #
 # cpu_clk    ______________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\________________/‾‾‾‾‾
 #                          :                :
@@ -151,28 +162,59 @@ set_output_delay -clock clk_cpu -clock_fall -max $cpu_tDSR $cpu_data_ports -add_
 #            ---<======================================>-----------
 
 set io_sel_ports [get_ports { \
-    io_oe_no \
     via_cs2_no \
     pia2_cs2_no \
     pia1_cs2_no \
 }]
 
-set io_tAC 10
-set io_tCA 10
+# Use the larger setup/hold times from the VIA.
+# Include the delay added by the level shifters.
+set io_tAC [expr { 10 + $io_tPZ }]
+set io_tCA [expr { 10 + $io_tPZ }]
+
 set_output_delay -clock { clk_cpu } -min [expr { ($io_tAC - (1000 / 16)) }] $io_sel_ports -add_delay
 set_output_delay -clock { clk_cpu } -max $io_tAC $io_sel_ports -add_delay
 
 # SRAM
 # https://www.alliancememory.com/wp-content/uploads/pdf/AS6C1008feb2007.pdf (pg. 4-6)
 
+# SRAM write:
+#
+#       clk    _________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\___________________/‾‾
+#        we    ‾‾‾‾‾‾‾‾‾‾‾‾\________________/‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+#                          :                :
+#                |<- tAS ->|<---- tWP  ---->|<-- tWR -->|
+#                                 |<- tDW ->|<- tDH ->|
+#      data    -------------------<===================>------------
+#      addr    --<======================================>----------
+
+
+set ram_tAS 0       ;# Address setup
+set ram_tWP 45      ;# Write pulse
+set ram_tWR 0       ;# Write recovery
+
+# Write pulse must begin at least tWP ahead of falling clock edge
+set ram_we_port [get_ports { ram_we_no }]
+set_output_delay -clock { clk_cpu } -clock_fall -min 0 $ram_we_port -add_delay
+set_output_delay -clock { clk_cpu } -clock_fall -max $ram_tWP $ram_we_port -add_delay
+
+# Address must be valid tAS ahead of tWP (or tAS + tWP ahead of falling clock edge.)
+set ram_addr_ports [get_ports { bus_addr_io[*] ram_addr_o[*] bus_rw_nio }]
+set_output_delay -clock { clk_cpu } -clock_fall -min $ram_tWR $ram_addr_ports -add_delay
+set_output_delay -clock { clk_cpu } -clock_fall -max [expr { $ram_tAS + $ram_tWP }] $ram_addr_ports -add_delay
+
+set ram_tDW 25      ;# Data to write time overlap
+set ram_tDH  0      ;# Data hold from end of write time
+
+# Data must be valid tDW ahead of falling clock edge and held for tDH afterward
+set_output_delay -clock { clk_cpu } -clock_fall -min $ram_tDH $bus_addr_ports -add_delay
+set_output_delay -clock { clk_cpu } -clock_fall -max $ram_tDW $bus_addr_ports -add_delay
+
+#ram_ce_no
+#ram_oe_no
 
 
 #cpu_en_o
 #cpu_ready_o
 #cpu_res_naio
-#ram_addr_o[10]
-#ram_addr_o[11]
-#ram_ce_no
-#ram_oe_no
-#ram_we_no
 #spi_ready_no

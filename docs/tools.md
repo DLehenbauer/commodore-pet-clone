@@ -7,7 +7,9 @@
   * [KiCAD JLCPCB tools](https://github.com/Bouni/kicad-jlcpcb-tools)
   * [Fabrication Toolkit](https://github.com/bennymeg/JLC-Plugin-for-KiCad)
 * [Freerouting](https://github.com/freerouting/freerouting/releases)
+  * `winget install -e --id EclipseAdoptium.Temurin.17.JRE`
 * [LTSpice](https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html)
+* [VIA Size Calculator](https://j.mp/via-calc)
 
 ## FPGA & Verilog
 

@@ -25,9 +25,7 @@ module main (
     input  logic spi_sclk_i,            // RPi 23 : GPIO 11
     input  logic spi_cs_ni,             // RPi 24 : GPIO 8
     input  logic spi_rx_i,              // RPi 19 : GPIO 10
-
-    // TODO: Should be 'inout'
-    output wire  spi_tx_io,             // RPi 21 : GPIO 9
+    inout  wire  spi_tx_io,             // RPi 21 : GPIO 9 (High-Z when SPI CS is deasserted)
 
     output logic spi_ready_no,          // RPi  3 : Request completed and pi_data held while still pending.
 
@@ -55,9 +53,7 @@ module main (
     input  logic gfx_i,
     output logic h_sync_o,
     output logic v_sync_o,
-    output logic video_o,
-
-    output logic [7:0] debug_o
+    output logic video_o
 );
     logic spi_ready_out;
     assign spi_ready_no = !spi_ready_out;
@@ -107,15 +103,6 @@ module main (
     wire cpu_rd_en = cpu_en_o &&  bus_rw_nio;
     wire cpu_wr_en = cpu_en_o && !bus_rw_nio;
     
-    assign debug_o[0] = clk_8;
-    assign debug_o[1] = spi_en;
-    assign debug_o[2] = cpu_sel;
-    assign debug_o[3] = cpu_en_o;
-    assign debug_o[4] = spi_sclk_i;
-    assign debug_o[5] = spi_cs_ni;
-    assign debug_o[6] = spi_rx_i;
-    assign debug_o[7] = spi_tx_io;
-
     video1 video1(
         .clk_16_i(clk_16_i),
         .h_sync_o(h_sync_o),

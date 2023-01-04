@@ -73,24 +73,16 @@ set_location_assignment PIN_7 -to P7_LED_D4
 set_location_assignment PIN_9 -to P9_LED_D5
 set_location_assignment PIN_17 -to clk_50_i
 set_location_assignment PIN_18 -to mcu_clk
-set_location_assignment PIN_22 -to spi_cs_ni
+set_location_assignment PIN_57 -to spi_cs_ni -comment A13
 set_location_assignment PIN_24 -to h_sync_o
 set_location_assignment PIN_25 -to cpu_ready_o
 set_location_assignment PIN_26 -to P26_1V2
 set_location_assignment PIN_27 -to P27_GND
-set_location_assignment PIN_30 -to spi_ready_no
+set_location_assignment PIN_70 -to spi_ready_no -comment A1
 set_location_assignment PIN_31 -to clk_cpu_o
-set_location_assignment PIN_40 -to debug_o[7]
-set_location_assignment PIN_41 -to debug_o[3]
-set_location_assignment PIN_42 -to debug_o[6]
-set_location_assignment PIN_43 -to debug_o[2]
-set_location_assignment PIN_44 -to debug_o[5]
-set_location_assignment PIN_45 -to debug_o[1]
-set_location_assignment PIN_47 -to debug_o[4]
-set_location_assignment PIN_48 -to debug_o[0]
-set_location_assignment PIN_55 -to spi_sclk_i
-set_location_assignment PIN_58 -to spi_rx_i
-set_location_assignment PIN_60 -to spi_tx_io
+set_location_assignment PIN_45 -to spi_sclk_i -comment D1
+set_location_assignment PIN_48 -to spi_rx_i -comment D0
+set_location_assignment PIN_53 -to spi_tx_io -comment A14
 #set_location_assignment PIN_64 -to spi_cs_ni
 set_location_assignment PIN_73 -to P73_POR
 set_location_assignment PIN_74 -to audio_o
