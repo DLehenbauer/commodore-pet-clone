@@ -1179,9 +1179,6 @@
     (path "/00000000-0000-0000-0000-000061a7d9c6/00000000-0000-0000-0000-000061acbeaf"
       (reference "#PWR06") (unit 1) (value "+5V") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/00000000-0000-0000-0000-000061a8becc"
-      (reference "#PWR07") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-00006151ec26/00000000-0000-0000-0000-000061b9d252"
       (reference "#PWR08") (unit 1) (value "+5V") (footprint "")
     )
@@ -1338,9 +1335,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/f6f142e7-c4dd-461f-b686-eba27962ccd5"
       (reference "#PWR084") (unit 1) (value "+3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/fb4010ef-d898-494d-9973-0f3ca73cc96d"
-      (reference "#PWR085") (unit 1) (value "+5V") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/baea8478-1e02-497f-88d9-4b0c6c77bc0e"
       (reference "#PWR086") (unit 1) (value "GND") (footprint "")
     )
@@ -1349,12 +1343,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/d23a18f4-1956-4141-848e-93ea448b6a3a"
       (reference "#PWR089") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-00006387fa5b"
-      (reference "#PWR092") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000063746b41"
-      (reference "#PWR093") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-0000617efbc6"
       (reference "#PWR097") (unit 1) (value "+3V3") (footprint "")
@@ -1464,6 +1452,9 @@
     (path "/00000000-0000-0000-0000-000061ed99de/5f00be70-7c9c-4544-a576-996c687c8bdd"
       (reference "#PWR0132") (unit 1) (value "PD_GND") (footprint "")
     )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/ec4ed38b-e3f4-4b12-ab05-3b1c2d102ba9"
+      (reference "#PWR0133") (unit 1) (value "PD_GND") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-0000617d6918/4a3320ad-065c-4235-865e-fe14ae2cb2e8"
       (reference "#PWR0134") (unit 1) (value "GND") (footprint "")
     )
@@ -1485,8 +1476,8 @@
     (path "/00000000-0000-0000-0000-00006151ec26/1077260c-7958-4837-be6e-a302a69405ba"
       (reference "#PWR0140") (unit 1) (value "+5V") (footprint "")
     )
-    (path "/1dc0595f-3832-49f8-98ab-9c5f13feffce/ba7eb70c-b6f2-4119-bc1f-1e1bf7d086fa"
-      (reference "#PWR0141") (unit 1) (value "GND") (footprint "")
+    (path "/00000000-0000-0000-0000-0000617d6918/20dbd71a-f964-4c21-a5bf-ad81adee599f"
+      (reference "#PWR0141") (unit 1) (value "PD_GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/194d8f94-1f8c-46b8-85c2-4d2c4aaacbf4"
       (reference "#PWR0142") (unit 1) (value "PD_5V") (footprint "")
@@ -1536,6 +1527,12 @@
     (path "/00000000-0000-0000-0000-000061ed99de/44e139a7-a907-412a-8d7e-792b9c4aa504"
       (reference "#PWR0157") (unit 1) (value "PD_5V") (footprint "")
     )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/53f96d03-9eb6-41e2-811e-646ac54a907c"
+      (reference "#PWR0158") (unit 1) (value "PD_5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/f3557c31-99ab-4007-9ad4-ebce5681b427"
+      (reference "#PWR0159") (unit 1) (value "PD_GND") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-000061ed99de/a7888501-bf32-484f-bbe0-96efdd7a3738"
       (reference "#PWR0160") (unit 1) (value "FPGA_VCC") (footprint "")
     )
@@ -1554,8 +1551,8 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/a7ea819f-bd61-44c3-a457-57909dd4cba3"
       (reference "#PWR0165") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/01e9921b-43c1-4e88-b231-4e0efa58f9bf"
-      (reference "#PWR0166") (unit 1) (value "GND") (footprint "")
+    (path "/00000000-0000-0000-0000-000061a7d9c6/833f676c-97a5-42f1-b79a-7d5bf5a6df79"
+      (reference "#PWR0166") (unit 1) (value "PD_GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/e4329a8e-987a-4051-b6fc-170ba653fdc1"
       (reference "#PWR0167") (unit 1) (value "GND") (footprint "")
@@ -1583,6 +1580,9 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/a36cca3c-5377-4c26-bf5d-b45141d3592e"
       (reference "#PWR0175") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/1dc0595f-3832-49f8-98ab-9c5f13feffce/aadaecab-1a9d-4a30-8fc4-dd1e1a6d1520"
+      (reference "#PWR0176") (unit 1) (value "PD_GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/37aa9524-ac3c-4ae4-b6d7-34fa5f13b292"
       (reference "#PWR0178") (unit 1) (value "FPGA_VCC") (footprint "")
@@ -2139,6 +2139,18 @@
     (path "/00000000-0000-0000-0000-000061ed99de/4ac83b17-9a97-4b0a-af8b-d16843e060c5"
       (reference "NT17") (unit 1) (value "GND") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6624e5ab-9027-4690-9b1a-6ea0926f8351"
+      (reference "NT18") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/2075671c-7abe-4f50-8311-5312a3c94771"
+      (reference "NT19") (unit 1) (value "GND") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/30336ae9-09cc-40f2-99f5-e5e749f5e108"
+      (reference "NT20") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/30651f3d-6b2c-4c3b-ba9f-19ca4c2c11e1"
+      (reference "NT21") (unit 1) (value "GND") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
     (path "/00000000-0000-0000-0000-000061bef9ce/04ae58fc-a1df-4733-997e-a64d33434240"
       (reference "Q1") (unit 1) (value "AO3401A") (footprint "JLCPCB:SOT-23_L2.9-W1.3-P1.90-LS2.4-BR")
     )
@@ -2219,6 +2231,9 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6d107083-f9cf-4964-a9c6-eee4e03c9725"
       (reference "R23") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0402_1005Metric")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/d2b59544-6a50-4082-80c1-e7b96358ea20"
+      (reference "R24") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/e7db277c-423d-4b1d-ac66-7688bc21899d"
       (reference "R25") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0402_1005Metric")
@@ -2338,10 +2353,13 @@
       (reference "R63") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/d6158a8c-1e89-437e-9ff0-e0b34f5cfa57"
-      (reference "R64") (unit 1) (value "4k7") (footprint "Resistor_SMD:R_0402_1005Metric")
+      (reference "R64") (unit 1) (value "2k2") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/4660a28e-5734-46dc-a176-c0f6402ddbb3"
-      (reference "R65") (unit 1) (value "4k7") (footprint "Resistor_SMD:R_0402_1005Metric")
+      (reference "R65") (unit 1) (value "2k2") (footprint "Resistor_SMD:R_0402_1005Metric")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/5701dd4a-1f70-4c3f-a094-e0e7baf31a4c"
+      (reference "R66") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/d274958a-11e0-4b46-9f0f-53c54a29ff64"
       (reference "RN1") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
@@ -2389,16 +2407,16 @@
       (reference "RV1") (unit 1) (value "20k") (footprint "Potentiometer_SMD:Potentiometer_Bourns_TC33X_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/d724628a-968b-43f8-8489-f234f074e4df"
-      (reference "SW1") (unit 1) (value "RESET") (footprint "Button_Switch_THT:SW_PUSH_6mm")
+      (reference "SW1") (unit 1) (value "RESET") (footprint "JLCPCB:SW-TH_L6.0-W3.5-P6.50")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/762d38b2-73cf-429f-a7f3-6cf8f2fd84ed"
-      (reference "SW2") (unit 1) (value "MCU_RESET") (footprint "Button_Switch_THT:SW_PUSH_6mm")
+      (reference "SW2") (unit 1) (value "MCU_RESET") (footprint "JLCPCB:SW-TH_L6.0-W3.5-P6.50")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/cccaa1a9-be38-41ac-af22-520ece5649ae"
       (reference "SW3") (unit 1) (value "MENU") (footprint "JLCPCB:KEY-TH_SKHLLBA010")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-00006384e2ca"
-      (reference "SW4") (unit 1) (value "NMI") (footprint "Button_Switch_THT:SW_PUSH_6mm")
+      (reference "SW4") (unit 1) (value "NMI") (footprint "JLCPCB:SW-TH_L6.0-W3.5-P6.50")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/e85d0331-708c-4b41-8b84-9aecdaed6102"
       (reference "SW5") (unit 1) (value "CONFIG") (footprint "Button_Switch_THT:SW_DIP_SPSTx04_Slide_6.7x11.72mm_W7.62mm_P2.54mm_LowProfile")
