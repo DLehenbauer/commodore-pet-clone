@@ -18,7 +18,7 @@ module spi_bridge(
     input  logic spi_sclk_i,
     input  logic spi_cs_ni,     // Also serves as a synchronous reset for the SPI FSM
     input  logic spi_rx_i,
-    inout  wire  spi_tx_io,     // High-Z when CS is deasserted
+    output logic spi_tx_o,
 
     output logic [16:0] spi_addr_o,
     input  logic  [7:0] spi_data_i,
@@ -33,24 +33,18 @@ module spi_bridge(
     output logic rx_valid
 );
     logic [7:0] rx;
-    logic spi_tx;
     
     spi_byte spi_byte(
         .clk_sys_i(clk_sys_i),
         .spi_sclk_i(spi_sclk_i),
         .spi_cs_ni(spi_cs_ni),
         .spi_rx_i(spi_rx_i),
-        .spi_tx_o(spi_tx),
+        .spi_tx_o(spi_tx_o),
         .rx_byte_o(rx),
         .tx_byte_i(spi_data_i),
         .valid_o(rx_valid)
     );
     
-    // High-Z when CS is deasserted
-    assign spi_tx_io = spi_cs_ni
-        ? 1'bZ
-        : spi_tx;
-
     logic cmd_rd_a;
 
     //                                RV

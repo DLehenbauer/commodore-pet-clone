@@ -14,18 +14,26 @@
 
 module main (
     // System Bus
-    inout  wire          bus_rw_nio,    // CPU 34          : 0 = CPU writing, 1 = CPU reading
-    inout  wire  [16:0]  bus_addr_io,   // CPU 9-20, 22-25 : System address bus
-    inout  wire   [7:0]  bus_data_io,   // CPU 33-26       : System data bus
+    input  logic         bus_rw_ni,     // CPU 34 : 0 = writing, 1 = reading
+    output logic         bus_rw_no,     // 
+    output logic         bus_rw_noe,    //
+
+    input  logic [15:0]  bus_addr_i,    // CPU 9-20, 22-25 : System address bus
+    output logic [16:0]  bus_addr_o,    //
+    output logic         bus_addr_oe,   //
+
+    input  logic  [7:0]  bus_data_i,    // CPU 33-26 : System data bus
+    output logic  [7:0]  bus_data_o,    //
+    output logic         bus_data_oe,   //
     
     output logic [11:10] ram_addr_o,    // RAM: Intercept A11/A10 to mirror VRAM.  Must remove zero ohm
                                         //      resistors at R9 and R10.
 
     // SPI
     input  logic spi_sclk_i,            // RPi 23 : GPIO 11
-    input  logic spi_cs_ni,             // RPi 24 : GPIO 8
+    input  logic spi_cs_ni,             // RPi 24 : GPIO 8 (Also serves as !spi_tx_oe)
     input  logic spi_rx_i,              // RPi 19 : GPIO 10
-    inout  wire  spi_tx_io,             // RPi 21 : GPIO 9 (High-Z when SPI CS is deasserted)
+    output logic spi_tx_o,              // RPi 21 : GPIO 9 (Should be High-Z when CS is deasserted)
 
     output logic spi_ready_no,          // RPi  3 : Request completed and pi_data held while still pending.
 
@@ -70,7 +78,7 @@ module main (
         .spi_sclk_i(spi_sclk_i),
         .spi_cs_ni(spi_cs_ni),
         .spi_rx_i(spi_rx_i),
-        .spi_tx_io(spi_tx_io),
+        .spi_tx_o(spi_tx_o),
         .spi_addr_o(spi_addr),
         .spi_data_i(spi_rd_data),
         .spi_data_o(spi_wr_data),
@@ -100,8 +108,8 @@ module main (
 
     wire spi_rd_en = spi_en &&  spi_rw_n;
     wire spi_wr_en = spi_en && !spi_rw_n;
-    wire cpu_rd_en = cpu_en_o &&  bus_rw_nio;
-    wire cpu_wr_en = cpu_en_o && !bus_rw_nio;
+    wire cpu_rd_en = cpu_en_o &&  bus_rw_ni;
+    wire cpu_wr_en = cpu_en_o && !bus_rw_ni;
     
     video1 video1(
         .clk_16_i(clk_16_i),
@@ -128,7 +136,7 @@ module main (
     logic is_mirrored;
     
     address_decoding address_decoding(
-        .bus_addr_i(bus_addr_io),
+        .bus_addr_i(bus_addr_i),
         .ram_en_o(ram_enable),
         .io_en_o(io_enable_before_kbd),
         .pia1_en_o(pia1_enable_before_kbd),
@@ -147,8 +155,8 @@ module main (
         .spi_addr_i(spi_addr),
         .spi_data_i(spi_wr_data),
         .spi_wr_en_i(spi_wr_en),
-        .bus_addr_i(bus_addr_io[1:0]),
-        .bus_data_i(bus_data_io),
+        .bus_addr_i(bus_addr_i[1:0]),
+        .bus_data_i(bus_data_i),
         .pia1_en_i(pia1_enable_before_kbd),
         .cpu_rd_en_i(cpu_rd_en),
         .cpu_wr_en_i(cpu_wr_en),
@@ -181,31 +189,34 @@ module main (
     always @(negedge clk_8) begin
         if (spi_rd_en) begin
             if (spi_addr == 17'h0e80f) spi_rd_data <= { 7'h0, gfx_i };
-            else spi_rd_data <= bus_data_io;
+            else spi_rd_data <= bus_data_i;
         end
     end
     
-    assign bus_rw_nio = cpu_en_o
-        ? 1'bZ                  // CPU is reading/writing and therefore driving rw_b
-        : !spi_wr_en;           // RPi is reading/writing and therefore driving rw_b
+    assign bus_rw_noe = !cpu_en_o;  // CPU is reading/writing and therefore driving rw_b
+    assign bus_rw_no  = !spi_wr_en; // When FPGA is driving, only write when spi_wr_en is asserted.
     
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr_o[11:10] =
         spi_en
-            ? spi_addr[11:10]            // Give RPi access to full RAM
-            : is_mirrored
-                ? 2'b00                  // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
-                : bus_addr_io[11:10];
+            ? spi_addr[11:10]           // Give RPi access to full RAM
+            : is_mirrored               // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
+                ? 2'b00
+                : bus_addr_i[11:10];
     
-    assign bus_addr_io = spi_en
-        ? spi_addr                      // RPi is reading/writing, and therefore driving addr
-        : { 1'b0, 16'bZ };              // CPU is reading/writing, and therefore driving addr
+    assign bus_addr_oe      = spi_en;
+    assign bus_addr_o[15:0] = spi_addr[15:0];
+    
+    // When the CPU is driving the address bus, set A16 to zero.
+    assign bus_addr_o[16] = bus_addr_oe
+        ? spi_addr[16]
+        : 1'b0;
 
-    assign bus_data_io =
-        spi_wr_en
-            ? spi_wr_data               // RPi is writing, and therefore driving data
-            : kbd_enable                // 0 = Normal bus access, 1 = Intercept read of keyboard matrix
-                ? kbd_data_out          // Return USB keyboard state for PIA 1 Port B ($E812)
-                : 8'bZ;                 // CPU is writing and therefore driving data, or CPU/RPi are reading and RAM is driving data
+    // FPGA drives 'bus_data' when writing or intercepting keyboard
+    assign bus_data_oe = spi_wr_en || kbd_enable;
+    
+    assign bus_data_o  = kbd_enable
+        ? kbd_data_out  // Return USB keyboard state for PIA 1 Port B ($E812)
+        : spi_wr_data;
 endmodule
