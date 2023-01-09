@@ -475,6 +475,7 @@
           "/CPU \\ RAM/~{VP}",
           "/MAGIC/FPGA/AUDIO",
           "/MAGIC/FPGA/BE",
+          "/MAGIC/FPGA/CBUS0",
           "/MAGIC/FPGA/CBUS1",
           "/MAGIC/FPGA/CBUS2",
           "/MAGIC/FPGA/CDONE",
@@ -543,7 +544,6 @@
         "microvia_drill": 0.1,
         "name": "MCU",
         "nets": [
-          "/MAGIC/FPGA/CBUS0",
           "/MAGIC/FPGA/CCK",
           "/MAGIC/FPGA/CDI0",
           "/MAGIC/FPGA/CDI1",
