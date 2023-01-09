@@ -165,7 +165,7 @@ module main (
     );
 
     wire pia1_enable = pia1_enable_before_kbd && !kbd_enable;
-    wire io_enable = io_enable_before_kbd && !kbd_enable;
+    wire io_enable   = io_enable_before_kbd && !kbd_enable;
        
     // Address Decoding
     wire   pia1_cs     = pia1_enable && cpu_en_o;
@@ -193,9 +193,19 @@ module main (
         end
     end
     
-    assign bus_rw_noe = !cpu_en_o;  // CPU is reading/writing and therefore driving rw_b
-    assign bus_rw_no  = !spi_wr_en; // When FPGA is driving, only write when spi_wr_en is asserted.
+    // FPGA drives 'bus_addr[15:0]' and 'bus_rw_n' whenever the CPU is not.
+    assign bus_addr_oe = !cpu_en_o;   
+    assign bus_rw_noe  = bus_addr_oe;   // Always same as 'bus_addr_oe'
     
+    assign bus_rw_no   = !spi_wr_en;    // When FPGA is driving, only write when spi_wr_en is asserted.
+    
+    assign bus_addr_o[15:0] = spi_addr[15:0];
+    
+    // Note that FPGA always drives 'bus_addr[16]' (the 17th address bit).
+    assign bus_addr_o[16] = bus_addr_oe
+        ? spi_addr[16]      // SPI has access to the upper 64kb
+        : 1'b0;             // Always set A[16]=0 for CPU and Video
+
     // 40 column PETs have 1KB of video ram, mirrored 4 times.
     // 80 column PETs have 2KB of video ram, mirrored 2 times.
     assign ram_addr_o[11:10] =
@@ -204,19 +214,11 @@ module main (
             : is_mirrored               // Mirror VRAM when CPU is reading/writing to $8000-$8FFF
                 ? 2'b00
                 : bus_addr_i[11:10];
-    
-    assign bus_addr_oe      = spi_en;
-    assign bus_addr_o[15:0] = spi_addr[15:0];
-    
-    // When the CPU is driving the address bus, set A16 to zero.
-    assign bus_addr_o[16] = bus_addr_oe
-        ? spi_addr[16]
-        : 1'b0;
 
     // FPGA drives 'bus_data' when writing or intercepting keyboard
     assign bus_data_oe = spi_wr_en || kbd_enable;
     
-    assign bus_data_o  = kbd_enable
+    assign bus_data_o = kbd_enable
         ? kbd_data_out  // Return USB keyboard state for PIA 1 Port B ($E812)
         : spi_wr_data;
 endmodule

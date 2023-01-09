@@ -14,7 +14,7 @@
 
 module top(
     // FPGA
-    input logic          clk_50_i,        // 50 MHz oscillator
+    input logic          clk_50_i,      // 50 MHz oscillator
 
     // System Bus
     inout wire           bus_rw_nio,    // CPU 34          : 0 = CPU writing, 1 = CPU reading
