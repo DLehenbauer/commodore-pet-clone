@@ -40,26 +40,26 @@ hw/**/*.xml
 hw/**/*.csv
 
 # Icarus Verilog build output
-rtl/*.out
-rtl/*.vcd
+rtl/ep2/*.out
+rtl/ep2/*.vcd
 
 # Quartus generated files
-rtl/*.v.bak
-rtl/*.sdc.bak
-rtl/*.sv.bak
-rtl/*.tcl.bak
-rtl/db/**
-rtl/incremental_db/**
-rtl/output_files/**
-rtl/*.dpf
-rtl/*.qws
-rtl/*_nativelink_simulation.rpt
+rtl/ep2/*.v.bak
+rtl/ep2/*.sdc.bak
+rtl/ep2/*.sv.bak
+rtl/ep2/*.tcl.bak
+rtl/ep2/db/**
+rtl/ep2/incremental_db/**
+rtl/ep2/output_files/**
+rtl/ep2/*.dpf
+rtl/ep2/*.qws
+rtl/ep2/*_nativelink_simulation.rpt
 
 # ModelSim generated files
-rtl/simulation/modelsim/**/*
+rtl/ep2/simulation/modelsim/**/*
 
 # ATMISP log file
-rtl/jtag.log
+rtl/ep2/jtag.log
 
 # Don't commit PRGs
 prgs/**
