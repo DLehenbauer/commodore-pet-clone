@@ -2093,7 +2093,7 @@
       (reference "NT5") (unit 1) (value "+3V3") (footprint "PET:NetTie-2_SMD_Pad_0.4_to_0.2mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/466f9382-20a3-4eaa-a4db-869a3dfcfaae"
-      (reference "NT6") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_0.4_to_0.2mm")
+      (reference "NT6") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_0.4_to_0.28mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/f22b14d5-3cdb-4ce9-bbfa-af2f9bf1e670"
       (reference "NT7") (unit 1) (value "+3V3") (footprint "PET:NetTie-2_SMD_Pad_0.4_to_0.28mm")

@@ -4822,7 +4822,7 @@
     (property "Value" "+5V" (id 1) (at 374.65 33.02 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Footprint" "PET:NetTie-2_SMD_Pad_0.4_to_0.2mm" (id 2) (at 374.65 35.56 0)
+    (property "Footprint" "PET:NetTie-2_SMD_Pad_0.4_to_0.28mm" (id 2) (at 374.65 35.56 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 374.65 35.56 0)
