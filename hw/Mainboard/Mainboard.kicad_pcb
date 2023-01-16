@@ -455,24 +455,24 @@
   (net 365 "/MAGIC/MCU/SPI1_SCK")
   (net 366 "/MAGIC/MCU/SPI1_RX")
   (net 367 "/MAGIC/MCU/SPI1_~{CS}")
-  (net 368 "Net-(R38-Pad1)")
-  (net 369 "Net-(U12-Pad30)")
+  (net 368 "Net-(C1-Pad1)")
+  (net 369 "Net-(C9-Pad1)")
   (net 370 "PD_3V3")
-  (net 371 "Net-(R37-Pad1)")
-  (net 372 "Net-(RN10-Pad5)")
+  (net 371 "Net-(C10-Pad1)")
+  (net 372 "Net-(C11-Pad1)")
   (net 373 "/IEEE/VCC")
   (net 374 "Net-(C8-Pad1)")
-  (net 375 "Net-(U7-Pad22)")
+  (net 375 "Net-(C19-Pad1)")
   (net 376 "Net-(C13-Pad1)")
-  (net 377 "Net-(U20-Pad1)")
+  (net 377 "Net-(NT37-Pad2)")
   (net 378 "Net-(J1-Pad1)")
   (net 379 "Net-(J14-PadA1_B12)")
   (net 380 "Net-(J14-PadA9_B4)")
-  (net 381 "Net-(R56-Pad1)")
-  (net 382 "Net-(R49-Pad1)")
+  (net 381 "Net-(NT33-Pad2)")
+  (net 382 "Net-(NT34-Pad2)")
   (net 383 "Net-(C7-Pad1)")
   (net 384 "Net-(C18-Pad1)")
-  (net 385 "Net-(NT6-Pad1)")
+  (net 385 "Net-(PT4-Pad2)")
   (net 386 "+1V2")
 
   (footprint "PET:PET_MountingHole_4mm" locked (layer "F.Cu")
@@ -614,7 +614,7 @@
     (fp_arc (start -3.683 0) (mid -4.054974 0.898026) (end -4.953 1.27) (layer "Edge.Cuts") (width 0.12) (tstamp 65f6ecfe-f239-4ce4-ac5b-970812b20db3))
     (fp_arc (start 24.765 1.27) (mid 23.866974 0.898026) (end 23.495 0) (layer "Edge.Cuts") (width 0.12) (tstamp 71927e60-d418-478d-93dc-4cbe4f0be008))
     (pad "1,A" connect custom locked (at 19.812 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -627,7 +627,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 32ab5067-d921-4e01-bd6b-7c4ce1b90dd8))
     (pad "1,A" connect custom locked (at 19.812 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -640,7 +640,7 @@
           ) (width 0) (fill yes))
       ) (tstamp db7485c5-1f3d-4c4d-aaca-21d9ceb48eb8))
     (pad "2,B" connect custom locked (at 15.8496 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 330 "PD_5V") (pinfunction "+5V") (pintype "power_in") (zone_connect 0)
+      (net 330 "PD_5V") (pinfunction "+5V") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -653,7 +653,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 575b366f-076f-4713-acc6-cb8ccddf9355))
     (pad "2,B" connect custom locked (at 15.8496 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 330 "PD_5V") (pinfunction "+5V") (pintype "power_in") (zone_connect 0)
+      (net 330 "PD_5V") (pinfunction "+5V") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -666,7 +666,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 602a588f-34e3-46cd-b5ef-24d1552c6319))
     (pad "3,C" connect custom locked (at 11.8872 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 187 "/CASS/CASS_A_MOTOR") (pinfunction "MOTOR") (pintype "input") (zone_connect 0)
+      (net 187 "/CASS/CASS_A_MOTOR") (pinfunction "MOTOR") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -679,7 +679,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 0369275a-90d4-4d65-ad75-9b800474d633))
     (pad "3,C" connect custom locked (at 11.8872 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 187 "/CASS/CASS_A_MOTOR") (pinfunction "MOTOR") (pintype "input") (zone_connect 0)
+      (net 187 "/CASS/CASS_A_MOTOR") (pinfunction "MOTOR") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -692,7 +692,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 89b62835-e77c-48ce-b670-fc64443fd277))
     (pad "4,D" connect custom locked (at 7.9248 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 153 "/CASS/CASS_A_READ") (pinfunction "READ") (pintype "output") (zone_connect 0)
+      (net 153 "/CASS/CASS_A_READ") (pinfunction "READ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -705,7 +705,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 2278e817-65ec-4f8a-80f5-e37f2f8ffc85))
     (pad "4,D" connect custom locked (at 7.9248 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 153 "/CASS/CASS_A_READ") (pinfunction "READ") (pintype "output") (zone_connect 0)
+      (net 153 "/CASS/CASS_A_READ") (pinfunction "READ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -718,7 +718,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 25cfb9c1-a29d-4712-9dc6-b45a63e9fa9a))
     (pad "5,E" connect custom locked (at 3.9624 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "input") (zone_connect 0)
+      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -731,7 +731,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 2f8d31c2-107a-4705-ad0c-7d7bd4e35046))
     (pad "5,E" connect custom locked (at 3.9624 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "input") (zone_connect 0)
+      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -744,7 +744,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 7273e056-fb7b-4325-b3c8-ceb64cb8eb66))
     (pad "6,F" connect custom locked (at 0 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 154 "/CASS/CASS_A_~{SWITCH}") (pinfunction "SWITCH") (pintype "output") (zone_connect 0)
+      (net 154 "/CASS/CASS_A_~{SWITCH}") (pinfunction "SWITCH") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -757,7 +757,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 654b1293-5e9e-4a07-a9bd-66b4a2c38e04))
     (pad "6,F" connect custom locked (at 0 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 154 "/CASS/CASS_A_~{SWITCH}") (pinfunction "SWITCH") (pintype "output") (zone_connect 0)
+      (net 154 "/CASS/CASS_A_~{SWITCH}") (pinfunction "SWITCH") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1031,7 +1031,7 @@
     (fp_line (start -0.5 -0.25) (end 0.5 -0.25) (layer "F.Fab") (width 0.1) (tstamp 743813c0-771c-4465-8228-9fba3b35f722))
     (fp_line (start 0.5 -0.25) (end 0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp 80dd166e-de51-4dba-bc19-eb1abf66fb6a))
     (pad "1" smd roundrect locked (at -0.48 0 270) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 377 "Net-(U20-Pad1)") (pintype "passive") (tstamp 13602db8-f1e8-470c-a71e-03bbe3a25eed))
+      (net 375 "Net-(C19-Pad1)") (pintype "passive") (tstamp 13602db8-f1e8-470c-a71e-03bbe3a25eed))
     (pad "2" smd roundrect locked (at 0.48 0 270) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "GND") (pintype "passive") (tstamp 60f50898-3be8-4bb6-9b3e-ffa66cb168ba))
     (model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -1078,7 +1078,7 @@
     (fp_line (start -2.2 3.9) (end -2.2 -2.9) (layer "F.Fab") (width 0.1) (tstamp 72e131f7-a798-473a-8d75-93c8e9d4f388))
     (fp_line (start 2.2 3.9) (end -2.2 3.9) (layer "F.Fab") (width 0.1) (tstamp b787be3a-8727-4466-a542-6d43408452a7))
     (pad "1" smd roundrect locked (at -2.8625 -3.575) (size 1.475 0.4) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 377 "Net-(U20-Pad1)") (pinfunction "VCCA") (pintype "power_in") (tstamp 3f3c88b3-f3c0-4c78-b63b-53782e6b89bf))
+      (net 375 "Net-(C19-Pad1)") (pinfunction "VCCA") (pintype "power_in") (tstamp 3f3c88b3-f3c0-4c78-b63b-53782e6b89bf))
     (pad "2" smd roundrect locked (at -2.8625 -2.925) (size 1.475 0.4) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "GND") (pinfunction "A->B") (pintype "input") (tstamp fa04cab9-6a83-4963-9210-71dd5a09b9bf))
     (pad "3" smd roundrect locked (at -2.8625 -2.275) (size 1.475 0.4) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
@@ -1413,7 +1413,7 @@
     (pad "23" thru_hole oval (at 15.24 43.18) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 157 "/IO/B~{VIA_CS}") (pinfunction "~{CS2}") (pintype "input") (tstamp 865e89d0-92fa-48b7-86dc-b840011940b6))
     (pad "24" thru_hole oval (at 15.24 40.64) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
-      (net 375 "Net-(U7-Pad22)") (pinfunction "CS1") (pintype "input") (tstamp 3c0ed449-caa9-4508-bd67-3ab5716017e4))
+      (net 369 "Net-(C9-Pad1)") (pinfunction "CS1") (pintype "input") (tstamp 3c0ed449-caa9-4508-bd67-3ab5716017e4))
     (pad "25" thru_hole oval (at 15.24 38.1) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 111 "/IO/Bϕ2") (pinfunction "ϕ2") (pintype "input") (tstamp 39af4ec2-1853-4408-99b8-e325b7f05d81))
     (pad "26" thru_hole oval (at 15.24 35.56) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
@@ -1538,11 +1538,11 @@
     (pad "21" thru_hole oval (at 15.24 48.26) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 112 "/IO/BR~{W}") (pinfunction "R/~{W}") (pintype "input") (tstamp ba5daf19-d15a-4b7e-a468-d04f1af84b0e))
     (pad "22" thru_hole oval (at 15.24 45.72) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
-      (net 375 "Net-(U7-Pad22)") (pinfunction "CS0") (pintype "input") (tstamp 82ae1fae-0718-4592-882a-2c8c7af3759b))
+      (net 369 "Net-(C9-Pad1)") (pinfunction "CS0") (pintype "input") (tstamp 82ae1fae-0718-4592-882a-2c8c7af3759b))
     (pad "23" thru_hole oval (at 15.24 43.18) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 122 "/IO/B~{PIA1_CS}") (pinfunction "~{CS2}") (pintype "input") (tstamp 94632864-7a86-43ff-b87c-e5de3d6e014a))
     (pad "24" thru_hole oval (at 15.24 40.64) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
-      (net 375 "Net-(U7-Pad22)") (pinfunction "CS1") (pintype "input") (tstamp 96780b52-41df-47ee-b2c8-07d2e0c95d6c))
+      (net 369 "Net-(C9-Pad1)") (pinfunction "CS1") (pintype "input") (tstamp 96780b52-41df-47ee-b2c8-07d2e0c95d6c))
     (pad "25" thru_hole oval (at 15.24 38.1) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 111 "/IO/Bϕ2") (pinfunction "ϕ2") (pintype "input") (tstamp 1f72e347-859b-4872-b449-660fbc6c2c83))
     (pad "26" thru_hole oval (at 15.24 35.56) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
@@ -1892,7 +1892,7 @@
     (fp_arc (start 6.5786 -1.143) (mid 5.9436 -0.508) (end 5.3086 -1.143) (layer "Edge.Cuts") (width 0.12) (tstamp 77e3bd1e-9b1c-450a-a91f-d255e2b95296))
     (fp_arc (start 48.641 1.27) (mid 47.742974 0.898026) (end 47.371 0) (layer "Edge.Cuts") (width 0.12) (tstamp da75cffb-4eac-4d60-98c9-bd0cc71904b0))
     (pad "1" connect custom locked (at 43.5864 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1905,7 +1905,7 @@
           ) (width 0) (fill yes))
       ) (tstamp d059c4f0-202c-4083-baf9-00209ca49e57))
     (pad "2" connect custom locked (at 39.624 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 118 "/MAGIC/~{BVIDEO}") (pinfunction "~{VIDEO}") (pintype "input") (zone_connect 0)
+      (net 118 "/MAGIC/~{BVIDEO}") (pinfunction "~{VIDEO}") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1931,7 +1931,7 @@
           ) (width 0) (fill yes))
       ) (tstamp bf6a02a1-f402-40d4-bf7e-215fd6c7f523))
     (pad "4" connect custom locked (at 31.6992 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 12 "/IEEE/EOI") (pinfunction "EOI") (pintype "bidirectional") (zone_connect 0)
+      (net 12 "/IEEE/EOI") (pinfunction "EOI") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1944,7 +1944,7 @@
           ) (width 0) (fill yes))
       ) (tstamp ca71971c-0974-4140-8078-7b16372743cc))
     (pad "5" connect custom locked (at 27.7368 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 129 "/IO/DIAG") (pinfunction "DIAG") (pintype "output") (zone_connect 0)
+      (net 129 "/IO/DIAG") (pinfunction "DIAG") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1957,7 +1957,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 574f926e-29b1-4ca2-a3f1-8fce90d19240))
     (pad "6" connect custom locked (at 23.7744 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 146 "/CASS/CASS2_READ") (pinfunction "CASS2_READ") (pintype "output") (zone_connect 0)
+      (net 146 "/CASS/CASS2_READ") (pinfunction "CASS2_READ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1970,7 +1970,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 2eba484d-688d-4f48-bb15-09916a0480a6))
     (pad "7" connect custom locked (at 19.812 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 76 "/CASS/CASS_WRITE") (pinfunction "CASS_WRITE") (pintype "input") (zone_connect 0)
+      (net 76 "/CASS/CASS_WRITE") (pinfunction "CASS_WRITE") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1983,7 +1983,7 @@
           ) (width 0) (fill yes))
       ) (tstamp ddc72f96-abee-4005-9d53-ba9a5188ae49))
     (pad "8" connect custom locked (at 15.8496 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 75 "/CASS/CASS1_READ") (pinfunction "CASS1_READ") (pintype "output") (zone_connect 0)
+      (net 75 "/CASS/CASS1_READ") (pinfunction "CASS1_READ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -1996,7 +1996,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 77837358-16ff-4aea-9319-d2e914bd3e05))
     (pad "9" connect custom locked (at 11.8872 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 173 "/IO/BVERT") (pinfunction "VERT") (pintype "input") (zone_connect 0)
+      (net 173 "/IO/BVERT") (pinfunction "VERT") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2009,7 +2009,7 @@
           ) (width 0) (fill yes))
       ) (tstamp c9411e96-46f8-4f71-9770-686ac324f7be))
     (pad "10" connect custom locked (at 7.9248 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 176 "/MAGIC/BHORIZ") (pinfunction "HORIZ") (pintype "input") (zone_connect 0)
+      (net 176 "/MAGIC/BHORIZ") (pinfunction "HORIZ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2022,7 +2022,7 @@
           ) (width 0) (fill yes))
       ) (tstamp d7c3a16c-a020-49c5-ad79-d7465ce390a4))
     (pad "11" connect custom locked (at 3.9624 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 48 "/IO/GRAPHIC") (pinfunction "GRAPHIC") (pintype "input") (zone_connect 0)
+      (net 48 "/IO/GRAPHIC") (pinfunction "GRAPHIC") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2035,7 +2035,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 62fff0c5-8415-40dc-9f00-a7182a751676))
     (pad "12" connect custom locked (at 0 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2048,7 +2048,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 6eba24da-9fc5-43b9-b3f3-0d17296ea4dd))
     (pad "A" connect custom locked (at 43.5864 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2061,7 +2061,7 @@
           ) (width 0) (fill yes))
       ) (tstamp a1bf63ea-9403-4fd1-8804-14b18d1de645))
     (pad "B" connect custom locked (at 39.624 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 47 "/IO/VIA_CA1") (pinfunction "VIA_CA1") (pintype "bidirectional") (zone_connect 0)
+      (net 47 "/IO/VIA_CA1") (pinfunction "VIA_CA1") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2074,7 +2074,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 26724368-76e3-4f0e-ac2d-f9b0a1b74634))
     (pad "C" connect custom locked (at 35.6616 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 58 "/IO/VIA_PA0") (pinfunction "VIA_PA0") (pintype "bidirectional") (zone_connect 0)
+      (net 58 "/IO/VIA_PA0") (pinfunction "VIA_PA0") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2087,7 +2087,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 3c6d3601-68a4-4db3-aa43-e369d29130c8))
     (pad "D" connect custom locked (at 31.6992 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 57 "/IO/VIA_PA1") (pinfunction "VIA_PA1") (pintype "bidirectional") (zone_connect 0)
+      (net 57 "/IO/VIA_PA1") (pinfunction "VIA_PA1") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2100,7 +2100,7 @@
           ) (width 0) (fill yes))
       ) (tstamp f980ca5e-6675-4748-b4eb-f5e7636f4a23))
     (pad "E" connect custom locked (at 27.7368 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 56 "/IO/VIA_PA2") (pinfunction "VIA_PA2") (pintype "bidirectional") (zone_connect 0)
+      (net 56 "/IO/VIA_PA2") (pinfunction "VIA_PA2") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2113,7 +2113,7 @@
           ) (width 0) (fill yes))
       ) (tstamp e91951a3-f2d8-462e-984e-3ac6df3c41b2))
     (pad "F" connect custom locked (at 23.7744 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 55 "/IO/VIA_PA3") (pinfunction "VIA_PA3") (pintype "bidirectional") (zone_connect 0)
+      (net 55 "/IO/VIA_PA3") (pinfunction "VIA_PA3") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2126,7 +2126,7 @@
           ) (width 0) (fill yes))
       ) (tstamp e2adbdd1-96a5-45cf-9c35-90253df5bd07))
     (pad "H" connect custom locked (at 19.812 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 54 "/IO/VIA_PA4") (pinfunction "VIA_PA4") (pintype "bidirectional") (zone_connect 0)
+      (net 54 "/IO/VIA_PA4") (pinfunction "VIA_PA4") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2139,7 +2139,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 4d7302a7-5530-45fa-957d-0153408c83b2))
     (pad "J" connect custom locked (at 15.8496 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 53 "/IO/VIA_PA5") (pinfunction "VIA_PA5") (pintype "bidirectional") (zone_connect 0)
+      (net 53 "/IO/VIA_PA5") (pinfunction "VIA_PA5") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2152,7 +2152,7 @@
           ) (width 0) (fill yes))
       ) (tstamp fac1386a-4505-4489-973f-99ae5c08142e))
     (pad "K" connect custom locked (at 11.8872 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 52 "/IO/VIA_PA6") (pinfunction "VIA_PA6") (pintype "bidirectional") (zone_connect 0)
+      (net 52 "/IO/VIA_PA6") (pinfunction "VIA_PA6") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2165,7 +2165,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 26a9ff80-6592-4630-b004-bd0385faeda4))
     (pad "L" connect custom locked (at 7.9248 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 51 "/IO/VIA_PA7") (pinfunction "VIA_PA7") (pintype "bidirectional") (zone_connect 0)
+      (net 51 "/IO/VIA_PA7") (pinfunction "VIA_PA7") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2178,7 +2178,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 0d055089-0200-4ded-a25d-60eff257b6d0))
     (pad "M" connect custom locked (at 3.9624 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 130 "/IO/VIA_CB2") (pinfunction "VIA_CB2") (pintype "bidirectional") (zone_connect 0)
+      (net 130 "/IO/VIA_CB2") (pinfunction "VIA_CB2") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2191,7 +2191,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 8dbd047a-e03b-4700-bbc0-fc871005d848))
     (pad "N" connect custom locked (at 0 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -2851,7 +2851,7 @@
     (fp_line (start 0.5 -0.25) (end 0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp bfbe11e5-5b1b-4c54-8a8a-c528d8e9df0c))
     (fp_line (start 0.5 0.25) (end -0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp e8df1910-72cb-453f-ad0c-0832513837a3))
     (pad "1" smd roundrect (at -0.48 0 90) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 375 "Net-(U7-Pad22)") (pintype "passive") (tstamp 9d9a01e2-3050-4e4d-9430-9e57d1304c2b))
+      (net 369 "Net-(C9-Pad1)") (pintype "passive") (tstamp 9d9a01e2-3050-4e4d-9430-9e57d1304c2b))
     (pad "2" smd roundrect (at 0.48 0 90) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "GND") (pintype "passive") (tstamp 9d98e6ac-b0e6-4910-b756-5c5e19fbd8e0))
     (model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -2894,7 +2894,7 @@
     (fp_line (start -0.5 -0.25) (end 0.5 -0.25) (layer "F.Fab") (width 0.1) (tstamp 6e652658-7c43-4788-afbc-f23ad795ce6b))
     (fp_line (start 0.5 -0.25) (end 0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp bab6639a-ea4a-4663-ab4a-9414dc065ffc))
     (pad "1" smd roundrect (at -0.48 0 180) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 368 "Net-(R38-Pad1)") (pintype "passive") (tstamp 4208bb8f-6283-43df-8eb9-288c1d9bb096))
+      (net 371 "Net-(C10-Pad1)") (pintype "passive") (tstamp 4208bb8f-6283-43df-8eb9-288c1d9bb096))
     (pad "2" smd roundrect (at 0.48 0 180) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "GND") (pintype "passive") (tstamp 3131c1d6-37ee-4b54-90cf-257b2a069644))
     (model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -2980,7 +2980,7 @@
     (fp_line (start 0.525 -0.27) (end 0.525 0.27) (layer "F.Fab") (width 0.1) (tstamp cf0ee801-621c-4402-a42c-c8283f421bef))
     (fp_line (start -0.525 0.27) (end -0.525 -0.27) (layer "F.Fab") (width 0.1) (tstamp d0db1ccc-afc2-4ecd-8e51-c5141bea9fc8))
     (pad "1" smd roundrect (at -0.51 0) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 368 "Net-(R38-Pad1)") (pintype "passive") (tstamp 92180e2a-1b3d-42ec-9d3f-9d5e8626dc90))
+      (net 371 "Net-(C10-Pad1)") (pintype "passive") (tstamp 92180e2a-1b3d-42ec-9d3f-9d5e8626dc90))
     (pad "2" smd roundrect (at 0.51 0) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 303 "/MAGIC/FPGA/~{IRQ}") (pintype "passive") (tstamp eb6dcbfd-504c-4bf6-9a10-38e14cf1237c))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -3032,7 +3032,7 @@
     (fp_arc (start -3.683 0) (mid -4.054974 0.898026) (end -4.953 1.27) (layer "Edge.Cuts") (width 0.12) (tstamp de926f96-9ccf-4707-a9ea-b318eb1a8510))
     (fp_arc (start 10.541 -1.143) (mid 9.906 -0.508) (end 9.271 -1.143) (layer "Edge.Cuts") (width 0.12) (tstamp ed9f59f4-310c-4cb4-a511-a75e9d30aac2))
     (pad "1" connect custom locked (at 43.5864 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 16 "/IEEE/DIO1") (pinfunction "DIO1") (pintype "bidirectional") (zone_connect 0)
+      (net 16 "/IEEE/DIO1") (pinfunction "DIO1") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3045,7 +3045,7 @@
           ) (width 0) (fill yes))
       ) (tstamp db6e42ff-da3d-4940-8ddb-d46a8726ac4c))
     (pad "2" connect custom locked (at 39.624 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 15 "/IEEE/DIO2") (pinfunction "DIO2") (pintype "bidirectional") (zone_connect 0)
+      (net 15 "/IEEE/DIO2") (pinfunction "DIO2") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3058,7 +3058,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 51fa7cb1-ce1a-4f70-bc41-8952dfafdd5b))
     (pad "3" connect custom locked (at 35.6616 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 14 "/IEEE/DIO3") (pinfunction "DIO3") (pintype "bidirectional") (zone_connect 0)
+      (net 14 "/IEEE/DIO3") (pinfunction "DIO3") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3071,7 +3071,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 730ba8f1-25f6-412f-b595-d6dda1c37402))
     (pad "4" connect custom locked (at 31.6992 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 13 "/IEEE/DIO4") (pinfunction "DIO4") (pintype "bidirectional") (zone_connect 0)
+      (net 13 "/IEEE/DIO4") (pinfunction "DIO4") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3084,7 +3084,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 3844e88a-aecd-410e-ae32-b7c0c80188dc))
     (pad "5" connect custom locked (at 27.7368 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 12 "/IEEE/EOI") (pinfunction "EOI") (pintype "bidirectional") (zone_connect 0)
+      (net 12 "/IEEE/EOI") (pinfunction "EOI") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3097,7 +3097,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 3e990472-50a9-4c47-b2d9-ab7c5f564804))
     (pad "6" connect custom locked (at 23.7744 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 11 "/IEEE/DAV") (pinfunction "DAV") (pintype "bidirectional") (zone_connect 0)
+      (net 11 "/IEEE/DAV") (pinfunction "DAV") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3110,7 +3110,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 1e706b36-344a-465a-817a-0d5c88c664d2))
     (pad "7" connect custom locked (at 19.812 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 10 "/IEEE/NRFD") (pinfunction "NRFD") (pintype "bidirectional") (zone_connect 0)
+      (net 10 "/IEEE/NRFD") (pinfunction "NRFD") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3123,7 +3123,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 90c3132d-5570-4c28-95e1-e350e2ff6251))
     (pad "8" connect custom locked (at 15.8496 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 9 "/IEEE/NDAC") (pinfunction "NDAC") (pintype "bidirectional") (zone_connect 0)
+      (net 9 "/IEEE/NDAC") (pinfunction "NDAC") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3136,7 +3136,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 5460c45c-536e-4497-af86-034a2a35cfcc))
     (pad "9" connect custom locked (at 11.8872 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 8 "/IEEE/IFC") (pinfunction "IFC") (pintype "input") (zone_connect 0)
+      (net 8 "/IEEE/IFC") (pinfunction "IFC") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3162,7 +3162,7 @@
           ) (width 0) (fill yes))
       ) (tstamp ed758a7e-1e54-49de-b304-c00d8f9c04bd))
     (pad "11" connect custom locked (at 3.9624 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 6 "/IEEE/ATN") (pinfunction "ATN") (pintype "bidirectional") (zone_connect 0)
+      (net 6 "/IEEE/ATN") (pinfunction "ATN") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3175,7 +3175,7 @@
           ) (width 0) (fill yes))
       ) (tstamp f224924e-f3c8-4c5c-844b-d08f679ff803))
     (pad "12" connect custom locked (at 0 -1.468) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3188,7 +3188,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 0e2c0bb8-58bc-4372-84f9-1fe4bbadbd78))
     (pad "A" connect custom locked (at 43.5864 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 5 "/IEEE/DIO5") (pinfunction "DIO5") (pintype "bidirectional") (zone_connect 0)
+      (net 5 "/IEEE/DIO5") (pinfunction "DIO5") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3201,7 +3201,7 @@
           ) (width 0) (fill yes))
       ) (tstamp ef9aef5a-4ff4-4640-9845-eaec7296f881))
     (pad "B" connect custom locked (at 39.624 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 4 "/IEEE/DIO6") (pinfunction "DIO6") (pintype "bidirectional") (zone_connect 0)
+      (net 4 "/IEEE/DIO6") (pinfunction "DIO6") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3214,7 +3214,7 @@
           ) (width 0) (fill yes))
       ) (tstamp e8f4b094-773a-42aa-9006-4d95dd10be7e))
     (pad "C" connect custom locked (at 35.6616 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 3 "/IEEE/DIO7") (pinfunction "DIO7") (pintype "bidirectional") (zone_connect 0)
+      (net 3 "/IEEE/DIO7") (pinfunction "DIO7") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3227,7 +3227,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 3ee88b5a-08ca-4f7d-a999-9939b683c9c2))
     (pad "D" connect custom locked (at 31.6992 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 2 "/IEEE/DIO8") (pinfunction "DIO8") (pintype "bidirectional") (zone_connect 0)
+      (net 2 "/IEEE/DIO8") (pinfunction "DIO8") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3240,7 +3240,7 @@
           ) (width 0) (fill yes))
       ) (tstamp c845ecea-d370-4163-8720-5683ce661ab5))
     (pad "E" connect custom locked (at 27.7368 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3253,7 +3253,7 @@
           ) (width 0) (fill yes))
       ) (tstamp cd2cca40-e567-4dd5-b851-4fd6c01ce8db))
     (pad "F" connect custom locked (at 23.7744 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3266,7 +3266,7 @@
           ) (width 0) (fill yes))
       ) (tstamp c14cfd11-2cd1-465d-b3c6-ea0e8f3f3cb9))
     (pad "H" connect custom locked (at 19.812 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3279,7 +3279,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 47022f36-ee19-44d4-b89d-2de118a4f69a))
     (pad "J" connect custom locked (at 15.8496 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3292,7 +3292,7 @@
           ) (width 0) (fill yes))
       ) (tstamp fa194e16-7467-4e19-b09b-3b55eb462993))
     (pad "K" connect custom locked (at 11.8872 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3305,7 +3305,7 @@
           ) (width 0) (fill yes))
       ) (tstamp ac0f4d1a-436e-404e-8ec4-9ca22e00da58))
     (pad "L" connect custom locked (at 7.9248 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3318,7 +3318,7 @@
           ) (width 0) (fill yes))
       ) (tstamp d46ae739-9ffe-43d4-9432-30b67e37097f))
     (pad "M" connect custom locked (at 3.9624 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3331,7 +3331,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 2751e0ab-111f-42e8-9d0f-9afeea2ace4b))
     (pad "N" connect custom locked (at 0 -1.468) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 328 "CHASSIS_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -3414,7 +3414,7 @@
     (pad "1" smd roundrect (at -0.51 0 270) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 301 "/MAGIC/FPGA/RDY") (pintype "passive") (tstamp 4d770512-df88-474f-9516-beea6934f41d))
     (pad "2" smd roundrect (at 0.51 0 270) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 368 "Net-(R38-Pad1)") (pintype "passive") (tstamp 0485ba7b-3c38-4d52-8769-7c7837cd9a71))
+      (net 371 "Net-(C10-Pad1)") (pintype "passive") (tstamp 0485ba7b-3c38-4d52-8769-7c7837cd9a71))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
@@ -3455,7 +3455,7 @@
     (fp_line (start 0.525 -0.27) (end 0.525 0.27) (layer "F.Fab") (width 0.1) (tstamp 7fd83fd3-d837-4654-94c3-5d7389820244))
     (fp_line (start -0.525 -0.27) (end 0.525 -0.27) (layer "F.Fab") (width 0.1) (tstamp b832cad1-af03-4f97-b2bc-d02eee913dfb))
     (pad "1" smd roundrect (at -0.51 0) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 368 "Net-(R38-Pad1)") (pintype "passive") (tstamp 16351624-33c2-4b30-bd4e-9383951a1743))
+      (net 371 "Net-(C10-Pad1)") (pintype "passive") (tstamp 16351624-33c2-4b30-bd4e-9383951a1743))
     (pad "2" smd roundrect (at 0.51 0) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 280 "/MAGIC/FPGA/~{NMI}") (pintype "passive") (tstamp f1789adb-9631-4c0e-a3a2-a5cf447d2e55))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -3862,7 +3862,7 @@
     (pad "15" smd roundrect (at 2.475 -3.175 90) (size 1.95 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 63 "/IO/KEY_ROW0") (pinfunction "P0") (pintype "input") (tstamp cabe01f1-3803-4bbd-a53f-5d2860a51920))
     (pad "16" smd roundrect (at 2.475 -4.445 90) (size 1.95 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "VCC") (pintype "power_in") (tstamp b0c5c3b6-93f0-41cd-931c-7c4d77109288))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "VCC") (pintype "power_in") (tstamp b0c5c3b6-93f0-41cd-931c-7c4d77109288))
     (model "${KICAD6_3DMODEL_DIR}/Package_SO.3dshapes/SOIC-16_3.9x9.9mm_P1.27mm.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
@@ -4057,7 +4057,7 @@
     (fp_line (start 0.525 0.27) (end -0.525 0.27) (layer "F.Fab") (width 0.1) (tstamp c2ea5f8a-0b5d-42c2-815c-39c011890efa))
     (fp_line (start 0.525 -0.27) (end 0.525 0.27) (layer "F.Fab") (width 0.1) (tstamp c857e6a0-7be5-408f-ab2b-df7836bae1e0))
     (pad "1" smd roundrect (at -0.51 0) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 381 "Net-(R56-Pad1)") (pintype "passive") (tstamp 913f97d2-1fb2-4f29-bb3e-5b2fbbaef569))
+      (net 381 "Net-(NT33-Pad2)") (pintype "passive") (tstamp 913f97d2-1fb2-4f29-bb3e-5b2fbbaef569))
     (pad "2" smd roundrect (at 0.51 0) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 154 "/CASS/CASS_A_~{SWITCH}") (pintype "passive") (tstamp 4e29825d-3e0f-48a3-a559-f0e9cfab0b01))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -5003,7 +5003,7 @@
     (pad "29" thru_hole oval (at 15.24 7.62) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 299 "/MAGIC/FPGA/~{WR_STROBE}") (pinfunction "WE#") (pintype "input") (tstamp 50b1f80e-5699-4294-9455-d5a7948b96e7))
     (pad "30" thru_hole oval (at 15.24 5.08) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
-      (net 369 "Net-(U12-Pad30)") (pinfunction "CE2") (pintype "input") (tstamp c32772cc-653d-4957-bb3c-0a5f172ab1be))
+      (net 372 "Net-(C11-Pad1)") (pinfunction "CE2") (pintype "input") (tstamp c32772cc-653d-4957-bb3c-0a5f172ab1be))
     (pad "31" thru_hole oval (at 15.24 2.54) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 166 "/CPU \\ RAM/A12") (pinfunction "A15") (pintype "input") (tstamp b9a147eb-b26e-4bfd-adbb-f16d3105724a))
     (pad "32" thru_hole oval (at 15.24 0) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
@@ -5571,7 +5571,7 @@
     (pad "1" smd circle (at 0 0 90) (size 1.6 1.6) (layers "F.Cu")
       (net 330 "PD_5V") (pinfunction "1") (pintype "power_in") (tstamp 625825f3-8aab-4862-a2ad-923520d044b3))
     (pad "2" smd circle (at 1.2 0 90) (size 0.4 0.4) (layers "F.Cu")
-      (net 382 "Net-(R49-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp 438fd1f5-289e-43a3-829f-b0f9fb59572e))
+      (net 382 "Net-(NT34-Pad2)") (pinfunction "2") (pintype "power_out") (tstamp 438fd1f5-289e-43a3-829f-b0f9fb59572e))
   )
 
   (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm" (layer "F.Cu")
@@ -5595,7 +5595,7 @@
     (pad "1" smd circle (at 0 0 180) (size 1.6 1.6) (layers "F.Cu")
       (net 330 "PD_5V") (pinfunction "1") (pintype "power_in") (tstamp 6f91e86b-0c97-4b47-9fa4-c0b6f8ca52f7))
     (pad "2" smd circle (at 1.2 0 180) (size 0.4 0.4) (layers "F.Cu")
-      (net 385 "Net-(NT6-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp 8ea9909a-1471-4ee3-b718-2978ede0cd1b))
+      (net 377 "Net-(NT37-Pad2)") (pinfunction "2") (pintype "power_out") (tstamp 8ea9909a-1471-4ee3-b718-2978ede0cd1b))
   )
 
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu")
@@ -6071,7 +6071,7 @@
     (fp_arc (start -3.683 0) (mid -4.054974 0.898026) (end -4.953 1.27) (layer "Edge.Cuts") (width 0.12) (tstamp 4ffe613b-0dab-429e-9a9f-b889b4288ac2))
     (fp_arc (start 14.5034 -1.143) (mid 13.8684 -0.508) (end 13.2334 -1.143) (layer "Edge.Cuts") (width 0.12) (tstamp cce43200-21fb-43f1-bca4-31528ebb0ccd))
     (pad "1,A" connect custom locked (at 19.812 -1.468 180) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6084,7 +6084,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 75f4ff14-abba-45e4-b003-5f14933a0be8))
     (pad "1,A" connect custom locked (at 19.812 -1.468 180) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 324 "PD_GND") (pinfunction "GND") (pintype "power_in") (zone_connect 0)
+      (net 324 "PD_GND") (pinfunction "GND") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6097,7 +6097,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 97e62c48-0d4f-40b3-8c84-9eef479d6732))
     (pad "2,B" connect custom locked (at 15.8496 -1.468 180) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 330 "PD_5V") (pinfunction "+5V") (pintype "power_in") (zone_connect 0)
+      (net 330 "PD_5V") (pinfunction "+5V") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6110,7 +6110,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 95bd95f1-4e83-4d6a-9c76-92059d480c05))
     (pad "2,B" connect custom locked (at 15.8496 -1.468 180) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 330 "PD_5V") (pinfunction "+5V") (pintype "power_in") (zone_connect 0)
+      (net 330 "PD_5V") (pinfunction "+5V") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6123,7 +6123,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 95da2120-fdc2-45c9-a4c2-1d684ef64f37))
     (pad "3,C" connect custom locked (at 11.8872 -1.468 180) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 188 "/CASS/CASS_B_MOTOR") (pinfunction "MOTOR") (pintype "input") (zone_connect 0)
+      (net 188 "/CASS/CASS_B_MOTOR") (pinfunction "MOTOR") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6136,7 +6136,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 05860533-8e19-4900-9339-328272c0b75e))
     (pad "3,C" connect custom locked (at 11.8872 -1.468 180) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 188 "/CASS/CASS_B_MOTOR") (pinfunction "MOTOR") (pintype "input") (zone_connect 0)
+      (net 188 "/CASS/CASS_B_MOTOR") (pinfunction "MOTOR") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6149,7 +6149,7 @@
           ) (width 0) (fill yes))
       ) (tstamp da288d87-f3a9-4d0c-8884-1c0caf0f1634))
     (pad "4,D" connect custom locked (at 7.9248 -1.468 180) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 155 "/CASS/CASS_B_READ") (pinfunction "READ") (pintype "output") (zone_connect 0)
+      (net 155 "/CASS/CASS_B_READ") (pinfunction "READ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6162,7 +6162,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 9f295b25-73cf-4f39-850c-73387515c89d))
     (pad "4,D" connect custom locked (at 7.9248 -1.468 180) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 155 "/CASS/CASS_B_READ") (pinfunction "READ") (pintype "output") (zone_connect 0)
+      (net 155 "/CASS/CASS_B_READ") (pinfunction "READ") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6175,7 +6175,7 @@
           ) (width 0) (fill yes))
       ) (tstamp a37dc8d6-07d5-4371-9859-1cbc9b1ff73a))
     (pad "5,E" connect custom locked (at 3.9624 -1.468 180) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "input") (zone_connect 0)
+      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6188,7 +6188,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 03104a02-5a9a-4d8d-a4cd-63947b9266b3))
     (pad "5,E" connect custom locked (at 3.9624 -1.468 180) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "input") (zone_connect 0)
+      (net 76 "/CASS/CASS_WRITE") (pinfunction "WRITE") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6201,7 +6201,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 7750384c-db4f-47c6-b7df-2991fa095429))
     (pad "6,F" connect custom locked (at 0 -1.468 180) (size 2.54 2.54) (layers "F.Cu" "F.Mask")
-      (net 156 "/CASS/CASS_B_~{SWITCH}") (pinfunction "SWITCH") (pintype "output") (zone_connect 0)
+      (net 156 "/CASS/CASS_B_~{SWITCH}") (pinfunction "SWITCH") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6214,7 +6214,7 @@
           ) (width 0) (fill yes))
       ) (tstamp 1ad69392-a100-47d2-8fc2-8d2be13a1a90))
     (pad "6,F" connect custom locked (at 0 -1.468 180) (size 2.54 2.54) (layers "B.Cu" "B.Mask")
-      (net 156 "/CASS/CASS_B_~{SWITCH}") (pinfunction "SWITCH") (pintype "output") (zone_connect 0)
+      (net 156 "/CASS/CASS_B_~{SWITCH}") (pinfunction "SWITCH") (pintype "passive") (zone_connect 0)
       (options (clearance outline) (anchor circle))
       (primitives
         (gr_poly (pts
@@ -6948,7 +6948,7 @@
     (property "STANDARD" "IPC-7351B")
     (property "Sheetfile" "File: CPLD.kicad_sch")
     (property "Sheetname" "FPGA")
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c6761a6a-9760-48d7-b3ec-c0eae269f805")
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/67543619-db9f-4097-8a45-75b1133d0929")
     (attr through_hole)
     (fp_text reference "U21" (at -11.115 -11.08) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15)))
@@ -7588,7 +7588,7 @@
     (fp_line (start 0.525 0.27) (end -0.525 0.27) (layer "F.Fab") (width 0.1) (tstamp 850b87f7-3fec-4787-95bc-e9e714275aed))
     (fp_line (start -0.525 -0.27) (end 0.525 -0.27) (layer "F.Fab") (width 0.1) (tstamp ddb54804-cce5-480d-983a-48a135b44c59))
     (pad "1" smd roundrect (at -0.51 0 180) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 382 "Net-(R49-Pad1)") (pintype "passive") (tstamp 9ad68330-d0f6-4ae1-a6d0-2da962f4bd2c))
+      (net 382 "Net-(NT34-Pad2)") (pintype "passive") (tstamp 9ad68330-d0f6-4ae1-a6d0-2da962f4bd2c))
     (pad "2" smd roundrect (at 0.51 0 180) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 156 "/CASS/CASS_B_~{SWITCH}") (pintype "passive") (tstamp 8173f5de-14ce-44cc-ab9e-40100fb2ec16))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -8173,7 +8173,7 @@
     (pad "1" smd circle (at 0 0) (size 1.6 1.6) (layers "F.Cu")
       (net 330 "PD_5V") (pinfunction "1") (pintype "power_in") (tstamp c1ac2a37-2364-40f4-9c33-50243b1d7f18))
     (pad "2" smd circle (at 1.2 0) (size 0.4 0.4) (layers "F.Cu")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "2") (pintype "power_out") (tstamp 5ba13a1a-2ed0-4b46-9986-8a60174f3261))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp 5ba13a1a-2ed0-4b46-9986-8a60174f3261))
   )
 
   (footprint "JLCPCB:SW-TH_L6.0-W3.5-P6.50" (layer "F.Cu")
@@ -8386,13 +8386,13 @@
     (pad "4" smd rect (at -0.9 1.2 90) (size 0.8 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
       (net 17 "/IO/KEY_COL7") (pinfunction "R4.1") (pintype "passive") (tstamp 30a43ad6-d0e8-49c7-bd03-67ddd7338839))
     (pad "5" smd rect (at 0.9 1.2 90) (size 0.8 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R4.2") (pintype "passive") (tstamp c23ceb28-61a1-4e79-88e6-e2d7440fd29f))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R4.2") (pintype "passive") (tstamp c23ceb28-61a1-4e79-88e6-e2d7440fd29f))
     (pad "6" smd rect (at 0.9 0.4 90) (size 0.8 0.4) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R3.2") (pintype "passive") (tstamp 67b1bc7f-1f2c-4bd7-9821-2b239795712f))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R3.2") (pintype "passive") (tstamp 67b1bc7f-1f2c-4bd7-9821-2b239795712f))
     (pad "7" smd rect (at 0.9 -0.4 90) (size 0.8 0.4) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R2.2") (pintype "passive") (tstamp 361a445e-5978-498a-8abd-002c1ef6685f))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R2.2") (pintype "passive") (tstamp 361a445e-5978-498a-8abd-002c1ef6685f))
     (pad "8" smd rect (at 0.9 -1.2 90) (size 0.8 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R1.2") (pintype "passive") (tstamp d102c8eb-074a-4828-9efa-d0a5a38d898c))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R1.2") (pintype "passive") (tstamp d102c8eb-074a-4828-9efa-d0a5a38d898c))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_Array_Convex_4x0603.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
@@ -8624,7 +8624,7 @@
     )
     (fp_rect (start 0.9025 -0.14) (end 0.1375 0.14) (layer "F.Cu") (width 0) (fill solid) (tstamp 0e5c5e7b-8b6b-49f6-b430-755335dd653b))
     (pad "1" smd circle (at 0 0 180) (size 0.4 0.4) (layers "F.Cu")
-      (net 385 "Net-(NT6-Pad1)") (pinfunction "1") (pintype "power_in") (tstamp e583694a-4207-4fef-ae08-9fd02d40ca8e))
+      (net 377 "Net-(NT37-Pad2)") (pinfunction "1") (pintype "power_in") (tstamp e583694a-4207-4fef-ae08-9fd02d40ca8e))
     (pad "2" smd circle (at 0.9 0 180) (size 0.28 0.28) (layers "F.Cu")
       (net 333 "DVI_VDD") (pinfunction "2") (pintype "power_out") (tstamp e32bfaa2-eddc-4ff5-8be7-01b7200fde2a))
   )
@@ -9335,7 +9335,7 @@
     (pad "13" thru_hole circle (at 0 15.24 270) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 290 "/MAGIC/FPGA/TCK") (pinfunction "Pin_13") (pintype "passive") (tstamp a7c9f07a-33e2-4340-a30b-76f788970d2a))
     (pad "14" thru_hole circle (at 2.54 15.24 270) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
-      (net 350 "/MAGIC/FPGA/HOLD") (pinfunction "Pin_14") (pintype "passive+no_connect") (tstamp d9e08dac-26a2-4398-9e2f-5d221ab5047e))
+      (net 350 "/MAGIC/FPGA/HOLD") (pinfunction "Pin_14") (pintype "passive") (tstamp d9e08dac-26a2-4398-9e2f-5d221ab5047e))
     (pad "15" thru_hole circle (at 0 17.78 270) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 291 "/MAGIC/FPGA/TDI") (pinfunction "Pin_15") (pintype "passive") (tstamp 54b275f9-e1f3-4314-8c29-4c53d69e9cb4))
     (pad "16" thru_hole circle (at 2.54 17.78 270) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
@@ -9640,7 +9640,7 @@
     (pad "1" smd circle (at 0 0) (size 1.6 1.6) (layers "F.Cu")
       (net 330 "PD_5V") (pinfunction "1") (pintype "power_in") (tstamp 84172064-64da-42be-ad40-ece00fd61597))
     (pad "2" smd circle (at 1.2 0) (size 0.4 0.4) (layers "F.Cu")
-      (net 375 "Net-(U7-Pad22)") (pinfunction "2") (pintype "power_out") (tstamp 360efefe-1586-4d4a-ac57-476dadbeb5a6))
+      (net 369 "Net-(C9-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp 360efefe-1586-4d4a-ac57-476dadbeb5a6))
   )
 
   (footprint "Capacitor_SMD:C_1206_3216Metric" (layer "F.Cu")
@@ -9879,7 +9879,7 @@
     (pad "1" smd circle (at 0 0 180) (size 1.6 1.6) (layers "F.Cu")
       (net 370 "PD_3V3") (pinfunction "1") (pintype "power_in") (tstamp 52230c74-87e4-4946-8ce1-33c6188fe4f2))
     (pad "2" smd circle (at 1.2 0 180) (size 0.4 0.4) (layers "F.Cu")
-      (net 369 "Net-(U12-Pad30)") (pinfunction "2") (pintype "power_out") (tstamp 9c57c6f0-420a-4087-9fcf-afbcba199040))
+      (net 372 "Net-(C11-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp 9c57c6f0-420a-4087-9fcf-afbcba199040))
   )
 
   (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm" (layer "F.Cu")
@@ -10114,9 +10114,9 @@
     )
     (fp_rect (start 1.2 0.2) (end 0.77 -0.2) (layer "F.Cu") (width 0) (fill solid) (tstamp e222bef0-d1d1-4f93-b2c9-01180815c92b))
     (pad "1" smd circle (at 0 0 90) (size 1.6 1.6) (layers "F.Cu")
-      (net 370 "PD_3V3") (pinfunction "1") (pintype "power_in") (tstamp 377c895e-d4f8-4c83-a7f4-5ec623d777a3))
+      (net 370 "PD_3V3") (pinfunction "1") (pintype "passive") (tstamp 377c895e-d4f8-4c83-a7f4-5ec623d777a3))
     (pad "2" smd circle (at 1.2 0 90) (size 0.4 0.4) (layers "F.Cu")
-      (net 90 "+3V3") (pinfunction "2") (pintype "power_out") (tstamp ff0d2ddc-772e-40cc-8214-892eb390ae80))
+      (net 90 "+3V3") (pinfunction "2") (pintype "passive") (tstamp ff0d2ddc-772e-40cc-8214-892eb390ae80))
   )
 
   (footprint "Resistor_SMD:R_0603_1608Metric" (layer "F.Cu")
@@ -10236,7 +10236,7 @@
     (fp_line (start 5.450978 9.55) (end 5.450978 6.1) (layer "F.Fab") (width 0.1) (tstamp ee6215a3-d950-492a-aeae-0158b99a2769))
     (fp_line (start -5.549022 6.15) (end -5.549022 9.55) (layer "F.Fab") (width 0.1) (tstamp f6b3df49-fe3c-4a4a-9d69-2a104c2aaf41))
     (fp_arc (start -5.049022 10.05) (mid -5.402575 9.903553) (end -5.549022 9.55) (layer "F.Fab") (width 0.1) (tstamp 8ee95817-b820-4695-9fdc-0e13dbdf46fc))
-    (fp_arc (start 5.450978 9.55) (mid 5.304529 9.903553) (end 4.950978 10.05) (layer "F.Fab") (width 0.1) (tstamp bc40cbbc-cbda-4c16-9962-993aa0931dd4))
+    (fp_arc (start 5.450978 9.55) (mid 5.30453 9.903546) (end 4.950978 10.05) (layer "F.Fab") (width 0.1) (tstamp bc40cbbc-cbda-4c16-9962-993aa0931dd4))
     (pad "1" smd rect (at 3.176022 5.350953 90) (size 0.7 1.2) (layers "F.Cu" "F.Paste" "F.Mask")
       (net 201 "Net-(J13-Pad1)") (pinfunction "DAT2") (pintype "bidirectional") (tstamp 2e17046e-633b-42bb-ad5b-be7b97cb302f))
     (pad "2" smd rect (at 2.075946 5.350953 90) (size 0.7 1.2) (layers "F.Cu" "F.Paste" "F.Mask")
@@ -10653,13 +10653,13 @@
     (pad "4" smd rect (at -0.9 1.2 90) (size 0.8 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
       (net 21 "/IO/KEY_COL3") (pinfunction "R4.1") (pintype "passive") (tstamp a9b5eefe-7cf7-479c-9ab3-76c1796e60fe))
     (pad "5" smd rect (at 0.9 1.2 90) (size 0.8 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R4.2") (pintype "passive") (tstamp e749234b-277c-421c-9f93-868ec53fd684))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R4.2") (pintype "passive") (tstamp e749234b-277c-421c-9f93-868ec53fd684))
     (pad "6" smd rect (at 0.9 0.4 90) (size 0.8 0.4) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R3.2") (pintype "passive") (tstamp f317e266-e020-40ce-a42d-a7f5391f165e))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R3.2") (pintype "passive") (tstamp f317e266-e020-40ce-a42d-a7f5391f165e))
     (pad "7" smd rect (at 0.9 -0.4 90) (size 0.8 0.4) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R2.2") (pintype "passive") (tstamp 3863a1c8-c479-48ee-b28d-5db92e57b1c2))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R2.2") (pintype "passive") (tstamp 3863a1c8-c479-48ee-b28d-5db92e57b1c2))
     (pad "8" smd rect (at 0.9 -1.2 90) (size 0.8 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
-      (net 372 "Net-(RN10-Pad5)") (pinfunction "R1.2") (pintype "passive") (tstamp 95342741-789d-4c23-a9bd-104fc07b0e64))
+      (net 368 "Net-(C1-Pad1)") (pinfunction "R1.2") (pintype "passive") (tstamp 95342741-789d-4c23-a9bd-104fc07b0e64))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_Array_Convex_4x0603.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
@@ -11246,7 +11246,7 @@
     (fp_line (start -0.5 0.25) (end -0.5 -0.25) (layer "F.Fab") (width 0.1) (tstamp 3e4c43e5-4bbf-47d0-b817-c3477742bb67))
     (fp_line (start 0.5 0.25) (end -0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp c8573021-7eae-4b77-b1d9-371398779ed4))
     (pad "1" smd roundrect (at -0.48 0 270) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 372 "Net-(RN10-Pad5)") (pintype "passive") (tstamp 9f8b8705-768f-4a29-a37b-c42ef7eb9b33))
+      (net 368 "Net-(C1-Pad1)") (pintype "passive") (tstamp 9f8b8705-768f-4a29-a37b-c42ef7eb9b33))
     (pad "2" smd roundrect (at 0.48 0 270) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "GND") (pintype "passive") (tstamp 5362dc25-1e22-4bd4-b99a-9ccf7209dbc8))
     (model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -11747,7 +11747,7 @@
     (pad "1" smd circle (at 0 0 90) (size 1.6 1.6) (layers "F.Cu")
       (net 324 "PD_GND") (pinfunction "1") (pintype "power_in") (tstamp 3021fac4-188b-424b-a51f-513e9540e859))
     (pad "2" smd circle (at 1.2 0 90) (size 0.4 0.4) (layers "F.Cu")
-      (net 371 "Net-(R37-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp f5496eef-15c5-4eb2-902b-4e8b752d304b))
+      (net 385 "Net-(PT4-Pad2)") (pinfunction "2") (pintype "power_out") (tstamp f5496eef-15c5-4eb2-902b-4e8b752d304b))
   )
 
   (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm" (layer "F.Cu")
@@ -12628,7 +12628,7 @@
     (fp_line (start 0.5 0.25) (end -0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp 618ad86d-a3b0-4eaf-874c-ea3d116f9e70))
     (fp_line (start 0.5 -0.25) (end 0.5 0.25) (layer "F.Fab") (width 0.1) (tstamp 9fe6b35f-de45-4e0e-bc98-8b7e92761eb7))
     (pad "1" smd roundrect (at -0.48 0) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 369 "Net-(U12-Pad30)") (pintype "passive") (tstamp ad48cc3c-b62f-421d-ad66-da9fcce6d6a0))
+      (net 372 "Net-(C11-Pad1)") (pintype "passive") (tstamp ad48cc3c-b62f-421d-ad66-da9fcce6d6a0))
     (pad "2" smd roundrect (at 0.48 0) (size 0.56 0.62) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "GND") (pintype "passive") (tstamp 98407b69-970f-42b3-9c72-3fa968958d92))
     (model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -13236,7 +13236,7 @@
     (pad "1" smd circle (at 0 0) (size 1.6 1.6) (layers "F.Cu")
       (net 370 "PD_3V3") (pinfunction "1") (pintype "power_in") (tstamp c3329aca-17f2-420b-8244-c63bc9ddd653))
     (pad "2" smd circle (at 1.2 0) (size 0.4 0.4) (layers "F.Cu")
-      (net 368 "Net-(R38-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp c85f5737-fa93-4000-88fc-530a2a8c0b35))
+      (net 371 "Net-(C10-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp c85f5737-fa93-4000-88fc-530a2a8c0b35))
   )
 
   (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm" (layer "F.Cu")
@@ -13260,7 +13260,7 @@
     (pad "1" smd circle (at 0 0 180) (size 1.6 1.6) (layers "F.Cu")
       (net 330 "PD_5V") (pinfunction "1") (pintype "power_in") (tstamp 31b2a0b7-f283-40e1-a1f1-967aaf338cfa))
     (pad "2" smd circle (at 1.2 0 180) (size 0.4 0.4) (layers "F.Cu")
-      (net 381 "Net-(R56-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp cdf9adc9-a55b-4768-ae2c-db4281caa41f))
+      (net 381 "Net-(NT33-Pad2)") (pinfunction "2") (pintype "power_out") (tstamp cdf9adc9-a55b-4768-ae2c-db4281caa41f))
   )
 
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu")
@@ -13488,7 +13488,7 @@
     (fp_line (start 0.525 -0.27) (end 0.525 0.27) (layer "F.Fab") (width 0.1) (tstamp bd26a1a9-1c90-46ea-8030-bcf890d42635))
     (fp_line (start -0.525 -0.27) (end 0.525 -0.27) (layer "F.Fab") (width 0.1) (tstamp f922b220-cdbc-4e1f-8c17-60f7c541f33c))
     (pad "1" smd roundrect (at -0.51 0 270) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 371 "Net-(R37-Pad1)") (pintype "passive") (tstamp 5927e73d-e80b-4392-8f2c-8b529ebfcfdd))
+      (net 385 "Net-(PT4-Pad2)") (pintype "passive") (tstamp 5927e73d-e80b-4392-8f2c-8b529ebfcfdd))
     (pad "2" smd roundrect (at 0.51 0 270) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 113 "Net-(C55-Pad1)") (pintype "passive") (tstamp 980ac5ea-c014-40fe-b4e2-4aab855ee774))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -14765,7 +14765,7 @@
     (fp_line (start -0.525 -0.27) (end 0.525 -0.27) (layer "F.Fab") (width 0.1) (tstamp aaff624a-5858-43df-b93a-a2f9dfb18d7a))
     (fp_line (start -0.525 0.27) (end -0.525 -0.27) (layer "F.Fab") (width 0.1) (tstamp fa2eec75-a95d-482a-a71b-387d950aeb38))
     (pad "1" smd roundrect (at -0.51 0 90) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
-      (net 368 "Net-(R38-Pad1)") (pintype "passive") (tstamp e04f3a21-8f57-466b-88cb-3007d6696aec))
+      (net 371 "Net-(C10-Pad1)") (pintype "passive") (tstamp e04f3a21-8f57-466b-88cb-3007d6696aec))
     (pad "2" smd roundrect (at 0.51 0 90) (size 0.54 0.64) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 78 "/MAGIC/~{RES}") (pintype "passive") (tstamp 9d2582d8-129e-4437-ae35-d98dd5d24f3e))
     (model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -15025,7 +15025,7 @@
     (pad "1" smd circle (at 0 0 270) (size 1.6 1.6) (layers "B.Cu")
       (net 330 "PD_5V") (pinfunction "1") (pintype "power_in") (tstamp 77484fa9-a57d-4abd-8d1f-45bd6d203377))
     (pad "2" smd circle (at 1.2 0 270) (size 0.4 0.4) (layers "B.Cu")
-      (net 377 "Net-(U20-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp b4881d3e-4cc9-4c09-84a3-50250aec7f8d))
+      (net 375 "Net-(C19-Pad1)") (pinfunction "2") (pintype "power_out") (tstamp b4881d3e-4cc9-4c09-84a3-50250aec7f8d))
   )
 
   (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm" (layer "B.Cu")
@@ -15172,9 +15172,9 @@
     )
     (fp_rect (start 0.7 -0.1) (end 0.165 0.1) (layer "B.Cu") (width 0) (fill solid) (tstamp 06b65be3-5b88-499f-a3f8-fdf09c46a555))
     (pad "1" smd circle (at 0 0 180) (size 0.4 0.4) (layers "B.Cu")
-      (net 90 "+3V3") (pinfunction "1") (pintype "power_in") (tstamp 2d944632-a072-457e-b7ee-27061f6b268a))
+      (net 90 "+3V3") (pinfunction "1") (pintype "passive") (tstamp 2d944632-a072-457e-b7ee-27061f6b268a))
     (pad "2" smd circle (at 0.7 0 180) (size 0.2 0.2) (layers "B.Cu")
-      (net 332 "MCU_IOVDD") (pinfunction "2") (pintype "power_out") (tstamp ca12ff17-0d60-458c-ab76-850ce9e67db5))
+      (net 332 "MCU_IOVDD") (pinfunction "2") (pintype "passive") (tstamp ca12ff17-0d60-458c-ab76-850ce9e67db5))
   )
 
   (footprint "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" (layer "B.Cu")
@@ -15457,9 +15457,9 @@
     )
     (fp_rect (start 0.9025 0.14) (end 0.1375 -0.14) (layer "B.Cu") (width 0) (fill solid) (tstamp 0f04020d-30ec-4b3f-9eea-c5a24378249e))
     (pad "1" smd circle (at 0 0 90) (size 0.4 0.4) (layers "B.Cu")
-      (net 386 "+1V2") (pinfunction "1") (pintype "power_in") (tstamp 64819d40-f48f-4d60-b73f-7f0838150b48))
+      (net 386 "+1V2") (pinfunction "1") (pintype "passive") (tstamp 64819d40-f48f-4d60-b73f-7f0838150b48))
     (pad "2" smd circle (at 0.9 0 90) (size 0.28 0.28) (layers "B.Cu")
-      (net 326 "FPGA_VCC") (pinfunction "2") (pintype "power_out") (tstamp e1dff3a6-1a3e-4054-b136-f16c271f13d4))
+      (net 326 "FPGA_VCC") (pinfunction "2") (pintype "passive") (tstamp e1dff3a6-1a3e-4054-b136-f16c271f13d4))
   )
 
   (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm" (layer "B.Cu")
@@ -15481,9 +15481,9 @@
     )
     (fp_rect (start 1.2 -0.2) (end 0.77 0.2) (layer "B.Cu") (width 0) (fill solid) (tstamp cc6e0839-1eaf-43de-b4d4-938ac9561666))
     (pad "1" smd circle (at 0 0) (size 1.6 1.6) (layers "B.Cu")
-      (net 370 "PD_3V3") (pinfunction "1") (pintype "power_in") (tstamp 29030f11-0830-45c4-8d3a-3fd59c3fedad))
+      (net 370 "PD_3V3") (pinfunction "1") (pintype "passive") (tstamp 29030f11-0830-45c4-8d3a-3fd59c3fedad))
     (pad "2" smd circle (at 1.2 0) (size 0.4 0.4) (layers "B.Cu")
-      (net 90 "+3V3") (pinfunction "2") (pintype "power_out") (tstamp 7572321a-8600-49b3-a090-d4994ee7fc33))
+      (net 90 "+3V3") (pinfunction "2") (pintype "passive") (tstamp 7572321a-8600-49b3-a090-d4994ee7fc33))
   )
 
   (footprint "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" (layer "B.Cu")
@@ -15630,9 +15630,9 @@
     )
     (fp_rect (start 0.9025 0.14) (end 0.1375 -0.14) (layer "B.Cu") (width 0) (fill solid) (tstamp cbd706b4-834f-45e6-b45c-85afcfc15459))
     (pad "1" smd circle (at 0 0) (size 0.4 0.4) (layers "B.Cu")
-      (net 90 "+3V3") (pinfunction "1") (pintype "power_in") (tstamp 038dd177-28e3-4d66-86d2-6e4b05888f12))
+      (net 90 "+3V3") (pinfunction "1") (pintype "passive") (tstamp 038dd177-28e3-4d66-86d2-6e4b05888f12))
     (pad "2" smd circle (at 0.9 0) (size 0.28 0.28) (layers "B.Cu")
-      (net 329 "FPGA_VCCIO") (pinfunction "2") (pintype "power_out") (tstamp 1abfa526-ac53-418b-8000-79a7a986f0c8))
+      (net 329 "FPGA_VCCIO") (pinfunction "2") (pintype "passive") (tstamp 1abfa526-ac53-418b-8000-79a7a986f0c8))
   )
 
   (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm" (layer "B.Cu")
@@ -15779,9 +15779,9 @@
     )
     (fp_rect (start 1.2 -0.2) (end 0.77 0.2) (layer "B.Cu") (width 0) (fill solid) (tstamp 858f0e79-4012-488a-b29d-86679f6cd929))
     (pad "1" smd circle (at 0 0) (size 1.6 1.6) (layers "B.Cu")
-      (net 370 "PD_3V3") (pinfunction "1") (pintype "power_in") (tstamp 6bbc34f6-f93a-402e-8c48-39aee179b693))
+      (net 370 "PD_3V3") (pinfunction "1") (pintype "passive") (tstamp 6bbc34f6-f93a-402e-8c48-39aee179b693))
     (pad "2" smd circle (at 1.2 0) (size 0.4 0.4) (layers "B.Cu")
-      (net 90 "+3V3") (pinfunction "2") (pintype "power_out") (tstamp b5833165-2ba7-4cbd-9369-f8d703845703))
+      (net 90 "+3V3") (pinfunction "2") (pintype "passive") (tstamp b5833165-2ba7-4cbd-9369-f8d703845703))
   )
 
   (gr_line locked (start -1.905 0) (end 1.905 0) (layer "Dwgs.User") (width 0.1) (tstamp 3cfcf0e1-3745-4ceb-a257-a9c3178b19b6))
@@ -22027,38 +22027,38 @@
   (segment (start -45.685 39.03) (end -44.585 40.13) (width 0.2) (layer "B.Cu") (net 367) (tstamp 003e3a7d-c7a3-4164-badd-55cb2ece47e3))
   (segment (start -51.919 39.03) (end -45.685 39.03) (width 0.2) (layer "B.Cu") (net 367) (tstamp 71354121-8cdc-41d7-8418-52e589a414cc))
   (segment (start -53.6457 40.7567) (end -51.919 39.03) (width 0.2) (layer "B.Cu") (net 367) (tstamp b6ec81fe-6ba9-47d8-9c91-15f0cbec67f6))
-  (segment (start -122.914 14.68) (end -122.012 14.68) (width 0.4) (layer "F.Cu") (net 368) (tstamp 0c8a2179-1d01-449d-89be-85e360be7be8))
-  (segment (start -140.04 28.65) (end -140.045 28.655) (width 0.4) (layer "F.Cu") (net 368) (tstamp 24b0736f-58de-49f8-ae43-cfed35083cc5))
-  (segment (start -140.72 18.7352) (end -140.72 22.7098) (width 0.4) (layer "F.Cu") (net 368) (tstamp 2b8f0455-d19e-41a5-a023-621591adc3d0))
-  (segment (start -122.012 14.68) (end -120.3 12.9682) (width 0.4) (layer "F.Cu") (net 368) (tstamp 58a0b1c7-9ba9-43b9-b499-1863886f0084))
-  (segment (start -139.15 28.65) (end -140.04 28.65) (width 0.4) (layer "F.Cu") (net 368) (tstamp 5e416c9e-8c3a-4386-8234-e3a1a142ff17))
-  (segment (start -139.15 24.9036) (end -139.0233 24.7769) (width 0.4) (layer "F.Cu") (net 368) (tstamp 6ba53dcb-3419-4b89-9deb-aec95fa55514))
-  (segment (start -139.0233 24.7769) (end -139.0233 24.7449) (width 0.4) (layer "F.Cu") (net 368) (tstamp 7118f5f8-5246-4ae4-a00d-5ea5413225e5))
-  (segment (start -140.72 22.7098) (end -140.86 22.85) (width 0.4) (layer "F.Cu") (net 368) (tstamp 7f8dcfd2-3927-4c8c-a229-21cf9decc7b1))
-  (segment (start -140.96 15.495) (end -140.96 18.495) (width 0.4) (layer "F.Cu") (net 368) (tstamp 821ee24b-766a-455f-9030-621674a69da4))
-  (segment (start -140.8366 22.9315) (end -140.86 22.9082) (width 0.4) (layer "F.Cu") (net 368) (tstamp a3952e66-e4e0-43fc-863b-8fab736b20c9))
-  (segment (start -140.96 18.495) (end -140.72 18.7352) (width 0.4) (layer "F.Cu") (net 368) (tstamp a6b84af7-b280-47e2-845a-226dfa9209d8))
-  (segment (start -133.011 24.7769) (end -122.914 14.68) (width 0.4) (layer "F.Cu") (net 368) (tstamp add6d578-95f9-4847-8e89-0079ced5c290))
-  (segment (start -120.3 12.9682) (end -120.3 11.91) (width 0.4) (layer "F.Cu") (net 368) (tstamp b899500b-c07d-4144-b2a5-9a16a5aac30e))
-  (segment (start -140.86 22.9082) (end -140.86 22.85) (width 0.4) (layer "F.Cu") (net 368) (tstamp bb4082df-81cb-426f-9273-588d81af92e1))
-  (segment (start -139.15 28.65) (end -139.15 24.9036) (width 0.4) (layer "F.Cu") (net 368) (tstamp f2105d0e-e300-4992-975c-d32bea4b1101))
-  (segment (start -139.0233 24.7449) (end -140.8366 22.9315) (width 0.4) (layer "F.Cu") (net 368) (tstamp f6e0271b-9527-466b-b5a5-e51cd49fbc71))
-  (segment (start -139.0233 24.7769) (end -133.011 24.7769) (width 0.4) (layer "F.Cu") (net 368) (tstamp faa1a802-7bc6-43fb-a30a-fd626a62bc9b))
-  (segment (start -139.9 14.435) (end -140.96 15.495) (width 0.4) (layer "F.Cu") (net 368) (tstamp fecca49f-75b8-48cb-ab58-5bdb949e3cfa))
-  (segment (start -99.8783 15.8283) (end -100 15.95) (width 0.3998) (layer "F.Cu") (net 369) (tstamp 668c7a1c-d140-4fe3-939c-657a09644a7c))
-  (segment (start -99.7566 15.95) (end -99.8783 15.8283) (width 0.4) (layer "F.Cu") (net 369) (tstamp 920472f0-dad5-4327-8521-b2be3f4961cc))
-  (segment (start -99.8783 15.2123) (end -99.8783 15.8283) (width 0.4) (layer "F.Cu") (net 369) (tstamp dd709151-5d31-4c38-b6dd-a5e520ea7b1a))
-  (segment (start -99.28 15.95) (end -99.7566 15.95) (width 0.4) (layer "F.Cu") (net 369) (tstamp eb85788d-da03-4955-bc38-5437bf5a2811))
-  (via (at -99.8783 15.2123) (size 0.6) (drill 0.3) (layers "F.Cu" "B.Cu") (net 369) (tstamp 00c4665f-676b-4809-90df-0910a12cb27c))
-  (segment (start -101.957057 19.69) (end -102.66 18.987057) (width 0.4) (layer "B.Cu") (net 369) (tstamp 25fa8c8d-dfbb-46d8-b728-e219deefb01e))
-  (segment (start -102.66 18.987057) (end -102.66 17.9152) (width 0.4) (layer "B.Cu") (net 369) (tstamp 976d332d-f72a-451e-85d6-fda76af10e6a))
-  (segment (start -101.46 19.74) (end -101.51 19.69) (width 0.4) (layer "B.Cu") (net 369) (tstamp 9871ca2b-4853-4c24-a14c-8b525dc3ec06))
-  (segment (start -101.46 21.03) (end -101.46 19.74) (width 0.4) (layer "B.Cu") (net 369) (tstamp a7b789b5-2838-4ff6-8eb9-8320473b3073))
-  (segment (start -101.0363 17.2898) (end -99.8783 16.1318) (width 0.4) (layer "B.Cu") (net 369) (tstamp b47dc568-0022-4d52-937d-514bb2dda63b))
-  (segment (start -99.8783 16.1318) (end -99.8783 15.2123) (width 0.4) (layer "B.Cu") (net 369) (tstamp b61e6437-eb48-4618-87f5-9689bd293b47))
-  (segment (start -101.51 19.69) (end -101.957057 19.69) (width 0.4) (layer "B.Cu") (net 369) (tstamp c116efb3-818b-4a01-a4ce-d87e58dc2840))
-  (segment (start -102.0346 17.2898) (end -101.0363 17.2898) (width 0.4) (layer "B.Cu") (net 369) (tstamp c67f5840-e930-476f-acd6-63000440b476))
-  (segment (start -102.66 17.9152) (end -102.0346 17.2898) (width 0.4) (layer "B.Cu") (net 369) (tstamp e190611f-0f7c-4be9-967c-c09645b00b80))
+  (segment (start -132.05 78.4852) (end -136.77 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp 0ea3f8ef-f9f8-402f-926c-cb541dfc0ed0))
+  (segment (start -128.940057 74.8782) (end -128.52 74.8782) (width 0.4) (layer "F.Cu") (net 368) (tstamp 10bc2173-8029-4029-bc06-3e42e27a1784))
+  (segment (start -148.53 78.4852) (end -149.33 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp 5071969c-7c51-4771-92b1-b86ce6f04762))
+  (segment (start -146.93 78.4852) (end -147.73 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp 510c8b99-e7bf-43a6-b429-9145735e6b19))
+  (segment (start -128.52 74.8782) (end -127.175 74.8782) (width 0.4) (layer "F.Cu") (net 368) (tstamp 64d02d55-651e-4b37-b068-bb816ca63034))
+  (segment (start -136.77 78.4852) (end -137.57 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp 70765c33-242c-431a-8780-1d8df2e62106))
+  (segment (start -147.73 78.4852) (end -148.53 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp 800e4e6a-1887-4eee-aedc-d7f5b26315c6))
+  (segment (start -138.37 78.4852) (end -139.17 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp 91c16fa1-980a-4a0a-8ffb-5f683dfacd72))
+  (segment (start -132.05 77.988143) (end -128.940057 74.8782) (width 0.4) (layer "F.Cu") (net 368) (tstamp 981726a0-e05d-476f-8794-e45a4599bb06))
+  (segment (start -132.05 78.4852) (end -132.05 77.988143) (width 0.4) (layer "F.Cu") (net 368) (tstamp d2405f46-7cfa-48ae-84de-45c25e85e392))
+  (segment (start -137.57 78.4852) (end -138.37 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp f2e05dbb-9b83-475f-8291-f59b542c92ea))
+  (segment (start -139.17 78.4852) (end -146.93 78.4852) (width 0.4) (layer "F.Cu") (net 368) (tstamp f47194f7-90b5-406c-a860-3049e4dedd9f))
+  (segment (start -153.488 54.8347) (end -154.6654 54.8347) (width 0.4) (layer "F.Cu") (net 369) (tstamp 1c2e2ed9-2332-4046-ae61-91a1e03f0192))
+  (segment (start -168.5503 59.135) (end -168.55 59.135) (width 0.3998) (layer "F.Cu") (net 369) (tstamp 2cba474c-ca24-43b9-964a-3502aa043ab6))
+  (segment (start -169.35 59.135) (end -168.5503 59.135) (width 0.4) (layer "F.Cu") (net 369) (tstamp 32bf4637-cf95-497b-abe0-b0e535af16ab))
+  (segment (start -155.1771 55.3464) (end -167.7873 55.3464) (width 0.4) (layer "F.Cu") (net 369) (tstamp 4a053e5d-578b-4c11-8a01-47be4fac248c))
+  (segment (start -172.76 51.515) (end -172.76 52.7151) (width 0.4) (layer "F.Cu") (net 369) (tstamp 6f6c0216-d5e8-4c52-8e8d-d84033ae6547))
+  (segment (start -152.9601 55.3626) (end -153.488 54.8347) (width 0.4) (layer "F.Cu") (net 369) (tstamp 72f38b11-1bb3-4cc5-9442-38a0ddf05be4))
+  (segment (start -171.9446 52.7151) (end -172.76 52.7151) (width 0.4) (layer "F.Cu") (net 369) (tstamp 90bd41d2-67b0-4c3a-840a-38d048ca3cc4))
+  (segment (start -168.5503 56.1094) (end -168.5503 59.135) (width 0.4) (layer "F.Cu") (net 369) (tstamp 981dd650-873f-480c-b0aa-8d06806c4dac))
+  (segment (start -167.7873 55.3464) (end -168.5503 56.1094) (width 0.4) (layer "F.Cu") (net 369) (tstamp a5183984-4a19-480c-b3a6-b79fb861bccc))
+  (segment (start -151.76 56.595) (end -152.9601 56.595) (width 0.4) (layer "F.Cu") (net 369) (tstamp c4d9b830-5fec-4fcc-be3e-e3e09221d0b1))
+  (segment (start -154.6654 54.8347) (end -155.1771 55.3464) (width 0.4) (layer "F.Cu") (net 369) (tstamp c6c52c32-0ced-4e82-a271-8e94f0becf9d))
+  (segment (start -152.9601 56.595) (end -152.9601 55.3626) (width 0.4) (layer "F.Cu") (net 369) (tstamp c9c7a24e-c9f1-4c86-81a0-4224db6b5f50))
+  (segment (start -168.5503 56.1094) (end -171.9446 52.7151) (width 0.4) (layer "F.Cu") (net 369) (tstamp f6366009-0631-4e1c-8903-ddb042998234))
+  (segment (start -151.76 56.595) (end -151.76 55.3949) (width 0.4) (layer "B.Cu") (net 369) (tstamp 122cc532-1c3b-46f9-99f0-5ae23a4ac52a))
+  (segment (start -152.961 54.5689) (end -152.961 53.5431) (width 0.4) (layer "B.Cu") (net 369) (tstamp 29ef0981-5cd1-4401-903c-3fb77ff5ab14))
+  (segment (start -151.76 55.3949) (end -152.135 55.3949) (width 0.4) (layer "B.Cu") (net 369) (tstamp 4dc7948e-0ab5-466f-8a35-96f3b23c2779))
+  (segment (start -151.76 51.515) (end -151.76 52.7151) (width 0.4) (layer "B.Cu") (net 369) (tstamp 58994a19-323d-49d5-bf26-4bb7e90211c3))
+  (segment (start -152.133 52.7151) (end -151.76 52.7151) (width 0.4) (layer "B.Cu") (net 369) (tstamp 5cb441c2-cb64-447d-9815-5e55e00f2729))
+  (segment (start -152.135 55.3949) (end -152.961 54.5689) (width 0.4) (layer "B.Cu") (net 369) (tstamp bc798a82-0f61-47bb-8ce6-d53072ee8636))
+  (segment (start -152.961 53.5431) (end -152.133 52.7151) (width 0.4) (layer "B.Cu") (net 369) (tstamp beacfd90-056e-41ab-be51-c496df6e57eb))
   (segment (start -54.3123 8.2376) (end -55.7499 6.8) (width 1.6) (layer "F.Cu") (net 370) (tstamp 0bb73785-55e4-426e-9383-bf19b87b1595))
   (segment (start -58.65 0.5) (end -58.65 -1.5001) (width 1.6) (layer "F.Cu") (net 370) (tstamp 14705e6e-788f-4219-9304-b08bc60c9887))
   (segment (start -50.4799 8.2376) (end -54.3123 8.2376) (width 1.6) (layer "F.Cu") (net 370) (tstamp 14b6d6d8-e33d-4ddd-a5b0-de9074382c48))
@@ -22118,20 +22118,38 @@
   (segment (start -41.8999 50.15) (end -41.9 50.15) (width 1.5998) (layer "B.Cu") (net 370) (tstamp cba41aa5-c69b-43cd-b51c-2b005c044ced))
   (segment (start -41.8999 50.15) (end -41.8999 25.725) (width 1.6) (layer "B.Cu") (net 370) (tstamp db9d68ef-d37f-4657-b226-d4d8c228ad6b))
   (segment (start -137.7 28.65) (end -136.56863 28.65) (width 1.6) (layer "B.Cu") (net 370) (tstamp e90ae8e0-f2a3-4f00-af3c-fa12c9bd0824))
-  (segment (start -51.95 0.7003) (end -51.95 0.7) (width 0.3998) (layer "F.Cu") (net 371) (tstamp 13939a42-d4af-40ac-8582-c15d5efb85a2))
-  (segment (start -51.95 1.29) (end -51.95 0.7003) (width 0.4) (layer "F.Cu") (net 371) (tstamp ec238595-40d2-4bdb-8acf-684347ae13a7))
-  (segment (start -132.05 78.4852) (end -136.77 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp 0ea3f8ef-f9f8-402f-926c-cb541dfc0ed0))
-  (segment (start -128.940057 74.8782) (end -128.52 74.8782) (width 0.4) (layer "F.Cu") (net 372) (tstamp 10bc2173-8029-4029-bc06-3e42e27a1784))
-  (segment (start -148.53 78.4852) (end -149.33 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp 5071969c-7c51-4771-92b1-b86ce6f04762))
-  (segment (start -146.93 78.4852) (end -147.73 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp 510c8b99-e7bf-43a6-b429-9145735e6b19))
-  (segment (start -128.52 74.8782) (end -127.175 74.8782) (width 0.4) (layer "F.Cu") (net 372) (tstamp 64d02d55-651e-4b37-b068-bb816ca63034))
-  (segment (start -136.77 78.4852) (end -137.57 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp 70765c33-242c-431a-8780-1d8df2e62106))
-  (segment (start -147.73 78.4852) (end -148.53 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp 800e4e6a-1887-4eee-aedc-d7f5b26315c6))
-  (segment (start -138.37 78.4852) (end -139.17 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp 91c16fa1-980a-4a0a-8ffb-5f683dfacd72))
-  (segment (start -132.05 77.988143) (end -128.940057 74.8782) (width 0.4) (layer "F.Cu") (net 372) (tstamp 981726a0-e05d-476f-8794-e45a4599bb06))
-  (segment (start -132.05 78.4852) (end -132.05 77.988143) (width 0.4) (layer "F.Cu") (net 372) (tstamp d2405f46-7cfa-48ae-84de-45c25e85e392))
-  (segment (start -137.57 78.4852) (end -138.37 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp f2e05dbb-9b83-475f-8291-f59b542c92ea))
-  (segment (start -139.17 78.4852) (end -146.93 78.4852) (width 0.4) (layer "F.Cu") (net 372) (tstamp f47194f7-90b5-406c-a860-3049e4dedd9f))
+  (segment (start -122.914 14.68) (end -122.012 14.68) (width 0.4) (layer "F.Cu") (net 371) (tstamp 0c8a2179-1d01-449d-89be-85e360be7be8))
+  (segment (start -140.04 28.65) (end -140.045 28.655) (width 0.4) (layer "F.Cu") (net 371) (tstamp 24b0736f-58de-49f8-ae43-cfed35083cc5))
+  (segment (start -140.72 18.7352) (end -140.72 22.7098) (width 0.4) (layer "F.Cu") (net 371) (tstamp 2b8f0455-d19e-41a5-a023-621591adc3d0))
+  (segment (start -122.012 14.68) (end -120.3 12.9682) (width 0.4) (layer "F.Cu") (net 371) (tstamp 58a0b1c7-9ba9-43b9-b499-1863886f0084))
+  (segment (start -139.15 28.65) (end -140.04 28.65) (width 0.4) (layer "F.Cu") (net 371) (tstamp 5e416c9e-8c3a-4386-8234-e3a1a142ff17))
+  (segment (start -139.15 24.9036) (end -139.0233 24.7769) (width 0.4) (layer "F.Cu") (net 371) (tstamp 6ba53dcb-3419-4b89-9deb-aec95fa55514))
+  (segment (start -139.0233 24.7769) (end -139.0233 24.7449) (width 0.4) (layer "F.Cu") (net 371) (tstamp 7118f5f8-5246-4ae4-a00d-5ea5413225e5))
+  (segment (start -140.72 22.7098) (end -140.86 22.85) (width 0.4) (layer "F.Cu") (net 371) (tstamp 7f8dcfd2-3927-4c8c-a229-21cf9decc7b1))
+  (segment (start -140.96 15.495) (end -140.96 18.495) (width 0.4) (layer "F.Cu") (net 371) (tstamp 821ee24b-766a-455f-9030-621674a69da4))
+  (segment (start -140.8366 22.9315) (end -140.86 22.9082) (width 0.4) (layer "F.Cu") (net 371) (tstamp a3952e66-e4e0-43fc-863b-8fab736b20c9))
+  (segment (start -140.96 18.495) (end -140.72 18.7352) (width 0.4) (layer "F.Cu") (net 371) (tstamp a6b84af7-b280-47e2-845a-226dfa9209d8))
+  (segment (start -133.011 24.7769) (end -122.914 14.68) (width 0.4) (layer "F.Cu") (net 371) (tstamp add6d578-95f9-4847-8e89-0079ced5c290))
+  (segment (start -120.3 12.9682) (end -120.3 11.91) (width 0.4) (layer "F.Cu") (net 371) (tstamp b899500b-c07d-4144-b2a5-9a16a5aac30e))
+  (segment (start -140.86 22.9082) (end -140.86 22.85) (width 0.4) (layer "F.Cu") (net 371) (tstamp bb4082df-81cb-426f-9273-588d81af92e1))
+  (segment (start -139.15 28.65) (end -139.15 24.9036) (width 0.4) (layer "F.Cu") (net 371) (tstamp f2105d0e-e300-4992-975c-d32bea4b1101))
+  (segment (start -139.0233 24.7449) (end -140.8366 22.9315) (width 0.4) (layer "F.Cu") (net 371) (tstamp f6e0271b-9527-466b-b5a5-e51cd49fbc71))
+  (segment (start -139.0233 24.7769) (end -133.011 24.7769) (width 0.4) (layer "F.Cu") (net 371) (tstamp faa1a802-7bc6-43fb-a30a-fd626a62bc9b))
+  (segment (start -139.9 14.435) (end -140.96 15.495) (width 0.4) (layer "F.Cu") (net 371) (tstamp fecca49f-75b8-48cb-ab58-5bdb949e3cfa))
+  (segment (start -99.8783 15.8283) (end -100 15.95) (width 0.3998) (layer "F.Cu") (net 372) (tstamp 668c7a1c-d140-4fe3-939c-657a09644a7c))
+  (segment (start -99.7566 15.95) (end -99.8783 15.8283) (width 0.4) (layer "F.Cu") (net 372) (tstamp 920472f0-dad5-4327-8521-b2be3f4961cc))
+  (segment (start -99.8783 15.2123) (end -99.8783 15.8283) (width 0.4) (layer "F.Cu") (net 372) (tstamp dd709151-5d31-4c38-b6dd-a5e520ea7b1a))
+  (segment (start -99.28 15.95) (end -99.7566 15.95) (width 0.4) (layer "F.Cu") (net 372) (tstamp eb85788d-da03-4955-bc38-5437bf5a2811))
+  (via (at -99.8783 15.2123) (size 0.6) (drill 0.3) (layers "F.Cu" "B.Cu") (net 372) (tstamp 00c4665f-676b-4809-90df-0910a12cb27c))
+  (segment (start -101.957057 19.69) (end -102.66 18.987057) (width 0.4) (layer "B.Cu") (net 372) (tstamp 25fa8c8d-dfbb-46d8-b728-e219deefb01e))
+  (segment (start -102.66 18.987057) (end -102.66 17.9152) (width 0.4) (layer "B.Cu") (net 372) (tstamp 976d332d-f72a-451e-85d6-fda76af10e6a))
+  (segment (start -101.46 19.74) (end -101.51 19.69) (width 0.4) (layer "B.Cu") (net 372) (tstamp 9871ca2b-4853-4c24-a14c-8b525dc3ec06))
+  (segment (start -101.46 21.03) (end -101.46 19.74) (width 0.4) (layer "B.Cu") (net 372) (tstamp a7b789b5-2838-4ff6-8eb9-8320473b3073))
+  (segment (start -101.0363 17.2898) (end -99.8783 16.1318) (width 0.4) (layer "B.Cu") (net 372) (tstamp b47dc568-0022-4d52-937d-514bb2dda63b))
+  (segment (start -99.8783 16.1318) (end -99.8783 15.2123) (width 0.4) (layer "B.Cu") (net 372) (tstamp b61e6437-eb48-4618-87f5-9689bd293b47))
+  (segment (start -101.51 19.69) (end -101.957057 19.69) (width 0.4) (layer "B.Cu") (net 372) (tstamp c116efb3-818b-4a01-a4ce-d87e58dc2840))
+  (segment (start -102.0346 17.2898) (end -101.0363 17.2898) (width 0.4) (layer "B.Cu") (net 372) (tstamp c67f5840-e930-476f-acd6-63000440b476))
+  (segment (start -102.66 17.9152) (end -102.0346 17.2898) (width 0.4) (layer "B.Cu") (net 372) (tstamp e190611f-0f7c-4be9-967c-c09645b00b80))
   (segment (start -164.9191 -5.963) (end -163.3999 -4.4438) (width 0.4) (layer "F.Cu") (net 373) (tstamp 062fa2ff-5f52-4eed-8329-216523e3da35))
   (segment (start -226.0097 39.3521) (end -224.6197 39.3521) (width 0.4) (layer "F.Cu") (net 373) (tstamp 07fa1854-20f9-42ab-80de-a8e37e8e19cc))
   (segment (start -226.0097 48.475) (end -225.5097 48.975) (width 0.4) (layer "F.Cu") (net 373) (tstamp 0be921ee-9dde-4284-8a11-dc3c6c28aa55))
@@ -22220,26 +22238,13 @@
   (segment (start -192.559 53.5411) (end -192.559 55.394) (width 0.4) (layer "B.Cu") (net 374) (tstamp 56796b97-6ba0-4669-b57a-cf13854b1bb0))
   (segment (start -193.385 52.7151) (end -192.559 53.5411) (width 0.4) (layer "B.Cu") (net 374) (tstamp 74a7593e-577a-4e58-b4bf-7dd693659f62))
   (segment (start -192.559 55.394) (end -193.76 56.595) (width 0.4) (layer "B.Cu") (net 374) (tstamp db7b1233-f983-4242-b378-b77c8c1681b5))
-  (segment (start -153.488 54.8347) (end -154.6654 54.8347) (width 0.4) (layer "F.Cu") (net 375) (tstamp 1c2e2ed9-2332-4046-ae61-91a1e03f0192))
-  (segment (start -168.5503 59.135) (end -168.55 59.135) (width 0.3998) (layer "F.Cu") (net 375) (tstamp 2cba474c-ca24-43b9-964a-3502aa043ab6))
-  (segment (start -169.35 59.135) (end -168.5503 59.135) (width 0.4) (layer "F.Cu") (net 375) (tstamp 32bf4637-cf95-497b-abe0-b0e535af16ab))
-  (segment (start -155.1771 55.3464) (end -167.7873 55.3464) (width 0.4) (layer "F.Cu") (net 375) (tstamp 4a053e5d-578b-4c11-8a01-47be4fac248c))
-  (segment (start -172.76 51.515) (end -172.76 52.7151) (width 0.4) (layer "F.Cu") (net 375) (tstamp 6f6c0216-d5e8-4c52-8e8d-d84033ae6547))
-  (segment (start -152.9601 55.3626) (end -153.488 54.8347) (width 0.4) (layer "F.Cu") (net 375) (tstamp 72f38b11-1bb3-4cc5-9442-38a0ddf05be4))
-  (segment (start -171.9446 52.7151) (end -172.76 52.7151) (width 0.4) (layer "F.Cu") (net 375) (tstamp 90bd41d2-67b0-4c3a-840a-38d048ca3cc4))
-  (segment (start -168.5503 56.1094) (end -168.5503 59.135) (width 0.4) (layer "F.Cu") (net 375) (tstamp 981dd650-873f-480c-b0aa-8d06806c4dac))
-  (segment (start -167.7873 55.3464) (end -168.5503 56.1094) (width 0.4) (layer "F.Cu") (net 375) (tstamp a5183984-4a19-480c-b3a6-b79fb861bccc))
-  (segment (start -151.76 56.595) (end -152.9601 56.595) (width 0.4) (layer "F.Cu") (net 375) (tstamp c4d9b830-5fec-4fcc-be3e-e3e09221d0b1))
-  (segment (start -154.6654 54.8347) (end -155.1771 55.3464) (width 0.4) (layer "F.Cu") (net 375) (tstamp c6c52c32-0ced-4e82-a271-8e94f0becf9d))
-  (segment (start -152.9601 56.595) (end -152.9601 55.3626) (width 0.4) (layer "F.Cu") (net 375) (tstamp c9c7a24e-c9f1-4c86-81a0-4224db6b5f50))
-  (segment (start -168.5503 56.1094) (end -171.9446 52.7151) (width 0.4) (layer "F.Cu") (net 375) (tstamp f6366009-0631-4e1c-8903-ddb042998234))
-  (segment (start -151.76 56.595) (end -151.76 55.3949) (width 0.4) (layer "B.Cu") (net 375) (tstamp 122cc532-1c3b-46f9-99f0-5ae23a4ac52a))
-  (segment (start -152.961 54.5689) (end -152.961 53.5431) (width 0.4) (layer "B.Cu") (net 375) (tstamp 29ef0981-5cd1-4401-903c-3fb77ff5ab14))
-  (segment (start -151.76 55.3949) (end -152.135 55.3949) (width 0.4) (layer "B.Cu") (net 375) (tstamp 4dc7948e-0ab5-466f-8a35-96f3b23c2779))
-  (segment (start -151.76 51.515) (end -151.76 52.7151) (width 0.4) (layer "B.Cu") (net 375) (tstamp 58994a19-323d-49d5-bf26-4bb7e90211c3))
-  (segment (start -152.133 52.7151) (end -151.76 52.7151) (width 0.4) (layer "B.Cu") (net 375) (tstamp 5cb441c2-cb64-447d-9815-5e55e00f2729))
-  (segment (start -152.135 55.3949) (end -152.961 54.5689) (width 0.4) (layer "B.Cu") (net 375) (tstamp bc798a82-0f61-47bb-8ce6-d53072ee8636))
-  (segment (start -152.961 53.5431) (end -152.133 52.7151) (width 0.4) (layer "B.Cu") (net 375) (tstamp beacfd90-056e-41ab-be51-c496df6e57eb))
+  (segment (start -98.23 59.43) (end -98.24 59.44) (width 0.4) (layer "F.Cu") (net 375) (tstamp 19bc14c6-787c-46d8-bffc-8cb00d3978b2))
+  (segment (start -96.6536 59.43) (end -98.23 59.43) (width 0.4) (layer "F.Cu") (net 375) (tstamp bcb254db-1a44-4d91-9ad5-a2fc15c863d8))
+  (segment (start -96.6536 59.43) (end -97.41 59.43) (width 0.4) (layer "F.Cu") (net 375) (tstamp c7a84bad-f68b-4b40-8783-043c02d5aaa2))
+  (segment (start -95.8625 59.8753) (end -96.3078 59.43) (width 0.4) (layer "F.Cu") (net 375) (tstamp d7f8e6e7-e59d-41ec-b577-a6e2e65e0fd4))
+  (segment (start -96.3078 59.43) (end -96.6536 59.43) (width 0.4) (layer "F.Cu") (net 375) (tstamp e62b141a-73f2-4b20-9b18-94e498e570b8))
+  (via (at -98.24 59.44) (size 0.6) (drill 0.3) (layers "F.Cu" "B.Cu") (net 375) (tstamp 94d8b9b1-47e9-4fb5-a6cc-1656f27d3d0c))
+  (segment (start -98.24 86.3068) (end -98.24 59.44) (width 0.4) (layer "B.Cu") (net 375) (tstamp 268e1f8c-c5e7-40d1-90ae-3a7b703d20c7))
   (segment (start -218.3846 69) (end -216.2691 69) (width 0.4) (layer "F.Cu") (net 376) (tstamp 581e8e37-fb8b-47b4-9bab-dbb10a959401))
   (segment (start -216.2691 69) (end -214.3691 69) (width 0.4) (layer "F.Cu") (net 376) (tstamp 58322b17-8dff-42ce-9032-659b8eb7c6f9))
   (segment (start -223.5337 80.1449) (end -223.5337 69) (width 0.4) (layer "F.Cu") (net 376) (tstamp 642c55e4-5ac9-43f4-bc9b-003dedf7df69))
@@ -22248,13 +22253,7 @@
   (segment (start -227.4937 69) (end -227.85 69) (width 0.4) (layer "F.Cu") (net 376) (tstamp ac03b1fc-afce-4d31-b600-9de12cc08261))
   (segment (start -223.5337 69) (end -227.4937 69) (width 0.4) (layer "F.Cu") (net 376) (tstamp e816e54f-8e0b-4279-947a-c89a14be4375))
   (segment (start -221.5 69) (end -223.5337 69) (width 0.4) (layer "F.Cu") (net 376) (tstamp f9453b1e-a521-4694-a94b-57dd51a22a51))
-  (segment (start -98.23 59.43) (end -98.24 59.44) (width 0.4) (layer "F.Cu") (net 377) (tstamp 19bc14c6-787c-46d8-bffc-8cb00d3978b2))
-  (segment (start -96.6536 59.43) (end -98.23 59.43) (width 0.4) (layer "F.Cu") (net 377) (tstamp bcb254db-1a44-4d91-9ad5-a2fc15c863d8))
-  (segment (start -96.6536 59.43) (end -97.41 59.43) (width 0.4) (layer "F.Cu") (net 377) (tstamp c7a84bad-f68b-4b40-8783-043c02d5aaa2))
-  (segment (start -95.8625 59.8753) (end -96.3078 59.43) (width 0.4) (layer "F.Cu") (net 377) (tstamp d7f8e6e7-e59d-41ec-b577-a6e2e65e0fd4))
-  (segment (start -96.3078 59.43) (end -96.6536 59.43) (width 0.4) (layer "F.Cu") (net 377) (tstamp e62b141a-73f2-4b20-9b18-94e498e570b8))
-  (via (at -98.24 59.44) (size 0.6) (drill 0.3) (layers "F.Cu" "B.Cu") (net 377) (tstamp 94d8b9b1-47e9-4fb5-a6cc-1656f27d3d0c))
-  (segment (start -98.24 86.3068) (end -98.24 59.44) (width 0.4) (layer "B.Cu") (net 377) (tstamp 268e1f8c-c5e7-40d1-90ae-3a7b703d20c7))
+  (segment (start -32.395 76.25) (end -31.995 76.25) (width 0.4) (layer "F.Cu") (net 377) (tstamp 74362f06-806d-47d3-ad7e-00313027078c))
   (segment (start 11.005 46.79) (end 11.005 48.0651) (width 0.4) (layer "F.Cu") (net 378) (tstamp 2e466285-bb26-40ef-91c0-4cf8acd1c9f6))
   (segment (start 11.005 48.0651) (end 2.1792 48.0651) (width 0.4) (layer "F.Cu") (net 378) (tstamp 4003c2ea-3d52-482f-ad98-40b58fba3a16))
   (segment (start 3.055 31.3499) (end 3.055 31.6822) (width 0.4) (layer "F.Cu") (net 378) (tstamp 4938b189-28a3-4d2f-9981-1b34e24c4b31))
@@ -22326,7 +22325,8 @@
   (segment (start -148.821 31.9415) (end -148.821 22.3372) (width 0.4) (layer "B.Cu") (net 384) (tstamp e0d53baf-5836-4d2d-85d3-86f12916c1d9))
   (segment (start -151.2889 35.005) (end -148.821 32.5371) (width 0.4) (layer "B.Cu") (net 384) (tstamp e379335a-a9fa-4486-92f1-263599673c45))
   (segment (start -148.821 32.5371) (end -148.821 31.9415) (width 0.4) (layer "B.Cu") (net 384) (tstamp edfd668b-7e75-4174-a345-79b6ebcc7d39))
-  (segment (start -32.395 76.25) (end -31.995 76.25) (width 0.4) (layer "F.Cu") (net 385) (tstamp 74362f06-806d-47d3-ad7e-00313027078c))
+  (segment (start -51.95 0.7003) (end -51.95 0.7) (width 0.3998) (layer "F.Cu") (net 385) (tstamp 13939a42-d4af-40ac-8582-c15d5efb85a2))
+  (segment (start -51.95 1.29) (end -51.95 0.7003) (width 0.4) (layer "F.Cu") (net 385) (tstamp ec238595-40d2-4bdb-8acf-684347ae13a7))
   (segment (start -85.02 25.7813) (end -84.4237 25.185) (width 0.4) (layer "F.Cu") (net 386) (tstamp 0284e449-1afd-4183-94f1-31f2f27c59cd))
   (segment (start -75.9739 29.1261) (end -70.1168 29.1261) (width 0.4) (layer "F.Cu") (net 386) (tstamp 1bd5e6f0-4b25-4d0c-a4aa-edfc6f6e22af))
   (segment (start -85.02 25.895) (end -85.02 27.2) (width 0.4) (layer "F.Cu") (net 386) (tstamp 360a4711-de3c-41b1-966c-f3aaa20d4e86))
