@@ -599,6 +599,10 @@
           "/MAGIC/MCU/RUN",
           "/MAGIC/MCU/SD_DETECT",
           "/MAGIC/MCU/SD_~{CS}",
+          "/MAGIC/MCU/SPI1_RX",
+          "/MAGIC/MCU/SPI1_SCK",
+          "/MAGIC/MCU/SPI1_TX",
+          "/MAGIC/MCU/SPI1_~{CS}",
           "/MAGIC/MCU/SPI1_~{READY}",
           "/MAGIC/MCU/SWCLK",
           "/MAGIC/MCU/SWD",
@@ -629,10 +633,10 @@
         "name": "PD",
         "nets": [
           "+9V_Unreg",
-          "/POWER/+9V_UNFILT",
           "/POWER/VAC1",
           "/POWER/VAC2",
           "CHASSIS_GND",
+          "PD_3V3",
           "PD_5V",
           "PD_6V",
           "PD_GND"
