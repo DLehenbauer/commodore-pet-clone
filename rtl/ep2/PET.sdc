@@ -16,7 +16,7 @@ set max_board_delay 5
 set clk_16           { pll|altpll_component|pll|clk[0] }
 set clk_8p           [get_registers { main:main|timing2:timing2|clk_8_o }]
 set clk_8n           [get_registers { main:main|timing2:timing2|clk_8n_o }]
-set spi_en           [get_registers { main:main|timing2:timing2|enable[0] }]
+set spi1_en          [get_registers { main:main|timing2:timing2|enable[0] }]
 set enable_1         [get_registers { main:main|timing2:timing2|enable[1] }]
 set enable_2         [get_registers { main:main|timing2:timing2|enable[2] }]
 set enable_3         [get_registers { main:main|timing2:timing2|enable[3] }]
@@ -26,7 +26,7 @@ set enable_6         [get_registers { main:main|timing2:timing2|enable[6] }]
 set cpu_en           [get_registers { main:main|timing2:timing2|enable[7] }]
 
 set clk_cpu  [get_ports { clk_cpu_o }]
-set spi_sclk [get_ports { spi_sclk_i }]
+set spi1_sclk [get_ports { spi1_sclk_i }]
 
 # clk_8p/n are phase-shifted 8 MHz ripple clocks derived from clk_16.  (We use ripple
 # clocks because the PLL cannot generate a clock this slow.)
@@ -41,26 +41,26 @@ proc ns_from_mhz { mhz } {
 	return $result
 }
 
-set spi_sclk_period_mhz 4
-set spi_sclk_period_ns [ns_from_mhz $spi_sclk_period_mhz]
+set spi1_sclk_period_mhz 4
+set spi1_sclk_period_ns [ns_from_mhz $spi1_sclk_period_mhz]
 
-create_clock -name "spi_sclk_v" -period $spi_sclk_period_ns
+create_clock -name "spi1_sclk_v" -period $spi1_sclk_period_ns
 
 # Input clock of center-aligned source synchronous interface is equal to source clock +90 degrees
 # (See AN433 page 43).
-create_clock -name "spi_sclk_i" -period $spi_sclk_period_ns \
-    -waveform [list [expr { $spi_sclk_period_ns * 0.25 }] [expr { $spi_sclk_period_ns * 0.75 }]] \
-    $spi_sclk
+create_clock -name "spi1_sclk_i" -period $spi1_sclk_period_ns \
+    -waveform [list [expr { $spi1_sclk_period_ns * 0.25 }] [expr { $spi1_sclk_period_ns * 0.75 }]] \
+    $spi1_sclk
 
-# SPI signals relative to spi_sclk_v
-set spi_input_ports [get_ports { spi_cs_ni spi_rx_i }]
-set spi_output_ports [get_ports { spi_tx_io }]
+# SPI signals relative to spi1_sclk_v
+set spi1_input_ports [get_ports { spi1_cs_ni spi1_rx_i }]
+set spi1_output_ports [get_ports { spi1_tx_io }]
 
-set_input_delay -min $max_board_delay -clock spi_sclk_v $spi_input_ports
-set_input_delay -max $max_board_delay -clock spi_sclk_v $spi_input_ports
+set_input_delay -min $max_board_delay -clock spi1_sclk_v $spi1_input_ports
+set_input_delay -max $max_board_delay -clock spi1_sclk_v $spi1_input_ports
 
-set_output_delay -min $max_board_delay -clock spi_sclk_v $spi_output_ports
-set_output_delay -max $max_board_delay -clock spi_sclk_v $spi_output_ports
+set_output_delay -min $max_board_delay -clock spi1_sclk_v $spi1_output_ports
+set_output_delay -max $max_board_delay -clock spi1_sclk_v $spi1_output_ports
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks

@@ -30,10 +30,10 @@ module main (
                                         //      resistors at R9 and R10.
 
     // SPI
-    input  logic spi_sclk_i,            // RPi 23 : GPIO 11
-    input  logic spi_cs_ni,             // RPi 24 : GPIO 8 (Also serves as !spi_tx_oe)
-    input  logic spi_rx_i,              // RPi 19 : GPIO 10
-    output logic spi_tx_o,              // RPi 21 : GPIO 9 (Should be High-Z when CS is deasserted)
+    input  logic spi1_sclk_i,           // RPi 23 : GPIO 11
+    input  logic spi1_cs_ni,            // RPi 24 : GPIO 8 (Also serves as !spi1_tx_oe)
+    input  logic spi1_rx_i,             // RPi 19 : GPIO 10
+    output logic spi1_tx_o,             // RPi 21 : GPIO 9 (Should be High-Z when CS is deasserted)
 
     output logic spi_ready_no,          // RPi  3 : Request completed and pi_data held while still pending.
 
@@ -75,10 +75,10 @@ module main (
 
     spi_bridge spi_bridge(
         .clk_sys_i(clk_8n),
-        .spi_sclk_i(spi_sclk_i),
-        .spi_cs_ni(spi_cs_ni),
-        .spi_rx_i(spi_rx_i),
-        .spi_tx_o(spi_tx_o),
+        .spi_sclk_i(spi1_sclk_i),
+        .spi_cs_ni(spi1_cs_ni),
+        .spi_rx_i(spi1_rx_i),
+        .spi_tx_o(spi1_tx_o),
         .spi_addr_o(spi_addr),
         .spi_data_i(spi_rd_data),
         .spi_data_o(spi_wr_data),
