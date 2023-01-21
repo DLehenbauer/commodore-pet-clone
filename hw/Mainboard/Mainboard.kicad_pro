@@ -33,9 +33,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 2.54,
-          "width": 2.54
+          "drill": 0.8,
+          "height": 2.0,
+          "width": 1.2
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -123,9 +123,10 @@
         0.0,
         0.2,
         0.28,
+        0.3,
         0.4,
-        0.8,
-        2.0
+        0.6,
+        1.6
       ],
       "via_dimensions": [
         {
@@ -137,8 +138,8 @@
           "drill": 0.3
         },
         {
-          "diameter": 1.27,
-          "drill": 0.508
+          "diameter": 1.6,
+          "drill": 0.8
         }
       ],
       "zones_allow_external_fillets": false,
@@ -442,9 +443,7 @@
           "/MAGIC/MCU/DVI_D1+",
           "/MAGIC/MCU/DVI_D1-",
           "/MAGIC/MCU/DVI_D2+",
-          "/MAGIC/MCU/DVI_D2-",
-          "DVI_GND",
-          "DVI_VDD"
+          "/MAGIC/MCU/DVI_D2-"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -508,17 +507,12 @@
           "/MAGIC/FPGA/S2",
           "/MAGIC/FPGA/S3",
           "/MAGIC/FPGA/S4",
-          "/MAGIC/FPGA/S5",
-          "/MAGIC/FPGA/S6",
           "/MAGIC/FPGA/SYNC",
           "/MAGIC/FPGA/TCK",
           "/MAGIC/FPGA/TDI",
           "/MAGIC/FPGA/TDO",
           "/MAGIC/FPGA/TMS",
           "/MAGIC/FPGA/VIA_CB2",
-          "/MAGIC/FPGA/X1",
-          "/MAGIC/FPGA/X2",
-          "/MAGIC/FPGA/X3",
           "/MAGIC/FPGA/~{IRQ}",
           "/MAGIC/FPGA/~{ML}",
           "/MAGIC/FPGA/~{NMI}",
@@ -540,10 +534,7 @@
           "/MAGIC/~{VIA_CS}",
           "/MAGIC/~{VIDEO}",
           "/MAGIC/ϕ2",
-          "FPGA_GND",
-          "FPGA_VCC",
-          "FPGA_VCCA",
-          "FPGA_VCCIO"
+          "FPGA_VCCA"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -611,8 +602,7 @@
           "/MAGIC/MCU/UART0_TX",
           "/MAGIC/MCU/XIN",
           "/MAGIC/MCU/XOUT",
-          "MCU_DVDD",
-          "MCU_IOVDD"
+          "MCU_DVDD"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -636,10 +626,7 @@
           "/POWER/VAC1",
           "/POWER/VAC2",
           "CHASSIS_GND",
-          "PD_3V3",
-          "PD_5V",
-          "PD_6V",
-          "PD_GND"
+          "PD_6V"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
