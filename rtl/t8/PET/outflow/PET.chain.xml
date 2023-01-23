@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<chain>
+    <device chip_num="1" id_code="0x00210a79" ir_width="4" istr_code="1100" />
+</chain>
