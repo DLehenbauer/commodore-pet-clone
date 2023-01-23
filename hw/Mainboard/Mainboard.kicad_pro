@@ -581,6 +581,7 @@
           "/MAGIC/MCU/MCU_DVI_D2-",
           "/MAGIC/MCU/MCU_USB_D+",
           "/MAGIC/MCU/MCU_USB_D-",
+          "/MAGIC/MCU/MCU_~{CRESET}",
           "/MAGIC/MCU/QSPI_SCLK",
           "/MAGIC/MCU/QSPI_SD0",
           "/MAGIC/MCU/QSPI_SD1",
