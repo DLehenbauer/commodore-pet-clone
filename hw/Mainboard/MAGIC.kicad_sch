@@ -1501,7 +1501,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 0964d0ae-bfeb-4e5f-889d-226d7de3e9eb)
   )
-  (text "MCU responsibilities:\n- Configure FPGA at POR\n- Initialize SRAM with ROM images\n- Read back video RAM and output to HDMI (bit-banged DVI)\n- Report USB keyboard input to FPGA\n\nFPGA responsibilities:\n- Read/write access to SRAM (via SPI)\n- Bus orchestration / address decoding\n- CRTC emulation / native video generation\n- Intercept PIA1 to inject USB keyboard\n\nSRAM is shared between the 6502 and the FPGA by\nusing an effective bus speed of 8 MHz and time-slicing.\n(The FPGA takes multiple turns in order to service\nSPI and generative native video.)\n\n"
+  (text "MCU responsibilities:\n- Configure FPGA at POR\n- Initialize SRAM with ROM images\n- Read back video RAM and output to HDMI (bit-banged DVI)\n- Report USB keyboard input to FPGA\n\nFPGA responsibilities:\n- Read/write access to SRAM (via SPI)\n- Bus orchestration / address decoding\n- CRTC emulation / native video generation\n- Intercept PIA1 to inject USB keyboard\n\nSRAM is shared between the 6502 and the FPGA by\nusing an effective bus speed of 8 MHz taking turns\nin round-robin fashion.  (The FPGA takes multiple\nturns in order to service SPI and generative native\nvideo.)"
     (at 82.55 91.44 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid b3fcf16b-286f-4649-8f4d-3901570dbf10)
