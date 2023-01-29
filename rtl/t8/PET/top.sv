@@ -22,20 +22,23 @@ module top(
     output logic         bus_rw_noe,    //
 
     input  logic [15:0]  bus_addr_i,    // CPU 9-20, 22-25 : System address bus
-    output logic [16:0]  bus_addr_o,    //
-    output logic         bus_addr_oe,   //
+    output logic [15:0]  bus_addr_o,    //
+    output logic [15:0]  bus_addr_oe,   //
+    output logic         bus_addr16_o,  // CPU has 16b bus, therefore A[16] is output only.
 
     input  logic  [7:0]  bus_data_i,    // CPU 33-26 : System data bus
     output logic  [7:0]  bus_data_o,    //
-    output logic         bus_data_oe,   //
+    output logic  [7:0]  bus_data_oe,   //
     
-    output logic [11:10] ram_addr_o,    // RAM: Intercept A11/A10 to mirror VRAM.
+    output logic [11:10] ram_addr_o,    // RAM: Intercept A[11:10] to mirror VRAM.
     
     // SPI
-    input  logic spi_sclk_i,            // RPi 23 : GPIO 11
-    input  logic spi_cs_ni,             // RPi 24 : GPIO 8
-    input  logic spi_rx_i,              // RPi 19 : GPIO 10
-    output logic spi_tx_o,              // RPi 21 : GPIO 9 (Should be High-Z when CS is deasserted)
+    input  logic spi1_sclk_i,           // RPi 23 : GPIO 11
+    input  logic spi1_cs_ni,            // RPi 24 : GPIO 8
+    input  logic spi1_rx_i,             // RPi 19 : GPIO 10
+    input  logic spi1_tx_i,             // RPi 21 : GPIO 9 (Should be High-Z when CS is deasserted)
+    output logic spi1_tx_o,             //
+    output logic spi1_tx_oe,            //
 
     output logic spi_ready_no,          // RPi  3 : Request completed and pi_data held while still pending.
 
@@ -62,7 +65,7 @@ module top(
     input  logic cpu_sync_i,            // CPU  7 :
 
     // Address Decoding
-    output logic cpu_en_o,              // CPU 36 (BE)   : 0 = High impedance, 1 = Enabled
+    output logic cpu_be_o,              // CPU 36 (BE)   : 0 = High impedance, 1 = Enabled
     output logic ram_ce_no,             // RAM 22 (CE_B) : 0 = Enabled, 1 = High impedance
     output logic pia1_cs2_no,
     output logic pia2_cs2_no,

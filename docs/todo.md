@@ -10,6 +10,7 @@
   * CPU signals (cpu_* prefix)
     * RDY vs. cpu_ready
     * SOB vs. /SO vs. so_n
+    * BE vs. cpu_en
   * Video signals:
     * /VIDEO vs video (not negated)
     * vert vs v_sync
@@ -17,3 +18,4 @@
 * Tie RAM_CE to 3V3 and reclaim FPGA pin
 * Larger net ties for FPGA_*
 * Consider [SMD SRAM](https://jlcpcb.com/partdetail/444095-IS61WV1288EEBLL10TLI/C443418)
+
