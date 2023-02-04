@@ -79,7 +79,6 @@ fw/roms/*.h
 # Efinity
 rtl/t8/PET/.lock
 rtl/t8/PET/outflow/**/*
-!rtl/t8/PET/outflow/PET.chain.xml
 rtl/t8/PET/work_syn/**/*
 rtl/t8/PET/work_pnr/**/*
 rtl/t8/PET/work_pt/**/*
