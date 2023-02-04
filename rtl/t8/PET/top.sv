@@ -81,8 +81,12 @@ module top(
     input  logic gfx_i,
     output logic h_sync_o,
     output logic v_sync_o,
-    output logic video_o
+    output logic video_o,
+    
+    output logic status_no
 );
+    assign status_no = 1'b0;
+
     // Stub to unblock PnR
     always @(posedge clk_16_i) begin
         clk_cpu_o = !clk_cpu_o;
