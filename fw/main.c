@@ -21,7 +21,7 @@
 #include "sd/sd.h"
 
 #ifdef TEST
-//#include "test.h"
+#include "test.h"
 #else
 #include "pet.h"
 #endif
