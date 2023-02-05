@@ -21,15 +21,14 @@
 #define SPI_CMD_WRITE_NEXT 0x00
 
 void driver_init() {
-    // To save an IO pin, we use CS_N to frame multibyte commands.  This requires us to
-    // drive CS_N from software since RP2040's hardware CS_N deasserts between bytes.
-    //
-    // Therefore we configure SPI_CSN_PIN as GPIO_OUT rather than GPIO_FUNC_SPI.
+    // Configure SPI_CS_N_PIN as GPIO_OUT rather than GPIO_FUNC_SPI because the RP2040's
+    // hardware CS_N deasserts between bytes and our design relies on CS_N being held low
+    // to frame multibyte commands transmitted to the FPGA.
     //
     // (See https://github.com/raspberrypi/pico-sdk/issues/88)
-    gpio_init(SPI_CSN_PIN);
-    gpio_set_dir(SPI_CSN_PIN, GPIO_OUT);
-    gpio_put(SPI_CSN_PIN, 1);
+
+    // In case the MCU is reset mid-transmission, Hold CS_N high long enough to trigger a
+    // synchronous reset of the FPGA's state machine so it is ready for a new command.
     sleep_ms(1);
     
     gpio_init(SPI_READY_B_PIN);

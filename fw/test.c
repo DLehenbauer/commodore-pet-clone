@@ -136,6 +136,11 @@ void r1w0(int32_t addr, int8_t bit) {
 
 void test_ram() {
     while (true) {
+        puts("Suspending CPU");
+
+        set_cpu(/* reset: */ false, /* run: */ false);
+        sleep_ms(1);
+
         puts("\nRAM Test (March C-):\n");
 
         printf("⇑(w0): ");

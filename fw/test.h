@@ -16,5 +16,5 @@
 
 #include "pch.h"
 
-void test_init();
+void test_ram();
 void test_display();
