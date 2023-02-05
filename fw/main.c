@@ -12,13 +12,20 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
+// #define TEST
+
 #include "pch.h"
 #include "driver.h"
 #include "dvi/dvi.h"
 #include "global.h"
-#include "pet.h"
 #include "sd/sd.h"
+
+#ifdef TEST
 //#include "test.h"
+#else
+#include "pet.h"
+#endif
+
 #include "usb/usb.h"
 
 void init() {
@@ -36,12 +43,13 @@ void init() {
 int main() {
     init();
 
+#ifdef TEST
+    test_ram();
+    // test_display();
+#else
     pet_reset();
     pet_main();
-
-    // test_init();
-    // test_ram();
-    // test_display();
+#endif
 
     __builtin_unreachable();
 }
