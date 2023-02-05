@@ -1,5 +1,8 @@
 # TODO
 
+* Checklist:
+  * Review BOM (esp. look for mixed values)
+  * ERC / DRC / update copper fills
 * HW:
   * 10uF 50V -> 10uF 25V
   * Combine FPGA prog and MCU debug on same header?
