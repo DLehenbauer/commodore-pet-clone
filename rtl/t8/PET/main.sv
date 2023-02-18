@@ -14,23 +14,8 @@
 
 module main(
     // FPGA
-    input  logic         clk16_i,
+    input  logic clk16_i,
 
-    // System Bus
-    input  logic         bus_rw_ni,
-    output logic         bus_rw_no,
-    output logic         bus_rw_noe,
-
-    input  logic [15:0]  bus_addr_i,
-    output logic [16:0]  bus_addr_o,
-    output logic         bus_addr_oe,
-
-    input  logic  [7:0]  bus_data_i,
-    output logic  [7:0]  bus_data_o,
-    output logic         bus_data_oe,
-    
-    output logic [11:10] ram_addr_o,
-    
     // SPI1
     input  logic spi1_sck_i,
     input  logic spi1_cs_ni,
@@ -40,12 +25,22 @@ module main(
     output logic spi1_tx_oe,
     output logic spi_ready_no,
 
-    // Timing
-    output logic cpu_clk_o,
-    output logic ram_oe_no,
-    output logic ram_we_no,
+    // System Bus
+    input  logic [15:0]  bus_addr_i,
+    output logic [16:0]  bus_addr_o,
+    output logic         bus_addr_oe,
 
+    input  logic  [7:0]  bus_data_i,
+    output logic  [7:0]  bus_data_o,
+    output logic         bus_data_oe,
+
+    input  logic         bus_rw_ni,
+    output logic         bus_rw_no,
+    output logic         bus_rw_noe,
+   
     // CPU
+    output logic cpu_clk_o,
+
     input  logic cpu_res_nai,
     output logic cpu_res_nao,
     output logic cpu_res_naoe,
@@ -60,9 +55,15 @@ module main(
     output logic cpu_nmi_no,
     output logic cpu_nmi_noe,
 
-    // Address Decoding
     output logic cpu_be_o,
+
+    // RAM
     output logic ram_ce_no,
+    output logic ram_oe_no,
+    output logic ram_we_no,
+    output logic [11:10] ram_addr_o,
+
+    // I/O
     output logic pia1_cs2_no,
     output logic pia2_cs2_no,
     output logic via_cs2_no,
@@ -79,6 +80,22 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
+    assign cpu_be_o     = '0;
+    assign bus_addr_oe  = '0;
+    assign bus_data_oe  = '0;
+    assign bus_rw_noe   = '0;
+    assign cpu_irq_noe  = '0;
+    assign cpu_nmi_noe  = '0;
+    assign cpu_res_naoe = '0;
+
+    assign io_oe_no     = 1'b1;
+    assign pia1_cs2_no  = 1'b1;
+    assign pia2_cs2_no  = 1'b1;
+    assign via_cs2_no   = 1'b1;
+    assign ram_ce_no    = 1'b1;
+    assign ram_oe_no    = 1'b1;
+    assign ram_we_no    = 1'b1;
+
     // Stub to unblock PnR
     always @(posedge clk16_i) begin
         cpu_clk_o = !cpu_clk_o;

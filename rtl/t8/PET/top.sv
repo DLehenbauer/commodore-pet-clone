@@ -17,22 +17,6 @@ module top(
     input  logic         clk16_i,           // 16 MHz system clock (from PLL)
     output logic         status_no,
 
-    // System Bus
-    input  logic         bus_rw_ni,         // CPU 34 : 0 = writing, 1 = reading
-    output logic         bus_rw_no,         // 
-    output logic         bus_rw_noe,        //
-
-    input  logic [15:0]  bus_addr_15_0_i,   // CPU 9-20, 22-25 : System address bus
-    output logic [15:0]  bus_addr_15_0_o,   //
-    output logic [15:0]  bus_addr_15_0_oe,  //
-    output logic         bus_addr_16_o,     // CPU has 16b bus, therefore A[16] is output only.
-
-    input  logic  [7:0]  bus_data_7_0_i,    // CPU 33-26 : System data bus
-    output logic  [7:0]  bus_data_7_0_o,    //
-    output logic  [7:0]  bus_data_7_0_oe,   //
-    
-    output logic [11:10] ram_addr_o,        // RAM: Intercept A[11:10] to mirror VRAM.
-    
     // SPI1
     input  logic spi1_sck_i,                // RPi 23 : GPIO 11
     input  logic spi1_cs_ni,                // RPi 24 : GPIO 8
@@ -42,12 +26,23 @@ module top(
     output logic spi1_tx_oe,                //
     output logic spi_ready_no,              // RPi  3 : Request completed and pi_data held while still pending.
 
-    // Timing
-    output logic cpu_clk_o,                 // CPU 37 : 1 MHz cpu clock
-    output logic ram_oe_no,                 // RAM 24 : 0 = output enabled, 1 = High impedance
-    output logic ram_we_no,                 // RAM 29 : 0 = write enabled,  1 = Not active
+    // System Bus
+    input  logic [15:0]  bus_addr_15_0_i,   // CPU 9-20, 22-25 : System address bus
+    output logic [15:0]  bus_addr_15_0_o,   //
+    output logic [15:0]  bus_addr_15_0_oe,  //
+    output logic         bus_addr_16_o,     // CPU has 16b bus, therefore A[16] is output only.
+
+    input  logic  [7:0]  bus_data_7_0_i,    // CPU 33-26 : System data bus
+    output logic  [7:0]  bus_data_7_0_o,    //
+    output logic  [7:0]  bus_data_7_0_oe,   //
+
+    input  logic         bus_rw_ni,         // CPU 34 : 0 = writing, 1 = reading
+    output logic         bus_rw_no,         // 
+    output logic         bus_rw_noe,        //
 
     // CPU
+    output logic cpu_clk_o,                 // CPU 37 : 1 MHz cpu clock
+
     input  logic cpu_res_nai,               // CPU 40 : 0 = Reset, 1 = Normal [Open drain]
     output logic cpu_res_nao,               //
     output logic cpu_res_naoe,              //
@@ -62,9 +57,15 @@ module top(
     output logic cpu_nmi_no,                //
     output logic cpu_nmi_noe,               //
 
-    // Address Decoding
     output logic cpu_be_o,                  // CPU 36 (BE)   : 0 = High impedance, 1 = Enabled
+
+    // RAM
     output logic ram_ce_no,                 // RAM 22 (CE_B) : 0 = Enabled, 1 = High impedance
+    output logic ram_oe_no,                 // RAM 24 : 0 = output enabled, 1 = High impedance
+    output logic ram_we_no,                 // RAM 29 : 0 = write enabled,  1 = Not active
+    output logic [11:10] ram_addr_o,        // RAM: Intercept A[11:10] to mirror VRAM.   
+
+    // I/O
     output logic pia1_cs2_no,
     output logic pia2_cs2_no,
     output logic via_cs2_no,
@@ -81,6 +82,7 @@ module top(
     output logic v_sync_o,
     output logic video_o
 );
+    // Turn off NSTATUS LED to indicate programming has successfully completed.
     assign status_no = 1'b0;
 
     // Efinity Interface Designer generates a separate output enable for each bus signal.
