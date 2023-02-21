@@ -54,7 +54,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 ARG PICO_PATH="/opt/pico"
 WORKDIR $PICO_PATH
 
-# Install cross toolchain for Raspberry Pi Pico.  Note that we also need native
+# Install cross toolchain for Raspberry Pi Pico.  Note that we also need
 # the native toolchain in order to build the 'pioasm' and 'elf2uf2' tools.
 RUN apt-get update && apt-get -y install --no-install-recommends \
     build-essential \

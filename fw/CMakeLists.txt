@@ -6,6 +6,8 @@ add_subdirectory("external/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI")
 if (TARGET tinyusb_device)
     set(FAMILY rp2040)
     set(BOARD pico_sdk)
+    
+    # TODO: 'TINYUSB_FAMILY_PROJECT_NAME_PREFIX' copied pico examples.  Is this used?
     set(TINYUSB_FAMILY_PROJECT_NAME_PREFIX "tinyusb_host_")
 
     add_executable(firmware
