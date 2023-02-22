@@ -12,12 +12,6 @@
 
 **/bin/
 
-# TODO: Figure out why these are not placed in /test/bin/
-test/src/*.d
-test/src/*.o
-testpins/src/*.d
-testpins/src/*.o
-
 # KiCad local settings
 hw/**/*.kicad_prl
 
@@ -61,18 +55,16 @@ rtl/ep2/simulation/modelsim/**/*
 # ATMISP log file
 rtl/ep2/jtag.log
 
-# Don't commit PRGs
+# PRGs
 prgs/**
 
 # CMake build artifacts
-/sw/build
 /build
 
-# Dev contianer artifact?
-**/.buildNodeID
-
-# Omit roms
+# Roms
 fw/roms/*.h
+
+# Cortex-Debug extension state
 .vscode/.cortex-debug.peripherals.state.json
 .vscode/.cortex-debug.registers.state.json
 
