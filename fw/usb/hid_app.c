@@ -23,7 +23,8 @@
  *
  */
 
-#include "../pch.h"
+#include "bsp/board.h"
+#include "tusb.h"
 #include "keyboard.h"
 
 //--------------------------------------------------------------------+
@@ -36,6 +37,8 @@
 
 #define MAX_REPORT  4
 
+// static uint8_t const keycode2ascii[128][2] =  { HID_KEYCODE_TO_ASCII };
+
 // Each HID instance can has multiple reports
 static struct
 {
@@ -43,6 +46,7 @@ static struct
   tuh_hid_report_info_t report_info[MAX_REPORT];
 }hid_info[CFG_TUH_HID];
 
+// static void process_kbd_report(hid_keyboard_report_t const *report);
 static void process_mouse_report(hid_mouse_report_t const * report);
 static void process_generic_report(uint8_t dev_addr, uint8_t instance, uint8_t const* report, uint16_t len);
 
@@ -123,6 +127,50 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
 }
 
 //--------------------------------------------------------------------+
+// Keyboard
+//--------------------------------------------------------------------+
+
+// look up new key in previous keys
+// static inline bool find_key_in_report(hid_keyboard_report_t const *report, uint8_t keycode)
+// {
+//   for(uint8_t i=0; i<6; i++)
+//   {
+//     if (report->keycode[i] == keycode)  return true;
+//   }
+
+//   return false;
+// }
+
+// static void process_kbd_report(hid_keyboard_report_t const *report)
+// {
+//   static hid_keyboard_report_t prev_report = { 0, 0, {0} }; // previous report to check key released
+
+//   //------------- example code ignore control (non-printable) key affects -------------//
+//   for(uint8_t i=0; i<6; i++)
+//   {
+//     if ( report->keycode[i] )
+//     {
+//       if ( find_key_in_report(&prev_report, report->keycode[i]) )
+//       {
+//         // exist in previous report means the current key is holding
+//       }else
+//       {
+//         // not existed in previous report means the current key is pressed
+//         bool const is_shift = report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
+//         uint8_t ch = keycode2ascii[report->keycode[i]][is_shift ? 1 : 0];
+//         putchar(ch);
+//         if ( ch == '\r' ) putchar('\n'); // added new line for enter key
+
+//         fflush(stdout); // flush right away, else nanolib will wait for newline
+//       }
+//     }
+//     // TODO example skips key released
+//   }
+
+//   prev_report = *report;
+// }
+
+//--------------------------------------------------------------------+
 // Mouse
 //--------------------------------------------------------------------+
 
@@ -200,7 +248,7 @@ static void process_generic_report(uint8_t dev_addr, uint8_t instance, uint8_t c
     // Composite report, 1st byte is report ID, data starts from 2nd byte
     uint8_t const rpt_id = report[0];
 
-    // Find report id in the arrray
+    // Find report id in the array
     for(uint8_t i=0; i<rpt_count; i++)
     {
       if (rpt_id == rpt_info_arr[i].report_id )

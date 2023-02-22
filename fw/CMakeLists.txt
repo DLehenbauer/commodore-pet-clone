@@ -18,7 +18,9 @@ if (TARGET tinyusb_device)
         pet.c
         sd/sd.c
         test.c
+        usb/cdc_app.c
         usb/hid_app.c
+        usb/msc_app.c
         usb/keyboard.c
         usb/usb.c
     )
