@@ -86,6 +86,27 @@ module top(
     output logic status_no
 );
     assign status_no = 1'b0;
+    
+    assign cpu_res_nao = 1'b1;
+    assign cpu_res_naoe = !cpu_res_nao;     // Wire-OR with external pullup
+
+    assign cpu_irq_no  = 1'b1;
+    assign cpu_irq_noe = !cpu_irq_no;       // Wire-OR with external pullup
+    
+    assign cpu_nmi_no  = 1'b1;
+    assign cpu_nmi_noe = !cpu_nmi_no;       // Wire-OR with external pullup
+
+    assign cpu_ready_o = 1'b0;              // Suspend CPU
+    assign cpu_be_o    = 1'b0;              // FPGA drives bus, CPU in high-Z
+    
+    assign io_oe_no    = 1'b1;              // FPGA driving bus, I/O in high-Z
+    assign pia1_cs2_no = 1'b1;
+    assign pia2_cs2_no = 1'b1;
+    assign via_cs2_no  = 1'b1;
+        
+    assign ram_ce_no   = 1'b0;              // RAM enabled
+    assign ram_oe_no   = 1'b0;              // RAM output enabled
+    assign ram_we_no   = 1'b1;
 
     // Stub to unblock PnR
     always @(posedge clk_16_i) begin
