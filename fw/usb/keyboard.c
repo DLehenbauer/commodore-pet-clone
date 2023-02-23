@@ -1,4 +1,17 @@
-#include "pch.h"
+/**
+ * PET Clone - Open hardware implementation of the Commodore PET
+ * by Daniel Lehenbauer and contributors.
+ * 
+ * https://github.com/DLehenbauer/commodore-pet-clone
+ *
+ * To the extent possible under law, I, Daniel Lehenbauer, have waived all
+ * copyright and related or neighboring rights to this project. This work is
+ * published from the United States.
+ *
+ * @copyright CC0 http://creativecommons.org/publicdomain/zero/1.0/
+ * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
+ */
+
 #include "keyboard.h"
 #include "../global.h"
 
@@ -252,8 +265,9 @@ static uint8_t const keycode2ascii[128][2] =  { HID_KEYCODE_TO_ASCII };
 
 static bool find_key_in_report(hid_keyboard_report_t const* report, uint8_t keycode) {
     for (uint8_t i = 0; i < 6; i++) {
-        if (report->keycode[i] == keycode)
+        if (report->keycode[i] == keycode) {
             return true;
+    }
     }
 
     return false;

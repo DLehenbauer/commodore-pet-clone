@@ -6,6 +6,10 @@
 #include "hw_config.h"
 #include "../hw.h"
 
+// TODO: 'no-OS-FatFS-SD-SPI-RPi-Pico' doesn't appear to export a declaration.
+//       (Defined in 'FatFs_SPI/sd_driver/spi.c')
+extern void __not_in_flash_func(spi_irq_handler)();
+
 void spi_dma_isr();
 
 // Hardware Configuration of SPI "objects"

@@ -33,7 +33,9 @@ static const uint8_t __attribute__((aligned(4), section(".data" ".rom_basic_d000
 };
 
 static const uint8_t __attribute__((aligned(4), section(".data" ".rom_edit_e000"))) rom_edit_e000[] = {
-    #include "roms/edit-4-40-n-60Hz-ntsc.h"
+//    #include "roms/edit-4-n.901447-29.h"
+    #include "roms/edit-4-40-n-50Hz.901498-01.h"
+//    #include "roms/edit-4-80-b-60Hz.901474-03.h"
 };
 
 static const uint8_t __attribute__((aligned(4), section(".data" ".rom_kernal_f000"))) rom_kernal_f000[] = {

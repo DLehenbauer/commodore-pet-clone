@@ -27,6 +27,10 @@ void driver_init() {
     //
     // (See https://github.com/raspberrypi/pico-sdk/issues/88)
 
+    gpio_init(SPI_CSN_PIN);
+    gpio_set_dir(SPI_CSN_PIN, GPIO_OUT);
+    gpio_put(SPI_CSN_PIN, 1);
+
     // In case the MCU is reset mid-transmission, Hold CS_N high long enough to trigger a
     // synchronous reset of the FPGA's state machine so it is ready for a new command.
     sleep_ms(1);

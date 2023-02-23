@@ -11,6 +11,17 @@
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
 git clean -Xfd
-mkdir sw/build
-cd sw/build
-cmake -DPI_HOST=pi@rpi3.local -DCMAKE_TOOLCHAIN_FILE=../cmake/cross-rpi0w2.cmake -DCMAKE_BUILD_TYPE=Debug "$@" ..
+
+mkdir build
+pushd build
+
+# Use 'RelWithDebInfo' instead of 'Debug' or TINY_USB will panic due to missed timing deadlines
+# Use '-DPICO_COPY_TO_RAM=1' or PicoDVI will not produce a display, but this disables breakpoints
+cmake -DPICO_COPY_TO_RAM=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo "$@" ..
+
+popd
+
+# CMake configuration will populate 'build/roms'.  Now run './roms.sh' to generate *.h files.
+pushd fw/roms
+./roms.sh
+popd

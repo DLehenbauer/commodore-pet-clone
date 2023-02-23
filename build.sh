@@ -10,5 +10,5 @@
 # @copyright CC0 http://creativecommons.org/publicdomain/zero/1.0/
 # @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
 
-cd sw/build
-cmake --build . --target run "$@"
+cd build
+cmake --build . "$@"
