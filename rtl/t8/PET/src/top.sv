@@ -18,13 +18,12 @@ module top(
     output logic         status_no,
 
     // SPI1
-    input  logic spi1_sck_i,                // RPi 23 : GPIO 11
-    input  logic spi1_cs_ni,                // RPi 24 : GPIO 8
-    input  logic spi1_rx_i,                 // RPi 19 : GPIO 10
-    input  logic spi1_tx_i,                 // RPi 21 : GPIO 9 (Should be High-Z when CS is deasserted)
-    output logic spi1_tx_o,                 //
-    output logic spi1_tx_oe,                //
-    output logic spi_ready_no,              // RPi  3 : Request completed and pi_data held while still pending.
+    input  logic spi1_sck_i,                // MCU 14: incoming SCK
+    input  logic spi1_cs_ni,                // MCU 13: incoming CS_N
+    input  logic spi1_mcu_tx_i,             // MCU 15: incoming from MCU TX
+    output logic spi1_mcu_rx_o,             // MCU 12: outgoing to MCU RX
+    output logic spi1_mcu_rx_oe,            //         (only drive RX when CS_N asserted)
+    output logic spi_ready_no,              // MCU 10: Asserted when previous SPI command completes
 
     // System Bus
     input  logic [15:0]  bus_addr_15_0_i,   // CPU 9-20, 22-25 : System address bus
@@ -120,10 +119,9 @@ module top(
         .ram_addr_o(ram_addr_o),
         .spi1_sck_i(spi1_sck_i),
         .spi1_cs_ni(spi1_cs_ni),
-        .spi1_rx_i(spi1_rx_i),
-        .spi1_tx_i(spi1_tx_i),
-        .spi1_tx_o(spi1_tx_o),
-        .spi1_tx_oe(spi1_tx_oe),
+        .spi1_mcu_tx_i(spi1_mcu_tx_i),
+        .spi1_mcu_rx_o(spi1_mcu_rx_o),
+        .spi1_mcu_rx_oe(spi1_mcu_rx_oe),
         .spi_ready_no(spi_ready_no),
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_no(ram_oe_no),

@@ -19,10 +19,9 @@ module main(
     // SPI1
     input  logic spi1_sck_i,
     input  logic spi1_cs_ni,
-    input  logic spi1_rx_i,
-    input  logic spi1_tx_i,
-    output logic spi1_tx_o,
-    output logic spi1_tx_oe,
+    input  logic spi1_mcu_tx_i,
+    output logic spi1_mcu_rx_o,
+    output logic spi1_mcu_rx_oe,
     output logic spi_ready_no,
 
     // System Bus
@@ -96,8 +95,28 @@ module main(
     assign ram_oe_no    = 1'b1;
     assign ram_we_no    = 1'b1;
 
-    // Stub to unblock PnR
+    assign spi1_mcu_rx_oe = !spi1_cs_ni;
+
+    logic spi_valid;
+    logic [7:0] spi_byte_rx;
+    logic [7:0] spi_byte_tx;
+
+    spi_byte spi(
+        .clk_sys_i(clk16_i),
+        .spi_cs_ni(spi1_cs_ni),
+        .spi_sck_i(spi1_sck_i),
+        .spi_rx_i(spi1_mcu_tx_i),
+        .spi_tx_o(spi1_mcu_rx_o),
+        .rx_byte_o(spi_byte_rx),
+        .tx_byte_i(spi_byte_tx),
+        .valid_o(spi_valid)
+    );
+    
+    assign spi_ready_no = !spi_valid;
+
     always @(posedge clk16_i) begin
+        if (spi_valid) spi_byte_tx <= spi_byte_rx;
+
         cpu_clk_o = !cpu_clk_o;
     end
 endmodule
