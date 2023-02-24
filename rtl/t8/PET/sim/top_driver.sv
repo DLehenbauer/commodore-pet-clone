@@ -24,13 +24,14 @@ module top_driver;
     logic  [7:0]  bus_data_o;
     logic  [7:0]  bus_data_7_0_oe;
     logic [11:10] ram_addr_o;
-    logic         spi1_sck_i;
-    logic         spi1_cs_ni;
-    logic         spi1_rx_i;
-    logic         spi1_tx_i;
-    logic         spi1_tx_o;
-    logic         spi1_tx_oe;
+    
+    logic         spi1_sck;
+    logic         spi1_cs_n;
+    logic         spi1_mcu_tx;
+    logic         spi1_mcu_rx;
+    logic         spi1_mcu_rx_oe;
     logic         spi_ready_no;
+
     logic         cpu_clk_o;
     logic         ram_oe_no;
     logic         ram_we_no;
@@ -72,13 +73,15 @@ module top_driver;
         .bus_data_7_0_o(bus_data_o),
         .bus_data_7_0_oe(bus_data_7_0_oe),
         .ram_addr_o(ram_addr_o),
-        .spi1_sck_i(spi1_sck_i),
-        .spi1_cs_ni(spi1_cs_ni),
-        .spi1_rx_i(spi1_rx_i),
-        .spi1_tx_i(spi1_tx_i),
-        .spi1_tx_o(spi1_tx_o),
-        .spi1_tx_oe(spi1_tx_oe),
+        
+        // SPI1
+        .spi1_sck_i(spi1_sck),
+        .spi1_cs_ni(spi1_cs_n),
+        .spi1_mcu_tx_i(spi1_mcu_tx),
+        .spi1_mcu_rx_o(spi1_mcu_rx),
+        .spi1_mcu_rx_oe(spi1_mcu_rx_oe),
         .spi_ready_no(spi_ready_no),
+
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_no(ram_oe_no),
         .ram_we_no(ram_we_no),
@@ -180,4 +183,25 @@ module top_driver;
             $finish;
         end
     end
+
+    mock_mcu mcu(
+        .spi1_sck_o(spi1_sck),
+        .spi1_cs_no(spi1_cs_n),
+        .spi1_tx_o(spi1_mcu_tx),
+        .spi1_rx_i(spi1_mcu_rx),
+        .spi_ready_ni(spi_ready_ni)
+    );
+
+    always begin
+        #1;
+        
+        assert(spi1_mcu_rx_oe != spi1_cs_n) else begin
+            $error("FPGA must only drive MCU's RX pin when /CS is asserted.");
+            $finish;
+        end
+    end
+
+    task reset;
+        mcu.reset();
+    endtask
 endmodule

@@ -12,19 +12,20 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-`timescale 1ns / 1ps
+module mock_mcu(
+    output logic spi1_sck_o,
+    output logic spi1_cs_no,
+    output logic spi1_tx_o,
+    input  logic spi1_rx_i,
+    input  logic spi_ready_ni
+);
+    spi_driver spi1(
+        .spi_sck_o(spi1_sck_o),
+        .spi_cs_no(spi1_cs_no),
+        .spi_tx_o(spi1_tx_o)
+    );
 
-module sim;
-    top_driver driver();
-
-    initial begin
-        $dumpfile("work_sim/out.vcd");
-        $dumpvars;
-
-        driver.reset();
-        #1000;
-
-        $display("[%t] Test Complete", $time);
-        $finish;
-    end
+    task reset;
+        spi1.reset();
+    endtask
 endmodule
