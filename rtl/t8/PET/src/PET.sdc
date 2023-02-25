@@ -12,20 +12,68 @@
 
 # (See also generated file: outflow\PET.pt.sdc)
 
+# Helpers
+#########
+
+# Calculate period in nanoseconds from frequency in megahertz.
+proc ns_from_mhz { mhz } {
+    set result [expr { 1000 / $mhz }]
+    return $result
+}
+
 # PLL Constraints
 #################
 create_clock -period 62.5000 clk16_i
+
+# SPI1 Constraints
+##################
+
+# This is a center-aligned source synchronous interface.
+# (See https://www.intel.com/content/dam/altera-www/global/en_US/pdfs/literature/an/an433.pdf)
+
+set spi1_sck_period_mhz 4
+set spi1_sck_period_ns [ns_from_mhz $spi1_sck_period_mhz]
+
+# 'spi1_sck_v' is a virtual clock that models the edges at which TX and RX transition
+create_clock -name spi1_sck_v -period $spi1_sck_period_ns
+
+# 'spi1_sck_i' is the incoming SCK used to sample TX/RX between transitions.  Note that
+# SCK is center-aligned (phase-shifted 90 degrees from 'spi1_sck_v'.)
+create_clock -name "spi1_sck_i" -period $spi1_sck_period_ns \
+    -waveform [list [expr { $spi1_sck_period_ns * 0.25 }] [expr { $spi1_sck_period_ns * 0.75 }]] \
+    [get_ports spi1_sck_i]
+
+# Remember: TX is incoming from the MCU (RX for the FPGA)
+
+# Assume TX transitions within +/- 250ps of virtual clock edge
+set_input_delay -max -clock spi1_sck_v 0.250 [get_ports spi1_mcu_tx_i]
+set_input_delay -min -clock spi1_sck_v -0.250 [get_ports spi1_mcu_tx_i]
+
+# Since SPI is single data rate, I don't think we need '-clock_fall' constraints(?)
+# set_input_delay -max -clock spi1_sck_v -clock_fall 0.250 [get_ports spi1_mcu_tx_i] -add
+# set_input_delay -min -clock spi1_sck_v -clock_fall -0.250 [get_ports spi1_mcu_tx_i] -add
+
+# TODO: Unsure of how CS_N relates.
+# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_cs_ni}]
+# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_cs_ni}]
+
+# Remember: RX is outgoing to the MCU (TX for the FPGA)
+
+# Unsure of setup/hold requirements for the PrimeCell SSP in the RP2040.  Guess +/-5ns?
+# (Theoretical maximum transfer rate is 62.5 Mbps as controller, ~11 as peripheral)
+set_output_delay -clock spi1_sck_i -max 5 [get_ports {spi1_mcu_rx_o}]
+set_output_delay -clock spi1_sck_i -min 5 [get_ports {spi1_mcu_rx_o}]
+set_output_delay -clock spi1_sck_i -max 5 [get_ports {spi1_mcu_rx_oe}]
+set_output_delay -clock spi1_sck_i -min 5 [get_ports {spi1_mcu_rx_oe}]
+
+# '_rx_i' is unused: we ignore other peripherals on the SPI bus
+# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_rx_i}]
+# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_rx_i}]
 
 # GPIO Constraints
 ####################
 # set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {clk_50_i}]
 # set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {clk_50_i}]
-# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_cs_ni}]
-# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_cs_ni}]
-# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_sck_i}]
-# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_sck_i}]
-# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_tx_i}]
-# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_tx_i}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {bus_addr_16_o}]
 # set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {bus_addr_16_o}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {cpu_clk_o}]
@@ -160,12 +208,6 @@ create_clock -period 62.5000 clk16_i
 # set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {cpu_res_nao}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {cpu_res_naoe}]
 # set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {cpu_res_naoe}]
-# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_rx_i}]
-# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_rx_i}]
-# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_rx_o}]
-# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_rx_o}]
-# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_rx_oe}]
-# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_rx_oe}]
 
 # LVDS RX GPIO Constraints
 ############################

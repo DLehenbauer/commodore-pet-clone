@@ -12,7 +12,9 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-module top_driver;
+module top_driver #(
+    parameter SPI1_MHZ = 4
+);
     logic         clk16_i;
     logic         bus_rw_ni;
     logic         bus_rw_no;
@@ -184,7 +186,7 @@ module top_driver;
         end
     end
 
-    mock_mcu mcu(
+    mock_mcu #(SPI1_MHZ) mcu(
         .spi1_sck_o(spi1_sck),
         .spi1_cs_no(spi1_cs_n),
         .spi1_tx_o(spi1_mcu_tx),

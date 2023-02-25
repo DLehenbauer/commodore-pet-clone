@@ -14,7 +14,7 @@
 
 `timescale 1ns / 1ps
 
-module spi_driver#(
+module spi_driver #(
     parameter SCK_MHZ = 4
 )(
     output logic spi_sck_o,
