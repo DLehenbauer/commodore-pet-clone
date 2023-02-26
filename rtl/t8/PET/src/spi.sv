@@ -128,7 +128,7 @@ module spi1(
     output logic [16:0] spi_addr_o, // Bus address of pending read/write command
     input  logic  [7:0] spi_data_i, // Data returned from completed read command
     output logic  [7:0] spi_data_o, // Data to be written by pending write command
-    output logic spi_rw_no = 1'b1   // Direction of pending command (0 = write, 1 = read)
+    output logic        spi_rw_no   // Direction of pending command (0 = write, 1 = read)
 );
     // State encoding for our FSM:
     //
