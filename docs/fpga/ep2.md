@@ -45,3 +45,13 @@ Pin | Function | Notes
 144 | KEY | Pin low when button pressed.  Requires FPGA internal pull up.
 
 **Note:** On EP2C5 boards pins 26, 27, 80, 81 can be used as normal if the "zero ohm" resistors are removed.
+
+## SPI
+
+Signal | GPIO | Pin # | Label |  FPGA
+-------|------|-------|-------|--------
+CE1    |   7  |   26  |   A2  | PIN_67
+CN_N   |   8  |   24  |   A3  | PIN_64
+TX     |   9  |   21  |   A4  | PIN_60
+RX     |  10  |   19  |   A5  | PIN_58
+SCLK   |  11  |   23  |   A6  | PIN_55

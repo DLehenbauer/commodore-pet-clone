@@ -12,5 +12,4 @@
 ## SDC
 
 * [Timequest User Guide](https://www.intel.com/content/dam/support/us/en/programmable/support-resources/fpga-wiki/asset02/timequest-user-guide.pdf)
-* [AN 433: Constraining and Analyzing
-Source-Synchronous Interfaces](https://www.intel.com/content/dam/altera-www/global/en_US/pdfs/literature/an/an433.pdf)
+* [AN 433: Constraining and Analyzing Source-Synchronous Interfaces](https://www.intel.com/content/dam/altera-www/global/en_US/pdfs/literature/an/an433.pdf)
