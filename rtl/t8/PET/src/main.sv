@@ -19,9 +19,8 @@ module main(
     // SPI1
     input  logic spi1_sck_i,
     input  logic spi1_cs_ni,
-    input  logic spi1_mcu_tx_i,
-    output logic spi1_mcu_rx_o,
-    output logic spi1_mcu_rx_oe,
+    input  logic spi1_rx_i,
+    output logic spi1_tx_o,
     output logic spi_ready_o,
 
     // System Bus
@@ -80,25 +79,26 @@ module main(
     assign ram_oe_o     = '0;
     assign ram_we_o     = '0;
 
-    assign spi1_mcu_rx_oe = !spi1_cs_ni;
+    // Protocol for SPI1 peripheral
+    logic spi_valid, spi_ready = '0;
 
-    logic [7:0] spi_byte_rx;
-    logic [7:0] spi_byte_tx;
-
-    spi_byte spi(
+    spi1 spi1(
         .clk_sys_i(clk16_i),
-        .spi_cs_ni(spi1_cs_ni),
         .spi_sck_i(spi1_sck_i),
-        .spi_rx_i(spi1_mcu_tx_i),
-        .spi_tx_o(spi1_mcu_rx_o),
-        .rx_byte_o(spi_byte_rx),
-        .tx_byte_i(spi_byte_tx),
-        .valid_o(spi_ready_o)
+        .spi_cs_ni(spi1_cs_ni),
+        .spi_rx_i(spi1_rx_i),
+        .spi_tx_o(spi1_tx_o),
+        .spi_valid_o(spi_valid),
+        .spi_ready_i(spi_ready),
+        .spi_ready_o(spi_ready_o),
+        .spi_addr_o(bus_addr_o),
+        .spi_data_i(bus_data_i),
+        .spi_data_o(bus_data_o),
+        .spi_rw_no(bus_rw_no)
     );
 
     always @(posedge clk16_i) begin
-        if (spi_ready_o) spi_byte_tx <= spi_byte_rx;
-
+        spi_ready <= spi_valid;
         cpu_clk_o = !cpu_clk_o;
     end
 endmodule

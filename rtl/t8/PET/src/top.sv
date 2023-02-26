@@ -141,6 +141,9 @@ module top(
     assign cpu_irq_o   = '0;
     assign cpu_nmi_o   = '0;
 
+    // Only drive POCI (FPGA TX -> MCU RX) when this SPI peripheral is selected
+    assign spi1_mcu_rx_oe = !spi1_cs_ni;
+
     main main(
         .clk16_i(clk16_i),
         .bus_rw_ni(bus_rw_ni),
@@ -155,9 +158,8 @@ module top(
         .ram_addr_o(ram_addr_o),
         .spi1_sck_i(spi1_sck_i),
         .spi1_cs_ni(spi1_cs_ni),
-        .spi1_mcu_tx_i(spi1_mcu_tx_i),
-        .spi1_mcu_rx_o(spi1_mcu_rx_o),
-        .spi1_mcu_rx_oe(spi1_mcu_rx_oe),
+        .spi1_rx_i(spi1_mcu_tx_i),  // PICO: MCU TX -> FPGA RX
+        .spi1_tx_o(spi1_mcu_rx_o),  // POCI: FPGA TX -> MCU RX
         .spi_ready_o(spi_ready_o),
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_o(ram_oe_o),
