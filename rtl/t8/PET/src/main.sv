@@ -22,7 +22,7 @@ module main(
     input  logic spi1_mcu_tx_i,
     output logic spi1_mcu_rx_o,
     output logic spi1_mcu_rx_oe,
-    output logic spi_ready_no,
+    output logic spi_ready_o,
 
     // System Bus
     input  logic [15:0]  bus_addr_i,
@@ -39,34 +39,21 @@ module main(
    
     // CPU
     output logic cpu_clk_o,
-
-    input  logic cpu_res_nai,
-    output logic cpu_res_nao,
-    output logic cpu_res_naoe,
-    
+    output logic cpu_res_o,
     output logic cpu_ready_o,
-    
-    input  logic cpu_irq_ni,
-    output logic cpu_irq_no,
-    output logic cpu_irq_noe,
-
-    input  logic cpu_nmi_ni,
-    output logic cpu_nmi_no,
-    output logic cpu_nmi_noe,
-
     output logic cpu_be_o,
 
     // RAM
-    output logic ram_ce_no,
-    output logic ram_oe_no,
-    output logic ram_we_no,
+    output logic ram_ce_o,
+    output logic ram_oe_o,
+    output logic ram_we_o,
     output logic [11:10] ram_addr_o,
 
     // I/O
-    output logic pia1_cs2_no,
-    output logic pia2_cs2_no,
-    output logic via_cs2_no,
-    output logic io_oe_no,
+    output logic pia1_cs_o,
+    output logic pia2_cs_o,
+    output logic via_cs_o,
+    output logic io_oe_o,
 
     // Audio
     input  logic diag_i,
@@ -79,25 +66,22 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
+    assign cpu_res_o    = '0;
     assign cpu_be_o     = '0;
     assign bus_addr_oe  = '0;
     assign bus_data_oe  = '0;
     assign bus_rw_noe   = '0;
-    assign cpu_irq_noe  = '0;
-    assign cpu_nmi_noe  = '0;
-    assign cpu_res_naoe = '0;
 
-    assign io_oe_no     = 1'b1;
-    assign pia1_cs2_no  = 1'b1;
-    assign pia2_cs2_no  = 1'b1;
-    assign via_cs2_no   = 1'b1;
-    assign ram_ce_no    = 1'b1;
-    assign ram_oe_no    = 1'b1;
-    assign ram_we_no    = 1'b1;
+    assign io_oe_o      = '0;
+    assign pia1_cs_o    = '0;
+    assign pia2_cs_o    = '0;
+    assign via_cs_o     = '0;
+    assign ram_ce_o     = '0;
+    assign ram_oe_o     = '0;
+    assign ram_we_o     = '0;
 
     assign spi1_mcu_rx_oe = !spi1_cs_ni;
 
-    logic spi_valid;
     logic [7:0] spi_byte_rx;
     logic [7:0] spi_byte_tx;
 
@@ -109,13 +93,11 @@ module main(
         .spi_tx_o(spi1_mcu_rx_o),
         .rx_byte_o(spi_byte_rx),
         .tx_byte_i(spi_byte_tx),
-        .valid_o(spi_valid)
+        .valid_o(spi_ready_o)
     );
-    
-    assign spi_ready_no = !spi_valid;
 
     always @(posedge clk16_i) begin
-        if (spi_valid) spi_byte_tx <= spi_byte_rx;
+        if (spi_ready_o) spi_byte_tx <= spi_byte_rx;
 
         cpu_clk_o = !cpu_clk_o;
     end

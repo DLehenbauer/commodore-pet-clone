@@ -42,9 +42,9 @@ module top(
     // CPU
     output logic cpu_clk_o,                 // CPU 37 : 1 MHz cpu clock
 
-    input  logic cpu_res_nai,               // CPU 40 : 0 = Reset, 1 = Normal [Open drain]
-    output logic cpu_res_nao,               //
-    output logic cpu_res_naoe,              //
+    input  logic cpu_res_ni,                // CPU 40 : 0 = Reset, 1 = Normal [Open drain]
+    output logic cpu_res_no,                //
+    output logic cpu_res_noe,               //
     
     output logic cpu_ready_o,               // CPU  2 : 0 = Halt,  1 = Run
     
@@ -81,12 +81,13 @@ module top(
     output logic v_sync_o,
     output logic video_o
 );
-    // Turn off NSTATUS LED to indicate programming has successfully completed.
-    assign status_no = 1'b0;
+    // NSTATUS is asserted if programming fails and is often connected to an LED.
+    // Deassert to indicate that programming was successful.
+    assign status_no = '0;
 
     // Efinity Interface Designer generates a separate output enable for each bus signal.
     // Create a combined logic signal to control OE for bus_addr_o[15:0].  Note that the
-    // 6502 is a 16b bus, so the 17th bit (A16) is always an output.
+    // 6502 is a 16b bus, so the 17th bit (bus_addr_o[16]) is always an output.
     logic bus_addr_oe;
 
     assign bus_addr_15_0_oe = {
@@ -105,13 +106,48 @@ module top(
         bus_data_oe, bus_data_oe, bus_data_oe, bus_data_oe
     };
 
+    // For convenience, convert control/reset signals to active high for consistency and
+    // to avoid thinking in double negatives.
+    logic io_oe_o, pia1_cs_o, pia2_cs_o, via_cs_o,
+          ram_ce_o, ram_oe_o, ram_we_o, spi_ready_o;
+
+    assign io_oe_no     = !io_oe_o;
+    assign pia1_cs2_no  = !pia1_cs_o;
+    assign pia2_cs2_no  = !pia2_cs_o;
+    assign via_cs2_no   = !via_cs_o;
+    assign ram_ce_no    = !ram_ce_o;
+    assign ram_oe_no    = !ram_oe_o;
+    assign ram_we_no    = !ram_we_o;
+    assign spi_ready_no = !spi_ready_o;
+
+    // RES, IRQ, and NMI are active low open drain wire-or signals.  For consistency
+    // and convenience we convert these to active high outputs and handle OE here.
+    logic cpu_res_i, cpu_res_o;
+    assign cpu_res_i   = !cpu_res_ni;
+    assign cpu_res_no  = !cpu_res_o;
+    assign cpu_res_noe = cpu_res_o;     // Only drive open drain wired-or when asserting RES
+
+    logic cpu_irq_i, cpu_irq_o;
+    assign cpu_irq_i   = !cpu_irq_ni;
+    assign cpu_irq_no  = !cpu_irq_o;
+    assign cpu_irq_noe = cpu_irq_o;     // Only drive open drain wired-or when asserting IRQ
+
+    logic cpu_nmi_i, cpu_nmi_o;
+    assign cpu_nmi_i   = !cpu_nmi_ni;
+    assign cpu_nmi_no  = !cpu_nmi_o;
+    assign cpu_nmi_noe = cpu_nmi_o;     // Only drive open drain wired-or when asserting NMI
+
+    // IRQ and NMI are currenly unused.  Deassert them so they don't drive pins.
+    assign cpu_irq_o   = '0;
+    assign cpu_nmi_o   = '0;
+
     main main(
         .clk16_i(clk16_i),
         .bus_rw_ni(bus_rw_ni),
         .bus_rw_no(bus_rw_no),
         .bus_rw_noe(bus_rw_noe),
         .bus_addr_i(bus_addr_15_0_i),
-        .bus_addr_o({bus_addr_16_o, bus_addr_15_0_o}),
+        .bus_addr_o({ bus_addr_16_o, bus_addr_15_0_o }),
         .bus_addr_oe(bus_addr_oe),
         .bus_data_i(bus_data_7_0_i),
         .bus_data_o(bus_data_7_0_o),
@@ -122,26 +158,18 @@ module top(
         .spi1_mcu_tx_i(spi1_mcu_tx_i),
         .spi1_mcu_rx_o(spi1_mcu_rx_o),
         .spi1_mcu_rx_oe(spi1_mcu_rx_oe),
-        .spi_ready_no(spi_ready_no),
+        .spi_ready_o(spi_ready_o),
         .cpu_clk_o(cpu_clk_o),
-        .ram_oe_no(ram_oe_no),
-        .ram_we_no(ram_we_no),
-        .cpu_res_nai(cpu_res_nai),
-        .cpu_res_nao(cpu_res_nao),
-        .cpu_res_naoe(cpu_res_naoe),
+        .ram_oe_o(ram_oe_o),
+        .ram_we_o(ram_we_o),
+        .cpu_res_o(cpu_res_o),
         .cpu_ready_o(cpu_ready_o),
-        .cpu_irq_ni(cpu_irq_ni),
-        .cpu_irq_no(cpu_irq_no),
-        .cpu_irq_noe(cpu_irq_noe),
-        .cpu_nmi_ni(cpu_nmi_ni),
-        .cpu_nmi_no(cpu_nmi_no),
-        .cpu_nmi_noe(cpu_nmi_noe),
         .cpu_be_o(cpu_be_o),
-        .ram_ce_no(ram_ce_no),
-        .pia1_cs2_no(pia1_cs2_no),
-        .pia2_cs2_no(pia2_cs2_no),
-        .via_cs2_no(via_cs2_no),
-        .io_oe_no(io_oe_no),
+        .ram_ce_o(ram_ce_o),
+        .pia1_cs_o(pia1_cs_o),
+        .pia2_cs_o(pia2_cs_o),
+        .via_cs_o(via_cs_o),
+        .io_oe_o(io_oe_o),
         .diag_i(diag_i),
         .cb2_i(cb2_i),
         .audio_o(audio_o),

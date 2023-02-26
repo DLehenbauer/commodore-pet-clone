@@ -37,9 +37,9 @@ module top_driver #(
     logic         cpu_clk_o;
     logic         ram_oe_no;
     logic         ram_we_no;
-    logic         cpu_res_nai;
-    logic         cpu_res_nao;
-    logic         cpu_res_naoe;
+    logic         cpu_res_ni;
+    logic         cpu_res_no;
+    logic         cpu_res_noe;
     logic         cpu_ready_o;
     logic         cpu_irq_ni;
     logic         cpu_irq_no;
@@ -87,9 +87,9 @@ module top_driver #(
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_no(ram_oe_no),
         .ram_we_no(ram_we_no),
-        .cpu_res_nai(cpu_res_nai),
-        .cpu_res_nao(cpu_res_nao),
-        .cpu_res_naoe(cpu_res_naoe),
+        .cpu_res_ni(cpu_res_ni),
+        .cpu_res_no(cpu_res_no),
+        .cpu_res_noe(cpu_res_noe),
         .cpu_ready_o(cpu_ready_o),
         .cpu_irq_ni(cpu_irq_ni),
         .cpu_irq_no(cpu_irq_no),
