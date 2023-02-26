@@ -28,7 +28,19 @@ create_clock -period 62.5000 clk16_i
 # SPI1 Constraints
 ##################
 
-# This is a center-aligned source synchronous interface.
+# SPI mode 0 (CPOL=0, CPHA=0) is a center-aligned source synchronous SDR interface.
+# Clock is low when idle.  Data is sampled on rising edge and shifted out on falling edge.
+#
+#       CS_N  ‾‾‾\_______________________________________________________________________/‾‾‾
+#              . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : .  
+#        SCK  ___________/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\_______
+#              . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : .  
+#         TX  -------<​_​̅_​̅_​̅7​̅_​̅_​̅_X_​̅_​̅_​̅6​̅_​̅_​̅_X_​̅_​̅_​̅5​̅_​̅_​̅_X_​̅_​̅_​̅4​̅_​̅_​̅_X_​̅_​̅_​̅3​̅_​̅_​̅_X_​̅_​̅_​̅2​̅_​̅_​̅_X_​̅_​̅_​̅1​̅_​̅_​̅_X_​̅_​̅_​̅0​̅_​̅_​̅_>-------
+#              . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+#         RX  ----<​_​̅_​̅_​̅_​̅_​̅_​̅7​̅_​̅_​̅_X_​̅_​̅_​̅6​̅_​̅_​̅_X_​̅_​̅_​̅5​̅_​̅_​̅_X_​̅_​̅_​̅4​̅_​̅_​̅_X_​̅_​̅_​̅3​̅_​̅_​̅_X_​̅_​̅_​̅2​̅_​̅_​̅_X_​̅_​̅_​̅1​̅_​̅_​̅_X_​̅_​̅_​̅0​̅_​̅_​̅_​̅_​̅_​̅_​̅_>---
+#              . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : .  
+#    READY_N  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\____/‾‾‾
+
 # (See https://www.intel.com/content/dam/altera-www/global/en_US/pdfs/literature/an/an433.pdf)
 
 set spi1_sck_period_mhz 4
@@ -39,36 +51,36 @@ create_clock -name spi1_sck_v -period $spi1_sck_period_ns
 
 # 'spi1_sck_i' is the incoming SCK used to sample TX/RX between transitions.  Note that
 # SCK is center-aligned (phase-shifted 90 degrees from 'spi1_sck_v'.)
-create_clock -name "spi1_sck_i" -period $spi1_sck_period_ns \
-    -waveform [list [expr { $spi1_sck_period_ns * 0.25 }] [expr { $spi1_sck_period_ns * 0.75 }]] \
-    [get_ports spi1_sck_i]
+create_clock -name "spi1_sck_i" -period $spi1_sck_period_ns -waveform [list [expr { $spi1_sck_period_ns * 0.25 }] [expr { $spi1_sck_period_ns * 0.75 }]] [get_ports spi1_sck_i]
+
+# SPI sampling and data clocks are asynchronous/unrelated to other clocks in the desgin.
+set_clock_groups -asynchronous -group {spi1_sck_v spi1_sck_i}
 
 # Remember: TX is incoming from the MCU (RX for the FPGA)
 
-# Assume TX transitions within +/- 250ps of virtual clock edge
-set_input_delay -max -clock spi1_sck_v 0.250 [get_ports spi1_mcu_tx_i]
-set_input_delay -min -clock spi1_sck_v -0.250 [get_ports spi1_mcu_tx_i]
-
-# Since SPI is single data rate, I don't think we need '-clock_fall' constraints(?)
-# set_input_delay -max -clock spi1_sck_v -clock_fall 0.250 [get_ports spi1_mcu_tx_i] -add
-# set_input_delay -min -clock spi1_sck_v -clock_fall -0.250 [get_ports spi1_mcu_tx_i] -add
-
-# TODO: Unsure of how CS_N relates.
-# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_cs_ni}]
-# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_cs_ni}]
+# Assume TX transitions within +/- 250ps of virtual data clock edge
+set_input_delay -max -clock spi1_sck_v 0.250 [get_ports {spi1_mcu_tx_i}]
+set_input_delay -min -clock spi1_sck_v -0.250 [get_ports {spi1_mcu_tx_i}]
 
 # Remember: RX is outgoing to the MCU (TX for the FPGA)
 
-# Unsure of setup/hold requirements for the PrimeCell SSP in the RP2040.  Guess +/-5ns?
-# (Theoretical maximum transfer rate is 62.5 Mbps as controller, ~11 as peripheral)
-set_output_delay -clock spi1_sck_i -max 5 [get_ports {spi1_mcu_rx_o}]
-set_output_delay -clock spi1_sck_i -min 5 [get_ports {spi1_mcu_rx_o}]
-set_output_delay -clock spi1_sck_i -max 5 [get_ports {spi1_mcu_rx_oe}]
-set_output_delay -clock spi1_sck_i -min 5 [get_ports {spi1_mcu_rx_oe}]
+# Assume the required RX data valid window is 1/2 the SCK period, centered on the sampling edge.
+set_output_delay -clock spi1_sck_i -max [expr { $spi1_sck_period_ns * 0.25 }] [get_ports {spi1_mcu_rx_o spi1_mcu_rx_oe}]
+set_output_delay -clock spi1_sck_i -min [expr { $spi1_sck_period_ns * -0.25 }] [get_ports {spi1_mcu_rx_o spi1_mcu_rx_oe}]
 
-# '_rx_i' is unused: we ignore other peripherals on the SPI bus
+# We ignore other peripherals on the SPI bus
 # set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_rx_i}]
 # set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_rx_i}]
+
+# Assume CS_N transitions within +/- 250ps of sampling clock.
+#
+# Under hardware control CS_N asserts on what would be the rising SCK edge prior the first bit
+# and deasserts on the rising SCK edge after the last bit (if SCK weren't disabled).
+#
+# Under software control, CS_N is unsynchronized, but generally delayed more than a clock period
+# at 4 MHz or above.
+set_input_delay -clock spi1_sck_i -max [expr { $spi1_sck_period_ns * 0.25 }] [get_ports {spi1_cs_ni}]
+set_input_delay -clock spi1_sck_i -min [expr { $spi1_sck_period_ns * -0.25 }] [get_ports {spi1_cs_ni}]
 
 # GPIO Constraints
 ####################
