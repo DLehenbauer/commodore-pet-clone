@@ -28,7 +28,7 @@ module spi_byte (
 );
     // Signals crossing clock domain
     logic spi_cs_nq;
-    logic spi_sclk_q;
+    logic spi_sck_q;
     logic spi_rx_q;
     logic spi_tx_d;
 
@@ -44,10 +44,10 @@ module spi_byte (
     logic [7:0] rx_byte_d;
     logic valid_d;
 
-    // Detect positive and negative edges of 'spi_sclk_q'.
-    logic spi_sclk_q2;
-    wire spi_sclk_pe = !spi_sclk_q2 &&  spi_sclk_q;
-    wire spi_sclk_ne =  spi_sclk_q2 && !spi_sclk_q;
+    // Detect positive and negative edges of 'spi_sck_q'.
+    logic spi_sck_q2;
+    wire spi_sck_pe = !spi_sck_q2 &&  spi_sck_q;
+    wire spi_sck_ne =  spi_sck_q2 && !spi_sck_q;
 
     always_comb begin
         // Signals crossing clock domain
@@ -69,8 +69,8 @@ module spi_byte (
             sr_d        = tx_byte_i;
             spi_tx_d    = tx_byte_i[7];
         end else begin
-            if (spi_sclk_pe) begin
-                // On the positive edge of 'spi_sclk' we shift the incoming 'rx' bit into 'sr'
+            if (spi_sck_pe) begin
+                // On the positive edge of 'spi_sck' we shift the incoming 'rx' bit into 'sr'
                 // and incement our 'bit_count'.  This simultaneously shifts the next outgoing
                 // bit of 'tx_byte' to sr[7].
                 sr_d        = { sr_q[6:0], spi_rx_q };
@@ -82,7 +82,7 @@ module spi_byte (
                     rx_byte_d = { sr_q[6:0], spi_rx_q };
                     valid_d   = 1'b1;
                 end
-            end else if (spi_sclk_ne) begin
+            end else if (spi_sck_ne) begin
                 if (bit_count_q == 3'd0) begin
                     // We transmitted the last bit of the previous 'tx_byte' on the positive edge
                     // of SCLK.  Load the next value of 'tx_byte' into 'sr' on the negative edge.
@@ -102,8 +102,8 @@ module spi_byte (
         sr_q        <= sr_d;
 
         spi_cs_nq   <= spi_cs_ni;
-        spi_sclk_q  <= spi_sck_i;
-        spi_sclk_q2 <= spi_sclk_q;
+        spi_sck_q  <= spi_sck_i;
+        spi_sck_q2 <= spi_sck_q;
         spi_rx_q    <= spi_rx_i;
         spi_tx_o    <= spi_tx_d;
 
