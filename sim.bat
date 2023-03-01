@@ -6,6 +6,7 @@ set BINDIR=C:\Efinity\2022.2\bin
 
 :Parse
     if /I "%~1" == "--run" goto Run
+    if /I "%~1" == "--view" goto View
 
 :Update
     :: Move to the root of the Efinity project so that 'efx_run' artifacts are generated
@@ -28,3 +29,7 @@ set BINDIR=C:\Efinity\2022.2\bin
     iverilog.exe -g2009 -s sim -o%PROJDIR%\work_sim\PET.vvp -f%PROJDIR%\work_sim\PET.f
     vvp.exe -l%PROJDIR%\outflow\PET.rtl.simlog %PROJDIR%\work_sim\PET.vvp
     popd && exit /b %ERRORLEVEL%
+
+:View
+    start /MAX gtkwave.exe %PROJDIR%\work_sim\out.vcd
+    exit /b %ERRORLEVEL%
