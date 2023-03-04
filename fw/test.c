@@ -18,7 +18,7 @@
 #include "test.h"
 
 const int32_t addr_min = 0x0000;
-const int32_t addr_max = 0xe80e;
+const int32_t addr_max = 0xFFFF;
 
 void sync_display() {
     spi_write(/* dest: */ 0x8000, /* pSrc: */ video_char_buffer, /* byteLength: */ 1000);
@@ -99,7 +99,7 @@ uint8_t toggle_bit(uint32_t addr, uint8_t bit, uint8_t expected) {
     uint8_t actual = (byte >> bit) & 1;
     
     if (actual != expected) {
-        printf("$%x[%d]: Expected %d, but got %d (original byte %x)\n", addr, bit, expected, actual, byte);
+        printf("$%x[%d]: Expected %d, but got %d (actual byte read %x)\n", addr, bit, expected, actual, byte);
         panic("");
     }
 
