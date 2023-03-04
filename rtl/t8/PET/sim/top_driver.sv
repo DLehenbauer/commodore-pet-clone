@@ -15,7 +15,7 @@
 module top_driver #(
     parameter SPI1_MHZ = 4
 );
-    logic         clk16_i;
+    logic         clk16_i = '0;
     logic         bus_rw_ni;
     logic         bus_rw_no;
     logic         bus_rw_noe;
@@ -61,6 +61,8 @@ module top_driver #(
     logic         v_sync_o;
     logic         video_o;
     logic         status_no;
+
+    initial forever #(1000 / (16 * 2)) clk16_i = ~clk16_i;
 
     top top(
         .clk16_i(clk16_i),

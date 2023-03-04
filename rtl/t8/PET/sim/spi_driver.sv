@@ -19,10 +19,13 @@ module spi_driver #(
 )(
     output logic spi_sck_o,
     output logic spi_cs_no,
+    input  logic spi_rx_i,
     output logic spi_tx_o
 );
     bit clk_sys = '0;
-    initial forever #(1000 / (SCK_MHZ * 4)) clk_sys = ~clk_sys;
+
+    // Sampling clock for 'spi_byte_tx' must be 4x SCK_MHZ.
+    initial forever #(1000 / (SCK_MHZ * 4 * 2)) clk_sys = ~clk_sys;
 
     bit start_sck = '0;
 
@@ -77,6 +80,26 @@ module spi_driver #(
         end
     endtask
 
+    task xfer_bytes(
+        input logic unsigned [7:0] tx[]
+    );
+        integer i;
+        
+        // string s;
+        // s = "";
+        // foreach (tx[i]) s = { s, $sformatf("%h ", tx[i]) };
+        // $display("[%t] SPI Send: [ %s]", $time, s);
+
+        // 'tx_byte' is continuously preloaded from falling edge of CS_N.
+        begin_xfer(tx[0]);
+
+        foreach(tx[i]) begin
+            // 'next_tx' is the next byte to load on the 8th falling edge of SCK.
+            xfer_bits(tx[i + 1]);
+        end
+    endtask
+
+
     task end_xfer(
         input bit next_cs_ni = 1'b1
     );
@@ -93,25 +116,6 @@ module spi_driver #(
         #500;
     endtask
 
-    task xfer_bytes(
-        input logic unsigned [7:0] tx[]
-    );
-        integer i;
-        
-        // string s;
-        // s = "";
-        // foreach (tx[i]) s = { s, $sformatf("%h ", tx[i]) };
-        // $display("[%t] SPI Send: [ %s]", $time, s);
-
-        // 'tx_byte' is continuously preloaded from falling edge of CS_N.
-        spi_driver.begin_xfer(tx[0]);
-
-        foreach(tx[i]) begin
-            // 'next_tx' is the next byte to load on the 8th falling edge of SCK.
-            spi_driver.xfer_bits(tx[i + 1]);
-        end
-    endtask
-
     logic       tx_valid;
     logic [7:0] tx_byte = 8'hxx;
 
@@ -119,6 +123,7 @@ module spi_driver #(
         .clk_sys_i(clk_sys),
         .spi_sck_i(spi_sck_o),
         .spi_cs_ni(spi_cs_no),
+        .spi_rx_i(spi_rx_i),
         .spi_tx_o(spi_tx_o),
         .tx_byte_i(tx_byte),
         .valid_o(tx_valid)

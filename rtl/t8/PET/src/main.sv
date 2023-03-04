@@ -67,21 +67,17 @@ module main(
 );
     assign cpu_res_o    = '0;
     assign cpu_be_o     = '0;
-    assign bus_addr_oe  = '0;
-    assign bus_data_oe  = '0;
-    assign bus_rw_noe   = '0;
 
     assign io_oe_o      = '0;
     assign pia1_cs_o    = '0;
     assign pia2_cs_o    = '0;
     assign via_cs_o     = '0;
-    assign ram_ce_o     = '0;
-    assign ram_oe_o     = '0;
-    assign ram_we_o     = '0;
 
     // Protocol for SPI1 peripheral
-    logic spi_valid, spi_ready = '0;
+    logic spi_valid, spi_ready;
 
+    logic [7:0] spi_rd_data;
+    
     spi1 spi1(
         .clk_sys_i(clk16_i),
         .spi_sck_i(spi1_sck_i),
@@ -92,13 +88,35 @@ module main(
         .spi_ready_i(spi_ready),
         .spi_ready_o(spi_ready_o),
         .spi_addr_o(bus_addr_o),
-        .spi_data_i(bus_data_i),
+        .spi_data_i(spi_rd_data),
         .spi_data_o(bus_data_o),
         .spi_rw_no(bus_rw_no)
     );
 
-    always @(posedge clk16_i) begin
-        spi_ready <= spi_valid;
-        cpu_clk_o = !cpu_clk_o;
+    logic spi_en;
+    logic clk8;
+
+    timing timing(
+        .clk16_i(clk16_i),
+        .clk8_o(clk8),
+        .spi_enable_o(spi_en),
+        .spi_valid_i(spi_valid),
+        .spi_ready_o(spi_ready)
+    );
+    
+    wire spi_rd_en = spi_en & bus_rw_no;
+    
+    always @(negedge clk8) begin
+        if (spi_rd_en) spi_rd_data <= bus_data_i;
     end
+
+    assign ram_ce_o = 1'b1;
+    assign ram_oe_o = bus_rw_no;            // RAM only drives data when FPGA/CPU are reading from bus
+    assign ram_we_o = spi_en & !bus_rw_no;
+    
+    assign bus_addr_oe  = 1'b1;
+    assign bus_data_oe  = !bus_rw_no;       // FPGA only drives data when writing to bus
+    assign bus_rw_noe   = 1'b1;
+
+    assign ram_addr_o[11:10] = bus_addr_o[11:10];
 endmodule
