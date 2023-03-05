@@ -65,7 +65,7 @@ module main(
     output logic video_o
 );
     assign cpu_res_o    = '0;
-    assign cpu_be_o     = '0;
+    assign cpu_ready_o  = '0;
 
     assign io_oe_o      = '0;
     assign pia1_cs_o    = '0;
@@ -95,26 +95,33 @@ module main(
         .spi_rw_no(spi_rw_n)
     );
 
-    logic spi_en;
     logic clk8;
+    logic cpu_en;
+    logic spi_en;
 
     timing timing(
         .clk16_i(clk16_i),
         .clk8_o(clk8),
-        .spi_enable_o(spi_en),
+        .spi_en_o(spi_en),
         .spi_valid_i(spi_valid),
-        .spi_ready_o(spi_ready)
+        .spi_ready_o(spi_ready),
+        .cpu_be_o(cpu_be_o),
+        .cpu_en_o(cpu_en_o),
+        .cpu_clk_o(cpu_clk_o)
     );
     
+    wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
+    wire cpu_wr_en = cpu_en && !bus_rw_ni;          // Enable for CPU read
+
     wire spi_rd_en = spi_en &&  spi_rw_n;           // Enable for SPI read transaction
     wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
     
-    assign ram_oe_o = spi_rd_en;                    // Strobe OE during SPI read transaction
-    assign ram_we_o = spi_wr_en;                    // Strobe WE during SPI write transaction
+    assign ram_oe_o = spi_rd_en || cpu_rd_en;       // RAM drives bus during read
+    assign ram_we_o = spi_wr_en || cpu_wr_en;       // Strobe WE during write
     
     assign bus_addr_oe  = spi_en;                   // FPGA drives RWB and address during SPI transaction
     assign bus_rw_noe   = spi_en;
-    assign bus_data_oe  = spi_en && !bus_rw_no;     // FPGA drives data during SPI write transaction
+    assign bus_data_oe  = spi_wr_en;                // FPGA drives data during SPI write transaction
 
     // Currently, the only time the FPGA drives the bus is when an SPI transaction is in progress.
     assign bus_addr_o   = spi_addr;
@@ -122,7 +129,7 @@ module main(
     assign bus_rw_no    = spi_rw_n;
 
     // VRAM mirroring is not yet implemented.
-    assign ram_addr_o[11:10] = bus_addr_o[11:10];
+    assign ram_addr_o[11:10] = bus_addr_i[11:10];
 
     always @(negedge clk8) begin
         if (spi_rd_en) spi_rd_data <= bus_data_i;
