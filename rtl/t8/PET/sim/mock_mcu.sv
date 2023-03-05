@@ -45,7 +45,12 @@ module mock_mcu #(
 
         $display("[%t]    send -> [%s]", $time, s);
         spi1.xfer_bytes(tx);
-        spi1.end_xfer(/* next_cs_ni: */ '0);
+
+        // MCU continues asserting /CS until FPGA has finished processing the command,
+        // indicated by the FPGA asserting READY.
+        wait (spi_ready_ni == '0);
+
+        spi1.end_xfer();
     endtask
 
     function [7:0] cmd(input bit rw_n, input bit set_addr, input logic [16:0] addr);
@@ -96,4 +101,18 @@ module mock_mcu #(
 
         //check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, addr_i, /* data: */ 8'hxx);
     endtask
+
+    always @(negedge spi1_cs_no) begin
+        assert(spi_ready_ni) else begin
+            $error("'spi_ready_n' must be deasserted on positive edge 'spi1_cs_n'.  (spi_cs_n=%d, spi_ready_n=%d)", spi1_cs_no, spi_ready_ni);
+            $finish;
+        end
+    end
+
+    always @(posedge spi1_cs_no) begin
+        #1 assert(spi_ready_ni) else begin
+            $error("Deasserting 'spi1_cs_n' must reset 'spi_ready_n'.  (spi_cs_n=%d, spi_ready_n=%d)", spi1_cs_no, spi_ready_ni);
+            $finish;
+        end
+    end
 endmodule

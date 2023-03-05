@@ -32,7 +32,7 @@ module top_driver #(
     logic         spi1_mcu_tx;
     logic         spi1_mcu_rx;
     logic         spi1_mcu_rx_oe;
-    logic         spi_ready_no;
+    logic         spi_ready_n;
 
     logic         cpu_clk_o;
     logic         ram_oe_no;
@@ -84,7 +84,7 @@ module top_driver #(
         .spi1_mcu_tx_i(spi1_mcu_tx),
         .spi1_mcu_rx_o(spi1_mcu_rx),
         .spi1_mcu_rx_oe(spi1_mcu_rx_oe),
-        .spi_ready_no(spi_ready_no),
+        .spi_ready_no(spi_ready_n),
 
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_no(ram_oe_no),
@@ -124,7 +124,7 @@ module top_driver #(
     generate
         for (genvar i = 0; i < 16; i++) begin
             always begin
-                #1 assert (bus_addr_15_0_oe[i] == bus_addr_oe)
+                #1 assert (bus_addr_15_0_oe[i] === bus_addr_oe)
                 else begin
                     $error("Expected bus_addr_15_0_oe[15:0] == bus_addr_oe (bus_addr_15_0_oe[%d]=%d,bus_addr_oe=%d)", i, bus_addr_15_0_oe[i], bus_addr_oe);
                     $finish;
@@ -142,7 +142,7 @@ module top_driver #(
     generate
         for (genvar i = 0; i < 8; i++) begin
             always begin
-                #1 assert (bus_data_7_0_oe[i] == bus_data_oe)
+                #1 assert (bus_data_7_0_oe[i] === bus_data_oe)
                 else begin
                     $error("Expected bus_data_7_0_oe[7:0] == bus_data_oe (bus_data_7_0_oe[%d]=%d,bus_data_oe=%d)", i, bus_data_7_0_oe[i], bus_data_oe);
                     $finish;
@@ -193,7 +193,7 @@ module top_driver #(
         .spi1_cs_no(spi1_cs_n),
         .spi1_tx_o(spi1_mcu_tx),
         .spi1_rx_i(spi1_mcu_rx),
-        .spi_ready_ni(spi_ready_ni)
+        .spi_ready_ni(spi_ready_n)
     );
 
     always begin

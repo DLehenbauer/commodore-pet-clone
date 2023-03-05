@@ -43,7 +43,6 @@ module main(
     output logic cpu_be_o,
 
     // RAM
-    output logic ram_ce_o,
     output logic ram_oe_o,
     output logic ram_we_o,
     output logic [11:10] ram_addr_o,
@@ -74,9 +73,12 @@ module main(
     assign via_cs_o     = '0;
 
     // Protocol for SPI1 peripheral
-    logic spi_valid, spi_ready;
-
-    logic [7:0] spi_rd_data;
+    logic        spi_rw_n;      // Direction (0 = Write, 1 = Read)
+    logic [16:0] spi_addr;      // Address
+    logic  [7:0] spi_wr_data;   // Data from MCU when writing
+    logic  [7:0] spi_rd_data;   // Data to MCU when reading
+    logic        spi_valid;     // Transaction pending: spi_addr, _data, and _rw_n are valid
+    logic        spi_ready;     // Transaction complete: ready for next SPI command
     
     spi1 spi1(
         .clk_sys_i(clk16_i),
@@ -87,10 +89,10 @@ module main(
         .spi_valid_o(spi_valid),
         .spi_ready_i(spi_ready),
         .spi_ready_o(spi_ready_o),
-        .spi_addr_o(bus_addr_o),
+        .spi_addr_o(spi_addr),
         .spi_data_i(spi_rd_data),
-        .spi_data_o(bus_data_o),
-        .spi_rw_no(bus_rw_no)
+        .spi_data_o(spi_wr_data),
+        .spi_rw_no(spi_rw_n)
     );
 
     logic spi_en;
@@ -104,19 +106,25 @@ module main(
         .spi_ready_o(spi_ready)
     );
     
-    wire spi_rd_en = spi_en & bus_rw_no;
+    wire spi_rd_en = spi_en &&  spi_rw_n;           // Enable for SPI read transaction
+    wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
     
+    assign ram_oe_o = spi_rd_en;                    // Strobe OE during SPI read transaction
+    assign ram_we_o = spi_wr_en;                    // Strobe WE during SPI write transaction
+    
+    assign bus_addr_oe  = spi_en;                   // FPGA drives RWB and address during SPI transaction
+    assign bus_rw_noe   = spi_en;
+    assign bus_data_oe  = spi_en && !bus_rw_no;     // FPGA drives data during SPI write transaction
+
+    // Currently, the only time the FPGA drives the bus is when an SPI transaction is in progress.
+    assign bus_addr_o   = spi_addr;
+    assign bus_data_o   = spi_wr_data;
+    assign bus_rw_no    = spi_rw_n;
+
+    // VRAM mirroring is not yet implemented.
+    assign ram_addr_o[11:10] = bus_addr_o[11:10];
+
     always @(negedge clk8) begin
         if (spi_rd_en) spi_rd_data <= bus_data_i;
     end
-
-    assign ram_ce_o = 1'b1;
-    assign ram_oe_o = bus_rw_no;            // RAM only drives data when FPGA/CPU are reading from bus
-    assign ram_we_o = spi_en & !bus_rw_no;
-    
-    assign bus_addr_oe  = 1'b1;
-    assign bus_data_oe  = !bus_rw_no;       // FPGA only drives data when writing to bus
-    assign bus_rw_noe   = 1'b1;
-
-    assign ram_addr_o[11:10] = bus_addr_o[11:10];
 endmodule
