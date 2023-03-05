@@ -135,13 +135,13 @@ void r1w0(int32_t addr, int8_t bit) {
 }
 
 void test_ram() {
-    while (true) {
+    set_cpu(/* reset: */ false, /* run: */ false);
+    sleep_ms(1);
+
+    for (uint32_t iteration = 1;; iteration++) {
         puts("Suspending CPU");
 
-        set_cpu(/* reset: */ false, /* run: */ false);
-        sleep_ms(1);
-
-        puts("\nRAM Test (March C-):\n");
+        printf("\nRAM Test (March C-): Iteration #%d\n", iteration);
 
         printf("⇑(w0): ");
         spi_write_at(addr_min, 0);
