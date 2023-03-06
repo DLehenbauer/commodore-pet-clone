@@ -64,9 +64,6 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
-    assign cpu_res_o    = '0;
-    assign cpu_ready_o  = '0;
-
     assign io_oe_o      = '0;
     assign pia1_cs_o    = '0;
     assign pia2_cs_o    = '0;
@@ -109,13 +106,22 @@ module main(
         .cpu_en_o(cpu_en_o),
         .cpu_clk_o(cpu_clk_o)
     );
-    
+
     wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
     wire cpu_wr_en = cpu_en && !bus_rw_ni;          // Enable for CPU read
 
     wire spi_rd_en = spi_en &&  spi_rw_n;           // Enable for SPI read transaction
     wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
-    
+
+    control control(
+        .clk_bus_i(clk8),
+        .spi_addr_i(spi_addr),
+        .spi_data_i(spi_wr_data),
+        .spi_wr_en_i(spi_wr_en),
+        .cpu_res_o(cpu_res_o),
+        .cpu_ready_o(cpu_ready_o)
+    );
+
     assign ram_oe_o = spi_rd_en || cpu_rd_en;       // RAM drives bus during read
     assign ram_we_o = spi_wr_en || cpu_wr_en;       // Strobe WE during write
     

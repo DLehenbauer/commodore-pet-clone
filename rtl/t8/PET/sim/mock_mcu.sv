@@ -102,6 +102,13 @@ module mock_mcu #(
         //check(/* pending: */ 1'b1, /* rw_b: */ 1'b1, addr_i, /* data: */ 8'hxx);
     endtask
 
+    task set_cpu(
+        input reset,
+        input ready
+    );
+        write_at(17'he80f, { 6'h00, ready, !reset });
+    endtask
+
     always @(negedge spi1_cs_no) begin
         assert(spi_ready_ni) else begin
             $error("'spi_ready_n' must be deasserted on positive edge 'spi1_cs_n'.  (spi_cs_n=%d, spi_ready_n=%d)", spi1_cs_no, spi_ready_ni);

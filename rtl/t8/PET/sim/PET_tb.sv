@@ -22,8 +22,16 @@ module sim;
         $dumpvars;
 
         driver.reset();
-        driver.mcu.write_at(17'h035e, 8'hff);
-        driver.mcu.read_at(17'h035e);
+
+        $display("[%t] Verify initial power on state:", $time);
+        driver.expect_reset(1);
+        driver.expect_ready(0);
+
+        $display("[%t] Verify CPU state combinations:", $time);
+        driver.set_cpu(/* reset: */ 0, /* ready: */ 1);
+        driver.set_cpu(/* reset: */ 1, /* ready: */ 1);
+        driver.set_cpu(/* reset: */ 1, /* ready: */ 0);
+        driver.set_cpu(/* reset: */ 0, /* ready: */ 1);
 
         $display("[%t] Test Complete", $time);
         $finish;

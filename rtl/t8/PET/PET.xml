@@ -11,6 +11,7 @@
         <efx:design_file name="src/main.sv" version="default" library="default"/>
         <efx:design_file name="src/spi.sv" version="default" library="default"/>
         <efx:design_file name="src/timing.sv" version="default" library="default"/>
+        <efx:design_file name="src/control.sv" version="default" library="default"/>
         <efx:top_vhdl_arch name=""/>
     </efx:design_info>
     <efx:constraint_info>

@@ -151,6 +151,27 @@ module top_driver #(
         end
     endgenerate
 
+    always begin
+        #1;
+        assert (cpu_res_noe == !cpu_res_no)
+        else begin
+            $error("FPGA must only drive open drain / wired-or 'cpu_res_no' when asserted.");
+            $finish;
+        end
+
+        assert (cpu_irq_noe == !cpu_irq_no)
+        else begin
+            $error("FPGA must only drive open drain / wired-or 'cpu_irq_no' when asserted.");
+            $finish;
+        end
+
+        assert (cpu_nmi_noe == !cpu_nmi_no)
+        else begin
+            $error("FPGA must only drive open drain / wired-or 'cpu_irq_no' when asserted.");
+            $finish;
+        end
+    end
+
     logic         cpu_rw_no;
     logic         cpu_rw_noe;
     logic [15:0]  cpu_addr_o;
@@ -207,5 +228,32 @@ module top_driver #(
 
     task reset;
         mcu.reset();
+    endtask
+
+    task expect_reset(
+        input bit expected
+    );
+        assert(cpu_res_no != expected) else begin
+            $error("cpu_res_no: Expected '%d', but got '%d'.", expected, cpu_res_no);
+            $finish;
+        end
+    endtask
+
+    task expect_ready(
+        input bit expected
+    );
+        assert(cpu_ready_o == expected) else begin
+            $error("cpu_ready_o: Expected '%d', but got '%d'.", expected, cpu_ready_o);
+            $finish;
+        end
+    endtask
+
+    task set_cpu(
+        input reset,
+        input ready
+    );
+        mcu.set_cpu(reset, ready);
+        expect_reset(reset);
+        expect_ready(ready);
     endtask
 endmodule
