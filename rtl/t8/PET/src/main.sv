@@ -103,7 +103,7 @@ module main(
         .spi_valid_i(spi_valid),
         .spi_ready_o(spi_ready),
         .cpu_be_o(cpu_be_o),
-        .cpu_en_o(cpu_en_o),
+        .cpu_en_o(cpu_en),
         .cpu_clk_o(cpu_clk_o)
     );
 
@@ -122,8 +122,8 @@ module main(
         .cpu_ready_o(cpu_ready_o)
     );
 
-    assign ram_oe_o = spi_rd_en || cpu_rd_en;       // RAM drives bus during read
-    assign ram_we_o = spi_wr_en || cpu_wr_en;       // Strobe WE during write
+    assign ram_oe_o = spi_rd_en || cpu_rd_en;               // RAM output enable
+    assign ram_we_o = (spi_wr_en || cpu_wr_en) && clk8;     // RAM write strobe must be sychronized with clk
     
     assign bus_addr_oe  = spi_en;                   // FPGA drives RWB and address during SPI transaction
     assign bus_rw_noe   = spi_en;
