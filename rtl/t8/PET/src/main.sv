@@ -92,13 +92,13 @@ module main(
         .spi_rw_no(spi_rw_n)
     );
 
-    logic clk8;
+    logic strobe_clk;
     logic cpu_en;
     logic spi_en;
 
     timing timing(
         .clk16_i(clk16_i),
-        .clk8_o(clk8),
+        .strobe_clk_o(strobe_clk),
         .spi_en_o(spi_en),
         .spi_valid_i(spi_valid),
         .spi_ready_o(spi_ready),
@@ -114,7 +114,7 @@ module main(
     wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
 
     control control(
-        .clk_bus_i(clk8),
+        .clk_bus_i(strobe_clk),
         .spi_addr_i(spi_addr),
         .spi_data_i(spi_wr_data),
         .spi_wr_en_i(spi_wr_en),
@@ -122,8 +122,8 @@ module main(
         .cpu_ready_o(cpu_ready_o)
     );
 
-    assign ram_oe_o = spi_rd_en || cpu_rd_en;               // RAM output enable
-    assign ram_we_o = (spi_wr_en || cpu_wr_en) && clk8;     // RAM write strobe must be sychronized with clk
+    assign ram_oe_o = spi_rd_en || cpu_rd_en;                   // RAM output enable
+    assign ram_we_o = (spi_wr_en || cpu_wr_en) && strobe_clk;   // RAM write strobe
     
     assign bus_addr_oe  = spi_en;                   // FPGA drives RWB and address during SPI transaction
     assign bus_rw_noe   = spi_en;
@@ -137,7 +137,7 @@ module main(
     // VRAM mirroring is not yet implemented.
     assign ram_addr_o[11:10] = bus_addr_i[11:10];
 
-    always @(negedge clk8) begin
+    always @(negedge strobe_clk) begin
         if (spi_rd_en) spi_rd_data <= bus_data_i;
     end
 endmodule
