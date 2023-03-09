@@ -159,6 +159,9 @@ module main(
     assign ram_addr_o[11:10] = bus_addr_i[11:10];
 
     always @(negedge strobe_clk) begin
-        if (spi_rd_en) spi_rd_data <= bus_data_i;
+        if (spi_rd_en) begin
+            if (spi_addr == 17'h0e80f) spi_rd_data <= { 7'h0, gfx_i };
+            else spi_rd_data <= bus_data_i;
+        end
     end
 endmodule
