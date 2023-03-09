@@ -19,7 +19,7 @@ module sim;
 
     initial begin
         $dumpfile("work_sim/out.vcd");
-        $dumpvars;
+        $dumpvars(0, sim);
 
         driver.reset();
 
