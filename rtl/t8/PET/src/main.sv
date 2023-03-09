@@ -64,11 +64,6 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
-    assign io_oe_o      = '0;
-    assign pia1_cs_o    = '0;
-    assign pia2_cs_o    = '0;
-    assign via_cs_o     = '0;
-
     // Protocol for SPI1 peripheral
     logic        spi_rw_n;      // Direction (0 = Write, 1 = Read)
     logic [16:0] spi_addr;      // Address
@@ -107,6 +102,26 @@ module main(
         .cpu_clk_o(cpu_clk_o)
     );
 
+    logic ram_en;
+    logic pia1_en;
+    logic pia2_en;
+    logic via_en;
+    logic io_en;
+
+    address_decoding address_decoding(
+        .addr_i({ bus_addr_o[16], bus_addr_i}),
+        .ram_en_o(ram_en),
+        .pia1_en_o(pia1_en),
+        .pia2_en_o(pia2_en),
+        .via_en_o(via_en),
+        .io_en_o(io_en)
+    );
+
+    assign pia1_cs_o = pia1_en && cpu_en;
+    assign pia2_cs_o = pia2_en && cpu_en;
+    assign via_cs_o  =  via_en && cpu_en;
+    assign io_oe_o   =   io_en && cpu_en;
+
     wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
     wire cpu_wr_en = cpu_en && !bus_rw_ni;          // Enable for CPU read
 
@@ -114,7 +129,7 @@ module main(
     wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
 
     control control(
-        .clk_bus_i(strobe_clk),
+        .strobe_clk_i(strobe_clk),
         .spi_addr_i(spi_addr),
         .spi_data_i(spi_wr_data),
         .spi_wr_en_i(spi_wr_en),
@@ -122,8 +137,8 @@ module main(
         .cpu_ready_o(cpu_ready_o)
     );
 
-    assign ram_oe_o = spi_rd_en || cpu_rd_en;                   // RAM output enable
-    assign ram_we_o = (spi_wr_en || cpu_wr_en) && strobe_clk;   // RAM write strobe
+    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en);               // RAM output enable
+    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk; // RAM write strobe
     
     assign bus_addr_oe  = spi_en;                   // FPGA drives RWB and address during SPI transaction
     assign bus_rw_noe   = spi_en;

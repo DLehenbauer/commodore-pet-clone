@@ -13,7 +13,7 @@
  */
 
 module control(
-    input  logic        clk_bus_i,
+    input  logic        strobe_clk_i,
     input  logic [16:0] spi_addr_i,
     input  logic  [7:0] spi_data_i,
     input  logic        spi_wr_en_i,
@@ -25,9 +25,9 @@ module control(
 
     logic [1:0] state = 2'b00;
 
-    always @(posedge clk_bus_i) begin
+    always @(posedge strobe_clk_i) begin
         if (spi_wr_en_i) begin
-            if (spi_addr_i == 16'hE80F) state <= spi_data_i[1:0];
+            if (spi_addr_i == 17'hE80F) state <= spi_data_i[1:0];
         end
     end
     
