@@ -149,6 +149,12 @@ module main(
     assign bus_data_o   = spi_wr_data;
     assign bus_rw_no    = spi_rw_n;
 
+    video video(
+        .clk16_i(clk16_i),
+        .h_sync_o(h_sync_o),
+        .v_sync_o(v_sync_o)
+    );
+
     // VRAM mirroring is not yet implemented.
     assign ram_addr_o[11:10] = bus_addr_i[11:10];
 
