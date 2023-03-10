@@ -55,7 +55,7 @@ module main(
 
     // Audio
     input  logic diag_i,
-    input  logic cb2_i,
+    input  logic via_cb2_i,
     output logic audio_o,
 
     // Graphics
@@ -64,9 +64,12 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
-    // Protocol for SPI1 peripheral
+    //
+    // SPI1
+    //
+
     logic        spi_rw_n;      // Direction (0 = Write, 1 = Read)
-    logic [16:0] spi_addr;      // Address
+    logic [16:0] spi_addr;      // 17-bit address of pending transaction
     logic  [7:0] spi_wr_data;   // Data from MCU when writing
     logic  [7:0] spi_rd_data;   // Data to MCU when reading
     logic        spi_valid;     // Transaction pending: spi_addr, _data, and _rw_n are valid
@@ -87,6 +90,10 @@ module main(
         .spi_rw_no(spi_rw_n)
     );
 
+    //
+    // Timing
+    //
+
     logic strobe_clk;
     logic cpu_en;
     logic spi_en;
@@ -101,6 +108,16 @@ module main(
         .cpu_en_o(cpu_en),
         .cpu_clk_o(cpu_clk_o)
     );
+    
+    wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
+    wire cpu_wr_en = cpu_en && !bus_rw_ni;          // Enable for CPU read
+
+    wire spi_rd_en = spi_en &&  spi_rw_n;           // Enable for SPI read transaction
+    wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
+
+    //
+    // Address Decoding
+    //
 
     logic ram_en;
     logic pia1_en;
@@ -116,17 +133,28 @@ module main(
         .via_en_o(via_en),
         .io_en_o(io_en)
     );
+    
+    logic [7:0] kbd_data;
+    logic       kbd_data_oe;
 
-    assign pia1_cs_o = pia1_en && cpu_en;
+    keyboard keyboard(
+        .strobe_clk_i(strobe_clk),
+        .spi_addr_i(spi_addr),
+        .spi_data_i(spi_wr_data),
+        .spi_wr_en_i(spi_wr_en),
+        .pia1_rs_i(bus_addr_i[1:0]),
+        .bus_data_i(bus_data_i),
+        .pia1_en_i(pia1_en),
+        .cpu_rd_en_i(cpu_rd_en),
+        .cpu_wr_en_i(cpu_wr_en),
+        .kbd_data_o(kbd_data),
+        .kbd_data_oe(kbd_data_oe)
+    );
+
+    assign pia1_cs_o = !kbd_data_oe && pia1_en && cpu_en;
     assign pia2_cs_o = pia2_en && cpu_en;
     assign via_cs_o  =  via_en && cpu_en;
-    assign io_oe_o   =   io_en && cpu_en;
-
-    wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
-    wire cpu_wr_en = cpu_en && !bus_rw_ni;          // Enable for CPU read
-
-    wire spi_rd_en = spi_en &&  spi_rw_n;           // Enable for SPI read transaction
-    wire spi_wr_en = spi_en && !spi_rw_n;           // Enable for SPI write transaction
+    assign io_oe_o   = !kbd_data_oe && io_en && cpu_en;
 
     control control(
         .strobe_clk_i(strobe_clk),
@@ -137,17 +165,15 @@ module main(
         .cpu_ready_o(cpu_ready_o)
     );
 
-    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en);               // RAM output enable
-    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk; // RAM write strobe
-    
-    assign bus_addr_oe  = spi_en;                   // FPGA drives RWB and address during SPI transaction
-    assign bus_rw_noe   = spi_en;
-    assign bus_data_oe  = spi_wr_en;                // FPGA drives data during SPI write transaction
+    //
+    // Audio
+    //
 
-    // Currently, the only time the FPGA drives the bus is when an SPI transaction is in progress.
-    assign bus_addr_o   = spi_addr;
-    assign bus_data_o   = spi_wr_data;
-    assign bus_rw_no    = spi_rw_n;
+    assign audio_o = via_cb2_i && diag_i;
+
+    //
+    // Video
+    //
 
     video video(
         .clk16_i(clk16_i),
@@ -157,6 +183,28 @@ module main(
 
     // VRAM mirroring is not yet implemented.
     assign ram_addr_o[11:10] = bus_addr_i[11:10];
+
+    //
+    // RAM
+    //
+
+    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en);               // RAM output enable
+    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk; // RAM write strobe
+    
+    //
+    // Bus
+    //
+
+    assign bus_rw_noe   = spi_en;
+    assign bus_rw_no    = spi_rw_n;
+
+    assign bus_addr_oe  = spi_en;
+    assign bus_addr_o   = spi_addr;
+
+    assign bus_data_oe  = spi_wr_en || kbd_data_oe;
+    assign bus_data_o   = kbd_data_oe
+        ? kbd_data
+        : spi_wr_data;
 
     always @(negedge strobe_clk) begin
         if (spi_rd_en) begin

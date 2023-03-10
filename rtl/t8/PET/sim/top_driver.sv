@@ -54,7 +54,7 @@ module top_driver #(
     logic         via_cs2_no;
     logic         io_oe_no;
     logic         diag_i;
-    logic         cb2_i;
+    logic         via_cb2_i;
     logic         audio_o;
     logic         gfx_i;
     logic         h_sync_o;
@@ -106,7 +106,7 @@ module top_driver #(
         .via_cs2_no(via_cs2_no),
         .io_oe_no(io_oe_no),
         .diag_i(diag_i),
-        .cb2_i(cb2_i),
+        .via_cb2_i(via_cb2_i),
         .audio_o(audio_o),
         .gfx_i(gfx_i),
         .h_sync_o(h_sync_o),

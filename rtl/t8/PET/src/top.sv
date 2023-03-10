@@ -72,7 +72,7 @@ module top(
 
     // Audio
     input  logic diag_i,
-    input  logic cb2_i,
+    input  logic via_cb2_i,
     output logic audio_o,
 
     // Graphics
@@ -175,7 +175,7 @@ module top(
         .via_cs_o(via_cs_o),
         .io_oe_o(io_oe_o),
         .diag_i(diag_i),
-        .cb2_i(cb2_i),
+        .via_cb2_i(via_cb2_i),
         .audio_o(audio_o),
         .gfx_i(gfx_i),
         .h_sync_o(h_sync_o),
