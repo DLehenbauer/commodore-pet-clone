@@ -44,11 +44,14 @@ download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/basic
 # Edit 4.0, 40 column, Graphics Keyboard, no CRTC
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-n.901447-29.bin 6FE27B43EC550A04D30B2E45F07D51FB)
 
-# Edit 4.0, 80 column, Business Keyboard, 60 Hz, CRTC
-download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-80-b-60Hz.901474-03.bin DA56995BE008C5F7DB1094E81E5060AA)
+# Edit 4.0, 40 column, Graphics Keyboard, 60 Hz, CRTC
+download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-40-n-60Hz.901499-01.bin 2E86403FC2AC30E7AF05B9E8607BEF98)
 
 # Edit 4.0, 40 column, Graphics Keyboard, 50 Hz, CRTC
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-40-n-50Hz.901498-01.bin B76D756E7AC8752AE0035F3CE5F1383C)
+
+# Edit 4.0, 80 column, Business Keyboard, 60 Hz, CRTC
+download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/edit-4-80-b-60Hz.901474-03.bin DA56995BE008C5F7DB1094E81E5060AA)
 
 # Kernal 4.0
 download_rom(http://www.zimmers.net/anonftp/pub/cbm/firmware/computers/pet/kernal-4.901465-22.bin 16EC21443EA5431AB63D511061054E6F)
