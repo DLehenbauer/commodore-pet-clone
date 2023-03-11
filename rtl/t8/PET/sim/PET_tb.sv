@@ -22,7 +22,7 @@ module sim;
         $dumpvars;
 
         driver.reset();
-        //driver.mcu.write_at(17'h035e, 8'hff);
+        driver.mcu.write_at(17'h035e, 8'hff);
         driver.mcu.read_at(17'h035e);
 
         $display("[%t] Test Complete", $time);

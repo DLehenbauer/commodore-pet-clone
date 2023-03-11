@@ -141,7 +141,12 @@ void test_ram() {
     for (uint32_t iteration = 1;; iteration++) {
         puts("Suspending CPU");
 
-        printf("\nRAM Test (March C-): Iteration #%d\n", iteration);
+        set_cpu(/* reset: */ false, /* run: */ false);
+        sleep_ms(1);
+
+        uint32_t iteration = 0;
+
+        printf("\nRAM Test (March C-): Iteration #%d:\n", iteration++);
 
         printf("⇑(w0): ");
         spi_write_at(addr_min, 0);

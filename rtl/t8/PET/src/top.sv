@@ -137,12 +137,15 @@ module top(
     assign cpu_nmi_no  = !cpu_nmi_o;
     assign cpu_nmi_noe = cpu_nmi_o;     // Only drive open drain wired-or when asserting NMI
 
-    // IRQ and NMI are currenly unused.  Deassert them so they don't drive pins.
+    // IRQ and NMI are currently unused.  Deassert them so they don't drive pins.
     assign cpu_irq_o   = '0;
     assign cpu_nmi_o   = '0;
 
     // Only drive POCI (FPGA TX -> MCU RX) when this SPI peripheral is selected
     assign spi1_mcu_rx_oe = !spi1_cs_ni;
+
+    // RAM CE is currently unused.  We use OE and WE to strobe reads/writes instead.
+    assign ram_ce_o = 1'b1;
 
     main main(
         .clk16_i(clk16_i),
@@ -167,7 +170,6 @@ module top(
         .cpu_res_o(cpu_res_o),
         .cpu_ready_o(cpu_ready_o),
         .cpu_be_o(cpu_be_o),
-        .ram_ce_o(ram_ce_o),
         .pia1_cs_o(pia1_cs_o),
         .pia2_cs_o(pia2_cs_o),
         .via_cs_o(via_cs_o),
