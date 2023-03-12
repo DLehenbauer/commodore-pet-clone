@@ -21,7 +21,9 @@ module timing(
     output logic cpu_en_o       = '0,
     input  logic spi_valid_i,
     output logic spi_en_o       = '0,
-    output logic spi_ready_o    = 1'b1
+    output logic spi_ready_o    = 1'b1,
+    output logic vram_en_o      = '0,
+    output logic vrom_en_o      = '0
 );
     // Generate two 8 MHz clocks that are offset by 90 degrees:
     //
@@ -78,8 +80,13 @@ module timing(
     always_ff @(posedge setup_clk_o) begin
         spi_en_o     <= spi_valid_i && en_d[0];
         spi_ready_o  <= spi_en_o;
+
+        vram_en_o    <= en_d[1];
+        vrom_en_o    <= en_d[2];
+        
         cpu_be_o     <= en_d[6] || en_d[7];
         cpu_en_o     <= en_d[7];
+
         en_q         <= en_d;
     end
     

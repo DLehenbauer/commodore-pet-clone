@@ -98,17 +98,24 @@ module main(
     logic setup_clk;
     logic cpu_en;
     logic spi_en;
+    logic vram_en;
+    logic vrom_en;
 
     timing timing(
         .clk16_i(clk16_i),
         .strobe_clk_o(strobe_clk),
         .setup_clk_o(setup_clk),
+
         .spi_en_o(spi_en),
         .spi_valid_i(spi_valid),
         .spi_ready_o(spi_ready),
+        
         .cpu_be_o(cpu_be_o),
         .cpu_en_o(cpu_en),
-        .cpu_clk_o(cpu_clk_o)
+        .cpu_clk_o(cpu_clk_o),
+
+        .vram_en_o(vram_en),
+        .vrom_en_o(vrom_en)
     );
     
     wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
@@ -179,9 +186,19 @@ module main(
     // Video
     //
 
+    logic [13:0] video_addr;
+    logic        video_addr_oe;
+
     video video(
+        .pixel_clk_i(setup_clk),
         .setup_clk_i(setup_clk),
+        .strobe_clk_i(strobe_clk),
         .cclk_en_i(cpu_en),
+        .vram_en_i(vram_en),
+        .vrom_en_i(vrom_en),
+        .addr_o(video_addr),
+        .addr_oe(video_addr_oe),
+        .data_i(bus_data_i),
         .h_sync_o(h_sync_o),
         .v_sync_o(v_sync_o),
         .video_o(video_o)
@@ -194,8 +211,8 @@ module main(
     // RAM
     //
 
-    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en);               // RAM output enable
-    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk; // RAM write strobe
+    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en || vram_en || vrom_en); // RAM output enable
+    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk;         // RAM write strobe
     
     //
     // Bus
@@ -204,8 +221,10 @@ module main(
     assign bus_rw_noe   = spi_en;
     assign bus_rw_no    = spi_rw_n;
 
-    assign bus_addr_oe  = spi_en;
-    assign bus_addr_o   = spi_addr;
+    assign bus_addr_oe  = spi_en || video_addr_oe;
+    assign bus_addr_o   = spi_en
+        ? spi_addr
+        : { 3'b010, video_addr };
 
     assign bus_data_oe  = spi_wr_en || kbd_data_oe;
     assign bus_data_o   = kbd_data_oe

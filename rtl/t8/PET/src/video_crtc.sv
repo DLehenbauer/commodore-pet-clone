@@ -22,31 +22,42 @@ module sync_gen(
     input logic [7:0] displayed_i,
     input logic [7:0] sync_start_i,
     input logic [4:0] sync_width_i,     // Note: V-Sync is hardcoded to 0x10, hence 5-bit counter.
+    input logic [4:0] adjust_i,         // Note: For V-Sync fine adjustment in scanlines
 
     output logic      display_o = '0,
     output logic      start_o,
     output logic      sync_o    = '0
 );
-    logic [7:0] counter_d, counter_q = '0;
+    logic [7:0] total_counter_d, total_counter_q = '0;
     logic [4:0] sync_counter_d, sync_counter_q = '0;
+    logic [4:0] adjust_counter_d, adjust_counter_q = '0;
     logic display_d;
     logic sync_d;
-    logic start_d;
+    logic start_d, end_d;
 
     always_comb begin
+        adjust_counter_d = '0;
+
         // Counter & start pulse
-        start_d = counter_q == total_i;
-        if (start_d) counter_d = '0;
-        else counter_d = counter_q + 1'b1;
+        end_d = total_counter_q == total_i;
+        start_d = end_d && adjust_counter_q == adjust_i;
+
+        if (start_d) adjust_counter_d = adjust_counter_q;
+        else if (end_d) adjust_counter_d = adjust_counter_q + 1'b1;
+        else adjust_counter_d = '0;
+
+        if (start_d) total_counter_d = '0;
+        else if (end_d) total_counter_d = total_counter_q;
+        else total_counter_d = total_counter_q + 1'b1;
 
         // Display enable
-        if (counter_d == displayed_i) display_d = '0;
+        if (total_counter_d == displayed_i) display_d = '0;
         else if (start_d) display_d = 1'b1;
         else display_d = display_o;
 
         // Sync pulse
         if (sync_counter_q == sync_width_i) sync_d = 1'b0;
-        else if (counter_d == sync_start_i) sync_d = 1'b1;
+        else if (total_counter_d == sync_start_i) sync_d = 1'b1;
         else sync_d = sync_o;
 
         // Sync width counter
@@ -56,18 +67,20 @@ module sync_gen(
 
     always_ff @(posedge clk_i or posedge reset_i) begin
         if (reset_i) begin
-            counter_q      <= '0;
-            display_o      <= '0;
-            sync_counter_q <= '0;
-            sync_o         <= '0;
+            total_counter_q      <= '0;
+            display_o            <= '0;
+            sync_counter_q       <= '0;
+            sync_o               <= '0;
+            adjust_counter_q     <= '0;
         end else begin
             if (sync_clk_en_i) begin
-                sync_counter_q <= sync_counter_d;
-                sync_o         <= sync_d;
+                sync_counter_q   <= sync_counter_d;
+                sync_o           <= sync_d;
+                adjust_counter_q <= adjust_counter_d;
             end
             if (total_clk_en_i) begin
-                counter_q      <= counter_d;
-                display_o      <= display_d;
+                total_counter_q  <= total_counter_d;
+                display_o        <= display_d;
             end
         end
     end
@@ -94,7 +107,9 @@ module ra_gen(
     end
 
     always_ff @(posedge clk_i) begin
-        if (line_clk_en_i) begin
+        if (reset_i) begin
+            ra_o <= '0;
+        end else if (line_clk_en_i) begin
             ra_o <= ra_d;
         end
     end
@@ -214,9 +229,9 @@ module crtc(
         r[R0_H_TOTAL]           = 8'd63;
         r[R1_H_DISPLAYED]       = 8'd40;
         r[R2_H_SYNC_POS]        = 8'd48;
-        r[R3_SYNC_WIDTH]        = 8'h0f;
+        r[R3_SYNC_WIDTH]        = 8'h01;
         r[R4_V_TOTAL]           = 7'd32;
-        r[R5_V_LINE_ADJUST]     = 5'd00;
+        r[R5_V_LINE_ADJUST]     = 5'd05;
         r[R6_V_DISPLAYED]       = 7'd25;
         r[R7_V_SYNC_POS]        = 7'd28;
         r[R9_SCAN_LINE]         = 5'd07;
@@ -243,6 +258,7 @@ module crtc(
         .displayed_i(r[R1_H_DISPLAYED]),
         .sync_start_i(r[R2_H_SYNC_POS]),
         .sync_width_i({ 1'b0, r[R3_SYNC_WIDTH][3:0] }),
+        .adjust_i(5'h0),                        // H. adjustment is always 0
         .sync_o(h_sync_o),
         .display_o(h_de),
         .start_o(line_start)
@@ -254,7 +270,7 @@ module crtc(
         .reset_i(reset_i),
         .clk_i(setup_clk_i),
         .line_clk_en_i(line_start),             // Line counter increments at start of scan line
-        .row_height_i(5'd7),
+        .row_height_i(r[R9_SCAN_LINE][4:0]),
         .ra_o(ra_o),
         .row_start_o(row_start)
     );
@@ -270,7 +286,8 @@ module crtc(
         .total_i(r[R4_V_TOTAL]),
         .displayed_i(r[R6_V_DISPLAYED]),
         .sync_start_i(r[R7_V_SYNC_POS]),
-        .sync_width_i(5'h10),                   // V-Sync is fixed at 16 scanlines
+        .sync_width_i(5'h10),                   // V. sync is fixed at 16 scanlines
+        .adjust_i(r[R5_V_LINE_ADJUST][4:0]),    // V. adjustment in scanlines
         .sync_o(v_sync_o),
         .display_o(v_de),
         .start_o(frame_start)
