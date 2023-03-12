@@ -183,7 +183,8 @@ module main(
         .setup_clk_i(setup_clk),
         .cclk_en_i(cpu_en),
         .h_sync_o(h_sync_o),
-        .v_sync_o(v_sync_o)
+        .v_sync_o(v_sync_o),
+        .video_o(video_o)
     );
 
     // VRAM mirroring is not yet implemented.
