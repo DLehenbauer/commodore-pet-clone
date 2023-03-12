@@ -57,9 +57,9 @@ module top_driver #(
     logic         via_cb2_i;
     logic         audio_o;
     logic         gfx_i;
-    logic         h_sync_o;
-    logic         v_sync_o;
-    logic         video_o;
+    logic         h_sync;
+    logic         v_sync;
+    logic         video;
     logic         status_no;
 
     initial forever #(1000 / (16 * 2)) clk16_i = ~clk16_i;
@@ -109,9 +109,9 @@ module top_driver #(
         .via_cb2_i(via_cb2_i),
         .audio_o(audio_o),
         .gfx_i(gfx_i),
-        .h_sync_o(h_sync_o),
-        .v_sync_o(v_sync_o),
-        .video_o(video_o),
+        .h_sync_o(h_sync),
+        .v_sync_o(v_sync),
+        .video_o(video),
         .status_no(status_no)
     );
 
@@ -256,4 +256,13 @@ module top_driver #(
         expect_reset(reset);
         expect_ready(ready);
     endtask
+
+    task wait_for_hsync();
+        @(posedge h_sync);
+    endtask
+
+    task wait_for_vsync();
+        @(posedge v_sync);
+    endtask
+
 endmodule

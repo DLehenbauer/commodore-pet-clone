@@ -34,25 +34,7 @@
                PORTB = 2'd2,
                CRB   = 2'd3;
 
-    logic [7:0] kbd_matrix [16] = '{
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff,
-        8'hff
-    };
-
+    logic [7:0] kbd_matrix [16];
     logic [3:0] current_kbd_row = '0;
     
     logic spi_wr_matrix;

@@ -12,27 +12,31 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-// Placeholder video implementation that generates H/V sync @60 Hz to drive IRQ_B.
 module video(
-    input  logic clk16_i,
+    input  logic setup_clk_i,
+    input  logic cclk_en_i,
     output logic h_sync_o,
     output logic v_sync_o
 );
-    logic [18:0] count = 0;
-    
-    // Bits 9:0 divide 16 MHz 'clk' by 1024 to get the H_Sync_o frequency of ~15.6 KHz
-    assign h_sync_o = count[9];
 
-    // Bits 18:10 count horizontal scan lines.  Bit 18 is high only momentarily before
-    // we reach line 260 and reset the counter.  Therefore we use bit 17 to get a 60 Hz
-    // V_Sync_o with a duty cycle of ~49.2%.
+crtc crtc(
+    //.reset_i(reset_i),
+    //.strobe_clk_i(strobe_clk_i),
+    .setup_clk_i(setup_clk_i),
+    .cclk_en_i(cclk_en_i),
     
-    localparam VBLANK = (19'd260 << 10);
-    
-    assign v_sync_o = count[17];
-    
-    always_ff @(posedge clk16_i) begin
-        if (count != (VBLANK - 1)) count <= count + 19'd1;
-        else count <= 0;
-    end
+    // .cs_i(cs_i),
+    // .rw_ni(rw_ni),
+    // .rs_i(rs_i),
+    // .data_i(data_i),
+    // .data_o(data_o),
+    // .data_oe(data_oe),
+    .h_sync_o(h_sync_o),
+    .v_sync_o(v_sync_o)
+    // .de_o(de_o),
+    // .ma_o(ma_o),
+    // .ra_o(ra_o)
+);
+
+
 endmodule

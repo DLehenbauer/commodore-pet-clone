@@ -95,12 +95,14 @@ module main(
     //
 
     logic strobe_clk;
+    logic setup_clk;
     logic cpu_en;
     logic spi_en;
 
     timing timing(
         .clk16_i(clk16_i),
         .strobe_clk_o(strobe_clk),
+        .setup_clk_o(setup_clk),
         .spi_en_o(spi_en),
         .spi_valid_i(spi_valid),
         .spi_ready_o(spi_ready),
@@ -123,6 +125,7 @@ module main(
     logic pia1_en;
     logic pia2_en;
     logic via_en;
+    logic crtc_en;
     logic io_en;
 
     address_decoding address_decoding(
@@ -131,6 +134,7 @@ module main(
         .pia1_en_o(pia1_en),
         .pia2_en_o(pia2_en),
         .via_en_o(via_en),
+        .crtc_en_o(crtc_en),
         .io_en_o(io_en)
     );
     
@@ -176,7 +180,8 @@ module main(
     //
 
     video video(
-        .clk16_i(clk16_i),
+        .setup_clk_i(setup_clk),
+        .cclk_en_i(cpu_en),
         .h_sync_o(h_sync_o),
         .v_sync_o(v_sync_o)
     );
