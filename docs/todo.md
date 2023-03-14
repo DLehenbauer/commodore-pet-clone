@@ -7,6 +7,7 @@
   * Review BOM (esp. look for mixed values)
   * Tag revision in Github
 * HW:
+  * Rotate video connector 180 degrees to match Dynamic V2 boards
   * 10uF 50V -> 10uF 25V
   * Combine FPGA prog and MCU debug on same header?
   * Build separate "debug PCB" that integrates:
@@ -39,3 +40,4 @@
   * Try using SPI_SCK as clock instead of oversampling
   * Explore using SPI0 to stream video to MCU in parallel
     * Possibly could bidirectionally send keyboard status at same time
+  * Implement 65xx chips on FPGA to make 40-pin chips optional

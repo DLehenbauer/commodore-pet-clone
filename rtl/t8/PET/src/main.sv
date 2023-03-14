@@ -134,6 +134,7 @@ module main(
     logic via_en;
     logic crtc_en;
     logic io_en;
+    logic is_mirrored;
 
     address_decoding address_decoding(
         .addr_i({ bus_addr_o[16], bus_addr_i}),
@@ -142,7 +143,8 @@ module main(
         .pia2_en_o(pia2_en),
         .via_en_o(via_en),
         .crtc_en_o(crtc_en),
-        .io_en_o(io_en)
+        .io_en_o(io_en),
+        .is_mirrored_o(is_mirrored)
     );
     
     logic [7:0] kbd_data;
@@ -190,12 +192,18 @@ module main(
     logic        video_addr_oe;
 
     video video(
+        .reset_i('0),
+        .clk16_i(clk16_i),
         .pixel_clk_i(setup_clk),
         .setup_clk_i(setup_clk),
         .strobe_clk_i(strobe_clk),
+        .cpu_en_i(cpu_en),
         .cclk_en_i(cpu_en),
         .vram_en_i(vram_en),
         .vrom_en_i(vrom_en),
+        .crtc_en_i(crtc_en),
+        .rw_ni(bus_rw_ni),
+        .addr_i(bus_addr_i[0]),
         .addr_o(video_addr),
         .addr_oe(video_addr_oe),
         .data_i(bus_data_i),
@@ -204,8 +212,9 @@ module main(
         .video_o(video_o)
     );
 
-    // VRAM mirroring is not yet implemented.
-    assign ram_addr_o[11:10] = bus_addr_i[11:10];
+    assign ram_addr_o[11:10] = is_mirrored && cpu_en
+        ? 2'b00
+        : bus_addr_i[11:10];
 
     //
     // RAM

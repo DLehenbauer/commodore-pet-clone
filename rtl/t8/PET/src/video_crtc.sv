@@ -26,7 +26,8 @@ module sync_gen(
 
     output logic      display_o = '0,
     output logic      start_o,
-    output logic      sync_o    = '0
+    output logic      sync_o    = '0,
+    output logic      reset_o
 );
     logic [7:0] total_counter_d, total_counter_q = '0;
     logic [4:0] sync_counter_d, sync_counter_q = '0;
@@ -85,6 +86,7 @@ module sync_gen(
         end
     end
 
+    assign reset_o = start_d;
     assign start_o = start_d && total_clk_en_i;
 endmodule
 
@@ -100,7 +102,7 @@ module ra_gen(
     logic [4:0] ra_d;
 
     always_comb begin
-        row_start_d = ra_o == row_height_i;
+        row_start_d = ra_o == row_height_i || reset_i;
         ra_d = row_start_d
             ? '0
             : ra_o + 1'b1;
@@ -187,8 +189,8 @@ module crtc(
                                             //       The position of the HSYNC determines the left-to-right location of the displayed text on the video screen.
                                             //       In this way, the side margins are adjusted.
 
-               R3_SYNC_WIDTH        = 3,    // [3:0] Width of HSYNC in character clock times
-                                            //       (TODO: Should [7:4] control VSync?)
+               R3_SYNC_WIDTH        = 3,    // [3:0] Width of HSYNC in character clock times (0 = HSYNC off)
+                                            // [7:4] Width of VSYNC in scan lines (0 = 16 scanlines)
 
                R4_V_TOTAL           = 4,    // [6:0] Total number of character rows in a frame, minus one. This register, along with R5,
                                             //       determines the overall frame rate, which should be close to the line frequency to
@@ -203,7 +205,7 @@ module crtc(
             
                R7_V_SYNC_POS        = 7,    // [6:0] Selects the character row time at which the VSYNC pulse is desired to occur and, thus,
                                             //       is used to position the displayed text in the vertical direction.
-            
+
                R9_SCAN_LINE         = 9,    // [4:0] Number of scan lines per character row, including spacing.
 
                R12_DISPLAY_START_HI = 12,   // [5:0] High 6 bits of 14 bit display address (starting address of screen_addr_o[13:8]).
@@ -267,7 +269,7 @@ module crtc(
     logic row_start;
 
     ra_gen ra_gen(
-        .reset_i(reset_i),
+        .reset_i(frame_reset),
         .clk_i(setup_clk_i),
         .line_clk_en_i(line_start),             // Line counter increments at start of scan line
         .row_height_i(r[R9_SCAN_LINE][4:0]),
@@ -276,6 +278,7 @@ module crtc(
     );
 
     logic frame_start;
+    logic frame_reset;
     logic v_de;
 
     sync_gen v_sync(
@@ -286,11 +289,12 @@ module crtc(
         .total_i(r[R4_V_TOTAL]),
         .displayed_i(r[R6_V_DISPLAYED]),
         .sync_start_i(r[R7_V_SYNC_POS]),
-        .sync_width_i(5'h10),                   // V. sync is fixed at 16 scanlines
+        .sync_width_i(5'h10),                   // V. sync is fixed at 16 scanlines (TODO: Support adjustable vsync?)
         .adjust_i(r[R5_V_LINE_ADJUST][4:0]),    // V. adjustment in scanlines
         .sync_o(v_sync_o),
         .display_o(v_de),
-        .start_o(frame_start)
+        .start_o(frame_start),
+        .reset_o(frame_reset)
     );
 
     assign de_o = h_de && v_de;

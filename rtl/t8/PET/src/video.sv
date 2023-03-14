@@ -13,35 +13,42 @@
  */
 
 module video(
-    input  logic pixel_clk_i,
-    input  logic setup_clk_i,
-    input  logic strobe_clk_i,
-    input  logic cclk_en_i,
-    input  logic vram_en_i,
-    input  logic vrom_en_i,
+    input  logic        reset_i,
+    input  logic        clk16_i,
+    input  logic        pixel_clk_i,
+    input  logic        setup_clk_i,
+    input  logic        strobe_clk_i,
+    input  logic        cpu_en_i,
+    input  logic        cclk_en_i,
+    input  logic        vram_en_i,
+    input  logic        vrom_en_i,
+    input  logic        crtc_en_i,
     
+    input  logic        rw_ni,
+    input  logic        addr_i,
     output logic [13:0] addr_o,
     output logic        addr_oe,
     input  logic  [7:0] data_i,
 
-    output logic h_sync_o,
-    output logic v_sync_o,
-    output logic video_o
+    output logic        h_sync_o,
+    output logic        v_sync_o,
+    output logic        video_o
 );
     logic [13:0] ma;
     logic [4:0] ra;
     logic hs, vs, de;
 
     crtc crtc(
-        //.reset_i(reset_i),
-        //.strobe_clk_i(strobe_clk_i),
+        .reset_i(reset_i),
+        .strobe_clk_i(strobe_clk_i),
         .setup_clk_i(setup_clk_i),
         .cclk_en_i(cclk_en_i),
         
-        // .cs_i(cs_i),
-        // .rw_ni(rw_ni),
-        // .rs_i(rs_i),
-        // .data_i(data_i),
+        .cs_i(crtc_en_i),
+        .rw_ni(rw_ni),
+        .rs_i(addr_i),
+        .data_i(data_i),
+
         // .data_o(data_o),
         // .data_oe(data_oe),
         .h_sync_o(hs),
@@ -78,8 +85,8 @@ module video(
     // Synchronize video and h/v sync
     always_ff @(posedge pixel_clk_i) begin
         if (cclk_en_i) begin
-            h_sync_o <= hs;
-            v_sync_o <= vs;
+            h_sync_o <= !hs;        // DynaPet inverts horiz/vert sync
+            v_sync_o <= !vs;
             de_q     <= de;
         end
     end
