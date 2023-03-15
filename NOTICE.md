@@ -1,10 +1,14 @@
+# Notice
+
 This project may incorporate material from the following third parties:
 
-# 6502 KiCad Library
-**source:** https://github.com/Alarm-Siren/6502-kicad-library
+## 6502 KiCad Library
 
-## License
-```
+**source:** <https://github.com/Alarm-Siren/6502-kicad-library>
+
+### License
+
+```text
 GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999
 

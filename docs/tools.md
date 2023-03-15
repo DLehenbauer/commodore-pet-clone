@@ -15,6 +15,7 @@
 
 * [Quartus II Web Edition 13.0 SP1](https://fpgasoftware.intel.com/13.0sp1/?edition=web)
 * [Icarus Verilog & GTKWave](http://bleyer.org/icarus/)
+* [vhd2vl](https://github.com/ldoolitt/vhd2vl)
 
 ## Logic Analyzer
 

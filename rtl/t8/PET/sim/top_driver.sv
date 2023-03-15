@@ -54,12 +54,12 @@ module top_driver #(
     logic         via_cs2_no;
     logic         io_oe_no;
     logic         diag_i;
-    logic         cb2_i;
+    logic         via_cb2_i;
     logic         audio_o;
     logic         gfx_i;
-    logic         h_sync_o;
-    logic         v_sync_o;
-    logic         video_o;
+    logic         h_sync;
+    logic         v_sync;
+    logic         video;
     logic         status_no;
 
     initial forever #(1000 / (16 * 2)) clk16_i = ~clk16_i;
@@ -106,12 +106,12 @@ module top_driver #(
         .via_cs2_no(via_cs2_no),
         .io_oe_no(io_oe_no),
         .diag_i(diag_i),
-        .cb2_i(cb2_i),
+        .via_cb2_i(via_cb2_i),
         .audio_o(audio_o),
         .gfx_i(gfx_i),
-        .h_sync_o(h_sync_o),
-        .v_sync_o(v_sync_o),
-        .video_o(video_o),
+        .h_sync_o(h_sync),
+        .v_sync_o(v_sync),
+        .video_o(video),
         .status_no(status_no)
     );
 
@@ -150,6 +150,27 @@ module top_driver #(
             end
         end
     endgenerate
+
+    always begin
+        #1;
+        assert (cpu_res_noe == !cpu_res_no)
+        else begin
+            $error("FPGA must only drive open drain / wired-or 'cpu_res_no' when asserted.");
+            $finish;
+        end
+
+        assert (cpu_irq_noe == !cpu_irq_no)
+        else begin
+            $error("FPGA must only drive open drain / wired-or 'cpu_irq_no' when asserted.");
+            $finish;
+        end
+
+        assert (cpu_nmi_noe == !cpu_nmi_no)
+        else begin
+            $error("FPGA must only drive open drain / wired-or 'cpu_irq_no' when asserted.");
+            $finish;
+        end
+    end
 
     logic         cpu_rw_no;
     logic         cpu_rw_noe;
@@ -208,4 +229,40 @@ module top_driver #(
     task reset;
         mcu.reset();
     endtask
+
+    task expect_reset(
+        input bit expected
+    );
+        assert(cpu_res_no != expected) else begin
+            $error("cpu_res_no: Expected '%d', but got '%d'.", expected, cpu_res_no);
+            $finish;
+        end
+    endtask
+
+    task expect_ready(
+        input bit expected
+    );
+        assert(cpu_ready_o == expected) else begin
+            $error("cpu_ready_o: Expected '%d', but got '%d'.", expected, cpu_ready_o);
+            $finish;
+        end
+    endtask
+
+    task set_cpu(
+        input reset,
+        input ready
+    );
+        mcu.set_cpu(reset, ready);
+        expect_reset(reset);
+        expect_ready(ready);
+    endtask
+
+    task wait_for_hsync();
+        @(posedge h_sync);
+    endtask
+
+    task wait_for_vsync();
+        @(posedge v_sync);
+    endtask
+
 endmodule

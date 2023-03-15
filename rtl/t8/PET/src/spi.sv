@@ -102,8 +102,8 @@ module spi_byte (
         sr_q        <= sr_d;
 
         spi_cs_nq   <= spi_cs_ni;
-        spi_sck_q  <= spi_sck_i;
-        spi_sck_q2 <= spi_sck_q;
+        spi_sck_q   <= spi_sck_i;
+        spi_sck_q2  <= spi_sck_q;
         spi_rx_q    <= spi_rx_i;
         spi_tx_o    <= spi_tx_d;
 

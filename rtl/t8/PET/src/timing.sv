@@ -14,90 +14,91 @@
 
 module timing(
     input  logic clk16_i,
-    output logic clk8_o = '0,
-    output logic clk8n_o = 1'b1,
-    output logic clk_cpu_o,
+    output logic strobe_clk_o   = '0,
+    output logic setup_clk_o    = 1'b1,
+    output logic cpu_clk_o,
+    output logic cpu_be_o       = '0,
+    output logic cpu_en_o       = '0,
     input  logic spi_valid_i,
-    output logic spi_enable_o,
-    output logic spi_ready_o,
-    output logic video_ram_enable_o,
-    output logic video_rom_enable_o,
-    input  logic cpu_valid_i,
-    output logic cpu_select_o,
-    output logic cpu_enable_o
+    output logic spi_en_o       = '0,
+    output logic spi_ready_o    = 1'b1,
+    output logic vram_en_o      = '0,
+    output logic vrom_en_o      = '0
 );
     // Generate two 8 MHz clocks that are offset by 90 degrees:
     //
-    //   'clk8n' rotates ownership of the bus in round robin fashion.
-    //   'clk8p' is the bus clock.
+    //   'setup_clk' rotates ownership of the bus in round robin fashion.
+    //   'strobe_clk' is the bus clock.
     //
-    // Note that 'clk8p' pulses are centered between enable transitions, creating ~31ns
+    // Note that 'strobe_clk' pulses are centered between enable transitions, creating ~31ns
     // of setup/hold time.
     //
     //               1 . 3 . 5 . 7 . 9 .11 .13 .15 .17 .19 .21 .23 .25 .27 .29 .31 . 1 .
     //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
     //     clk_16   _/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\
     //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
-    //     clk8n    ‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\
+    //  setup_clk   ‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\
     //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
     //     enable   ​̅​_​̅_​̅_​̅0​̅_​̅_​̅_X​_​̅_​̅_​̅1​̅_​̅_​̅_X_​̅_​̅_​̅2​̅_​̅_​̅_X_​̅_​̅_​̅3​̅_​̅_​̅_X_​̅_​̅_​̅4​̅_​̅_​̅_X_​̅_​̅_​̅5​̅_​̅_​̅_X_​̅_​̅_​̅6​̅_​̅_​̅_X_​̅_​̅_​̅7​̅_​̅_​̅_X_​̅_​̅_​̅0 
     //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
-    //     clk8p    _/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾
+    // strobe_clk   _/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾
     //
     // Note: edge # = count * 2 + 1
     //       { rise edge #, fall edge #, rise edge # + 32 }
 
-    always_ff @(posedge clk16_i) clk8_o  <= ~clk8_o;
-    always_ff @(negedge clk16_i) clk8n_o <= ~clk8_o;
+    always_ff @(posedge clk16_i) strobe_clk_o <= ~strobe_clk_o;
+    always_ff @(negedge clk16_i) setup_clk_o  <= ~strobe_clk_o;
 
-    // We initialize enable 8'b00000001 and rotate left on each positive edge of 'clk8n'.
+    // We initialize en[7:0] with 8'b00000001 and rotate left on each positive edge of 'setup_clk'.
     //
     //                16   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //     clk8n   ‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\
+    // setup_clk   ‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable0   ‾‾‾‾‾‾‾\_______________________________________________________/‾‾‾‾
+    //     en[0]   ‾‾‾‾‾‾‾\_______________________________________________________/‾‾‾‾
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable1   _______/‾‾‾‾‾‾‾\____________________________________________________
+    //     en[1]   _______/‾‾‾‾‾‾‾\____________________________________________________
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable2   _______________/‾‾‾‾‾‾‾\____________________________________________
+    //     en[2]   _______________/‾‾‾‾‾‾‾\____________________________________________
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable3   _______________________/‾‾‾‾‾‾‾\____________________________________
+    //     en[3]   _______________________/‾‾‾‾‾‾‾\____________________________________
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable4   _______________________________/‾‾‾‾‾‾‾\____________________________
+    //     en[4]   _______________________________/‾‾‾‾‾‾‾\____________________________
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable5   _______________________________________/‾‾‾‾‾‾‾\____________________
+    //     en[5]   _______________________________________/‾‾‾‾‾‾‾\____________________
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable6   _______________________________________________/‾‾‾‾‾‾‾\____________
+    //     en[6]   _______________________________________________/‾‾‾‾‾‾‾\____________
     //                 :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    enable7   _______________________________________________________/‾‾‾‾‾‾‾\____
+    //     en[7]   _______________________________________________________/‾‾‾‾‾‾‾\____
 
-    logic [7:0] enable_d, enable = 8'h01;
+    logic [7:0] en_d, en_q = 8'h01;
 
     always_comb begin
-        enable_d = { enable[6:0], enable[7] };
+        en_d = { en_q[6:0], en_q[7] };
     end
     
-    always_ff @(posedge clk8n_o) begin
-        spi_enable_o <= spi_valid_i  && enable_d[0];
-        spi_ready_o  <= spi_enable_o;
-        cpu_select_o <= cpu_valid_i  && (enable_d[6] || enable_d[7]);
-        cpu_enable_o <= cpu_select_o && enable_d[7];
-        enable       <= enable_d;
-    end
+    always_ff @(posedge setup_clk_o) begin
+        spi_en_o     <= spi_valid_i && en_d[0];
+        spi_ready_o  <= spi_en_o;
 
-    assign video_ram_enable_o  = enable[1];
-    assign video_rom_enable_o  = enable[2];
+        vram_en_o    <= en_d[1];
+        vrom_en_o    <= en_d[2];
+        
+        cpu_be_o     <= en_d[6] || en_d[7];
+        cpu_en_o     <= en_d[7];
+
+        en_q         <= en_d;
+    end
     
-    // Generate 'clk_cpu' for the 6502:
+    // Generate 'cpu_clk' for the 6502:
     //
     //               1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16   1
-    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //     clk8p   _/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾
-    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    // cpu_enable   _______________________________________________________/‾‾‾‾‾‾‾\____
-    //               :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :
-    //    clk_cpu   _________________________________________________________/‾‾‾\______
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    // strobe_clk   _/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾‾\___/‾‾
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    //     cpu_en   _______________________________________________________/‾‾‾‾‾‾‾\____
+    //               : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . : . 
+    //    cpu_clk   _________________________________________________________/‾‾‾\______
 
-    assign clk_cpu_o = clk8_o & cpu_enable_o;
+    assign cpu_clk_o = strobe_clk_o & cpu_en_o;
 endmodule
