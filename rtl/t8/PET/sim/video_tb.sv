@@ -33,6 +33,7 @@ module sim;
         .vrom_en_o(vrom_en)
     );
 
+    logic reset = '0;
     logic [13:0] addr;
     logic  [7:0] data = 8'h33;
     logic h_sync;
@@ -40,6 +41,8 @@ module sim;
     logic v;
 
     video video(
+        .reset_i(reset),
+        .clk16_i(clk16),
         .pixel_clk_i(setup_clk),
         .setup_clk_i(setup_clk),
         .strobe_clk_i(strobe_clk),
@@ -56,6 +59,12 @@ module sim;
     initial begin
         $dumpfile("work_sim/out.vcd");
         $dumpvars(0, sim);
+
+        @(negedge clk16);
+        reset = 1'b1;
+        @(posedge clk16);
+        @(posedge clk16);
+        reset = '0;
 
         @(posedge h_sync);
         $display("H-Sync");

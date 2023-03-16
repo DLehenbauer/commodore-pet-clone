@@ -12,152 +12,6 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-module sync_gen(
-    input logic       reset_i,
-    input logic       clk_i,
-    input logic       total_clk_en_i,
-    input logic       sync_clk_en_i,
-
-    input logic [7:0] total_i,
-    input logic [7:0] displayed_i,
-    input logic [7:0] sync_start_i,
-    input logic [4:0] sync_width_i,     // Note: V-Sync is hardcoded to 0x10, hence 5-bit counter.
-    input logic [4:0] adjust_i,         // Note: For V-Sync fine adjustment in scanlines
-
-    output logic      display_o = '0,
-    output logic      start_o,
-    output logic      sync_o    = '0,
-    output logic      reset_o
-);
-    logic [7:0] total_counter_d, total_counter_q = '0;
-    logic [4:0] sync_counter_d, sync_counter_q = '0;
-    logic [4:0] adjust_counter_d, adjust_counter_q = '0;
-    logic display_d;
-    logic sync_d;
-    logic start_d, end_d;
-
-    always_comb begin
-        adjust_counter_d = '0;
-
-        // Counter & start pulse
-        end_d = total_counter_q == total_i;
-        start_d = end_d && adjust_counter_q == adjust_i;
-
-        if (start_d) adjust_counter_d = adjust_counter_q;
-        else if (end_d) adjust_counter_d = adjust_counter_q + 1'b1;
-        else adjust_counter_d = '0;
-
-        if (start_d) total_counter_d = '0;
-        else if (end_d) total_counter_d = total_counter_q;
-        else total_counter_d = total_counter_q + 1'b1;
-
-        // Display enable
-        if (total_counter_d == displayed_i) display_d = '0;
-        else if (start_d) display_d = 1'b1;
-        else display_d = display_o;
-
-        // Sync pulse
-        if (sync_counter_q == sync_width_i) sync_d = 1'b0;
-        else if (total_counter_d == sync_start_i) sync_d = 1'b1;
-        else sync_d = sync_o;
-
-        // Sync width counter
-        if (sync_d) sync_counter_d = sync_counter_q + 1'b1;
-        else sync_counter_d = '0;
-    end
-
-    always_ff @(posedge clk_i or posedge reset_i) begin
-        if (reset_i) begin
-            total_counter_q      <= '0;
-            display_o            <= '0;
-            sync_counter_q       <= '0;
-            sync_o               <= '0;
-            adjust_counter_q     <= '0;
-        end else begin
-            if (sync_clk_en_i) begin
-                sync_counter_q   <= sync_counter_d;
-                sync_o           <= sync_d;
-                adjust_counter_q <= adjust_counter_d;
-            end
-            if (total_clk_en_i) begin
-                total_counter_q  <= total_counter_d;
-                display_o        <= display_d;
-            end
-        end
-    end
-
-    assign reset_o = start_d;
-    assign start_o = start_d && total_clk_en_i;
-endmodule
-
-module ra_gen(
-    input  logic       reset_i,
-    input  logic       clk_i,
-    input  logic       line_clk_en_i,
-    input  logic [4:0] row_height_i,
-    output logic [4:0] ra_o         = '0,
-    output logic       row_start_o
-);
-    logic row_start_d;
-    logic [4:0] ra_d;
-
-    always_comb begin
-        row_start_d = ra_o == row_height_i || reset_i;
-        ra_d = row_start_d
-            ? '0
-            : ra_o + 1'b1;
-    end
-
-    always_ff @(posedge clk_i) begin
-        if (reset_i) begin
-            ra_o <= '0;
-        end else if (line_clk_en_i) begin
-            ra_o <= ra_d;
-        end
-    end
-
-    assign row_start_o = row_start_d && line_clk_en_i;
-endmodule
-
-module ma_gen(
-    input  logic        reset_i,
-    input  logic        clk_i,
-    input  logic        clk_en_i,
-    input  logic        de_i,
-    input  logic        line_start_i,
-    input  logic        row_start_i,
-    input  logic        frame_start_i,
-    input  logic [13:0] start_addr_i,
-    output logic [13:0] ma_o = '0
-);
-    logic [13:0] row_addr_d, row_addr_q = '0;
-    logic [13:0] ma_d;
-
-    always_comb begin
-        if (frame_start_i) begin
-            row_addr_d = start_addr_i;
-            ma_d = start_addr_i;
-        end else if (row_start_i) begin
-            row_addr_d = ma_o;
-            ma_d = ma_o;
-        end else begin
-            row_addr_d = row_addr_q;
-            ma_d = line_start_i
-                ? row_addr_q
-                : de_i
-                    ? ma_o + 1'b1
-                    : ma_o;
-        end
-    end
-
-    always_ff @(posedge clk_i) begin
-        if (clk_en_i) begin
-            row_addr_q <= row_addr_d;
-            ma_o <= ma_d;
-        end
-    end
-endmodule
-
 module crtc(
     input  logic        reset_i,
     input  logic        strobe_clk_i,           // Triggers data transfers on bus
@@ -197,7 +51,7 @@ module crtc(
                                             //       ensure flicker-free appearance. If the frame time is adjusted to be longer than the
                                             //       period of the line frequency, then /RES may be used to provide absolute synchronism.
 
-               R5_V_LINE_ADJUST     = 5,    // [4:0] Number of additional scan lines needed to complete an entire frame scan and is intended
+               R5_V_ADJUST          = 5,    // [4:0] Number of additional scan lines needed to complete an entire frame scan and is intended
                                             //       as a fine adjustment for the video frame time.
 
                R6_V_DISPLAYED       = 6,    // [6:0] Number of displayed character rows in each frame. In this way, the vertical size of the
@@ -206,13 +60,13 @@ module crtc(
                R7_V_SYNC_POS        = 7,    // [6:0] Selects the character row time at which the VSYNC pulse is desired to occur and, thus,
                                             //       is used to position the displayed text in the vertical direction.
 
-               R9_SCAN_LINE         = 9,    // [4:0] Number of scan lines per character row, including spacing.
+               R9_MAX_SCAN_LINE     = 9,    // [4:0] Number of scan lines per character row, including spacing.
 
-               R12_DISPLAY_START_HI = 12,   // [5:0] High 6 bits of 14 bit display address (starting address of screen_addr_o[13:8]).
-               R13_DISPLAY_START_LO = 13;   // [7:0] Low 8 bits of 14 bit display address (starting address of screen_addr_o[7:0]).
+               R12_START_ADDR_HI    = 12,   // [5:0] High 6 bits of 14 bit display address (starting address of screen_addr_o[13:8]).
+               R13_START_ADDR_LO    = 13;   // [7:0] Low 8 bits of 14 bit display address (starting address of screen_addr_o[7:0]).
 
-    logic [4:0] ar = '0;                        // Internal address register used to select R0..17
-    logic [7:0] r[31:0];                        // Internal storage for R0..17 padded to next power of 2
+    logic [4:0] ar = '0;                    // Address register used to select R0..17
+    logic [7:0] r[31:0];                    // Storage for R0..17 (extended to next power of 2)
 
     // CRTC drives data when the current data transfer is reading from the CRTC
     //
@@ -233,12 +87,12 @@ module crtc(
         r[R2_H_SYNC_POS]        = 8'd48;
         r[R3_SYNC_WIDTH]        = 8'h01;
         r[R4_V_TOTAL]           = 7'd32;
-        r[R5_V_LINE_ADJUST]     = 5'd05;
+        r[R5_V_ADJUST]          = 5'd05;
         r[R6_V_DISPLAYED]       = 7'd25;
         r[R7_V_SYNC_POS]        = 7'd28;
-        r[R9_SCAN_LINE]         = 5'd07;
-        r[R12_DISPLAY_START_HI] = 8'h10;
-        r[R13_DISPLAY_START_LO] = 8'h00;
+        r[R9_MAX_SCAN_LINE]     = 5'd07;
+        r[R12_START_ADDR_HI]    = 8'h10;
+        r[R13_START_ADDR_LO]    = 8'h00;
     end
 
     always_ff @(negedge strobe_clk_i) begin
@@ -248,66 +102,153 @@ module crtc(
         end
     end
 
-    logic line_start;
-    logic h_de;
+    wire  [7:0] h_total         = r[R0_H_TOTAL];
+    wire  [7:0] h_displayed     = r[R1_H_DISPLAYED];
+    wire  [7:0] h_sync_pos      = r[R2_H_SYNC_POS];
+    wire  [3:0] h_sync_width    = r[R3_SYNC_WIDTH][3:0];
+    wire  [4:0] v_sync_width    = r[R3_SYNC_WIDTH][7:4] == 0 ? 5'h10 : r[R3_SYNC_WIDTH][7:4];
+    wire  [6:0] v_total         = r[R4_V_TOTAL][6:0];
+    wire  [4:0] v_adjust        = r[R5_V_ADJUST][4:0];
+    wire  [6:0] v_displayed     = r[R6_V_DISPLAYED][6:0];
+    wire  [6:0] v_sync_pos      = r[R7_V_SYNC_POS][6:0];
+    wire  [4:0] max_scan_line   = r[R9_MAX_SCAN_LINE][4:0];
+    wire [13:0] start_addr      = { r[R12_START_ADDR_HI][5:0], r[R13_START_ADDR_LO] };
 
-    sync_gen h_sync(
-        .reset_i(reset_i),
-        .clk_i(setup_clk_i),
-        .total_clk_en_i(cclk_en_i),             // H. total counter increments on each CCLK
-        .sync_clk_en_i(cclk_en_i),              // H. sync counter increments on each CCLK
-        .total_i(r[R0_H_TOTAL]),
-        .displayed_i(r[R1_H_DISPLAYED]),
-        .sync_start_i(r[R2_H_SYNC_POS]),
-        .sync_width_i({ 1'b0, r[R3_SYNC_WIDTH][3:0] }),
-        .adjust_i(5'h0),                        // H. adjustment is always 0
-        .sync_o(h_sync_o),
-        .display_o(h_de),
-        .start_o(line_start)
-    );
+    // Horizontal
 
-    logic row_start;
+    logic [7:0] h_total_counter = '0;
+    logic [3:0] h_sync_counter  = '0;
+    logic       h_de            = '1;
 
-    ra_gen ra_gen(
-        .reset_i(frame_reset),
-        .clk_i(setup_clk_i),
-        .line_clk_en_i(line_start),             // Line counter increments at start of scan line
-        .row_height_i(r[R9_SCAN_LINE][4:0]),
-        .ra_o(ra_o),
-        .row_start_o(row_start)
-    );
+    wire       line_start  = h_total_counter == h_total;
 
-    logic frame_start;
-    logic frame_reset;
-    logic v_de;
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) h_total_counter <= '0;
+        else if (cclk_en_i) begin
+            if (line_start) h_total_counter <= '0;
+            else h_total_counter <= h_total_counter + 1'b1;
+        end
+    end
 
-    sync_gen v_sync(
-        .reset_i(reset_i),
-        .clk_i(setup_clk_i),
-        .total_clk_en_i(row_start),             // V. total counter increments at start of character row
-        .sync_clk_en_i(line_start),             // V. sync counter increments at start of scan line
-        .total_i(r[R4_V_TOTAL]),
-        .displayed_i(r[R6_V_DISPLAYED]),
-        .sync_start_i(r[R7_V_SYNC_POS]),
-        .sync_width_i(5'h10),                   // V. sync is fixed at 16 scanlines (TODO: Support adjustable vsync?)
-        .adjust_i(r[R5_V_LINE_ADJUST][4:0]),    // V. adjustment in scanlines
-        .sync_o(v_sync_o),
-        .display_o(v_de),
-        .start_o(frame_start),
-        .reset_o(frame_reset)
-    );
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) h_de = 1'b1;
+        else if (h_total_counter == h_displayed) h_de <= '0;
+        else if (h_total_counter == '0) h_de <= 1'b1;
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) h_sync_o <= '0;
+        else if (h_sync_counter == h_sync_width) h_sync_o <= 1'b0;
+        else if (h_total_counter == h_sync_pos) h_sync_o <= 1'b1;
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) h_sync_counter <= '0;
+        else if (cclk_en_i) begin            
+            if (h_sync_o) h_sync_counter <= h_sync_counter + 1'b1;
+            else h_sync_counter <= '0;
+        end
+    end
+
+    // Raster
+
+    logic [4:0] line_counter = '0;
+    wire row_start = line_start && line_counter == max_scan_line;
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) line_counter <= '0;
+        else if (cclk_en_i) begin
+            if (frame_start) line_counter <= '0;
+            else if (row_start) line_counter <= '0;
+            else if (line_start) line_counter <= line_counter + 1'b1;
+        end
+    end
+
+    assign ra_o = line_counter;
+
+    // Vertical
+
+    logic [6:0] v_total_counter = '0;
+    logic [5:0] v_sync_counter  = '0;
+    logic       v_de            = '1;
+
+    wire       frame_start  = row_start && v_total_counter == v_total;
+    wire [6:0] v_total_next = v_total_counter + 1'b1;
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) v_total_counter <= '0;
+        else if (cclk_en_i) begin
+            if (frame_start) v_total_counter <= '0;
+            else if (row_start) v_total_counter <= v_total_next;
+        end
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) v_de = 1'b1;
+        else if (cclk_en_i) begin
+            if (v_total_counter == v_displayed) v_de <= '0;
+            else if (frame_start) v_de <= 1'b1;
+        end
+    end
+
+    logic v_sync_latched = '0;
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) begin
+            v_sync_o <= '0;
+            v_sync_latched <= '0;
+        end else begin
+            if (frame_start) v_sync_latched <= '0;
+            if (v_sync_counter == v_sync_width) v_sync_o <= 1'b0;
+            else if (v_total_counter == v_sync_pos && !v_sync_latched) begin
+                v_sync_latched <= 1'b1;
+                v_sync_o <= 1'b1;
+            end
+        end
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) v_sync_counter <= '0;
+        else if (cclk_en_i) begin
+            if (line_start) begin
+                if (v_sync_o) v_sync_counter <= v_sync_counter + 1'b1;
+                else v_sync_counter <= '0;
+            end
+        end
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) v_sync_counter <= '0;
+        else if (cclk_en_i) begin
+            if (line_start) begin
+                if (v_sync_o) v_sync_counter <= v_sync_counter + 1'b1;
+                else v_sync_counter <= '0;
+            end
+        end
+    end
 
     assign de_o = h_de && v_de;
 
-    ma_gen ma_gen(
-        .reset_i(reset_i),
-        .clk_i(setup_clk_i),
-        .clk_en_i(cclk_en_i),
-        .de_i(de_o),
-        .line_start_i(line_start),
-        .row_start_i(row_start),
-        .frame_start_i(frame_start),
-        .start_addr_i({ r[R12_DISPLAY_START_HI][5:0], r[R13_DISPLAY_START_LO] }),
-        .ma_o(ma_o)
-    );
+    // Refresh
+
+    logic [13:0] row_addr = '0;
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) row_addr <= '0;
+        else if (cclk_en_i) begin
+            if (frame_start) row_addr <= start_addr;
+            else if (row_start) row_addr <= ma_o;
+        end
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) ma_o <= '0;
+        else if (cclk_en_i) begin
+            if (frame_start) ma_o <= start_addr;
+            else if (!row_start) begin
+                if (line_start) ma_o <= row_addr;
+                else if (de_o) ma_o <= ma_o + 1'b1;
+            end
+        end
+    end
 endmodule

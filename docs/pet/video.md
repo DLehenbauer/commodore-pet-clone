@@ -35,9 +35,10 @@ Signal | Frequency | Duty       | Source
 HSync  | 20 KHz    | 70-70.126% | Video connector
 VSync  | 60.062 Hz | 95.195%    | Video connector
 
-## CRTC Bugs:
+## CRTC Bugs
 
 Noted problems in my current CRTC implementation:
+
 * Bug in vertical timing: (61 Hz instead of 60 Hz)
 * V. Sync width currently fixed at 16 scanlines (per original Motorola chips)
 
