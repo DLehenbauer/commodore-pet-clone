@@ -28,50 +28,50 @@ module sim;
 
         crtc.reset();
 
-        // crtc.setup('{
-        //     8'd5,       // H Total:      Width of scanline in characters (-1)
-        //     8'd3,       // H Displayed:  Number of characters displayed per scanline
-        //     8'd4,       // H Sync Pos:   Start of horizontal sync pulse in characters
-        //     8'h11,      // Sync Width:   H. Sync = 1 char, V. Sync = 1 scanline
-        //     8'd4,       // V Total:      Height of frame in characters (-1)
-        //     8'd0,       // V Adjust:     Adjustment of frame height in scanlines
-        //     8'd2,       // V Displayed:  Number of characters displayed per frame
-        //     8'd3,       // V Sync Pos:   Position of vertical sync pulse in characters
-        //     8'h00,      // Mode Control: (Unused)
-        //     8'h02,      // Char Height:  Height of one character in scanlines (-1)
-        //     8'h00,      // Cursor Start: (Unused)
-        //     8'h00,      // Cursor End:   (Unused)
-        //     8'h00,      // Display H:    Display start address ([3:0] high bits)
-        //     8'h00       // Display L:    Display start address (low bits)
-        // });
-
         crtc.setup('{
-            8'd49,      // H Total:      Width of scanline in characters (-1)
-            8'd40,      // H Displayed:  Number of characters displayed per scanline
-            8'd41,      // H Sync Pos:   Start of horizontal sync pulse in characters
-            8'h0f,      // Sync Width:   H. Sync = 15 char, V. Sync = 16 scanline
-            8'd40,      // V Total:      Height of frame in characters (-1)
-            8'd05,      // V Adjust:     Adjustment of frame height in scanlines
-            8'd25,      // V Displayed:  Number of characters displayed per frame
-            8'd33,      // V Sync Pos:   Position of vertical sync pulse in characters
-            8'd00,      // Mode Control: (Unused)
-            8'd07,      // Char Height:  Height of one character in scanlines (-1)
+            8'd5,       // H Total:      Width of scanline in characters (-1)
+            8'd3,       // H Displayed:  Number of characters displayed per scanline
+            8'd4,       // H Sync Pos:   Start of horizontal sync pulse in characters
+            8'h11,      // Sync Width:   H. Sync = 1 char, V. Sync = 1 scanline
+            8'd4,       // V Total:      Height of frame in characters (-1)
+            8'd0,       // V Adjust:     Adjustment of frame height in scanlines
+            8'd2,       // V Displayed:  Number of characters displayed per frame
+            8'd3,       // V Sync Pos:   Position of vertical sync pulse in characters
+            8'h00,      // Mode Control: (Unused)
+            8'h02,      // Char Height:  Height of one character in scanlines (-1)
             8'h00,      // Cursor Start: (Unused)
             8'h00,      // Cursor End:   (Unused)
             8'h00,      // Display H:    Display start address ([3:0] high bits)
             8'h00       // Display L:    Display start address (low bits)
         });
 
+        // crtc.setup('{
+        //     8'd49,      // H Total:      Width of scanline in characters (-1)
+        //     8'd40,      // H Displayed:  Number of characters displayed per scanline
+        //     8'd41,      // H Sync Pos:   Start of horizontal sync pulse in characters
+        //     8'h0f,      // Sync Width:   H. Sync = 15 char, V. Sync = 16 scanline
+        //     8'd40,      // V Total:      Height of frame in characters (-1)
+        //     8'd05,      // V Adjust:     Adjustment of frame height in scanlines
+        //     8'd25,      // V Displayed:  Number of characters displayed per frame
+        //     8'd33,      // V Sync Pos:   Position of vertical sync pulse in characters
+        //     8'd00,      // Mode Control: (Unused)
+        //     8'd07,      // Char Height:  Height of one character in scanlines (-1)
+        //     8'h00,      // Cursor Start: (Unused)
+        //     8'h00,      // Cursor End:   (Unused)
+        //     8'h00,      // Display H:    Display start address ([3:0] high bits)
+        //     8'h00       // Display L:    Display start address (low bits)
+        // });
+
         crtc.reset();
 
         @(posedge h_sync);
-        $display("[%t] HSYNC");
+        $display("[%t] HSYNC", $time);
 
         @(posedge v_sync);
-        $display("[%t] VSYNC");
+        $display("[%t] VSYNC", $time);
 
         @(posedge v_sync);
-        $display("[%t] VSYNC");
+        $display("[%t] VSYNC", $time);
 
         $display("[%t] End CRTC", $time);
     endtask

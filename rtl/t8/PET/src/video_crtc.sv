@@ -78,7 +78,7 @@ module crtc(
 
     assign data_oe = rw_ni && cs_i;
     assign data_o  = rs_i == '0
-        ? { 2'b00, v_sync_o, 5'b0 }             // RS = 0: Read status register
+        ? { 2'b0, v_sync, 5'b0 }                // RS = 0: Read status register
         : r[ar];                                // RS = 1: Read addressed register R0..17 (TODO: Allow this?  Infers dual-port RAM?)
 
     initial begin
@@ -118,7 +118,8 @@ module crtc(
 
     logic [7:0] h_total_counter = '0;
     logic [3:0] h_sync_counter  = '0;
-    logic       h_de            = '1;
+    logic       h_enable        = '1;
+    logic       h_sync          = '0;
 
     wire       line_start  = h_total_counter == h_total;
 
@@ -131,21 +132,21 @@ module crtc(
     end
 
     always_ff @(posedge setup_clk_i) begin
-        if (reset_i) h_de = 1'b1;
-        else if (h_total_counter == h_displayed) h_de <= '0;
-        else if (h_total_counter == '0) h_de <= 1'b1;
+        if (reset_i) h_enable = 1'b1;
+        else if (h_total_counter == h_displayed) h_enable <= '0;
+        else if (h_total_counter == '0) h_enable <= 1'b1;
     end
 
     always_ff @(posedge setup_clk_i) begin
-        if (reset_i) h_sync_o <= '0;
-        else if (h_sync_counter == h_sync_width) h_sync_o <= 1'b0;
-        else if (h_total_counter == h_sync_pos) h_sync_o <= 1'b1;
+        if (reset_i) h_sync <= '0;
+        else if (h_sync_counter == h_sync_width) h_sync <= 1'b0;
+        else if (h_total_counter == h_sync_pos) h_sync <= 1'b1;
     end
 
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) h_sync_counter <= '0;
         else if (cclk_en_i) begin            
-            if (h_sync_o) h_sync_counter <= h_sync_counter + 1'b1;
+            if (h_sync) h_sync_counter <= h_sync_counter + 1'b1;
             else h_sync_counter <= '0;
         end
     end
@@ -164,13 +165,12 @@ module crtc(
         end
     end
 
-    assign ra_o = line_counter;
-
     // Vertical
 
     logic [6:0] v_total_counter = '0;
     logic [5:0] v_sync_counter  = '0;
-    logic       v_de            = '1;
+    logic       v_enable        = 1'b1;
+    logic       v_sync          = '0;
 
     wire       frame_start  = row_start && v_total_counter == v_total;
     wire [6:0] v_total_next = v_total_counter + 1'b1;
@@ -184,10 +184,10 @@ module crtc(
     end
 
     always_ff @(posedge setup_clk_i) begin
-        if (reset_i) v_de = 1'b1;
+        if (reset_i) v_enable = 1'b1;
         else if (cclk_en_i) begin
-            if (v_total_counter == v_displayed) v_de <= '0;
-            else if (frame_start) v_de <= 1'b1;
+            if (v_total_counter == v_displayed) v_enable <= '0;
+            else if (frame_start) v_enable <= 1'b1;
         end
     end
 
@@ -195,14 +195,14 @@ module crtc(
 
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) begin
-            v_sync_o <= '0;
+            v_sync <= '0;
             v_sync_latched <= '0;
         end else begin
             if (frame_start) v_sync_latched <= '0;
-            if (v_sync_counter == v_sync_width) v_sync_o <= 1'b0;
+            if (v_sync_counter == v_sync_width) v_sync <= 1'b0;
             else if (v_total_counter == v_sync_pos && !v_sync_latched) begin
                 v_sync_latched <= 1'b1;
-                v_sync_o <= 1'b1;
+                v_sync <= 1'b1;
             end
         end
     end
@@ -211,7 +211,7 @@ module crtc(
         if (reset_i) v_sync_counter <= '0;
         else if (cclk_en_i) begin
             if (line_start) begin
-                if (v_sync_o) v_sync_counter <= v_sync_counter + 1'b1;
+                if (v_sync) v_sync_counter <= v_sync_counter + 1'b1;
                 else v_sync_counter <= '0;
             end
         end
@@ -221,13 +221,11 @@ module crtc(
         if (reset_i) v_sync_counter <= '0;
         else if (cclk_en_i) begin
             if (line_start) begin
-                if (v_sync_o) v_sync_counter <= v_sync_counter + 1'b1;
+                if (v_sync) v_sync_counter <= v_sync_counter + 1'b1;
                 else v_sync_counter <= '0;
             end
         end
     end
-
-    assign de_o = h_de && v_de;
 
     // Refresh
 
@@ -251,4 +249,9 @@ module crtc(
             end
         end
     end
+
+    assign h_sync_o = h_sync;
+    assign v_sync_o = v_sync; 
+    assign de_o = h_enable && v_enable;
+    assign ra_o = line_counter;
 endmodule

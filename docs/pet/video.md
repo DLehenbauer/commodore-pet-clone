@@ -63,6 +63,8 @@ Noted problems in my current CRTC implementation:
   * [Register Values](https://github.com/sjgray/cbm-edit-rom/blob/master/docs/CRTC%20Registers.txt)
   * [Reverse Engineering](https://stardot.org.uk/forums/viewtopic.php?t=22008)
   * Datasheet
+    * [Motorolla MC6845](https://archive.org/details/bitsavers_motorolada_1431515/page/n9/mode/2up)
+    * [Motorolla AN-851](https://archive.org/details/bitsavers_motorolaapaMC6845CRTCSimplifiesVideoDisplayControl_9722748/mode/2up)
     * [Rockwell R6545](http://archive.6502.org/datasheets/rockwell_r6545-1_crtc.pdf)
-    * [Motorolla MC6845](http://m.www.datasheets.pl/elementy_czynne/IC/MC6845.pdf)
     * [C6845 CRT Controller IP](https://colorcomputerarchive.com/repo/Documents/Datasheets/SY6845E-C6845%20CRT%20Controller%20(CAST).pdf)
+    * [DB6845 CRTC IP](https://www.digitalblocks.com/files/DB6845-DS-V1_1.pdf)
