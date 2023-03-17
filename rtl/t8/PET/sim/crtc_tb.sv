@@ -34,7 +34,7 @@ module sim;
             8'd4,       // H Sync Pos:   Start of horizontal sync pulse in characters
             8'h11,      // Sync Width:   H. Sync = 1 char, V. Sync = 1 scanline
             8'd4,       // V Total:      Height of frame in characters (-1)
-            8'd0,       // V Adjust:     Adjustment of frame height in scanlines
+            8'd2,       // V Adjust:     Adjustment of frame height in scanlines
             8'd2,       // V Displayed:  Number of characters displayed per frame
             8'd3,       // V Sync Pos:   Position of vertical sync pulse in characters
             8'h00,      // Mode Control: (Unused)
@@ -66,6 +66,9 @@ module sim;
 
         @(posedge h_sync);
         $display("[%t] HSYNC", $time);
+
+        @(posedge v_sync);
+        $display("[%t] VSYNC", $time);
 
         @(posedge v_sync);
         $display("[%t] VSYNC", $time);
