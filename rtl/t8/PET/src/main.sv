@@ -207,6 +207,7 @@ module main(
         .addr_o(video_addr),
         .addr_oe(video_addr_oe),
         .data_i(bus_data_i),
+        .gfx_i(gfx_i),
         .h_sync_o(h_sync_o),
         .v_sync_o(v_sync_o),
         .video_o(video_o)

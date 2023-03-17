@@ -23,7 +23,7 @@ module sim;
         .v_sync_o(v_sync)
     );
 
-    task run();
+    task run;
         $display("[%t] Begin CRTC", $time);
 
         crtc.reset();
