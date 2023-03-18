@@ -21,16 +21,16 @@ module sim;
     logic strobe_clk;
     logic setup_clk;
     logic cpu_en;
-    logic vram_en;
-    logic vrom_en;
+    logic vram0_en;
+    logic vrom0_en;
 
     timing timing(
         .clk16_i(clk16),
         .strobe_clk_o(strobe_clk),
         .setup_clk_o(setup_clk),
         .cpu_en_o(cpu_en),
-        .vram_en_o(vram_en),
-        .vrom_en_o(vrom_en)
+        .vram0_en_o(vram0_en),
+        .vrom0_en_o(vrom0_en)
     );
 
     wire cclk_en = cpu_en;
@@ -54,14 +54,14 @@ module sim;
     logic v_sync;
     logic v;
 
-    logic [7:0] char_i      = 8'hc0;
-    logic [7:0] pixels_i    = 8'h33;
+    logic [7:0] char_i      = 8'h0c;
+    logic [7:0] pixels_i    = 8'ha5;
     logic [7:0] data_i;
 
     always_comb begin
         if (cs) data_i = crtc_data_i;
-        else if (vram_en) data_i = char_i;
-        else if (vrom_en) data_i = pixels_i;
+        else if (vram0_en) data_i = char_i;
+        else if (vrom0_en) data_i = pixels_i;
         else data_i = 8'hxx;
     end
 
@@ -72,8 +72,8 @@ module sim;
         .setup_clk_i(setup_clk),
         .strobe_clk_i(strobe_clk),
         .cclk_en_i(cpu_en),
-        .vram_en_i(vram_en),
-        .vrom_en_i(vrom_en),
+        .vram0_en_i(vram0_en),
+        .vrom0_en_i(vrom0_en),
         .crtc_en_i(cs),
         .rw_ni(rw_n),
         .addr_i(rs),

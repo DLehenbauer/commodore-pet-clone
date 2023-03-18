@@ -20,8 +20,10 @@ module video(
     input  logic        strobe_clk_i,
     input  logic        cpu_en_i,
     input  logic        cclk_en_i,
-    input  logic        vram_en_i,
-    input  logic        vrom_en_i,
+    input  logic        vram0_en_i,
+    input  logic        vrom0_en_i,
+    input  logic        vram1_en_i,
+    input  logic        vrom1_en_i,
     input  logic        crtc_en_i,
     
     input  logic        rw_ni,
@@ -59,45 +61,52 @@ module video(
         .ra_o(ra)
     );
 
-    assign addr_o = vrom_en_i
-        ? { 2'b1, gfx_i, next_char[6:0], ra[2:0] }
-        : { 4'b0000, ma[9:0] };
-
-    assign addr_oe = vram_en_i || vrom_en_i;
-
-    logic [7:0] next_char;
-
-    always_ff @(negedge strobe_clk_i) begin
-        if (vram_en_i) next_char <= data_i;
+    always_comb begin
+        if (vram0_en_i) addr_o = { 3'b000, ma[9:0], 1'b0 };
+        else if (vrom0_en_i) addr_o = { 2'b1, gfx_i, even_char[6:0], ra[2:0] };
+        else if (vram1_en_i) addr_o = { 3'b000, ma[9:0], 1'b1 };
+        else if (vrom1_en_i) addr_o = { 2'b1, gfx_i, odd_char[6:0], ra[2:0] };
     end
 
-    logic [7:0] next_pixels;
+    assign addr_oe = vram0_en_i || vrom0_en_i || vram1_en_i || vrom1_en_i;
+
+    logic [7:0] even_char, odd_char;
 
     always_ff @(negedge strobe_clk_i) begin
-        if (vrom_en_i) next_pixels <= data_i;
+        if (vram0_en_i) even_char <= data_i;
+        if (vram1_en_i) odd_char <= data_i;
     end
 
-    logic de_q;
+    logic [15:0] next_pixels;
 
-    // Synchronize video and h/v sync
-    always_ff @(posedge pixel_clk_i) begin
-        if (cclk_en_i) de_q <= de;
+    always_ff @(negedge strobe_clk_i) begin
+        if (vrom0_en_i) next_pixels[15:8] <= data_i;
+        else if (vrom1_en_i) next_pixels[7:0] <= data_i;
     end
 
     // Scanlines exceeding the 8 pixel high character ROM should be blanked.
     // (See 'NO_ROW' signal on sheets 8 and 10 of Universal Dynamic PET.)
     wire no_row = ra[3] || ra[4];
 
+    logic video_strobe = 1'b0;
+
+    always_ff @(posedge clk16_i) begin
+        if (cclk_en_i && setup_clk_i) begin
+            video_strobe <= 1'b1;
+        end else begin
+            video_strobe <= 1'b0;
+        end
+    end
+
     dotgen dotgen(
         .pixel_clk_i(clk16_i),
-        .video_latch(cclk_en_i),
+        .video_latch(video_strobe),
         .pixels_i(next_pixels),
-        .display_en_i(de_q && !no_row),
-        .reverse_i(next_char[7]),
+        .display_en_i(de && !no_row),
+        .reverse_i({ even_char[7], odd_char[7] }),
         .video_o(video_o)
     );
 
-    // PETs with a CRTC invert horiz/vert sync
     assign h_sync_o = !hs;
     assign v_sync_o = !vs;
 endmodule

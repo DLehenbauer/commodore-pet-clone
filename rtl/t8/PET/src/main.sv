@@ -98,8 +98,10 @@ module main(
     logic setup_clk;
     logic cpu_en;
     logic spi_en;
-    logic vram_en;
-    logic vrom_en;
+    logic vram0_en;
+    logic vrom0_en;
+    logic vram1_en;
+    logic vrom1_en;
 
     timing timing(
         .clk16_i(clk16_i),
@@ -114,8 +116,10 @@ module main(
         .cpu_en_o(cpu_en),
         .cpu_clk_o(cpu_clk_o),
 
-        .vram_en_o(vram_en),
-        .vrom_en_o(vrom_en)
+        .vram0_en_o(vram0_en),
+        .vrom0_en_o(vrom0_en),
+        .vram1_en_o(vram1_en),
+        .vrom1_en_o(vrom1_en)
     );
     
     wire cpu_rd_en = cpu_en &&  bus_rw_ni;          // Enable for CPU write
@@ -199,8 +203,10 @@ module main(
         .strobe_clk_i(strobe_clk),
         .cpu_en_i(cpu_en),
         .cclk_en_i(cpu_en),
-        .vram_en_i(vram_en),
-        .vrom_en_i(vrom_en),
+        .vram0_en_i(vram0_en),
+        .vrom0_en_i(vrom0_en),
+        .vram1_en_i(vram1_en),
+        .vrom1_en_i(vrom1_en),
         .crtc_en_i(crtc_en),
         .rw_ni(bus_rw_ni),
         .addr_i(bus_addr_i[0]),
@@ -214,15 +220,15 @@ module main(
     );
 
     assign ram_addr_o[11:10] = is_mirrored && cpu_en
-        ? 2'b00
+        ? { 1'b0, bus_addr_i[10:10] }
         : bus_addr_i[11:10];
 
     //
     // RAM
     //
 
-    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en || vram_en || vrom_en); // RAM output enable
-    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk;         // RAM write strobe
+    assign ram_oe_o = ram_en && (spi_rd_en || cpu_rd_en || vram0_en || vrom0_en || vram1_en || vrom1_en);   // RAM output enable
+    assign ram_we_o = ram_en && (spi_wr_en || cpu_wr_en) && strobe_clk;                                     // RAM write strobe
     
     //
     // Bus
