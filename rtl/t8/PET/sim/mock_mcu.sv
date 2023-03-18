@@ -25,7 +25,7 @@ module mock_mcu #(
         .spi_sck_o(spi1_sck_o),
         .spi_cs_no(spi1_cs_no),
         .spi_tx_o(spi1_tx_o),
-        .spi_rx_i(spi_rx_i)
+        .spi_rx_i(spi1_rx_i)
     );
 
     task reset;

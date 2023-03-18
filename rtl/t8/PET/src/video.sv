@@ -59,35 +59,29 @@ module video(
         .ra_o(ra)
     );
 
-    logic [7:0] next_char;
-
-    always_ff @(negedge strobe_clk_i) begin
-        if (vram_en_i) begin
-            next_char <= data_i;
-        end
-    end
-
     assign addr_o = vrom_en_i
         ? { 2'b1, gfx_i, next_char[6:0], ra[2:0] }
         : { 4'b0000, ma[9:0] };
 
     assign addr_oe = vram_en_i || vrom_en_i;
 
+    logic [7:0] next_char;
+
+    always_ff @(negedge strobe_clk_i) begin
+        if (vram_en_i) next_char <= data_i;
+    end
+
     logic [7:0] next_pixels;
 
     always_ff @(negedge strobe_clk_i) begin
-        if (vrom_en_i) begin
-            next_pixels <= data_i;
-        end
+        if (vrom_en_i) next_pixels <= data_i;
     end
 
     logic de_q;
 
     // Synchronize video and h/v sync
     always_ff @(posedge pixel_clk_i) begin
-        if (cclk_en_i) begin
-            de_q     <= de;
-        end
+        if (cclk_en_i) de_q <= de;
     end
 
     // Scanlines exceeding the 8 pixel high character ROM should be blanked.
@@ -95,11 +89,10 @@ module video(
     wire no_row = ra[3] || ra[4];
 
     dotgen dotgen(
-        .reset_i(cclk_en_i),
-        .pixel_clk_i(pixel_clk_i),
+        .pixel_clk_i(clk16_i),
+        .video_latch(cclk_en_i),
         .pixels_i(next_pixels),
-        .display_en_i(de_q),
-        .no_row(no_row),
+        .display_en_i(de_q && !no_row),
         .reverse_i(next_char[7]),
         .video_o(video_o)
     );

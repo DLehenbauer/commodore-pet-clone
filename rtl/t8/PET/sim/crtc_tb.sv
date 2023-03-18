@@ -15,20 +15,68 @@
 `timescale 1ns / 1ps
 
 module sim;
-    logic h_sync;
-    logic v_sync;
+    logic clk16 = '0;
+    initial forever #(1000 / (16 * 2)) clk16 = ~clk16;
 
-    crtc_driver crtc(
-        .h_sync_o(h_sync),
-        .v_sync_o(v_sync)
+    logic strobe_clk;
+    logic setup_clk;
+    logic cpu_en;
+
+    timing timing(
+        .clk16_i(clk16),
+        .strobe_clk_o(strobe_clk),
+        .setup_clk_o(setup_clk),
+        .cpu_en_o(cpu_en)
+    );
+    
+    wire cclk_en = cpu_en;
+
+    logic        res;
+    logic        cs;
+    logic        rw_n;
+    logic        rs;
+    logic [7:0]  crtc_data_i;
+    logic [7:0]  crtc_data_o;
+    logic        crtc_data_oe;
+    logic        de;
+    logic [13:0] ma;
+    logic [4:0]  ra;
+
+    crtc crtc(
+        .reset_i(res),
+        .strobe_clk_i(strobe_clk),      // Triggers data transfers on bus
+        .setup_clk_i(setup_clk),        // Triggers data transfers on bus
+        .cclk_en_i(cpu_en),             // Enables character clock (always 1 MHz)
+        .cs_i(cs),                      // CRTC selected for data transfer (driven by address decoding)
+        .rw_ni(rw_n),                   // Direction of date transfers (0 = writing to CRTC, 1 = reading from CRTC)
+        .rs_i(rs),                      // Register select (0 = write address/read status, 1 = read addressed register)
+        .data_i(crtc_data_i),           // Transfer data written from CPU to CRTC when CS asserted and /RW is low
+        .data_o(crtc_data_o),           // Transfer data read by CPU from CRTC when CS asserted and /RW is high
+        .data_oe(crtc_data_oe),         // Asserted when CPU is reading from CRTC
+        .h_sync_o(h_sync),              // Horizontal sync
+        .v_sync_o(v_sync),              // Vertical sync
+        .de_o(de),                      // Display enable
+        .ma_o(ma),                      // Refresh RAM address lines
+        .ra_o(ra)                       // Raster address lines
+    );
+
+    crtc_driver driver(
+        .setup_clk_i(setup_clk),
+        .strobe_clk_i(strobe_clk),
+        .cclk_i(setup_clk && cclk_en_i),
+        .res_o(res),
+        .cs_o(cs),
+        .rs_o(rs),
+        .rw_no(rw_n),
+        .data_o(crtc_data_i)
     );
 
     task run;
         $display("[%t] Begin CRTC", $time);
 
-        crtc.reset();
+        driver.reset();
 
-        crtc.setup('{
+        driver.setup('{
             8'd5,       // H Total:      Width of scanline in characters (-1)
             8'd3,       // H Displayed:  Number of characters displayed per scanline
             8'd4,       // H Sync Pos:   Start of horizontal sync pulse in characters
@@ -45,7 +93,7 @@ module sim;
             8'h00       // Display L:    Display start address (low bits)
         });
 
-        // crtc.setup('{
+        // driver.setup('{
         //     8'd49,      // H Total:      Width of scanline in characters (-1)
         //     8'd40,      // H Displayed:  Number of characters displayed per scanline
         //     8'd41,      // H Sync Pos:   Start of horizontal sync pulse in characters
@@ -62,7 +110,7 @@ module sim;
         //     8'h00       // Display L:    Display start address (low bits)
         // });
 
-        crtc.reset();
+        driver.reset();
 
         @(posedge h_sync);
         $display("[%t] HSYNC", $time);
