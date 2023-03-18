@@ -26,3 +26,5 @@
 #define SD_DAT_GP SPI_RX_PIN
 #define SD_CSN_GP 9
 #define SD_DETECT 8
+
+#define FPGA_CLK_GP 11
