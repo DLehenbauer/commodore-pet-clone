@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="PET" device_def="T8Q144" location="D:\gh\commodore-pet-clone\rtl\t8\PET" version="2022.2.322" db_version="20222999" last_change_date="Sun Feb 26 09:42:18 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="PET" device_def="T8Q144" location="D:\gh\commodore-pet-clone\rtl\t8\PET" version="2022.2.322" db_version="20222999" last_change_date="Sun Mar 19 13:33:15 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="1A" iostd="3.3 V LVTTL / LVCMOS"/>
@@ -185,6 +185,9 @@
         <efxpt:gpio name="diag" gpio_def="GPIOB_TXP04" mode="input" bus_name="" is_lvds_gpio="true" io_standard="3.3 V LVTTL / LVCMOS">
             <efxpt:input_config name="diag_i" name_ddio_lo="" conn_type="normal" is_register="false" clock_name="" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="none"/>
         </efxpt:gpio>
+        <efxpt:gpio name="frga_clk" gpio_def="GPIOL_74" mode="input" bus_name="" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:input_config name="frga_clk" name_ddio_lo="" conn_type="pll_clkin" is_register="false" clock_name="" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="none"/>
+        </efxpt:gpio>
         <efxpt:gpio name="gfx" gpio_def="GPIOB_TXP06" mode="input" bus_name="" is_lvds_gpio="true" io_standard="3.3 V LVTTL / LVCMOS">
             <efxpt:input_config name="gfx_i" name_ddio_lo="" conn_type="normal" is_register="false" clock_name="" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="none"/>
         </efxpt:gpio>
@@ -253,9 +256,9 @@
         <efxpt:bus name="ram_addr" mode="output" msb="11" lsb="10"/>
     </efxpt:gpio_info>
     <efxpt:pll_info>
-        <efxpt:pll name="pll_inst1" pll_def="PLL_TL0" ref_clock_name="" ref_clock_freq="50.0000" multiplier="32" pre_divider="1" post_divider="4" reset_name="" locked_name="" is_ipfrz="false" is_bypass_lock="true">
-            <efxpt:output_clock name="clk16_i" number="0" out_divider="25" adv_out_phase_shift="0"/>
-            <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="3" clksel_name="" feedback_clock_name="" feedback_mode="internal"/>
+        <efxpt:pll name="pll_inst1" pll_def="PLL_TL1" ref_clock_name="" ref_clock_freq="45.0000" multiplier="17" pre_divider="1" post_divider="8" reset_name="" locked_name="" is_ipfrz="false" is_bypass_lock="true">
+            <efxpt:output_clock name="clk16_i" number="0" out_divider="6" adv_out_phase_shift="90"/>
+            <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="2" clksel_name="" feedback_clock_name="" feedback_mode="internal"/>
         </efxpt:pll>
     </efxpt:pll_info>
     <efxpt:lvds_info/>
