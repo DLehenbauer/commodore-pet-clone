@@ -19,6 +19,7 @@
 #include "dvi/dvi.h"
 #include "global.h"
 #include "sd/sd.h"
+#include "fpga/fpga.h"
 
 #ifdef TEST
 #include "test.h"
@@ -31,12 +32,20 @@
 void init() {
     stdio_init_all();
 
-    printf("PET init\n");
+    printf("\e[1;1H\e[2J");
     fflush(stdout);
 
+    printf("PET init\n");
+    fpga_init();
+    //fpga_config();
+
     driver_init();
-    // init_sd();
+    init_sd();
     usb_init();
+
+    // Flush stdout before starting Core 1    
+    fflush(stdout);
+
     video_init();
 }
 

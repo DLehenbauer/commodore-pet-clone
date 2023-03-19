@@ -21,6 +21,7 @@
 #include "hardware/dma.h"
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
+#include "hardware/pwm.h"
 #include "hardware/spi.h"
 #include "hardware/structs/bus_ctrl.h"
 #include "hardware/structs/ssi.h"
