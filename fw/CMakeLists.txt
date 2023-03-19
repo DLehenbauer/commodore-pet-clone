@@ -13,6 +13,7 @@ if (TARGET tinyusb_device)
     add_executable(firmware
         driver.c
         dvi/dvi.c
+        fpga/fpga.c
         global.c
         main.c
         pet.c
@@ -20,8 +21,8 @@ if (TARGET tinyusb_device)
         test.c
         usb/cdc_app.c
         usb/hid_app.c
-        usb/msc_app.c
         usb/keyboard.c
+        usb/msc_app.c
         usb/usb.c
     )
 

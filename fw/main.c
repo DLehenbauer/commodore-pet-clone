@@ -19,6 +19,7 @@
 #include "dvi/dvi.h"
 #include "global.h"
 #include "sd/sd.h"
+#include "fpga/fpga.h"
 
 #ifdef TEST
 #include "test.h"
@@ -31,11 +32,18 @@
 void init() {
     stdio_init_all();
 
+    // Send a few ANSI clear screens on startup to resynchronize UART.
+    for (int i = 0; i < 16; i++) {
+        printf("\e[1;1H\e[2J");
+        fflush(stdout);
+    }
+
     printf("PET init\n");
     fflush(stdout);
 
+    init_fpga();
     driver_init();
-    // init_sd();
+    init_sd();
     usb_init();
     video_init();
 }
