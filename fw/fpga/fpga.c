@@ -19,23 +19,12 @@
 #include "ff.h"
 #include "diskio.h"
 
-static const uint8_t __in_flash() bitstream[] = {
+static const uint8_t __in_flash(".fpga_bitstream") bitstream[] = {
     #include "./bitstream.h"
 };
 
-void init_fpga() {
-    // TODO: Read CRESET_N to see if an attached programming is driving CRESET_N=1
-    //       to avoid potential contention.
-    
-    // Drive CRESET_N low to initiate FPGA configuration.
-    //
-    // TODO: Alternatively, leave CRESET_N as an input and let pulldown drive low.
+void fpga_init() {
     gpio_init(FPGA_CRESET_GP);
-    gpio_set_dir(FPGA_CRESET_GP, GPIO_OUT);
-
-    gpio_put(FPGA_CRESET_GP, 1);
-    sleep_ms(1);  // t_CRESET_N = 320 ns
-    gpio_put(FPGA_CRESET_GP, 0);
 
     // Setup 270 MHz system clock
 	vreg_set_voltage(VREG_VOLTAGE_1_20);
@@ -49,7 +38,27 @@ void init_fpga() {
     pwm_config_set_wrap(&config, 5);
     pwm_init(slice, &config, /* start: */ true);
     pwm_set_chan_level(slice, channel, 2);
+    gpio_set_drive_strength(FPGA_CLK_GP, GPIO_DRIVE_STRENGTH_2MA);
     gpio_set_function(FPGA_CLK_GP, GPIO_FUNC_PWM);
+}
+
+bool fpga_config() {
+    gpio_init(FPGA_CRESET_GP);
+
+    if (gpio_get(FPGA_CRESET_GP)) {
+        printf("FPGA: Programmer attached.  Skipping configuration.\n");
+        return false;
+    }
+
+    // Drive CRESET_N low to initiate FPGA configuration.
+    //
+    // TODO: Alternatively, leave CRESET_N as an input and let pulldown drive low.
+    gpio_init(FPGA_CRESET_GP);
+    gpio_set_dir(FPGA_CRESET_GP, GPIO_OUT);
+
+    gpio_put(FPGA_CRESET_GP, 1);
+    sleep_ms(1);  // t_CRESET_N = 320 ns
+    gpio_put(FPGA_CRESET_GP, 0);
 
     sleep_ms(1);  // t_CRESET_N = 320 ns
 
@@ -89,4 +98,6 @@ void init_fpga() {
 
     printf("FPGA: DONE\n");
     gpio_put(SPI0_CSN_GP, 1);
+
+    return true;
 }

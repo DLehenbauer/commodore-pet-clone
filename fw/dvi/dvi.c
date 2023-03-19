@@ -225,8 +225,6 @@ void video_init() {
 	sleep_ms(10);
  	set_sys_clock_khz(DVI_TIMING.bit_clk_khz, true);
 
-	setup_default_uart();
-
 	printf("Configuring DVI\n");
 
 	dvi0.timing = &DVI_TIMING;

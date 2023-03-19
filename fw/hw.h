@@ -18,7 +18,7 @@
 #define SPI_RX_PIN 12
 #define SPI_CSN_PIN 13
 #define SPI_READY_B_PIN 10
-#define SPI_MHZ 4
+#define SPI_MHZ 2
 
 #define SD_SPI_INSTANCE SPI_INSTANCE
 #define SD_CLK_GP SPI_SCK_PIN

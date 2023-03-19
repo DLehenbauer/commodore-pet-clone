@@ -32,19 +32,20 @@
 void init() {
     stdio_init_all();
 
-    // Send a few ANSI clear screens on startup to resynchronize UART.
-    for (int i = 0; i < 16; i++) {
-        printf("\e[1;1H\e[2J");
-        fflush(stdout);
-    }
-
-    printf("PET init\n");
+    printf("\e[1;1H\e[2J");
     fflush(stdout);
 
-    init_fpga();
+    printf("PET init\n");
+    fpga_init();
+    //fpga_config();
+
     driver_init();
     init_sd();
     usb_init();
+
+    // Flush stdout before starting Core 1    
+    fflush(stdout);
+
     video_init();
 }
 

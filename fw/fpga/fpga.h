@@ -16,4 +16,5 @@
 
 #include "pch.h"
 
-void init_fpga();
+void fpga_init();
+bool fpga_config();

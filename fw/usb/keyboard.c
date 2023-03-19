@@ -267,7 +267,7 @@ static bool find_key_in_report(hid_keyboard_report_t const* report, uint8_t keyc
     for (uint8_t i = 0; i < 6; i++) {
         if (report->keycode[i] == keycode) {
             return true;
-    }
+        }
     }
 
     return false;
