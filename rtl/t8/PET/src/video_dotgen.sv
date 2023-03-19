@@ -13,7 +13,8 @@
  */
 
 module dotgen(
-    input  logic        pixel_clk_i,
+    input  logic        clk_i,
+    input  logic        pixel_clk_en,
     input  logic        video_latch,
     input  logic [15:0] pixels_i,
     input  logic [1:0]  reverse_i,
@@ -39,11 +40,13 @@ module dotgen(
         end
     end
 
-    always_ff @(posedge pixel_clk_i) begin
-        pixel_ctr_q  <= pixel_ctr_d;
-        sr_out_q     <= sr_out_d;
-        reverse_q    <= reverse_d;
-        display_en_q <= display_en_d;
+    always_ff @(posedge clk_i) begin
+        if (pixel_clk_en) begin
+            pixel_ctr_q  <= pixel_ctr_d;
+            sr_out_q     <= sr_out_d;
+            reverse_q    <= reverse_d;
+            display_en_q <= display_en_d;
+        end
     end
 
     assign video_o = display_en_q & (sr_out_q[15] ^ reverse_q[~pixel_ctr_q[3]]);

@@ -61,8 +61,13 @@ module video(
         .ra_o(ra)
     );
 
+    logic col_80_mode = '1;
+
     always_comb begin
-        if (vram0_en_i) addr_o = { 3'b000, ma[9:0], 1'b0 };
+        if (vram0_en_i) begin
+            if (col_80_mode) addr_o = { 3'b000, ma[9:0], 1'b0 };
+            else addr_o = { 4'b0000, ma[9:0] };
+        end
         else if (vrom0_en_i) addr_o = { 2'b1, gfx_i, even_char[6:0], ra[2:0] };
         else if (vram1_en_i) addr_o = { 3'b000, ma[9:0], 1'b1 };
         else if (vrom1_en_i) addr_o = { 2'b1, gfx_i, odd_char[6:0], ra[2:0] };
@@ -99,7 +104,8 @@ module video(
     end
 
     dotgen dotgen(
-        .pixel_clk_i(clk16_i),
+        .clk_i(clk16_i),
+        .pixel_clk_en(col_80_mode ? 1'b1 : strobe_clk_i),
         .video_latch(video_strobe),
         .pixels_i(next_pixels),
         .display_en_i(de && !no_row),

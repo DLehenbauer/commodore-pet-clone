@@ -9,11 +9,14 @@
 * HW:
   * Rotate video connector 180 degrees to match Dynamic V2 boards
   * 10uF 50V -> 10uF 25V
-  * Combine FPGA prog and MCU debug on same header?
-  * Build separate "debug PCB" that integrates:
-    * Picoprobe
-    * FT2232
-    * Moves CDONE/NSTATUS to debug board
+  * Programming
+    * Combine FPGA prog and MCU debug header?
+    * SPI0 already accessible elsewhere on the board, no need to expose twice.
+      * Reduces FPGA pins to: TCK, TDO, TDI, TMS, ENA, SS, CRESET, GND, CDONE, NSTATUS
+    * Build separate "debug PCB" that integrates:
+      * Picoprobe
+      * FT2232
+      * Moves CDONE/NSTATUS to debug board?
   * Remove 50 MHz oscillator / use MCU instead to generate clk_sys
   * Consider LM317AG to generate +5v
     * Possibly, use second LM317AG to produce 1.5A for USB
