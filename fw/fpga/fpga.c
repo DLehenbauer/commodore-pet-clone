@@ -36,6 +36,21 @@ void init_fpga() {
     gpio_put(FPGA_CRESET_GP, 1);
     sleep_ms(1);  // t_CRESET_N = 320 ns
     gpio_put(FPGA_CRESET_GP, 0);
+
+    // Setup 270 MHz system clock
+	vreg_set_voltage(VREG_VOLTAGE_1_20);
+	sleep_ms(10);
+ 	set_sys_clock_khz(270000, true);
+
+    // FPGA CLK: 270 MHz / 6 = 45 MHz
+    const uint slice = pwm_gpio_to_slice_num(FPGA_CLK_GP);
+    const uint channel = pwm_gpio_to_channel(FPGA_CLK_GP);
+    pwm_config config = pwm_get_default_config();
+    pwm_config_set_wrap(&config, 5);
+    pwm_init(slice, &config, /* start: */ true);
+    pwm_set_chan_level(slice, channel, 2);
+    gpio_set_function(FPGA_CLK_GP, GPIO_FUNC_PWM);
+
     sleep_ms(1);  // t_CRESET_N = 320 ns
 
     // Configure CS_N as GPIO_OUT rather than GPIO_FUNC_SPI so we can control via software.

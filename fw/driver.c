@@ -42,15 +42,6 @@ void driver_init() {
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
-
-    // FPGA CLK: 270 MHz / 6 = 45 MHz
-    const uint slice = pwm_gpio_to_slice_num(FPGA_CLK_GP);
-    const uint channel = pwm_gpio_to_channel(FPGA_CLK_GP);
-    pwm_config config = pwm_get_default_config();
-    pwm_config_set_wrap(&config, 5);
-    pwm_init(slice, &config, /* start: */ true);
-    pwm_set_chan_level(slice, channel, 2);
-    gpio_set_function(FPGA_CLK_GP, GPIO_FUNC_PWM);
 }
 
 void cmd_start() {
