@@ -118,23 +118,24 @@ module crtc(
 
     logic [7:0] h_total_counter = '0;
     logic [3:0] h_sync_counter  = '0;
-    logic       h_enable        = '1;
+    logic       h_display        = '1;
     logic       h_sync          = '0;
 
-    wire       line_start  = h_total_counter == h_total;
+    wire last_column = h_total_counter == h_displayed;
+    wire line_ending = h_total_counter == h_total;
 
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) h_total_counter <= '0;
         else if (cclk_en_i) begin
-            if (line_start) h_total_counter <= '0;
+            if (line_ending) h_total_counter <= '0;
             else h_total_counter <= h_total_counter + 1'b1;
         end
     end
 
     always_ff @(posedge setup_clk_i) begin
-        if (reset_i) h_enable = 1'b1;
-        else if (h_total_counter == h_displayed) h_enable <= '0;
-        else if (h_total_counter == '0) h_enable <= 1'b1;
+        if (reset_i) h_display = 1'b1;
+        else if (last_column) h_display <= '0;
+        else if (h_total_counter == '0) h_display <= 1'b1;
     end
 
     always_ff @(posedge setup_clk_i) begin
@@ -151,17 +152,18 @@ module crtc(
         end
     end
 
-    // Raster
+    // Raster address generator
 
     logic [4:0] line_counter = '0;
-    wire row_start = line_start && line_counter == max_scan_line;
+    wire last_line  = line_counter == max_scan_line;
+    wire row_ending = last_line && line_ending;
 
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) line_counter <= '0;
         else if (cclk_en_i) begin
             if (frame_start) line_counter <= '0;
-            else if (row_start) line_counter <= '0;
-            else if (line_start) line_counter <= line_counter + 1'b1;
+            else if (row_ending) line_counter <= '0;
+            else if (line_ending) line_counter <= line_counter + 1'b1;
         end
     end
 
@@ -169,25 +171,24 @@ module crtc(
 
     logic [6:0] v_total_counter = '0;
     logic [5:0] v_sync_counter  = '0;
-    logic       v_enable        = 1'b1;
+    logic       v_display       = 1'b1;
     logic       v_sync          = '0;
 
-    wire       frame_start  = row_start && v_total_counter == v_total;
-    wire [6:0] v_total_next = v_total_counter + 1'b1;
+    wire last_row    = v_total_counter == v_total;
 
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) v_total_counter <= '0;
         else if (cclk_en_i) begin
             if (frame_start) v_total_counter <= '0;
-            else if (row_start) v_total_counter <= v_total_next;
+            else if (row_ending) v_total_counter <= v_total_counter + 1'b1;
         end
     end
 
     always_ff @(posedge setup_clk_i) begin
-        if (reset_i) v_enable = 1'b1;
+        if (reset_i) v_display =1'b1;
         else if (cclk_en_i) begin
-            if (v_total_counter == v_displayed) v_enable <= '0;
-            else if (frame_start) v_enable <= 1'b1;
+            if (v_total_counter == v_displayed) v_display <= '0;
+            else if (frame_start) v_display <= 1'b1;
         end
     end
 
@@ -210,7 +211,7 @@ module crtc(
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) v_sync_counter <= '0;
         else if (cclk_en_i) begin
-            if (line_start) begin
+            if (line_ending) begin
                 if (v_sync) v_sync_counter <= v_sync_counter + 1'b1;
                 else v_sync_counter <= '0;
             end
@@ -220,14 +221,60 @@ module crtc(
     always_ff @(posedge setup_clk_i) begin
         if (reset_i) v_sync_counter <= '0;
         else if (cclk_en_i) begin
-            if (line_start) begin
+            if (line_ending) begin
                 if (v_sync) v_sync_counter <= v_sync_counter + 1'b1;
                 else v_sync_counter <= '0;
             end
         end
     end
 
-    // Refresh
+    // Frame
+
+    logic [4:0] adjust_counter = '0;
+    wire adjusting     = frame_state_d == ADJUSTING;
+    wire adjust_ending = line_ending && adjust_counter == v_adjust;
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) adjust_counter <= '0;
+        else if (cclk_en_i) begin
+            if (adjust_ending) adjust_counter <= '0;
+            else if (adjusting && line_ending) adjust_counter <= adjust_counter + 1'b1;
+        end
+    end
+
+    localparam
+        NORMAL         = 3'b000,
+        FRAME_ENDING   = 3'b001,
+        ADJUST_PENDING = 3'b011,
+        ADJUSTING      = 3'b101;
+    
+    logic [2:0] frame_state_d, frame_state_q = NORMAL;
+    
+    wire frame_ending = frame_state_q[0];
+    wire frame_start = frame_ending && adjust_ending;
+
+    always_comb begin
+        frame_state_d = frame_state_q;
+
+        unique case (frame_state_q)
+            NORMAL: if (last_row && last_line) frame_state_d = FRAME_ENDING;
+
+            FRAME_ENDING: begin
+                if (v_adjust != '0) frame_state_d = ADJUST_PENDING;
+                else if (line_ending) frame_state_d = NORMAL;
+            end
+
+            ADJUST_PENDING: if (line_ending) frame_state_d = ADJUSTING;
+            ADJUSTING: if (adjust_ending) frame_state_d = NORMAL;
+        endcase
+    end
+
+    always_ff @(posedge setup_clk_i) begin
+        if (reset_i) frame_state_q <= NORMAL;
+        else if (cclk_en_i)frame_state_q <= frame_state_d;
+    end
+
+    // Linear address generator
 
     logic [13:0] row_addr = '0;
 
@@ -235,7 +282,7 @@ module crtc(
         if (reset_i) row_addr <= '0;
         else if (cclk_en_i) begin
             if (frame_start) row_addr <= start_addr;
-            else if (row_start) row_addr <= ma_o;
+            else if (last_line && last_column) row_addr <= ma_o;
         end
     end
 
@@ -243,15 +290,13 @@ module crtc(
         if (reset_i) ma_o <= '0;
         else if (cclk_en_i) begin
             if (frame_start) ma_o <= start_addr;
-            else if (!row_start) begin
-                if (line_start) ma_o <= row_addr;
-                else if (de_o) ma_o <= ma_o + 1'b1;
-            end
+            else if (line_ending) ma_o <= row_addr;
+            else ma_o <= ma_o + 1'b1;
         end
     end
 
     assign h_sync_o = h_sync;
     assign v_sync_o = v_sync; 
-    assign de_o = h_enable && v_enable;
-    assign ra_o = line_counter;
+    assign de_o     = h_display && v_display;
+    assign ra_o     = line_counter;
 endmodule

@@ -18,6 +18,7 @@ module dotgen(
     input  logic [7:0] pixels_i,
     input  logic reverse_i,
     input  logic display_en_i,
+    input  logic no_row,
     output logic video_o
 );
     logic [2:0] pixel_ctr_d, pixel_ctr_q;
@@ -42,5 +43,5 @@ module dotgen(
         reverse_q   <= reverse_d;
     end
 
-    assign video_o = display_en_i & (sr_out_q[7] ^ reverse_q);
+    assign video_o = !no_row & display_en_i & (sr_out_q[7] ^ reverse_q);
 endmodule

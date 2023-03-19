@@ -29,6 +29,7 @@ module video(
     output logic [13:0] addr_o,
     output logic        addr_oe,
     input  logic  [7:0] data_i,
+    input  logic        gfx_i,
 
     output logic        h_sync_o,
     output logic        v_sync_o,
@@ -67,7 +68,7 @@ module video(
     end
 
     assign addr_o = vrom_en_i
-        ? { 2'b10, next_char[6:0], ra[2:0] }
+        ? { 2'b1, gfx_i, next_char[6:0], ra[2:0] }
         : { 4'b0000, ma[9:0] };
 
     assign addr_oe = vram_en_i || vrom_en_i;
@@ -85,18 +86,25 @@ module video(
     // Synchronize video and h/v sync
     always_ff @(posedge pixel_clk_i) begin
         if (cclk_en_i) begin
-            h_sync_o <= !hs;        // DynaPet inverts horiz/vert sync
-            v_sync_o <= !vs;
             de_q     <= de;
         end
     end
+
+    // Scanlines exceeding the 8 pixel high character ROM should be blanked.
+    // (See 'NO_ROW' signal on sheets 8 and 10 of Universal Dynamic PET.)
+    wire no_row = ra[3] || ra[4];
 
     dotgen dotgen(
         .reset_i(cclk_en_i),
         .pixel_clk_i(pixel_clk_i),
         .pixels_i(next_pixels),
         .display_en_i(de_q),
+        .no_row(no_row),
         .reverse_i(next_char[7]),
         .video_o(video_o)
     );
+
+    // PETs with a CRTC invert horiz/vert sync
+    assign h_sync_o = !hs;
+    assign v_sync_o = !vs;
 endmodule

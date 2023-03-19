@@ -77,7 +77,7 @@ module crtc_driver(
         @(posedge strobe_clk);
     endtask
 
-    task crtc_end();
+    task crtc_end;
         if (strobe_clk) @(negedge strobe_clk);
 
         #1;
@@ -90,7 +90,7 @@ module crtc_driver(
     task select(input logic [7:0] register);
         crtc_begin(/* rs: */ '0, /* rw_n: */ '0, /* data: */ register);
         crtc_end();
-    endtask;
+    endtask
 
     task write(input logic [7:0] data);
         crtc_begin(/* rs: */ '1, /* rw_n: */ '0, /* data: */ data);
