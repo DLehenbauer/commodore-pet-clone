@@ -2761,7 +2761,7 @@
     (property "Sheet name" "FPGA" (id 0) (at 176.53 52.6284 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
-    (property "Sheet file" "CPLD.kicad_sch" (id 1) (at 176.53 163.1446 0)
+    (property "Sheet file" "FPGA.kicad_sch" (id 1) (at 176.53 163.1446 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )
     (pin "R~{W}" input (at 207.01 66.04 0)
