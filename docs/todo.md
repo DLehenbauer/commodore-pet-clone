@@ -17,8 +17,7 @@
       * Picoprobe
       * FT2232
       * Moves CDONE/NSTATUS to debug board?
-  * Consider LM317AG to generate +5v
-    * Possibly, use second LM317AG to produce 1.5A for USB
+  * Use second LM317AG to produce 1.5A for USB or reduce USB PD resistors
   * Consider LM317AG to generate +1.25v (can test with spare PCB)
   * Use spare CLK/GCTL pins for signals to simplify routing
   * Expose additional unused pins

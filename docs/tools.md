@@ -9,7 +9,11 @@
 * [Freerouting](https://github.com/freerouting/freerouting/releases)
   * `winget install -e --id EclipseAdoptium.Temurin.17.JRE`
 * [LTSpice](https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html)
-* [VIA Size Calculator](https://j.mp/via-calc)
+* Online calculators
+  * [VIA Size Calculator](https://j.mp/via-calc)
+  * [Resistor Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
+  * [LM317 Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
+* [JLCPCB Parts Search](https://yaqwsx.github.io/jlcparts/#/)
 
 ## FPGA & Verilog
 
