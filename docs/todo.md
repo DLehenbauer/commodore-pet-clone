@@ -17,7 +17,6 @@
       * Picoprobe
       * FT2232
       * Moves CDONE/NSTATUS to debug board?
-  * Remove 50 MHz oscillator / use MCU instead to generate clk_sys
   * Consider LM317AG to generate +5v
     * Possibly, use second LM317AG to produce 1.5A for USB
   * Consider LM317AG to generate +1.25v (can test with spare PCB)
@@ -27,6 +26,7 @@
   * Larger net ties for FPGA_*
   * Consider [SMD SRAM](https://jlcpcb.com/partdetail/444095-IS61WV1288EEBLL10TLI/C443418)
   * PIA/VIAs have multiple CS pins (with differing polarity).  Consider if other pins simplify routing or design.
+  * Avoid CBSEL0 for dip switch as these effect boot image?
 * Fix signal names:
   * RD/WR_STROBE -> RAM_OE / RAM_WE
   * GRAPHICS vs. gfx

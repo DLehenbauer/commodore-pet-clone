@@ -1306,9 +1306,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-0000617f7866"
       (reference "#PWR098") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/894fb7bd-78a4-45de-b442-172b11363e8c"
-      (reference "#PWR099") (unit 1) (value "+3V3") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-0000617f70c9"
       (reference "#PWR0100") (unit 1) (value "GND") (footprint "")
     )
@@ -1420,17 +1417,8 @@
     (path "/00000000-0000-0000-0000-0000614e685e/1ddaf6cc-aa3f-4aed-90d7-91f2d49f7bb4"
       (reference "#PWR0136") (unit 1) (value "PD_GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/897bf1a6-37c0-476f-ade8-45778a9cbc6b"
-      (reference "#PWR0137") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/f4af52de-f86d-4300-bc9c-388e49791b0c"
       (reference "#PWR0138") (unit 1) (value "+1V2") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/e2ea2dfc-d9f8-4cbe-af23-8430b18c5635"
-      (reference "#PWR0139") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3fd27817-43b3-44f7-a74b-557e2e65b123"
-      (reference "#PWR0140") (unit 1) (value "+1V2") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/20dbd71a-f964-4c21-a5bf-ad81adee599f"
       (reference "#PWR0141") (unit 1) (value "PD_GND") (footprint "")
@@ -1441,38 +1429,11 @@
     (path "/00000000-0000-0000-0000-0000614e685e/b62b6061-2d7c-480a-ac77-eac075043940"
       (reference "#PWR0143") (unit 1) (value "PD_3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cdbb74ce-8b82-43a3-8a24-6764f6ffa48f"
-      (reference "#PWR0144") (unit 1) (value "+3V3") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/ede7c365-3e42-45f3-a6d1-5d7a319d759e"
       (reference "#PWR0145") (unit 1) (value "PD_GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/654cb2ee-695b-4b04-b3e8-94abd3d5819a"
-      (reference "#PWR0146") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/8aae33ae-bf0c-49f9-b7bd-739ec1f2bbf7"
       (reference "#PWR0147") (unit 1) (value "VBUS") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9c4a0bc5-c17c-4724-9a0d-97620f71dd80"
-      (reference "#PWR0148") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6c233861-6f26-4f69-9647-f51626270246"
-      (reference "#PWR0149") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/bdcde766-a7ad-41c0-9db0-7752842e9c7b"
-      (reference "#PWR0150") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/2d67bc00-ad2d-4e0f-87b9-618a04d5359e"
-      (reference "#PWR0151") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9591d916-f095-4a59-9fb2-0e0089178571"
-      (reference "#PWR0152") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cf00393e-cee0-4779-b21b-e47d9b62ab54"
-      (reference "#PWR0153") (unit 1) (value "FPGA_VCC") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-000066a110f7"
-      (reference "#PWR0154") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/643c3bdf-7270-415a-a261-9d67a30bfd21"
       (reference "#PWR0155") (unit 1) (value "GND") (footprint "")
@@ -1492,21 +1453,6 @@
     (path "/00000000-0000-0000-0000-000061ed99de/9a6d983e-b65e-440c-b1b4-e759f4e7164e"
       (reference "#PWR0160") (unit 1) (value "PD_GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/aa779d76-9713-4bb6-a18a-fe8af0836495"
-      (reference "#PWR0161") (unit 1) (value "FPGA_VCCIO") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-000066e306c8"
-      (reference "#PWR0162") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/0ec5e78c-7d74-4b6d-9900-a3e09913c31d"
-      (reference "#PWR0163") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/335b1eee-b45f-4057-8fa0-0cb5abda1c59"
-      (reference "#PWR0164") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/a7ea819f-bd61-44c3-a457-57909dd4cba3"
-      (reference "#PWR0165") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061a7d9c6/833f676c-97a5-42f1-b79a-7d5bf5a6df79"
       (reference "#PWR0166") (unit 1) (value "PD_GND") (footprint "")
     )
@@ -1519,17 +1465,11 @@
     (path "/00000000-0000-0000-0000-000061ed99de/329cb1e0-10ef-41d1-bb81-7c4b57c5dd50"
       (reference "#PWR0169") (unit 1) (value "FPGA_VCCA") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6215c841-4056-48a6-a803-37299bf66b14"
-      (reference "#PWR0170") (unit 1) (value "+3V3") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/0d2fe8d5-67d9-4755-8669-ae7e78a65aaa"
       (reference "#PWR0171") (unit 1) (value "MCU_DVDD") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/5725b324-41e5-49a5-a134-75b89afb0809"
       (reference "#PWR0172") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/310c2664-3902-4e50-bd19-79e837a55764"
-      (reference "#PWR0173") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/1a80b0f6-d98b-4394-8398-14f22992e406"
       (reference "#PWR0174") (unit 1) (value "PD_GND") (footprint "")
@@ -1545,18 +1485,6 @@
     )
     (path "/00000000-0000-0000-0000-000061ed99de/bba803d0-332a-43c5-b117-dab807b2de6d"
       (reference "#PWR0178") (unit 1) (value "FPGA_VCCIO") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/acbf9e28-1c06-4b4d-933f-e3cd0a847a3f"
-      (reference "#PWR0179") (unit 1) (value "FPGA_GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3b7dbc7e-f5c9-40bf-aae3-3fe8e2829f7e"
-      (reference "#PWR0180") (unit 1) (value "FPGA_VCCA") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/a316cf0c-ee6f-4dca-9a68-e0e9a1414871"
-      (reference "#PWR0181") (unit 1) (value "FPGA_VCCIO") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6cca155d-a8c9-48c6-8948-d74fc3cea499"
-      (reference "#PWR0182") (unit 1) (value "FPGA_VCC") (footprint "")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/1156a3ee-d14c-4ec9-9113-acbd283a849c"
       (reference "#PWR0183") (unit 1) (value "PD_GND") (footprint "")
@@ -1593,12 +1521,6 @@
     )
     (path "/00000000-0000-0000-0000-000061ed99de/9c8b1165-5597-4aa3-8539-af1045afa3fa"
       (reference "#PWR0194") (unit 1) (value "PD_5V") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/bc327bc9-34af-4969-9558-daed169d7154"
-      (reference "#PWR0195") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c812033b-4889-43b4-84ec-b57dbf0f6f4d"
-      (reference "#PWR0196") (unit 1) (value "GND") (footprint "")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/fb68fcee-9bf0-4704-8643-64bf56f20675"
       (reference "#PWR0197") (unit 1) (value "PD_6V") (footprint "")
@@ -1645,9 +1567,6 @@
     (path "/00000000-0000-0000-0000-000061b9c2eb/b54a7119-f8b9-47f4-941b-9ada366cd38d"
       (reference "#PWR0211") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b9d3ace8-3a07-49f8-bd98-25c443488727"
-      (reference "#PWR0212") (unit 1) (value "PD_3V3") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c3e23abe-a57e-42f9-bc2e-c88162a33e95"
       (reference "#PWR0213") (unit 1) (value "DVI_GND") (footprint "")
     )
@@ -1657,17 +1576,8 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/dc92764e-406d-45e5-b42b-4fa9b66c8370"
       (reference "#PWR0215") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/8db24a33-f135-43e9-aa99-e1f1f50ff0b8"
-      (reference "#PWR0216") (unit 1) (value "PD_GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061bef9ce/c705edb7-7d1f-44fd-87c6-6a4b9471d859"
       (reference "#PWR0217") (unit 1) (value "PD_6V") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/2a797f36-c144-4c16-9312-e175355694ba"
-      (reference "#PWR0218") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b42b21e1-dee9-4db5-9bc9-6119d2a2c9c1"
-      (reference "#PWR0219") (unit 1) (value "GND") (footprint "")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/412ce271-ac77-434f-b570-a5702fc23740"
       (reference "#PWR0220") (unit 1) (value "PD_GND") (footprint "")
@@ -1728,6 +1638,90 @@
     )
     (path "/00000000-0000-0000-0000-00006151ec26/ddcfa864-ca7b-4456-9017-70571a286eb6"
       (reference "#PWR0239") (unit 1) (value "PD_5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-000066a110f7"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-000066e306c8"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/0ec5e78c-7d74-4b6d-9900-a3e09913c31d"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/2a797f36-c144-4c16-9312-e175355694ba"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/2d67bc00-ad2d-4e0f-87b9-618a04d5359e"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/310c2664-3902-4e50-bd19-79e837a55764"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/335b1eee-b45f-4057-8fa0-0cb5abda1c59"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3b7dbc7e-f5c9-40bf-aae3-3fe8e2829f7e"
+      (reference "#PWR?") (unit 1) (value "FPGA_VCCA") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3fd27817-43b3-44f7-a74b-557e2e65b123"
+      (reference "#PWR?") (unit 1) (value "+1V2") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6215c841-4056-48a6-a803-37299bf66b14"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6c233861-6f26-4f69-9647-f51626270246"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6cca155d-a8c9-48c6-8948-d74fc3cea499"
+      (reference "#PWR?") (unit 1) (value "FPGA_VCC") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/894fb7bd-78a4-45de-b442-172b11363e8c"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/897bf1a6-37c0-476f-ade8-45778a9cbc6b"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/8db24a33-f135-43e9-aa99-e1f1f50ff0b8"
+      (reference "#PWR?") (unit 1) (value "PD_GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9591d916-f095-4a59-9fb2-0e0089178571"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9c4a0bc5-c17c-4724-9a0d-97620f71dd80"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/a316cf0c-ee6f-4dca-9a68-e0e9a1414871"
+      (reference "#PWR?") (unit 1) (value "FPGA_VCCIO") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/a7ea819f-bd61-44c3-a457-57909dd4cba3"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/aa779d76-9713-4bb6-a18a-fe8af0836495"
+      (reference "#PWR?") (unit 1) (value "FPGA_VCCIO") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/acbf9e28-1c06-4b4d-933f-e3cd0a847a3f"
+      (reference "#PWR?") (unit 1) (value "FPGA_GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b42b21e1-dee9-4db5-9bc9-6119d2a2c9c1"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b9d3ace8-3a07-49f8-bd98-25c443488727"
+      (reference "#PWR?") (unit 1) (value "PD_3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/bc327bc9-34af-4969-9558-daed169d7154"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/bdcde766-a7ad-41c0-9db0-7752842e9c7b"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c812033b-4889-43b4-84ec-b57dbf0f6f4d"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cf00393e-cee0-4779-b21b-e47d9b62ab54"
+      (reference "#PWR?") (unit 1) (value "FPGA_VCC") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/e2ea2dfc-d9f8-4cbe-af23-8430b18c5635"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061a7d9c6/00000000-0000-0000-0000-000061f85bd2"
       (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1902,9 +1896,6 @@
     )
     (path "/00000000-0000-0000-0000-000061ed99de/74f56b92-74e0-4562-81a4-82ff09d39c69"
       (reference "C58") (unit 1) (value "4.7u 10V") (footprint "Capacitor_SMD:C_0402_1005Metric")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b72fea06-95ef-47d8-9de4-a4f62b7a0fae"
-      (reference "C59") (unit 1) (value "10n 50V") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/4af620f9-2a23-4600-b67c-8645456d4b4b"
       (reference "C60") (unit 1) (value "1u 25V") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -2362,9 +2353,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/4e670d40-6ba9-4e4c-8fb2-1f4d545c6635"
       (reference "R27") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b9cfc080-1d99-470c-947c-6291b626209f"
-      (reference "R28") (unit 1) (value "33") (footprint "Resistor_SMD:R_0402_1005Metric")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/0ee1e99d-8fbf-4b24-8b8c-cbf4ee6152af"
       (reference "R29") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
@@ -2628,9 +2616,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cefd63f9-21f6-43e0-98c0-bb79235600be"
       (reference "U21") (unit 13) (value "T8Q144C3") (footprint "SnapEDA:QFP50P2200X2200X160-144N")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3f948d24-ca1d-43ae-b3df-1b33e94fd179"
-      (reference "X1") (unit 1) (value "50 MHz") (footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/5aa292c5-d3bb-4d1e-8d90-92f4de8aadcd"
       (reference "Y1") (unit 1) (value "12 MHz") (footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm")
