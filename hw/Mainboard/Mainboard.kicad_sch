@@ -1294,9 +1294,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/894fb7bd-78a4-45de-b442-172b11363e8c"
       (reference "#PWR039") (unit 1) (value "+3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/00000000-0000-0000-0000-000061f67bde"
-      (reference "#PWR040") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6cca155d-a8c9-48c6-8948-d74fc3cea499"
       (reference "#PWR041") (unit 1) (value "FPGA_VCC") (footprint "")
     )
@@ -1498,9 +1495,6 @@
     (path "/00000000-0000-0000-0000-000061ed99de/c1e129c8-f973-4e5f-ac36-aff3c5b8ac74"
       (reference "#PWR0120") (unit 1) (value "CHASSIS_GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/0f2586c6-86f0-4ded-b50e-578751c84774"
-      (reference "#PWR0122") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/e894922c-8f50-4ef6-b557-e7b75940c77c"
       (reference "#PWR0123") (unit 1) (value "PD_5V") (footprint "")
     )
@@ -1512,9 +1506,6 @@
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/7274ee11-7152-47d8-8cc8-a742db0803f6"
       (reference "#PWR0126") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000614e685e/df1b28fc-a4b9-450d-972a-836a9e2c70b9"
-      (reference "#PWR0128") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/ec4ed38b-e3f4-4b12-ab05-3b1c2d102ba9"
       (reference "#PWR0133") (unit 1) (value "PD_GND") (footprint "")
@@ -1594,15 +1585,6 @@
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/fb68fcee-9bf0-4704-8643-64bf56f20675"
       (reference "#PWR0197") (unit 1) (value "PD_6V") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/e8232aba-4b8a-4c32-9392-0db70a5223e8"
-      (reference "#PWR0200") (unit 1) (value "PD_GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/a929c6df-4672-48c1-8af1-0c3bd6815e39"
-      (reference "#PWR0201") (unit 1) (value "PD_5V") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/2c9543c9-2062-4675-bf62-6f91111af4d6"
-      (reference "#PWR0202") (unit 1) (value "PD_GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/0de90098-cf05-4702-8161-9dda2cfd85e3"
       (reference "#PWR0203") (unit 1) (value "+3V3") (footprint "")
     )
@@ -1617,15 +1599,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/881ca6fb-0aaf-4ec0-bb0e-b66f845a7e41"
       (reference "#PWR0207") (unit 1) (value "MCU_IOVDD") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/4539bf3e-f389-40ac-8737-1e7e499b4c54"
-      (reference "#PWR0208") (unit 1) (value "PD_5V") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/6ddf4a4c-2a8a-4310-b3f4-a1350be8db6e"
-      (reference "#PWR0209") (unit 1) (value "PD_GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/1d9bc544-bb44-48bf-9855-206292746697"
-      (reference "#PWR0210") (unit 1) (value "PD_5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061b9c2eb/b54a7119-f8b9-47f4-941b-9ada366cd38d"
       (reference "#PWR0211") (unit 1) (value "GND") (footprint "")
@@ -1665,6 +1638,27 @@
     )
     (path "/00000000-0000-0000-0000-00006151ec26/ddcfa864-ca7b-4456-9017-70571a286eb6"
       (reference "#PWR0239") (unit 1) (value "PD_5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b9c2eb/0a3548eb-c4ff-453a-a2e7-4ced217cb1c5"
+      (reference "#PWR?") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b9c2eb/a362576d-4732-4033-8c9f-4e5f67719f68"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b9c2eb/c0fa5595-7b89-440a-9fab-9a6c7f64189a"
+      (reference "#PWR?") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b9c2eb/c376e1c6-9675-427b-a50d-8fdebcf333cd"
+      (reference "#PWR?") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b9c2eb/d089edf3-e8f7-45dc-9c88-d09760fb7d8f"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b9c2eb/efd5ab68-90b1-46fe-8503-45f86f365123"
+      (reference "#PWR?") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000614e685e/f73c9197-e6da-4025-986a-abef039877b0"
+      (reference "#PWR?") (unit 1) (value "+3V3") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061a7d9c6/00000000-0000-0000-0000-000061f85bd2"
       (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -2080,23 +2074,11 @@
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/9f55949f-a736-486c-a1ac-72a0473ae76f"
       (reference "NT9") (unit 1) (value "+6V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/b9aff9e0-b225-4512-9e0f-91bf722a366c"
-      (reference "NT10") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
     (path "/00000000-0000-0000-0000-000061bef9ce/d4e25451-fe2a-45a2-b5a0-7d83e138db45"
       (reference "NT11") (unit 1) (value "+6V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/e772a6c2-b65e-4a0f-ae1c-4cfa2bd40ea9"
       (reference "NT12") (unit 1) (value "+6V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/8a321d4c-5050-451a-b3df-a9370e5a951a"
-      (reference "NT13") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/2a8b31c4-0e1d-4749-8882-bc3312f3b772"
-      (reference "NT14") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/fad02431-1864-43f4-9cb5-a08da914f1fa"
-      (reference "NT15") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6624e5ab-9027-4690-9b1a-6ea0926f8351"
       (reference "NT18") (unit 1) (value "+5V") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
