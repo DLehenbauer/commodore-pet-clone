@@ -13,6 +13,7 @@
   * [VIA Size Calculator](https://j.mp/via-calc)
   * [Resistor Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
   * [LM317 Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
+  * [Switch Debounce Calculator](https://clisystems.com/tool_debounce.php)
 * [JLCPCB Parts Search](https://yaqwsx.github.io/jlcparts/#/)
 
 ## FPGA & Verilog

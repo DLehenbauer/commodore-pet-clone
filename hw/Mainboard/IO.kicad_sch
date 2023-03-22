@@ -1944,6 +1944,10 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid c2079b33-906e-4c67-b0b6-7e228acc166b)
   )
+  (text "Note that ~{IRQ} is pulled to 3V3 (not 5V)" (at 222.25 22.86 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid d1a06c6c-c9a7-41cb-ba12-0ae56c17938d)
+  )
 
   (label "KEY_COL5" (at 96.52 59.69 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))

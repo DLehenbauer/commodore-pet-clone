@@ -21,7 +21,6 @@
   * Consider LM317AG to generate +1.25v (can test with spare PCB)
   * Use spare CLK/GCTL pins for signals to simplify routing
   * Expose additional unused pins
-  * Tie RAM_CE to 3V3 and reclaim FPGA pin
   * Larger net ties for FPGA_*
   * Consider [SMD SRAM](https://jlcpcb.com/partdetail/444095-IS61WV1288EEBLL10TLI/C443418)
   * PIA/VIAs have multiple CS pins (with differing polarity).  Consider if other pins simplify routing or design.
