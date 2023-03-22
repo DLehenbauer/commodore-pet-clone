@@ -2,7 +2,11 @@
 
   (uuid 32e2034f-4204-4b40-98bb-6685c2ba0700)
 
-  (paper "B")
+  (paper "A")
+
+  (title_block
+    (title "CBM PET Mainboard Replacement")
+  )
 
   (lib_symbols
     (symbol "Connector:Conn_01x02_Male" (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)
