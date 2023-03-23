@@ -8,6 +8,7 @@
   * Tag revision in Github
 * HW:
   * Rotate video connector 180 degrees to match Dynamic V2 boards
+  * Use push in/out SD reader (C393941)
   * 10uF 50V -> 10uF 25V
   * Programming
     * Combine FPGA prog and MCU debug header?
@@ -34,7 +35,6 @@
     * SOB vs. /SO vs. so_n
     * BE vs. cpu_en
   * Video signals:
-    * /VIDEO vs video (not negated)
     * vert vs v_sync
     * horiz vs h_sync
 * Design

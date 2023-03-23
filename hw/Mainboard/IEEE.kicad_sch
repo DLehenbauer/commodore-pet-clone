@@ -1101,7 +1101,7 @@
   (no_connect (at 77.47 43.18) (uuid a66f6e5a-53a0-4bd0-a172-dc6f14ed3adb))
   (no_connect (at 186.69 83.82) (uuid ab0f7c06-536e-48a7-9ae6-9258418dd746))
   (no_connect (at 115.57 165.1) (uuid b77256de-c497-4b8c-8508-8d419940b51c))
-  (no_connect (at 115.57 167.64) (uuid b77256de-c497-4b8c-8508-8d419940b51c))
+  (no_connect (at 115.57 167.64) (uuid b77256de-c497-4b8c-8508-8d419940b51d))
   (no_connect (at 186.69 134.62) (uuid dfef5ccf-cfe1-42b4-94ae-77c74495c39b))
 
   (bus_entry (at 154.94 111.76) (size 2.54 2.54)

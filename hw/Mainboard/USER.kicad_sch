@@ -536,7 +536,7 @@
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 4fc3183f-297c-42b7-b3bd-25a9ea18c844)
   )
-  (hierarchical_label "~{BVIDEO}" (shape input) (at 133.35 87.63 180)
+  (hierarchical_label "BVIDEO" (shape input) (at 133.35 87.63 180)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 6fddc16f-ccc1-4ade-884c-d6efda461da8)
   )
