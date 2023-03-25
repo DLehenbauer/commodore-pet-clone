@@ -1274,8 +1274,16 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 0964d0ae-bfeb-4e5f-889d-226d7de3e9eb)
   )
-  (text "MCU responsibilities:\n- Configure FPGA at POR\n- Initialize SRAM with ROM images\n- Read back video RAM and output to HDMI (bit-banged DVI)\n- Report USB keyboard input to FPGA\n\nFPGA responsibilities:\n- Read/write access to SRAM (via SPI)\n- Bus orchestration / address decoding\n- CRTC emulation / native video generation\n- Intercept PIA1 to inject USB keyboard\n\nSRAM is shared between the 6502 and the FPGA by\nusing an effective bus speed of 8 MHz taking turns\nin round-robin fashion.  (The FPGA takes multiple\nturns in order to service SPI and generative native\nvideo.)"
-    (at 66.04 187.96 0)
+  (text "Level Shifting" (at 191.77 21.59 0)
+    (effects (font (size 1.5 1.5) (thickness 0.8) bold) (justify left bottom))
+    (uuid 5f8890d8-a796-4d2e-9ea0-37e2328cb5c3)
+  )
+  (text "Magic" (at 25.4 19.05 0)
+    (effects (font (size 1.5 1.5) (thickness 0.8) bold) (justify left bottom))
+    (uuid 617c9cf4-ea39-41b3-90fb-c811c136475d)
+  )
+  (text "MCU responsibilities:\n- Configure FPGA at POR\n- Initialize SRAM with ROM images\n- Read back video RAM and output to HDMI (bit-banged DVI)\n- Report USB keyboard input to FPGA\n\nFPGA responsibilities:\n- Timing / address decoding\n- CRTC emulation / native PET video generation\n- Expose read/write access to SRAM for MCU (via SPI)\n- Intercept PIA1 to inject USB keyboard\n\nSRAM is shared between the 6502 and the FPGA by\nusing an effective bus speed of 8 MHz taking turns\nin round-robin fashion.\n\nFrom the CPU and I/O chip's perspective, ϕ2 is \"stretched\"\nwith a 1/8th duty cycle.  From the FPGA's perspective, there\nis an 8 MHz clock and 8 clock enable signals, which are used\nas follows:\n\n0: Read/write to SRAM to service SPI request from MCU\n1: Read even character from VRAM\n2: Read even character bitmat from \"ROM\"\n3: Read odd character from VRAM\n4: Read odd character from \"ROM\"\n5: (future use)\n6: Setup for next CPU cycle\n7: Pulse ϕ2"
+    (at 54.61 200.66 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid b3fcf16b-286f-4649-8f4d-3901570dbf10)
   )
