@@ -7,6 +7,8 @@
   * Review BOM (esp. look for mixed values)
   * Tag revision in Github
 * HW:
+  * Use 4:16 decoder for keyboard expansion (C21061)
+    * See http://www.6502.org/users/sjgray/projects/petkeyboard/index.html
   * Rotate video connector 180 degrees to match Dynamic V2 boards
   * Use push in/out SD reader (C393941)
   * 10uF 50V -> 10uF 25V
