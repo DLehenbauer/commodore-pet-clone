@@ -751,6 +751,10 @@
     [
       "d7346628-bc14-4709-aafe-5231479d808e",
       "MicroSD"
+    ],
+    [
+      "6521fafb-cb3f-4004-93ad-439f568f7908",
+      "USB"
     ]
   ],
   "text_variables": {}
