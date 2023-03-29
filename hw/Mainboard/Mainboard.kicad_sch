@@ -1643,6 +1643,12 @@
     (path "/00000000-0000-0000-0000-000061ed99de/9a8a12e5-fec6-43cb-aa5a-3099ba35deb6"
       (reference "#PWR0233") (unit 1) (value "+1V2") (footprint "")
     )
+    (path "/00000000-0000-0000-0000-000061a7d9c6/0411f81d-8df6-441f-ab32-0fc77a61222a"
+      (reference "#PWR?") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061a7d9c6/b22a6653-f1dc-4c88-a3b6-52ef014e8365"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-000061a7d9c6/00000000-0000-0000-0000-000061f85bd2"
       (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
@@ -1974,7 +1980,7 @@
       (reference "J12") (unit 1) (value "NOT_HDMI_A") (footprint "Connector_HDMI:HDMI_A_Molex_208658-1001_Horizontal")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/d7346628-bc14-4709-aafe-5231479d808e/5a92e91e-60e1-4566-a509-ac4a8a2cc322"
-      (reference "J13") (unit 1) (value "Micro_SD") (footprint "JLCPCB:SIM-SMD_8P-1040310811")
+      (reference "J13") (unit 1) (value "MicroSD") (footprint "JLCPCB:TF-SMD_TF-PUSH")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/68cc681d-8989-476b-839f-4fc1f0de74e0"
       (reference "J14") (unit 1) (value "USB2.0_HOST_TYPE_C") (footprint "JLCPCB:USB-C_SMD-TYPE-C-31-M-12")
@@ -2008,6 +2014,9 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-0000663728bd"
       (reference "J24") (unit 1) (value "FPGA_P3") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x14_P2.54mm_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-000061a7d9c6/75324d7c-593d-4a76-8998-fa94e24c335d"
+      (reference "J?") (unit 1) (value "Keyboard_Ex_Conn_Keyed_12P") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x12_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/2a95e86c-c6c0-46aa-b818-245b269c2229"
       (reference "JP1") (unit 1) (value "CASS A ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
@@ -2309,9 +2318,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/e85d0331-708c-4b41-8b84-9aecdaed6102"
       (reference "SW5") (unit 1) (value "CONFIG") (footprint "Button_Switch_THT:SW_DIP_SPSTx04_Slide_6.7x11.72mm_W7.62mm_P2.54mm_LowProfile")
     )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/00000000-0000-0000-0000-000061a7e1c2"
-      (reference "U1") (unit 1) (value "74LS145") (footprint "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm")
-    )
     (path "/00000000-0000-0000-0000-00006151ec26/00000000-0000-0000-0000-000061b9d26b"
       (reference "U2") (unit 1) (value "SN74LS07") (footprint "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm")
     )
@@ -2407,6 +2413,9 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cefd63f9-21f6-43e0-98c0-bb79235600be"
       (reference "U21") (unit 13) (value "T8Q144C3") (footprint "SnapEDA:QFP50P2200X2200X160-144N")
+    )
+    (path "/00000000-0000-0000-0000-000061a7d9c6/e027f430-97d0-4874-9f80-c79b5ac57a10"
+      (reference "U?") (unit 1) (value "74HC154") (footprint "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/5aa292c5-d3bb-4d1e-8d90-92f4de8aadcd"
       (reference "Y1") (unit 1) (value "12 MHz") (footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm")

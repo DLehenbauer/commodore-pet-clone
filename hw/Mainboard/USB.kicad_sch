@@ -361,7 +361,6 @@
     )
   )
 
-
   (junction (at 130.81 74.93) (diameter 0) (color 0 0 0 0)
     (uuid 01b46a2a-f43f-4314-9ce6-5e5912699bcd)
   )
@@ -497,14 +496,14 @@
     (uuid faa698d2-db21-4d99-8342-aa8685c5005a)
   )
 
-  (text "USB" (at 161.29 62.23 180)
-    (effects (font (size 4 4)) (justify right bottom))
-    (uuid 13252272-d4e6-481b-804c-4d460791f667)
-  )
-  (text "56k pullups on CC1 and CC2 identify USB-C\nas a downstream facing port (DFP) supplying\nup to 900ma @ 5V."
+  (text "USB 2.0 Host over USB-C connector\n\n56k pullups on CC1 and CC2 identify USB-C\nas a downstream facing port (DFP) supplying\nup to 900ma @ 5V."
     (at 76.2 82.55 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 8e708561-1ee2-45fa-87f1-e6b7b76c40dd)
+  )
+  (text "USB" (at 149.86 64.77 0)
+    (effects (font (size 1.5 1.5) (thickness 0.8) bold) (justify left bottom))
+    (uuid a3256d0e-75e4-4672-abdb-674efb13491e)
   )
 
   (label "CC2" (at 137.16 85.09 180)
