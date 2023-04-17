@@ -30,7 +30,7 @@ Here are the highlights:
 
 * CPU and I/O are similar to the original Commodore design, using the 6502, PIA, and VIA.
 * Main RAM, Display RAM and ROM are combined on a single 128K SRAM.
-  * On POR the MCU initialized $9000-FFFF with the user's selected ROM set
+  * On POR the MCU initializes $9000-FFFF with the user's selected ROM set
   * After initialization, $9000-FFFF is write protected.
 * Timing, address decoding, and native PET video are consolidated on a small FPGA.
 * The MCU reads display RAM and mirrors the PET video to HDMI (via bit-banged DVI)
