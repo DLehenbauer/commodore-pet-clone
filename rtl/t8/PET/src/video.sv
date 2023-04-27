@@ -61,7 +61,7 @@ module video(
         .ra_o(ra)
     );
 
-    logic col_80_mode = '1;
+    logic col_80_mode = '0;
 
     always_comb begin
         if (vram0_en_i) begin

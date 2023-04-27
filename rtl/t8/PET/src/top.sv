@@ -74,6 +74,7 @@ module top(
     input  logic diag_i,
     input  logic via_cb2_i,
     output logic audio_o,
+    output logic audio_no,
 
     // Graphics
     input  logic gfx_i,
@@ -182,4 +183,6 @@ module top(
         .v_sync_o(v_sync_o),
         .video_o(video_o)
     );
+    
+    assign audio_no = !audio_o;
 endmodule
