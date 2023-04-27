@@ -7,6 +7,7 @@
   * Review BOM (esp. look for mixed values)
   * Tag revision in Github
 * HW:
+  * No need to expose video or user port signals on headers
   * Use 4:16 decoder for keyboard expansion (C21061)
     * See http://www.6502.org/users/sjgray/projects/petkeyboard/index.html
   * Rotate video connector 180 degrees to match Dynamic V2 boards
@@ -21,7 +22,6 @@
       * FT2232
       * Moves CDONE/NSTATUS to debug board?
   * Use second LM317AG to produce 1.5A for USB or reduce USB PD resistors
-  * Consider LM317AG to generate +1.25v (can test with spare PCB)
   * Use spare CLK/GCTL pins for signals to simplify routing
   * Expose additional unused pins
   * Larger net ties for FPGA_*

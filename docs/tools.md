@@ -14,7 +14,16 @@
   * [Resistor Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
   * [LM317 Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
   * [Switch Debounce Calculator](https://clisystems.com/tool_debounce.php)
+  * [Trace Width Calculator](https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-pcb-trace-width)
+  * [Trace Impedance Calculator](https://www.eeweb.com/tools/edge-coupled-microstrip-impedance/)
+* [JLCPCB Capabilities](https://jlcpcb.com/capabilities/Capabilities)
 * [JLCPCB Parts Search](https://yaqwsx.github.io/jlcparts/#/)
+
+Property            | Value
+--------------------|--------------------------
+Thickness           | 1.6 mm
+Dielectric constant | 4.5 (double-sided PCB)
+Outer copper layer  | 1 oz/ft^2 (35 um)
 
 ## FPGA & Verilog
 
