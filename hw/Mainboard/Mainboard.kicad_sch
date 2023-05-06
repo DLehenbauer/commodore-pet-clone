@@ -1495,9 +1495,6 @@
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/73ecd528-55a6-478a-9e50-b7c11b8ab51a"
       (reference "#PWR0137") (unit 1) (value "GND") (footprint "")
     )
-    (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/a0a1f2da-646b-4c33-9e10-d841c009f335"
-      (reference "#PWR0138") (unit 1) (value "+6V") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061b9c2eb/01d1922c-00be-4c9c-8a50-903e4ae9d939"
       (reference "#PWR0139") (unit 1) (value "PD_GND") (footprint "")
     )
@@ -1804,9 +1801,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/cfa2d6f0-341d-4d41-b3a2-79c3476fc073"
       (reference "C52") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/63e3e4de-0d17-4a34-b3f7-38ff4d8afe7e"
-      (reference "C53") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/e1d76a09-a2cf-49cf-b048-eb8e55714c8e"
       (reference "C56") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
@@ -1978,8 +1972,8 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/68cc681d-8989-476b-839f-4fc1f0de74e0"
       (reference "J14") (unit 1) (value "USB2.0_HOST_TYPE_C") (footprint "JLCPCB:USB-C_SMD-TYPE-C-31-M-12")
     )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/2ce4058b-89a7-4f07-99b8-5fb38d0d2d55"
-      (reference "J15") (unit 1) (value "KEYBOARDEX") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x09_P2.54mm_Vertical")
+    (path "/00000000-0000-0000-0000-000061a7d9c6/29fcd257-a892-4157-afbc-0ad1ce5de70e"
+      (reference "J15") (unit 1) (value "KEYBOARD_EX") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/f6c7368d-e7a6-4af8-86b4-5fe255aa4835"
       (reference "J16") (unit 1) (value "MCU") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x12_P2.54mm_Vertical")
@@ -2148,9 +2142,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/06334088-dd78-4e80-a658-961659670bd4"
       (reference "Q4") (unit 1) (value "MMBT3904") (footprint "Package_TO_SOT_SMD:SOT-23")
-    )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/863df319-c337-4a72-a612-7680ff37accf"
-      (reference "Q5") (unit 1) (value "SS8550") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/a28c22e9-75f0-4b25-a1f0-be0493908ce2"
       (reference "R1") (unit 1) (value "270") (footprint "Resistor_SMD:R_0603_1608Metric")
@@ -2365,15 +2356,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b5b079a1-3fe5-4580-ba5a-c6100b764583"
       (reference "R71") (unit 1) (value "33") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/8f01a1d7-a9e6-4303-ab07-366d7890a242"
-      (reference "R72") (unit 1) (value "2k2") (footprint "Resistor_SMD:R_0402_1005Metric")
-    )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/ad75348d-8637-4040-ba92-0c7c8b1b9302"
-      (reference "R73") (unit 1) (value "2k2") (footprint "Resistor_SMD:R_0402_1005Metric")
-    )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/457ffb4e-ab49-402e-8eca-60b7ecd77f10"
-      (reference "R74") (unit 1) (value "2k2") (footprint "Resistor_SMD:R_0402_1005Metric")
-    )
     (path "/00000000-0000-0000-0000-00006151ec26/d274958a-11e0-4b46-9f0f-53c54a29ff64"
       (reference "RN1") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
     )
@@ -2538,9 +2520,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cefd63f9-21f6-43e0-98c0-bb79235600be"
       (reference "U21") (unit 13) (value "T8Q144C3") (footprint "SnapEDA:QFP50P2200X2200X160-144N")
-    )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/f51d4468-c953-44f2-a9d4-b3416ecefe6f"
-      (reference "U22") (unit 1) (value "74LS145") (footprint "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/5aa292c5-d3bb-4d1e-8d90-92f4de8aadcd"
       (reference "Y1") (unit 1) (value "12 MHz") (footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm")
