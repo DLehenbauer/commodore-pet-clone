@@ -37,7 +37,7 @@ void init() {
 
     printf("PET init\n");
     fpga_init();
-    //fpga_config();
+    fpga_config();
 
     driver_init();
     init_sd();
