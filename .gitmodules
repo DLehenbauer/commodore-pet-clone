@@ -4,3 +4,7 @@
 [submodule "fw/external/no-OS-FatFS-SD-SPI-RPi-Pico"]
 	path = fw/external/no-OS-FatFS-SD-SPI-RPi-Pico
 	url = https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico
+[submodule "rtl/external/icesid"]
+	path = rtl/external/icesid
+	url = https://github.com/DLehenbauer/icesid.git
+	branch = efinix-t8
