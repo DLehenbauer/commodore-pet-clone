@@ -137,6 +137,7 @@ module main(
     logic pia2_en;
     logic via_en;
     logic crtc_en;
+    logic sid_en;
     logic io_en;
     logic is_mirrored;
 
@@ -147,6 +148,7 @@ module main(
         .pia2_en_o(pia2_en),
         .via_en_o(via_en),
         .crtc_en_o(crtc_en),
+        .sid_en_o(sid_en),
         .io_en_o(io_en),
         .is_mirrored_o(is_mirrored)
     );
@@ -186,7 +188,20 @@ module main(
     // Audio
     //
 
-    assign audio_o = via_cb2_i && diag_i;
+    audio audio(
+        .reset_i('0),           // TODO: reset
+        .clk8_i(strobe_clk),
+        .cpu_en_i(cpu_en),
+        .sid_en_i(sid_en),
+        .rw_ni(bus_rw_ni),
+        .addr_i(bus_addr_i[4:0]),
+        .data_i(bus_data_i),
+        // .data_o(bus_data_o),
+
+        .diag_i(diag_i),
+        .via_cb2_i(via_cb2_i),
+        .audio_o(audio_o)
+    );
 
     //
     // Video
@@ -196,7 +211,7 @@ module main(
     logic        video_addr_oe;
 
     video video(
-        .reset_i('0),
+        .reset_i('0),               // TODO: reset
         .clk16_i(clk16_i),
         .pixel_clk_i(setup_clk),
         .setup_clk_i(setup_clk),
@@ -220,7 +235,7 @@ module main(
     );
 
     assign ram_addr_o[11:10] = is_mirrored && cpu_en
-        ? { 1'b0, bus_addr_i[10:10] }
+        ? 2'b00 // 80 col: { 1'b0, bus_addr_i[10:10] }
         : bus_addr_i[11:10];
 
     //

@@ -27,6 +27,7 @@ set BINDIR=C:\Efinity\2022.2\bin
     pushd %PROJDIR%
 
     iverilog.exe -g2009 -s sim -o%PROJDIR%\work_sim\PET.vvp -f%PROJDIR%\work_sim\PET.f
+    ::iverilog.exe -g2009 -s address_decoding_tb -o%PROJDIR%\work_sim\PET.vvp -f%PROJDIR%\work_sim\PET.f
     if %ERRORLEVEL% neq 0 popd && exit /b %ERRORLEVEL%
 
     vvp.exe -l%PROJDIR%\outflow\PET.rtl.simlog %PROJDIR%\work_sim\PET.vvp

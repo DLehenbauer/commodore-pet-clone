@@ -265,4 +265,14 @@ module top_driver #(
         @(posedge v_sync);
     endtask
 
+    task cpu_write(
+        input logic [15:0] addr,
+        input logic [7:0]  data
+    );
+        @(negedge cpu_clk_o);
+        cpu.set_cpu(addr, data, /* rw_ni: */ '0);
+        
+        @(posedge cpu_clk_o);
+        cpu.set_cpu(addr, data, /* rw_ni: */ '1);
+    endtask
 endmodule

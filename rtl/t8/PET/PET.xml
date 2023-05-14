@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="PET" description="" last_change_date="Fri March 10 2023 06:33:37" location="D:/gh/commodore-pet-clone/rtl/t8/PET" sw_version="2022.2.322" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="true" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="PET" description="" last_change_date="Sun May 14 2023 09:44:41" location="D:/gh/commodore-pet-clone/rtl/t8/PET" sw_version="2022.2.322" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="true" design_ood="change" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion"/>
         <efx:device name="T8Q144"/>
@@ -7,16 +7,26 @@
     </efx:device_info>
     <efx:design_info def_veri_version="sv_09" def_vhdl_version="vhdl_2008">
         <efx:top_module name="top"/>
-        <efx:design_file name="src/top.sv" version="default" library="default"/>
+        <efx:design_file name="src/address_decoding.sv" version="default" library="default"/>
+        <efx:design_file name="src/audio.sv" version="default" library="default"/>
+        <efx:design_file name="src/control.sv" version="default" library="default"/>
+        <efx:design_file name="src/keyboard.sv" version="default" library="default"/>
         <efx:design_file name="src/main.sv" version="default" library="default"/>
         <efx:design_file name="src/spi.sv" version="default" library="default"/>
         <efx:design_file name="src/timing.sv" version="default" library="default"/>
-        <efx:design_file name="src/control.sv" version="default" library="default"/>
-        <efx:design_file name="src/address_decoding.sv" version="default" library="default"/>
-        <efx:design_file name="src/video.sv" version="default" library="default"/>
-        <efx:design_file name="src/keyboard.sv" version="default" library="default"/>
+        <efx:design_file name="src/top.sv" version="default" library="default"/>
         <efx:design_file name="src/video_crtc.sv" version="default" library="default"/>
         <efx:design_file name="src/video_dotgen.sv" version="default" library="default"/>
+        <efx:design_file name="src/video.sv" version="default" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/clip.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/dac.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/env.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/filter.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/mult.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/output.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/pot.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/sid.v" version="sv_05" library="default"/>
+        <efx:design_file name="../../external/icesid/icesid/voice.v" version="sv_05" library="default"/>
         <efx:top_vhdl_arch name=""/>
     </efx:design_info>
     <efx:constraint_info>
@@ -24,13 +34,18 @@
         <efx:inter_file name=""/>
     </efx:constraint_info>
     <efx:sim_info>
-        <efx:sim_file name="sim/PET_tb.sv"/>
-        <efx:sim_file name="sim/top_driver.sv"/>
+        <efx:sim_file name="sim/address_decoding_tb.sv"/>
+        <efx:sim_file name="sim/audio_driver.sv"/>
+        <efx:sim_file name="sim/audio_tb.sv"/>
         <efx:sim_file name="sim/mock_cpu.sv"/>
-        <efx:sim_file name="sim/spi_driver.sv"/>
         <efx:sim_file name="sim/mock_mcu.sv"/>
+        <efx:sim_file name="sim/PET_tb.sv"/>
+        <efx:sim_file name="sim/spi_driver.sv"/>
+        <efx:sim_file name="sim/top_driver.sv"/>
     </efx:sim_info>
-    <efx:misc_info/>
+    <efx:misc_info>
+        <efx:misc_file name="../../external/icesid/icesid/curve_6581.hex"/>
+    </efx:misc_info>
     <efx:ip_info/>
     <efx:synthesis tool_name="efx_map">
         <efx:param name="work_dir" value="work_syn" value_type="e_string"/>
