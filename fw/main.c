@@ -30,23 +30,17 @@
 #include "usb/usb.h"
 
 void init() {
-    stdio_init_all();
-
-    printf("\e[1;1H\e[2J");
-    fflush(stdout);
-
-    printf("PET init\n");
     fpga_init();
     fpga_config();
-
+    printf("FPGA initialized.\n");
     driver_init();
+    printf("Driver initialized.\n");
     init_sd();
+    printf("SD initialized.\n");
     usb_init();
-
-    // Flush stdout before starting Core 1    
-    fflush(stdout);
-
+    printf("USB initialized.\n");
     video_init();
+    printf("Video initialized.\n");
 }
 
 int main() {
@@ -57,6 +51,7 @@ int main() {
     // test_display();
 #else
     pet_reset();
+    printf("PET reset.\n");
     pet_main();
 #endif
 

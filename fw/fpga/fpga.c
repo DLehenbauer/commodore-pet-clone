@@ -13,15 +13,32 @@
  */
 
 #include "fpga.h"
-#include "sd/sd.h"
-#include "./hw.h"
-#include "f_util.h"
-#include "ff.h"
-#include "diskio.h"
+#include "hw.h"
 
 static const uint8_t __in_flash(".fpga_bitstream") bitstream[] = {
     #include "./bitstream.h"
 };
+
+void measure_freqs(uint fpga_div) {
+    uint32_t f_pll_sys = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_PLL_SYS_CLKSRC_PRIMARY);
+    uint32_t f_pll_usb = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_PLL_USB_CLKSRC_PRIMARY);
+    uint32_t f_rosc = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_ROSC_CLKSRC);
+    uint32_t f_clk_sys = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_SYS);
+    uint32_t f_clk_peri = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_PERI);
+    uint32_t f_clk_usb = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_USB);
+    uint32_t f_clk_adc = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_ADC);
+    uint32_t f_clk_rtc = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_RTC);
+
+    printf("    pll_sys  = %d kHz\n", f_pll_sys);
+    printf("    pll_usb  = %d kHz\n", f_pll_usb);
+    printf("    rosc     = %d kHz\n", f_rosc);
+    printf("    clk_sys  = %d kHz\n", f_clk_sys);
+    printf("    clk_peri = %d kHz\n", f_clk_peri);
+    printf("    clk_usb  = %d kHz\n", f_clk_usb);
+    printf("    clk_adc  = %d kHz\n", f_clk_adc);
+    printf("    clk_rtc  = %d kHz\n", f_clk_rtc);
+    printf("    clk_fpga = %d kHz\n", f_clk_sys / fpga_div);
+}
 
 void fpga_init() {
     gpio_init(FPGA_CRESET_GP);
@@ -32,21 +49,32 @@ void fpga_init() {
  	set_sys_clock_khz(270000, true);
 
     // FPGA CLK: 270 MHz / 6 = 45 MHz
+    const uint16_t fpga_div = 6;
+
     const uint slice = pwm_gpio_to_slice_num(FPGA_CLK_GP);
     const uint channel = pwm_gpio_to_channel(FPGA_CLK_GP);
     pwm_config config = pwm_get_default_config();
-    pwm_config_set_wrap(&config, 5);
+    pwm_config_set_wrap(&config, fpga_div - 1);
     pwm_init(slice, &config, /* start: */ true);
     pwm_set_chan_level(slice, channel, 2);
     gpio_set_drive_strength(FPGA_CLK_GP, GPIO_DRIVE_STRENGTH_2MA);
     gpio_set_function(FPGA_CLK_GP, GPIO_FUNC_PWM);
+
+    // Setting 'sys_clk' causes 'peri_clk' to revert to 48 MHz.  (Re)initialize UART.
+    //
+    // See: https://github.com/Bodmer/TFT_eSPI/discussions/2432
+    // See: https://github.com/raspberrypi/pico-examples/blob/master/clocks/hello_48MHz/hello_48MHz.c
+    stdio_init_all();
+    printf("\e[2J");
+    printf("Clocks initialized:\n");
+    measure_freqs(fpga_div);
 }
 
 bool fpga_config() {
     gpio_init(FPGA_CRESET_GP);
 
     if (gpio_get(FPGA_CRESET_GP)) {
-        printf("FPGA: Programmer attached.  Skipping configuration.\n");
+        printf("FPGA config skipped: Programmer attached.\n");
         return false;
     }
 

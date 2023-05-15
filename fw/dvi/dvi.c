@@ -221,22 +221,20 @@ void core1_main() {
 }
 
 void video_init() {
-	vreg_set_voltage(VREG_VSEL);
-	sleep_ms(10);
- 	set_sys_clock_khz(DVI_TIMING.bit_clk_khz, true);
-
-	printf("Configuring DVI\n");
+    uint32_t f_clk_sys = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_SYS);
+    int32_t delta      = f_clk_sys - DVI_TIMING.bit_clk_khz;
+    if (!(-1 <= delta && delta <= 1)) {
+        panic("FAIL: Incorrect clk_sys frequency.  Expected %d +/-1 kHz, but got %d kHz.", DVI_TIMING.bit_clk_khz, f_clk_sys);
+    }
 
 	dvi0.timing = &DVI_TIMING;
 	dvi0.ser_cfg = micromod_cfg;
 	dvi0.scanline_callback = core1_scanline_callback;
 	dvi_init(&dvi0, next_striped_spin_lock_num(), next_striped_spin_lock_num());
 
-	printf("Prepare first scanline\n");
     memset(video_char_buffer, 0, sizeof(video_char_buffer));
 	prepare_scanline(video_char_buffer, 0);
 
-	printf("Core 1 start\n");
 	sem_init(&dvi_start_sem, 0, 1);
 	hw_set_bits(&bus_ctrl_hw->priority, BUSCTRL_BUS_PRIORITY_PROC1_BITS);
 	multicore_launch_core1(core1_main);
