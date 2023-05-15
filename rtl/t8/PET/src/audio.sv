@@ -78,7 +78,7 @@ module audio(
     input  logic       clk8_i,
     input  logic       cpu_en_i,
     input  logic       sid_en_i,
-    input  logic       rw_ni,
+    input  logic       cpu_wr_en_i,
     input  logic [4:0] addr_i,
     input  logic [7:0] data_i,      // writing to SID
     output logic [7:0] data_o,      // reading from SID
@@ -87,6 +87,8 @@ module audio(
     input  logic       via_cb2_i,
     output logic       audio_o
 );
+    assign sid_wr_en = cpu_wr_en_i && sid_en_i;
+
     // See http://www.cbmhardware.de/show.php?r=14&id=71/PETSID
     logic signed [15:0] sid_out;
 
@@ -94,7 +96,7 @@ module audio(
         .clk(clk8_i),       // System clock
         .clkEn(cpu_en_i),   // 1 MHz clock enable
         .iRst(reset_i),     // sync. reset (active high)
-        .iWE(!rw_ni),       // write enable (active high)
+        .iWE(sid_wr_en),    // write enable (active high)
         .iAddr(addr_i),     // sid address
         .iDataW(data_i),    // writing to SID
         .oDataR(data_o),    // reading from SID

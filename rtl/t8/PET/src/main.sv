@@ -189,11 +189,11 @@ module main(
     //
 
     audio audio(
-        .reset_i('0),           // TODO: reset
+        .reset_i(cpu_res_o),           // TODO: reset
         .clk8_i(strobe_clk),
         .cpu_en_i(cpu_en),
+        .cpu_wr_en_i(cpu_wr_en),
         .sid_en_i(sid_en),
-        .rw_ni(bus_rw_ni),
         .addr_i(bus_addr_i[4:0]),
         .data_i(bus_data_i),
         // .data_o(bus_data_o),

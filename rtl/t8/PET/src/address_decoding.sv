@@ -63,13 +63,10 @@ module address_decoding(
     logic [NUM_BITS-1:0] select = NUM_BITS'('hxxx);
 
     always_comb begin
-        unique casez (addr_i[16:0])
+        priority casez (addr_i[16:0])
             17'b0_0???_????_????_????: select = RAM;    // RAM   : 0000-7FFF
-            17'b0_1000_0???_????_????: select = VRAM;   // VRAM  : 8000-8F00
-            17'b0_1000_1??0_????_????: select = VRAM;
-            17'b0_1000_1?0?_????_????: select = VRAM;
-            17'b0_1000_10??_????_????: select = VRAM;
             17'b0_1000_1111_????_????: select = SID;    // SID   : 8F00-8FFF
+            17'b0_1000_????_????_????: select = VRAM;   // VRAM  : 8000-8F00
             17'b0_1110_1000_0000_????: select = MAGIC;  // MAGIC : E800-E80F
             17'b0_1110_1000_0001_????: select = PIA1;   // PIA1  : E810-E81F
             17'b0_1110_1000_001?_????: select = PIA2;   // PIA2  : E820-E83F

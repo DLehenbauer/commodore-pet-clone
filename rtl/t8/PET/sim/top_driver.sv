@@ -189,6 +189,26 @@ module top_driver #(
         .cpu_be_i(cpu_be_o)
     );
 
+    assign bus_rw_ni = cpu_rw_noe
+        ? cpu_rw_no
+        : bus_rw_noe
+            ? bus_rw_no
+            : 1'bx;
+
+    assign bus_addr_i = 
+        cpu_addr_oe
+            ? cpu_addr_o
+            : bus_addr_15_0_oe
+                ? bus_addr_o[15:0]
+                : 16'hxxxx;
+
+    assign bus_data_i =
+        cpu_data_oe
+            ? cpu_data_o
+            : bus_data_7_0_oe
+                ? bus_data_o
+                : 8'hxx;
+
     // The FPGA and CPU should never attempt to drive the bus signals simultaneously.
     always begin
         #1;
@@ -269,10 +289,10 @@ module top_driver #(
         input logic [15:0] addr,
         input logic [7:0]  data
     );
-        @(negedge cpu_clk_o);
+        @(posedge cpu_be_o);
         cpu.set_cpu(addr, data, /* rw_ni: */ '0);
         
-        @(posedge cpu_clk_o);
+        @(negedge cpu_be_o);
         cpu.set_cpu(addr, data, /* rw_ni: */ '1);
     endtask
 endmodule

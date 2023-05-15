@@ -33,6 +33,16 @@ module sim;
         driver.set_cpu(/* reset: */ 1, /* ready: */ 0);
         driver.set_cpu(/* reset: */ 0, /* ready: */ 1);
 
+        $display("[%t] SID: Play 440 Hz", $time);
+        driver.cpu_write(16'h8f18, 8'h1F);
+        driver.cpu_write(16'h8f00, 8'hD6);
+        driver.cpu_write(16'h8f01, 8'h1C);
+        driver.cpu_write(16'h8f05, 8'h00);
+        driver.cpu_write(16'h8f06, 8'hF0);
+        driver.cpu_write(16'h8f04, 8'b0001_0001);
+
+        #100000;
+
         $display("[%t] Test Complete", $time);
         $finish;
     end
