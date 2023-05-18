@@ -2,7 +2,11 @@
 
   (uuid 61066fc0-5c38-465b-99da-7213d62ed0a3)
 
-  (paper "A4")
+  (paper "A")
+
+  (title_block
+    (title "CBM PET Mainboard Replacement")
+  )
 
   (lib_symbols
     (symbol "Device:R_Small" (pin_numbers hide) (pin_names (offset 0.254) hide) (in_bom yes) (on_board yes)

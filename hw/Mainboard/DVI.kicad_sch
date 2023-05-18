@@ -2,7 +2,11 @@
 
   (uuid 0515dea8-0d23-405a-a6c8-028831016352)
 
-  (paper "A4")
+  (paper "A")
+
+  (title_block
+    (title "CBM PET Mainboard Replacement")
+  )
 
   (lib_symbols
     (symbol "Connector:HDMI_A" (in_bom yes) (on_board yes)

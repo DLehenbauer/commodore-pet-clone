@@ -2,7 +2,11 @@
 
   (uuid 69bfd397-7283-4857-beba-7ad15a0acba1)
 
-  (paper "A4")
+  (paper "A")
+
+  (title_block
+    (title "CBM PET Mainboard Replacement")
+  )
 
   (lib_symbols
     (symbol "Connector:Micro_SD_Card_Det" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)

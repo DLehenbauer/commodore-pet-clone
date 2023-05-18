@@ -2,7 +2,11 @@
 
   (uuid 875721b4-fc1d-4ab9-b9d8-8d1e81e29c4b)
 
-  (paper "A4")
+  (paper "A")
+
+  (title_block
+    (title "CBM PET Mainboard Replacement")
+  )
 
   (lib_symbols
     (symbol "Connector:Conn_01x02_Male" (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)

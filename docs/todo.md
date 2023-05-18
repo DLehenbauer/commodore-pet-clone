@@ -9,14 +9,11 @@
 * HW:
   * SID Audio
   * Consider FPGA UART
-  * Expose RES on lower header
-  * 10uF 50V -> 10uF 25V
   * Programming
     * Build separate "debug PCB" that integrates:
       * Picoprobe
       * FT2232
       * Moves CDONE/NSTATUS to debug board?
-  * Use second LM317AG to produce 1.5A for USB or reduce USB PD resistors
   * Larger net ties for FPGA_*
   * Consider [SMD SRAM](https://jlcpcb.com/partdetail/444095-IS61WV1288EEBLL10TLI/C443418)
   * PIA/VIAs have multiple CS pins (with differing polarity).  Consider if other pins simplify routing or design.
