@@ -17,6 +17,8 @@
 module sim;
     top_driver driver();
 
+    integer addr;
+
     initial begin
         $dumpfile("work_sim/out.vcd");
         $dumpvars(0, sim);
@@ -34,14 +36,26 @@ module sim;
         driver.set_cpu(/* reset: */ 0, /* ready: */ 1);
 
         $display("[%t] SID: Play 440 Hz", $time);
-        driver.cpu_write(16'h8f18, 8'h1F);
-        driver.cpu_write(16'h8f00, 8'hD6);
-        driver.cpu_write(16'h8f01, 8'h1C);
-        driver.cpu_write(16'h8f05, 8'h00);
-        driver.cpu_write(16'h8f06, 8'hF0);
-        driver.cpu_write(16'h8f04, 8'b0001_0001);
+        driver.cpu_write(16'h8f18, 8'h0F);      // Volume=15, No Filters
 
-        #100000;
+        for (addr = 16'h8f00; addr < 16'h8f15; addr += 7) begin
+            driver.cpu_write(addr + 16'd0, 8'hD6);     // Freq = 440 Hz
+            driver.cpu_write(addr + 16'd1, 8'h1C);
+            driver.cpu_write(addr + 16'd3, 8'h07);     // Pulse Width = 50%
+            driver.cpu_write(addr + 16'd4, 8'hff);     //
+            driver.cpu_write(addr + 16'd5, 8'h00);     // Attack  = 0, Decay = 0
+            driver.cpu_write(addr + 16'd6, 8'hF0);     // Sustain = F, Release = 0
+        end
+
+        for (addr = 16'h8f00; addr < 16'h8f15; addr += 7) begin
+            driver.cpu_write(addr + 16'd4, 8'b0100_0001);   // Pulse / Trigger
+        end
+
+        #2000000;
+
+        driver.ext_reset();
+
+        #1000000;
 
         $display("[%t] Test Complete", $time);
         $finish;

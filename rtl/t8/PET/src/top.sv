@@ -84,7 +84,7 @@ module top(
 );
     // NSTATUS is asserted if programming fails and is often connected to an LED.
     // Deassert to indicate that programming was successful.
-    assign status_no = '0;
+    assign status_no = cpu_res_i;
 
     // Efinity Interface Designer generates a separate output enable for each bus signal.
     // Create a combined logic signal to control OE for bus_addr_o[15:0].  Note that the
@@ -124,7 +124,7 @@ module top(
     // RES, IRQ, and NMI are active low open drain wire-or signals.  For consistency
     // and convenience we convert these to active high outputs and handle OE here.
     logic cpu_res_i, cpu_res_o;
-    assign cpu_res_i   = !cpu_res_ni;
+    assign cpu_res_i   = cpu_res_o ? 1'b1 : !cpu_res_ni;
     assign cpu_res_no  = !cpu_res_o;
     assign cpu_res_noe = cpu_res_o;     // Only drive open drain wired-or when asserting RES
 
@@ -168,6 +168,7 @@ module top(
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_o(ram_oe_o),
         .ram_we_o(ram_we_o),
+        .cpu_res_i(cpu_res_i),
         .cpu_res_o(cpu_res_o),
         .cpu_ready_o(cpu_ready_o),
         .cpu_be_o(cpu_be_o),
