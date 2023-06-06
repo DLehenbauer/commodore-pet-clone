@@ -481,7 +481,6 @@
     )
   )
 
-
   (junction (at 130.81 74.93) (diameter 0) (color 0 0 0 0)
     (uuid 150d0069-c07f-4375-b6e1-720c46bfcdee)
   )
@@ -920,10 +919,10 @@
     (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (id 2) (at 154.94 69.85 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/1810191219_Samsung-Electro-Mechanics-CL05B104KO5NNNC_C1525.pdf" (id 3) (at 154.94 69.85 0)
+    (property "Datasheet" "" (id 3) (at 154.94 69.85 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "LCSC" "C1525" (id 4) (at 154.94 69.85 0)
+    (property "LCSC" "C307331" (id 4) (at 154.94 69.85 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid 3f7d4c69-8285-41f9-88eb-5cd0af6396b0))
