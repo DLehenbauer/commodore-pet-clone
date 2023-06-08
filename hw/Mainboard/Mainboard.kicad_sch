@@ -1850,7 +1850,7 @@
       (reference "C54") (unit 1) (value "47u 10V") (footprint "Capacitor_SMD:C_1206_3216Metric")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/f42ac844-6058-47e2-9fe9-dde4a7edc2f5"
-      (reference "C55") (unit 1) (value "47n") (footprint "Capacitor_SMD:C_0402_1005Metric")
+      (reference "C55") (unit 1) (value "47n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/e1d76a09-a2cf-49cf-b048-eb8e55714c8e"
       (reference "C56") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
