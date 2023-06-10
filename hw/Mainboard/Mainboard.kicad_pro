@@ -455,6 +455,7 @@
         "name": "FPGA",
         "nets": [
           "+1V2",
+          "+3V3",
           "/CPU \\ RAM/A0",
           "/CPU \\ RAM/A1",
           "/CPU \\ RAM/A10",
@@ -573,7 +574,6 @@
         "microvia_drill": 0.1,
         "name": "MCU",
         "nets": [
-          "+3V3",
           "/MAGIC/FPGA/CEC",
           "/MAGIC/FPGA/I2C1_SCL",
           "/MAGIC/FPGA/I2C1_SDA",
