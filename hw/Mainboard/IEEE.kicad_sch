@@ -3672,7 +3672,7 @@
     (property "Footprint" "Retrocomputing:CBM_PET_IEEE_EDGE_CON_24P" (id 2) (at 238.76 119.38 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (id 3) (at 238.76 119.38 0)
+    (property "Datasheet" "~" (id 3) (at 238.76 119.38 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid 0b54b345-9a53-4674-9845-b3cc18589955))
