@@ -1099,7 +1099,7 @@
     (property "Footprint" "Connector_HDMI:HDMI_A_Molex_208658-1001_Horizontal" (id 2) (at 191.135 88.9 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (id 3) (at 191.135 88.9 0)
+    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/1811111311_BOOMELE-Boom-Precision-Elec-C138388_C138388.pdf" (id 3) (at 191.135 88.9 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "LCSC" "C138388" (id 4) (at 190.5 88.9 0)

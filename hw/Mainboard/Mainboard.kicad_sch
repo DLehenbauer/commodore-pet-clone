@@ -1399,8 +1399,8 @@
     (path "/00000000-0000-0000-0000-000061ed99de/20838e3b-f939-476a-99c9-6f1f1f874b74"
       (reference "#PWR0111") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/95eab52c-2ced-447e-9356-12c5a74982d8"
-      (reference "#PWR0112") (unit 1) (value "+9V_Unreg") (footprint "")
+    (path "/00000000-0000-0000-0000-000061ed99de/7992f9f2-f97b-4cd0-9c28-1ad452b09dff"
+      (reference "#PWR0112") (unit 1) (value "+5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/3af57d77-54f8-4cc8-a2a0-34963025f1ef"
       (reference "#PWR0113") (unit 1) (value "PD_GND") (footprint "")
@@ -2107,6 +2107,9 @@
     (path "/00000000-0000-0000-0000-000061ed99de/7904a885-cd00-4ca9-b80e-c715a8a13e1e"
       (reference "PT3") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
+    (path "/00000000-0000-0000-0000-000061ed99de/bf4db44e-f6b2-4854-a79f-10d85d9159d8"
+      (reference "PT4") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
     (path "/00000000-0000-0000-0000-00006151ec26/3ee42b49-116c-44b8-a1f3-c3cf2ac19c75"
       (reference "PT5") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
@@ -2335,8 +2338,8 @@
     (path "/00000000-0000-0000-0000-0000614e685e/00000000-0000-0000-0000-0000618f0ec7"
       (reference "R40") (unit 1) (value "4k7") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000061f4c743"
-      (reference "R41") (unit 1) (value "2k7") (footprint "Resistor_SMD:R_0603_1608Metric")
+    (path "/00000000-0000-0000-0000-000061ed99de/7b349b15-4b76-4f18-ad90-adbb4ab85e30"
+      (reference "R41") (unit 1) (value "1k5") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062fc42f8"
       (reference "R42") (unit 1) (value "68") (footprint "Resistor_SMD:R_0805_2012Metric")
