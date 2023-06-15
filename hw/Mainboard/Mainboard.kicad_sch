@@ -1252,9 +1252,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6215c841-4056-48a6-a803-37299bf66b14"
       (reference "#PWR038") (unit 1) (value "+3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/e3701e2f-2771-41c3-9493-40a9d7d78c08"
-      (reference "#PWR041") (unit 1) (value "+1V2") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3fd27817-43b3-44f7-a74b-557e2e65b123"
       (reference "#PWR042") (unit 1) (value "+1V2") (footprint "")
     )
@@ -1269,9 +1266,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/bc327bc9-34af-4969-9558-daed169d7154"
       (reference "#PWR046") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/5522586f-9c66-4225-8053-956b035879b7"
-      (reference "#PWR047") (unit 1) (value "+3V3") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-000066a110f7"
       (reference "#PWR048") (unit 1) (value "GND") (footprint "")
@@ -1501,8 +1495,8 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/8d14bb17-80d1-466e-bb67-d9a60c1edafa"
       (reference "#PWR0145") (unit 1) (value "+3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/cfc57b6d-b368-41b3-b774-ff74256913c7"
-      (reference "#PWR0146") (unit 1) (value "GND") (footprint "")
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/ef021165-2306-4ab9-99f8-dba421cc72be"
+      (reference "#PWR0146") (unit 1) (value "PD_GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/d7346628-bc14-4709-aafe-5231479d808e/178c181a-d67b-4300-a30f-cb828a29cfca"
       (reference "#PWR0147") (unit 1) (value "+3V3") (footprint "")
@@ -1867,8 +1861,8 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/951a2de4-c809-4440-8862-66184207e8e0"
       (reference "C62") (unit 1) (value "10n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/e01350e0-8416-46dc-890a-db734ec0a8c8"
-      (reference "C63") (unit 1) (value "10n") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/78eaa28b-c89f-463a-904f-aa1a86d0ade0"
+      (reference "C63") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/378f566e-d5ca-4a18-918c-3f161ac762ae"
       (reference "C64") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1926,6 +1920,9 @@
     )
     (path "/00000000-0000-0000-0000-000061ed99de/a9ccdd8b-860b-4d70-9163-1f336ae1e976"
       (reference "C82") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3f4cde1a-23f8-41f9-bb05-00a08c12b738"
+      (reference "C83") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000061f4c74a"
       (reference "D1") (unit 1) (value "LED_RED") (footprint "LED_SMD:LED_0603_1608Metric")
@@ -2206,8 +2203,20 @@
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/558865b8-78a0-4a81-8308-9935555f8725"
       (reference "PT36") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
+    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/3c7e1ff8-9659-4eba-8f35-f138d1a3d62d"
+      (reference "PT37") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/1435cd12-2017-40ac-b459-9519ce547344"
       (reference "PT38") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/63c33da3-84f5-4dbe-a0a5-dc2c7e7eb61e"
+      (reference "PT39") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c0149dcc-7328-4bf7-b520-fec6ae8b045d"
+      (reference "PT40") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c0d916aa-6e62-440f-a4ea-a9a0d59a0e0c"
+      (reference "PT41") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/04ae58fc-a1df-4733-997e-a64d33434240"
       (reference "Q1") (unit 1) (value "AO3401A") (footprint "JLCPCB:SOT-23_L2.9-W1.3-P1.90-LS2.4-BR")
