@@ -699,7 +699,7 @@
     (property "Footprint" "Capacitor_SMD:C_0603_1608Metric" (id 2) (at 102.87 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (id 3) (at 102.87 83.82 0)
+    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Samsung-Electro-Mechanics-CL10A475KO8NNNC_C19666.pdf" (id 3) (at 102.87 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "LCSC" "C19666" (id 4) (at 102.87 83.82 0)

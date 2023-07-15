@@ -483,7 +483,6 @@
           "/MAGIC/FPGA/VCC_85",
           "/MAGIC/FPGA/VCC_96",
           "/MAGIC/FPGA/VIA_CB2",
-          "/MAGIC/FPGA/VSS",
           "/MAGIC/FPGA/~{IRQ}",
           "/MAGIC/FPGA/~{ML}",
           "/MAGIC/FPGA/~{RAM_OE}",
@@ -662,8 +661,7 @@
           "/POWER/9V_UNFILT",
           "/POWER/VAC1",
           "/POWER/VAC2",
-          "CHASSIS_GND",
-          "PD_GND"
+          "CHASSIS_GND"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
