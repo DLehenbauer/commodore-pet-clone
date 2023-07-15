@@ -1855,8 +1855,8 @@
     (path "/00000000-0000-0000-0000-000061ed99de/0da0e645-b31d-4020-815f-0f81d8bd4a10"
       (reference "C57") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/74f56b92-74e0-4562-81a4-82ff09d39c69"
-      (reference "C58") (unit 1) (value "4.7u 10V") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (path "/00000000-0000-0000-0000-000061ed99de/4687eebb-3639-49f4-8e9e-3fb784083ebf"
+      (reference "C58") (unit 1) (value "4.7u 16V") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/504943f1-2273-469c-a480-921d4818b10d"
       (reference "C59") (unit 1) (value "22n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1934,10 +1934,13 @@
       (reference "C83") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/11bcc422-b1ac-4844-b200-6cd60b4e84d5"
-      (reference "C84") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C84") (unit 1) (value "4.7u 16V") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/974b5930-d41c-4d34-b3db-a0a40abfb01a"
-      (reference "C85") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    (path "/00000000-0000-0000-0000-000061ed99de/57dd3186-a2ec-45e5-8883-065214792dce"
+      (reference "C85") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    )
+    (path "/00000000-0000-0000-0000-000061ed99de/77adda12-8c52-4ebe-b505-d1543fdacfdb"
+      (reference "C86") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000061f4c74a"
       (reference "D1") (unit 1) (value "LED_RED") (footprint "LED_SMD:LED_0603_1608Metric")
