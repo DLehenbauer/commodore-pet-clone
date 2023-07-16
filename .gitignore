@@ -29,10 +29,6 @@ hw/**/fp-info-cache
 hw/**/*.dsn
 hw/**/*.ses
 
-# BOM import/export
-hw/**/*.xml
-hw/**/*.csv
-
 # Icarus Verilog build output
 rtl/ep2/*.out
 rtl/ep2/*.vcd
