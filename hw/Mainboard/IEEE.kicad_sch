@@ -1119,6 +1119,7 @@
 
   (bus_alias "IEEE_IN" (members "DAV_IN" "NRFD_IN" "NDAC_IN" "ATN_IN" "EOI_IN" "SRQ_IN"))
   (bus_alias "IEEE" (members "ATN" "EOI" "NDAC" "SRQ" "NRFD" "DAV" "IFC" "DIO8" "DIO1" "DIO2" "DIO3" "DIO4" "DIO5" "DIO6" "DIO7"))
+
   (junction (at 247.65 132.08) (diameter 0) (color 0 0 0 0)
     (uuid 090d522f-ec88-46b3-b5d4-7243e92f6680)
   )

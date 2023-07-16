@@ -1849,14 +1849,8 @@
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/f42ac844-6058-47e2-9fe9-dde4a7edc2f5"
       (reference "C55") (unit 1) (value "47n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/e1d76a09-a2cf-49cf-b048-eb8e55714c8e"
-      (reference "C56") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/0da0e645-b31d-4020-815f-0f81d8bd4a10"
-      (reference "C57") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/4687eebb-3639-49f4-8e9e-3fb784083ebf"
-      (reference "C58") (unit 1) (value "4.7u 16V") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C58") (unit 1) (value "4.7u 10V") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/504943f1-2273-469c-a480-921d4818b10d"
       (reference "C59") (unit 1) (value "22n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -1999,6 +1993,9 @@
     (path "/00000000-0000-0000-0000-000061ed99de/a711bf4d-422b-4985-ab81-aad070900231"
       (reference "H4") (unit 1) (value "MountingHole") (footprint "PET:PET_MountingHole_4mm")
     )
+    (path "/00000000-0000-0000-0000-000061ed99de/ecf3b506-d152-4eb8-93c3-6f71ff69123c"
+      (reference "HS1") (unit 1) (value "Heatsink_Pad") (footprint "PET:V1100SMDBL")
+    )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/54611654-ef5e-404c-acdc-e5cf225cbf41"
       (reference "J1") (unit 1) (value "SJ-43504-SMT-TR") (footprint "SnapEDA:CUI_SJ-43504-SMT-TR")
     )
@@ -2119,9 +2116,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c3638af2-eb20-4ef0-b6ba-27947aaf50b1"
       (reference "PT2") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/7904a885-cd00-4ca9-b80e-c715a8a13e1e"
-      (reference "PT3") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/bf4db44e-f6b2-4854-a79f-10d85d9159d8"
       (reference "PT4") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
@@ -2211,9 +2205,6 @@
     )
     (path "/00000000-0000-0000-0000-000061a7d9c6/9cdf69fe-bf3e-47ca-a9ed-084d2508b75d"
       (reference "PT33") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/ff7be9c6-aafe-47c4-bc84-3cd05a965f1b"
-      (reference "PT34") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/5d4478c1-4f99-4ffd-a4e4-04932e5d3db1"
       (reference "PT35") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
@@ -2600,7 +2591,7 @@
       (reference "U9") (unit 1) (value "W65C22N") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/6e73782c-43a6-4440-b33e-a2638e43dc9f"
-      (reference "U10") (unit 1) (value "LM317AG-TN3-R") (footprint "PET:TO-252-2_ThermalVias")
+      (reference "U10") (unit 1) (value "LM317AG-TN3-R") (footprint "Package_TO_SOT_SMD:TO-252-2")
     )
     (path "/00000000-0000-0000-0000-0000614e685e/00000000-0000-0000-0000-0000614e6908"
       (reference "U11") (unit 1) (value "W65C02S") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
@@ -2615,7 +2606,7 @@
       (reference "U14") (unit 1) (value "RP2040") (footprint "JLCPCB:LQFN-56_L7.0-W7.0-P0.4-EP")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/1cb7efbd-cb21-4c0a-bb06-295ded2b2bb4"
-      (reference "U15") (unit 1) (value "LM317AG-TN3-R") (footprint "PET:TO-252-2_ThermalVias")
+      (reference "U15") (unit 1) (value "LM317AG-TN3-R") (footprint "Package_TO_SOT_SMD:TO-252-2")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/3b6d0c70-6282-4619-97c5-f97c852cfe84/946cbf38-e765-47d9-a77d-709a42611048"
       (reference "U16") (unit 1) (value "W25Q128JVS") (footprint "Package_SO:SOIC-8_5.23x5.23mm_P1.27mm")
