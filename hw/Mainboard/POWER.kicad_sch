@@ -4497,7 +4497,7 @@
     (property "DIGI-KEY" "AE10775-ND" (id 4) (at 151.13 72.39 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "MFR" "V-1100-SMD/B-L" (id 5) (at 151.13 72.39 0)
+    (property "MPN" "V-1100-SMD/B-L" (id 6) (at 151.13 72.39 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid cfc416f8-e20c-46e1-a33c-8d24a6b6ca86))
