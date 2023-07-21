@@ -2042,7 +2042,7 @@
       (reference "J15") (unit 1) (value "KEYBOARD_EX") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cbb0700d-e886-4bf0-aa7e-8d9f070b8f5f"
-      (reference "J16") (unit 1) (value "MCU") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x11_P2.54mm_Vertical")
+      (reference "J16") (unit 1) (value "FPGA_MCU") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x11_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/e9fa18f6-951f-44a2-88a6-b760d8e51fa2"
       (reference "J18") (unit 1) (value "PET POWER") (footprint "PET:PET_POWER_Molex_KK-396_A-41791-0009_1x09_P3.96mm_Vertical")
@@ -2054,7 +2054,7 @@
       (reference "J20") (unit 1) (value "5V PWR") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-00006636c6b8"
-      (reference "J21") (unit 1) (value "FPGA-P4") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x14_P2.54mm_Vertical")
+      (reference "J21") (unit 1) (value "FPGA_P3") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x14_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/8d3a88f6-63ee-4370-beba-6b4175a92f24"
       (reference "J22") (unit 1) (value "MENU") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
@@ -2063,7 +2063,7 @@
       (reference "J23") (unit 1) (value "FPGA_P2") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x14_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/414feadf-f0f5-4b17-89df-c792ab4bf009"
-      (reference "J24") (unit 1) (value "Conn_02x15_Odd_Even") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x15_P2.54mm_Vertical")
+      (reference "J24") (unit 1) (value "FPGA_P1") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x15_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/52090067-486f-45bf-85aa-f30d55abde57"
       (reference "J25") (unit 1) (value "IEEE_HEADER") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x09_P2.54mm_Vertical")
