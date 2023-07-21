@@ -2799,8 +2799,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid d3af371b-eb23-4d75-8c1b-61cf84e3f244)
   )
-  (text "LM317\nV_{OUT}=1.25V×(1+R2/R1)\nΔV_{OUT}=3-40V\n(Up to 3V headroom required)"
-    (at 147.32 29.21 0)
+  (text "LM317\nV_{OUT}=1.25V×(1+R2/R1)\nΔV_{OUT}=3-40V" (at 147.32 29.21 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid d8c96ae0-4564-40db-9caf-1485ecc60b58)
   )
