@@ -14,7 +14,7 @@
 
 #define SPI_INSTANCE spi1
 #define SPI_SCK_PIN 14
-#define SPI_TX_PIN 15
+#define SPI_TX_PIN 11
 #define SPI_RX_PIN 12
 #define SPI_CSN_PIN 13
 #define SPI_READY_B_PIN 10
@@ -34,4 +34,4 @@
 #define SPI0_MHZ 4
 
 #define FPGA_CRESET_GP 26
-#define FPGA_CLK_GP 11
+#define FPGA_CLK_GP 15
