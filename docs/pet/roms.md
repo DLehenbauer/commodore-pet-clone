@@ -7,4 +7,5 @@
 
 ## Reference
 
+* [ROM Hash Codes](http://mhv.bplaced.net/cbmroms/cbmroms.php)
 * [ROM Genealogy](http://penguincentral.com/retrocomputing/PET/petroms.pdf)
