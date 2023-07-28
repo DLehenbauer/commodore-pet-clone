@@ -17,8 +17,16 @@
 #include "roms.h"
 #include "test.h"
 
-const int32_t addr_min = 0x0000;
-const int32_t addr_max = 0xFFFF;
+typedef struct {
+    uint32_t min;
+    uint32_t max;
+} addr_range;
+
+static const addr_range mem_test_addr_range[] = {
+    { 0x0000, 0x8EFF },
+    { 0x9000, 0xE7FF },
+    { 0xE900, 0xFFFF }
+};
 
 void sync_display() {
     spi_write(/* dest: */ 0x8000, /* pSrc: */ video_char_buffer, /* byteLength: */ 1000);
@@ -110,28 +118,65 @@ uint8_t toggle_bit(uint32_t addr, uint8_t bit, uint8_t expected) {
 
 typedef void march_element_fn(int32_t addr, int8_t bit);
 
-void test_each_bit_ascending(march_element_fn* pFn) {
-    for (int32_t addr = addr_min; addr <= addr_max; addr++) {
-        for (int8_t bit = 0; bit < 8; bit++) {
-            pFn(addr, bit);
-        }
-    }
-}
-
-void test_each_bit_descending(march_element_fn* pFn) {
-    for (int32_t addr = addr_max; addr >= addr_min; addr--) {
-        for (int8_t bit = 0; bit < 8; bit++) {
-            pFn(addr, bit);
-        }
-    }
-}
-
 void r0w1(int32_t addr, int8_t bit) {
     toggle_bit(addr, bit, /* expected: */ 0);
 }
 
 void r1w0(int32_t addr, int8_t bit) {
     toggle_bit(addr, bit, /* expected: */ 1);
+}
+
+typedef void march_visit_fn(march_element_fn* pFn);
+
+void test_each_bit(int32_t start_addr, int32_t end_addr, march_element_fn* pFn) {
+    int8_t start_bit;
+    int32_t delta;
+
+    // Because start/end are inclusive we need to increment our bytes remaining count by one.
+    int32_t bytes_remaining = 1;
+
+    if (start_addr < end_addr) {
+        bytes_remaining += end_addr - start_addr;
+        start_bit = 0;
+        delta = 1;
+    } else {
+        bytes_remaining += start_addr - end_addr;
+        start_bit = 7;
+        delta = -1;
+    }
+
+    printf("    $%04x-$%04x: ", start_addr, end_addr);
+
+    int32_t addr = start_addr;
+
+    for (; bytes_remaining; addr = addr + delta, bytes_remaining--) {
+        for (int8_t bit = start_bit, bits_remaining = 8; bits_remaining; bit = bit + delta, bits_remaining--) {
+            pFn(addr, bit);
+        }
+    }
+
+    // Paranoid check that we ended up at the desired address.
+    assert(addr == end_addr + delta);
+
+    puts("OK");
+}
+
+void test_each_bit_ascending(march_element_fn* pFn) {
+    const size_t num_ranges = sizeof(mem_test_addr_range) / sizeof(addr_range);
+
+    for (size_t i = 0; i < num_ranges; i++) {
+        const addr_range range = mem_test_addr_range[i];
+        test_each_bit(/* start: */ range.min, /* end: */ range.max, pFn);
+    }
+}
+
+void test_each_bit_descending(march_element_fn* pFn) {
+    const int32_t num_ranges = sizeof(mem_test_addr_range) / sizeof(addr_range);
+    
+    for (int32_t i = num_ranges - 1; i >= 0; i--) {
+        const addr_range range = mem_test_addr_range[i];
+        test_each_bit(/* start: */ range.max, /* end: */ range.min, pFn);
+    }
 }
 
 void test_ram() {
@@ -148,30 +193,29 @@ void test_ram() {
 
         printf("\nRAM Test (March C-): Iteration #%d:\n", iteration++);
 
-        printf("⇑(w0): ");
+        printf("⇑(w0):\n");
+        const int32_t addr_min = 0x0000;
+        const int32_t addr_max = 0xFFFF;
+
         spi_write_at(addr_min, 0);
         for (int32_t addr = addr_min + 1; addr <= addr_max; addr++) {
             spi_write_next(0);
         }
         puts("OK");
 
-        printf("⇑(r0,w1): ");
+        printf("⇑(r0,w1):\n");
         test_each_bit_ascending(r0w1);
-        puts("OK");
 
-        printf("⇑(r1,w0): ");
+        printf("⇑(r1,w0):\n");
         test_each_bit_ascending(r1w0);
-        puts("OK");
 
-        printf("⇓(r0,w1): ");
+        printf("⇓(r0,w1):\n");
         test_each_bit_descending(r0w1);
-        puts("OK");
         
-        printf("⇓(r1,w0): ");
+        printf("⇓(r1,w0):\n");
         test_each_bit_descending(r1w0);
-        puts("OK");
 
-        printf("⇑(r0): ");
+        printf("⇑(r0):\n");
         spi_read_at(addr_min);
         for (int32_t addr = addr_min; addr <= addr_max; addr++) {
             check_byte(addr, spi_read_next(), 0);
