@@ -12,6 +12,10 @@ usbipd wsl attach --hardware-id 2e8a:0004
 minicom -b 115200 -o -D /dev/ttyACM0
 ```
 
+## SPI
+
+Max TX is 62.5 Mbps
+
 ## Specs
 
 * [Device Class Definition for Human Interface Devices (HID)](https://www.usb.org/sites/default/files/hid1_11.pdf)

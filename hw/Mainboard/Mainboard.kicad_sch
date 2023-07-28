@@ -1606,9 +1606,6 @@
     (path "/00000000-0000-0000-0000-000061a7d9c6/5a905ad5-da37-4a3f-a2aa-3a82e58ed190"
       (reference "#PWR0182") (unit 1) (value "PD_GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/22f04c7f-b4c0-482a-a32a-5a0add9469f5"
-      (reference "#PWR0183") (unit 1) (value "PD_GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-00006151ec26/ecb12ed7-1f87-4988-8d22-33f76ff21456"
       (reference "#PWR0184") (unit 1) (value "CHASSIS_GND") (footprint "")
     )
@@ -1641,9 +1638,6 @@
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/74b559f0-0f1c-4be9-b797-aa87daa0c051"
       (reference "#PWR0194") (unit 1) (value "+5V") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/681a4bf5-966f-4fed-82ef-779adaaff98d"
-      (reference "#PWR0195") (unit 1) (value "+5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/09a3f8bd-c1ce-4abe-be11-1cc0d282193d"
       (reference "#PWR0196") (unit 1) (value "+5V") (footprint "")
@@ -2049,9 +2043,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/5b2d2437-3a46-4c1a-87d3-0321358644bb"
       (reference "J19") (unit 1) (value "PROG") (footprint "Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/8e64c60b-2f1d-4d3f-a69a-7a95b6d6a0fb"
-      (reference "J20") (unit 1) (value "5V PWR") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-00006636c6b8"
       (reference "J21") (unit 1) (value "FPGA_P3") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x14_P2.54mm_Vertical")
