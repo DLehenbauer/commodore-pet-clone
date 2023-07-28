@@ -436,7 +436,6 @@
   )
 
   (bus_alias "DVI" (members "DVI_D2+" "DVI_D2-" "DVI_D1+" "DVI_D1-" "DVI_D0+" "DVI_D0-" "DVI_CK+" "DVI_CK-"))
-
   (junction (at 134.62 111.76) (diameter 0) (color 0 0 0 0)
     (uuid 025794d7-081e-41e5-9c7e-a8e61fe6b60e)
   )

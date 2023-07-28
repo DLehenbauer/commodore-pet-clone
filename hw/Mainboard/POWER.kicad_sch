@@ -1636,7 +1636,6 @@
     )
   )
 
-
   (junction (at 130.81 95.25) (diameter 0) (color 0 0 0 0)
     (uuid 00f1e4d2-fbea-46d7-8cd5-943e5f3f01be)
   )
@@ -3264,7 +3263,7 @@
     (uuid 1cb7efbd-cb21-4c0a-bb06-295ded2b2bb4)
     (property "Reference" "U15" (id 0) (at 130.81 30.6832 0))
     (property "Value" "LM317AG-TN3-R" (id 1) (at 130.81 32.9946 0))
-    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (id 2) (at 130.81 30.48 0)
+    (property "Footprint" "PET:TO-252-2_ThermalVias" (id 2) (at 130.81 30.48 0)
       (effects (font (size 1.27 1.27) italic) hide)
     )
     (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_UTC-Unisonic-Tech-LM317AG-TN3-R_C75510.pdf" (id 3) (at 130.81 36.83 0)
@@ -3719,7 +3718,7 @@
     (uuid 6e73782c-43a6-4440-b33e-a2638e43dc9f)
     (property "Reference" "U10" (id 0) (at 130.81 81.4832 0))
     (property "Value" "LM317AG-TN3-R" (id 1) (at 130.81 83.7946 0))
-    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (id 2) (at 130.81 81.28 0)
+    (property "Footprint" "PET:TO-252-2_ThermalVias" (id 2) (at 130.81 81.28 0)
       (effects (font (size 1.27 1.27) italic) hide)
     )
     (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_UTC-Unisonic-Tech-LM317AG-TN3-R_C75510.pdf" (id 3) (at 130.81 87.63 0)

@@ -2591,7 +2591,7 @@
       (reference "U9") (unit 1) (value "W65C22N") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/6e73782c-43a6-4440-b33e-a2638e43dc9f"
-      (reference "U10") (unit 1) (value "LM317AG-TN3-R") (footprint "Package_TO_SOT_SMD:TO-252-2")
+      (reference "U10") (unit 1) (value "LM317AG-TN3-R") (footprint "PET:TO-252-2_ThermalVias")
     )
     (path "/00000000-0000-0000-0000-0000614e685e/00000000-0000-0000-0000-0000614e6908"
       (reference "U11") (unit 1) (value "W65C02S") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
@@ -2606,7 +2606,7 @@
       (reference "U14") (unit 1) (value "RP2040") (footprint "JLCPCB:LQFN-56_L7.0-W7.0-P0.4-EP")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/1cb7efbd-cb21-4c0a-bb06-295ded2b2bb4"
-      (reference "U15") (unit 1) (value "LM317AG-TN3-R") (footprint "Package_TO_SOT_SMD:TO-252-2")
+      (reference "U15") (unit 1) (value "LM317AG-TN3-R") (footprint "PET:TO-252-2_ThermalVias")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/3b6d0c70-6282-4619-97c5-f97c852cfe84/946cbf38-e765-47d9-a77d-709a42611048"
       (reference "U16") (unit 1) (value "W25Q128JVS") (footprint "Package_SO:SOIC-8_5.23x5.23mm_P1.27mm")
