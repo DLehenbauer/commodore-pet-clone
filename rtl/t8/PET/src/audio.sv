@@ -28,49 +28,22 @@ module pwm(
     assign out_o = accumulator[16];
 endmodule
 
-module second_order_dac(
-  input wire i_clk,
-  input wire i_res,
-  input wire i_ce,
-  input wire [15:0] i_func, 
-  output wire o_DAC
+module delta_sigma_dac(
+    input  logic               clk_i,
+    input  logic               reset_i,
+    input  logic signed [15:0] dac_i,
+    output logic               dac_o
 );
+    // Convert signed 16-bit input to unsigned biased.
+    wire  [15:0] s16         = dac_i + 16'h8000;
+    logic [16:0] accumulator = '0;
 
-  reg this_bit;
- 
-  reg [19:0] DAC_acc_1st;
-  reg [19:0] DAC_acc_2nd;
-  reg [19:0] i_func_extended;
-   
-  assign o_DAC = this_bit;
-
-  always @(*)
-     i_func_extended = {i_func[15],i_func[15],i_func[15],i_func[15],i_func};
-    
-  always @(posedge i_clk or negedge i_res)
-    begin
-      if (i_res==0)
-        begin
-          DAC_acc_1st<=16'd0;
-          DAC_acc_2nd<=16'd0;
-          this_bit = 1'b0;
-        end
-      else if(i_ce == 1'b1) 
-        begin
-          if(this_bit == 1'b1)
-            begin
-              DAC_acc_1st = DAC_acc_1st + i_func_extended - (2**15);
-              DAC_acc_2nd = DAC_acc_2nd + DAC_acc_1st     - (2**15);
-            end
-          else
-            begin
-              DAC_acc_1st = DAC_acc_1st + i_func_extended + (2**15);
-              DAC_acc_2nd = DAC_acc_2nd + DAC_acc_1st + (2**15);
-            end
-          // When the high bit is set (a negative value) we need to output a 0 and when it is clear we need to output a 1.
-          this_bit = ~DAC_acc_2nd[19];
-        end
+    always_ff @(posedge clk_i) begin
+        if (reset_i) accumulator <= '0;
+        else accumulator <= accumulator[15:0] + s16;
     end
+
+    assign dac_o = accumulator[16];
 endmodule
 
 module audio(
@@ -87,7 +60,7 @@ module audio(
     input  logic       via_cb2_i,
     output logic       audio_o
 );
-    assign sid_wr_en = cpu_wr_en_i && sid_en_i;
+    wire sid_wr_en = cpu_wr_en_i && sid_en_i;
 
     // See http://www.cbmhardware.de/show.php?r=14&id=71/PETSID
     logic signed [15:0] sid_out;
@@ -103,26 +76,16 @@ module audio(
         .oOut(sid_out)      // sid output
     );
 
-    logic [15:0] waveOut = 0;
+    wire signed [15:0] cb2_out = via_cb2_i && diag_i
+        ? 16'h800
+        : -16'h800;
 
-    always @(posedge clk8_i) begin
-        waveOut <= sid_out + 16'h8000;
-    end
+    wire signed [15:0] mixed = sid_out + cb2_out;
 
-    pwm pwm(
-        .reset_i(reset_i),
+    delta_sigma_dac dac(
         .clk_i(clk8_i),
-        .compare_i(waveOut),
-        .out_o(audio_o)
+        .reset_i(reset_i),
+        .dac_i(mixed),
+        .dac_o(audio_o)
     );
-
-    // second_order_dac dac(
-    //     .i_clk(clk8_i),
-    //     .i_res(!reset_i),
-    //     .i_ce(1'b1),
-    //     .i_func(waveOut), 
-    //     .o_DAC(audio_o)
-    // );
-
-    // assign audio_o = via_cb2_i && diag_i;
 endmodule

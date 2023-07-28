@@ -39,6 +39,7 @@ module main(
     // CPU
     output logic cpu_clk_o,
     output logic cpu_res_o,
+    input  logic cpu_res_i,
     output logic cpu_ready_o,
     output logic cpu_be_o,
 
@@ -189,15 +190,13 @@ module main(
     //
 
     audio audio(
-        .reset_i(cpu_res_o),           // TODO: reset
+        .reset_i(cpu_res_i),
         .clk8_i(strobe_clk),
         .cpu_en_i(cpu_en),
         .cpu_wr_en_i(cpu_wr_en),
         .sid_en_i(sid_en),
         .addr_i(bus_addr_i[4:0]),
         .data_i(bus_data_i),
-        // .data_o(bus_data_o),
-
         .diag_i(diag_i),
         .via_cb2_i(via_cb2_i),
         .audio_o(audio_o)
@@ -211,7 +210,7 @@ module main(
     logic        video_addr_oe;
 
     video video(
-        .reset_i('0),               // TODO: reset
+        .reset_i(cpu_res_i),
         .clk16_i(clk16_i),
         .pixel_clk_i(setup_clk),
         .setup_clk_i(setup_clk),

@@ -37,7 +37,7 @@ module top_driver #(
     logic         cpu_clk_o;
     logic         ram_oe_no;
     logic         ram_we_no;
-    logic         cpu_res_ni;
+    logic         cpu_res_ni = 1'b1;
     logic         cpu_res_no;
     logic         cpu_res_noe;
     logic         cpu_ready_o;
@@ -248,6 +248,13 @@ module top_driver #(
 
     task reset;
         mcu.reset();
+    endtask
+
+    task ext_reset;
+        @(posedge cpu_clk_o);
+        cpu_res_ni = '0;
+        @(posedge cpu_clk_o);
+        cpu_res_ni = 1'b1;
     endtask
 
     task expect_reset(

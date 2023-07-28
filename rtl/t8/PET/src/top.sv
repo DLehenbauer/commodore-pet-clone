@@ -29,7 +29,6 @@ module top(
     input  logic [15:0]  bus_addr_15_0_i,   // CPU 9-20, 22-25 : System address bus
     output logic [15:0]  bus_addr_15_0_o,   //
     output logic [15:0]  bus_addr_15_0_oe,  //
-    output logic         bus_addr_16_o,     // CPU has 16b bus, therefore A[16] is output only.
 
     input  logic  [7:0]  bus_data_7_0_i,    // CPU 33-26 : System data bus
     output logic  [7:0]  bus_data_7_0_o,    //
@@ -59,10 +58,10 @@ module top(
     output logic cpu_be_o,                  // CPU 36 (BE)   : 0 = High impedance, 1 = Enabled
 
     // RAM
-    output logic ram_ce_no,                 // RAM 22 (CE_B) : 0 = Enabled, 1 = High impedance
     output logic ram_oe_no,                 // RAM 24 : 0 = output enabled, 1 = High impedance
     output logic ram_we_no,                 // RAM 29 : 0 = write enabled,  1 = Not active
-    output logic [11:10] ram_addr_o,        // RAM: Intercept A[11:10] to mirror VRAM.   
+    output logic [11:10] ram_addr_11_10_o,  // RAM: Intercept A[11:10] to mirror VRAM
+    output logic [16:15] ram_addr_16_15_o,  // RAM: Intercept A[16:15] for bank switching
 
     // I/O
     output logic pia1_cs2_no,
@@ -74,7 +73,6 @@ module top(
     input  logic diag_i,
     input  logic via_cb2_i,
     output logic audio_o,
-    output logic audio_no,
 
     // Graphics
     input  logic gfx_i,
@@ -83,8 +81,9 @@ module top(
     output logic video_o
 );
     // NSTATUS is asserted if programming fails and is often connected to an LED.
-    // Deassert to indicate that programming was successful.
-    assign status_no = '0;
+    // Deassert to indicate that programming was successful.  We use '!cpu_res_i'
+    // so that NSTATUS doubles as a RES indicator.
+    assign status_no = !cpu_res_i;
 
     // Efinity Interface Designer generates a separate output enable for each bus signal.
     // Create a combined logic signal to control OE for bus_addr_o[15:0].  Note that the
@@ -116,7 +115,6 @@ module top(
     assign pia1_cs2_no  = !pia1_cs_o;
     assign pia2_cs2_no  = !pia2_cs_o;
     assign via_cs2_no   = !via_cs_o;
-    assign ram_ce_no    = !ram_ce_o;
     assign ram_oe_no    = !ram_oe_o;
     assign ram_we_no    = !ram_we_o;
     assign spi_ready_no = !spi_ready_o;
@@ -124,7 +122,7 @@ module top(
     // RES, IRQ, and NMI are active low open drain wire-or signals.  For consistency
     // and convenience we convert these to active high outputs and handle OE here.
     logic cpu_res_i, cpu_res_o;
-    assign cpu_res_i   = !cpu_res_ni;
+    assign cpu_res_i   = cpu_res_o ? 1'b1 : !cpu_res_ni;
     assign cpu_res_no  = !cpu_res_o;
     assign cpu_res_noe = cpu_res_o;     // Only drive open drain wired-or when asserting RES
 
@@ -145,8 +143,10 @@ module top(
     // Only drive POCI (FPGA TX -> MCU RX) when this SPI peripheral is selected
     assign spi1_mcu_rx_oe = !spi1_cs_ni;
 
-    // RAM CE is currently unused.  We use OE and WE to strobe reads/writes instead.
-    assign ram_ce_o = 1'b1;
+    // TODO: Implement bank switching.  For now, we echo A15 to R15.
+    assign ram_addr_16_15_o[15] = bus_addr_oe
+        ? bus_addr_15_0_o[15]
+        : bus_addr_15_0_i[15];
 
     main main(
         .clk16_i(clk16_i),
@@ -154,12 +154,12 @@ module top(
         .bus_rw_no(bus_rw_no),
         .bus_rw_noe(bus_rw_noe),
         .bus_addr_i(bus_addr_15_0_i),
-        .bus_addr_o({ bus_addr_16_o, bus_addr_15_0_o }),
+        .bus_addr_o({ ram_addr_16_15_o[16], bus_addr_15_0_o }),
         .bus_addr_oe(bus_addr_oe),
         .bus_data_i(bus_data_7_0_i),
         .bus_data_o(bus_data_7_0_o),
         .bus_data_oe(bus_data_oe),
-        .ram_addr_o(ram_addr_o),
+        .ram_addr_o(ram_addr_11_10_o),
         .spi1_sck_i(spi1_sck_i),
         .spi1_cs_ni(spi1_cs_ni),
         .spi1_rx_i(spi1_mcu_tx_i),  // PICO: MCU TX -> FPGA RX
@@ -168,6 +168,7 @@ module top(
         .cpu_clk_o(cpu_clk_o),
         .ram_oe_o(ram_oe_o),
         .ram_we_o(ram_we_o),
+        .cpu_res_i(cpu_res_i),
         .cpu_res_o(cpu_res_o),
         .cpu_ready_o(cpu_ready_o),
         .cpu_be_o(cpu_be_o),
@@ -183,6 +184,4 @@ module top(
         .v_sync_o(v_sync_o),
         .video_o(video_o)
     );
-    
-    assign audio_no = !audio_o;
 endmodule

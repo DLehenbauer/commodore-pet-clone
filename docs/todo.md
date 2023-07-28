@@ -7,20 +7,18 @@
   * Review BOM (esp. look for mixed values)
   * Tag revision in Github
 * HW:
-  * SID Audio
+  * Clean up SPI:
+    * Routing
+    * 25k pullups for SD card?
+    * Reverse SPI1?  (Recall that SPI is fastest when RP2040 drives clk)
   * Consider FPGA UART
-  * Expose RES on lower header
-  * 10uF 50V -> 10uF 25V
   * Programming
     * Build separate "debug PCB" that integrates:
       * Picoprobe
       * FT2232
       * Moves CDONE/NSTATUS to debug board?
-  * Use second LM317AG to produce 1.5A for USB or reduce USB PD resistors
   * Larger net ties for FPGA_*
   * Consider [SMD SRAM](https://jlcpcb.com/partdetail/444095-IS61WV1288EEBLL10TLI/C443418)
-  * PIA/VIAs have multiple CS pins (with differing polarity).  Consider if other pins simplify routing or design.
-  * Avoid CBSEL0 for dip switch as these effect boot image.
   * Align reference designators with original PET?
 * Fix signal names:
   * RD/WR_STROBE -> RAM_OE / RAM_WE
