@@ -12,10 +12,12 @@
   * [Parts](https://www.diyaudio.com/community/threads/a-large-free-ltspice-model-library.360086/)
 * Online calculators
   * [VIA Size Calculator](https://j.mp/via-calc)
+  * [VIA Size Calculator](http://circuitcalculator.com/wordpress/2006/03/12/pcb-via-calculator/)
   * [Resistor Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
   * [LM317 Calculator](https://circuitdigest.com/calculators/lm317-resistor-voltage-calculator)
   * [Switch Debounce Calculator](https://clisystems.com/tool_debounce.php)
   * [Trace Width Calculator](https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-pcb-trace-width)
+  * [Trace Width Calculator](http://circuitcalculator.com/wordpress/?p=25/)
   * [Trace Impedance Calculator](https://www.eeweb.com/tools/edge-coupled-microstrip-impedance/)
 * [JLCPCB Capabilities](https://jlcpcb.com/capabilities/Capabilities)
 * [JLCPCB Parts Search](https://yaqwsx.github.io/jlcparts/#/)

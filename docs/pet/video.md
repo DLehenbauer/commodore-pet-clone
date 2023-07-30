@@ -47,6 +47,9 @@ VSync  | 60.062 Hz | 95.195%    | Video connector
   * [TinyVGA Timings](http://www.tinyvga.com/vga-timing)
 * DVI
   * [CEA-861-D](https://ia903002.us.archive.org/1/items/CEA-861-D/CEA-861-D.pdf)
+* HDMI
+  * [HDMI Layout Guidelines](https://ez.analog.com/video/w/documents/687/hdmi-layout-guideline)
+  * [HDMI Intel FPGA IP Board Design Tips](https://www.intel.com/content/www/us/en/docs/programmable/683677/current/ip-board-design-tips.html)
 * NTSC / PAL
   * [Timing Characteristics](http://www.kolumbus.fi/pami1/video/pal_ntsc.html)
 * CRTC
