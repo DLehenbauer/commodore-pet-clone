@@ -57,10 +57,10 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     pkg-config \
     texinfo
 
-RUN git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --depth=1 --no-single-branch && \
+RUN git clone https://github.com/raspberrypi/openocd.git --branch rp2040 --depth=1 && \
     cd openocd && \
     ./bootstrap && \
-    ./configure --enable-picoprobe && \
+    ./configure && \
     make -j4 && \
     sudo make install
 

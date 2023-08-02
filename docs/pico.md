@@ -1,5 +1,12 @@
 # Pico Debugging
 
+Used ExpressIf directions
+[Outdated setup for WSL2](https://github.com/robotdad/piconotes)
+
+Setup:
+
+* Flash Pico with the [Picoprobe UF2 file](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#debugging-using-another-raspberry-pi-pico).
+
 ## Share Picoprobe with WSL
 
 ```sh
