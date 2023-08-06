@@ -33,9 +33,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 5.8,
-          "width": 6.4
+          "drill": 1.0,
+          "height": 1.7,
+          "width": 1.7
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -412,11 +412,7 @@
           "/CASS/~{CASS2_MOTOR}",
           "/CASS/~{CASS2_SWITCH}",
           "/IEEE/ATN",
-          "/IEEE/ATN_IN",
-          "/IEEE/ATN_OUT",
           "/IEEE/DAV",
-          "/IEEE/DAV_IN",
-          "/IEEE/DAV_OUT",
           "/IEEE/DIO1",
           "/IEEE/DIO2",
           "/IEEE/DIO3",
@@ -495,7 +491,6 @@
           "/MAGIC/FPGA/I2C1_SDA",
           "/MAGIC/FPGA/L12",
           "/MAGIC/FPGA/L13",
-          "/MAGIC/FPGA/L46",
           "/MAGIC/FPGA/SPI0_RX",
           "/MAGIC/FPGA/SPI0_SCK",
           "/MAGIC/FPGA/SPI0_TX",
@@ -587,6 +582,7 @@
         "microvia_drill": 0.1,
         "name": "POWER_1.0A",
         "nets": [
+          "+6V",
           "/CASS/CASS_A_MOTOR",
           "/CASS/CASS_B_MOTOR"
         ],
@@ -609,7 +605,6 @@
         "name": "POWER_1.5A",
         "nets": [
           "+5V",
-          "+6V",
           "+9V_Unreg",
           "/POWER/9V_UNFILT",
           "/POWER/VAC1",
