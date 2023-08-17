@@ -1224,7 +1224,7 @@
     (uuid 9f5d630c-e8c2-4aa8-92b1-30205b28ed54)
     (property "Reference" "JP1" (id 0) (at 69.85 73.66 0))
     (property "Value" "VIDEO_OR_5V" (id 1) (at 69.85 76.2 0))
-    (property "Footprint" "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm" (id 2) (at 69.85 78.74 0)
+    (property "Footprint" "PET:PinHeader_and_Jumper_1x03_P2.54mm_Vertical" (id 2) (at 69.85 78.74 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 69.85 78.74 0)
