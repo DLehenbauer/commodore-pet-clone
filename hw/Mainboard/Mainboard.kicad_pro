@@ -606,10 +606,12 @@
         "nets": [
           "+5V",
           "+9V_Unreg",
+          "/MAGIC/MCU/USB/VBUS",
           "/POWER/9V_UNFILT",
           "/POWER/VAC1",
           "/POWER/VAC2",
           "CHASSIS_GND",
+          "GNDPWR",
           "PD_GND"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
@@ -635,7 +637,7 @@
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.2,
+        "track_width": 0.3,
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6.0
