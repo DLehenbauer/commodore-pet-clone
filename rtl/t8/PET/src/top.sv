@@ -15,7 +15,7 @@
 module top(
     // FPGA
     input  logic         clk16_i,           // 16 MHz system clock (from PLL)
-    output logic         status_no,
+    output logic         status_no,         // NSTATUS LED (0 = On, 1 = Off)
 
     // SPI1
     input  logic spi1_sck_i,                // MCU 14: incoming SCK
@@ -80,9 +80,21 @@ module top(
     output logic v_sync_o,
     output logic video_o
 );
-    // NSTATUS is asserted if programming fails and is often connected to an LED.
-    // Deassert to indicate that programming was successful.  We use '!cpu_res_i'
-    // so that NSTATUS doubles as a RES indicator.
+    // 'status_no' is connected to the NSTATUS LED (0 = on, 1 = off).  The 'status_no'
+    // output is assigned to the FPGA's NSTATUS pin, which is is driven low by the by
+    // the FPGA if programming fails.  (See AN 006: Configuring Trion FPGAs.)
+    //
+    // After programming succeeds, 'status_no' is a standard GPIO.  We assign assigned
+    // 'status_no' to '!cpu_res_i'.  Because the FPGA's initial state asserts 'cpu_res_i',
+    // this will also light the LED if programming succeeds, but the MCU does is unable
+    // to communicate with the FPGA.
+    //
+    // Under normal conditions, the user will see:
+    //
+    //   - No LEDS while programming is in progress.
+    //   - CDONE lights indicating programming.
+    //   - NSTATUS blinks briefly, indicating the MCU has reset the 6502.
+    //
     assign status_no = !cpu_res_i;
 
     // Efinity Interface Designer generates a separate output enable for each bus signal.
