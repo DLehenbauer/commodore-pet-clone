@@ -611,7 +611,6 @@
           "/POWER/VAC1",
           "/POWER/VAC2",
           "CHASSIS_GND",
-          "GNDPWR",
           "PD_GND"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",

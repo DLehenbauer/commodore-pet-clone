@@ -1702,29 +1702,17 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/79fcf202-48ce-4ab5-9c6b-0d4da2a7e67e"
       (reference "#PWR0171") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/2ec3ee28-3561-444a-a715-ba486a36738d"
-      (reference "#PWR0172") (unit 1) (value "GNDPWR") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/67fa32f5-ebec-40e5-bf94-88445935fea0"
       (reference "#PWR0173") (unit 1) (value "+5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9fe5f783-9e1e-4e08-97cd-1e8ea00988c3"
       (reference "#PWR0174") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/105f8588-26c6-482a-9762-232c4d3721b0"
-      (reference "#PWR0175") (unit 1) (value "PD_GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/e548d5cb-0843-4f60-af43-47e8d1dd778c"
-      (reference "#PWR0176") (unit 1) (value "GNDPWR") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/03457e38-aac6-45ef-a1c4-6251888cac51"
-      (reference "#PWR0177") (unit 1) (value "GNDPWR") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/5c46897c-c12b-4a45-a32c-93ae55c20875"
-      (reference "#PWR0178") (unit 1) (value "PD_GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/ed1ae693-4b15-46b5-b9ad-df0d2148a63c"
       (reference "#PWR0179") (unit 1) (value "PD_GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061ed99de/3a6a54af-4661-45ff-b0b1-3e788ca832fd"
+      (reference "#PWR?") (unit 1) (value "PD_GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000614e685e/00000000-0000-0000-0000-000061f53899"
       (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -2161,14 +2149,8 @@
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/5a88016c-3777-4d9c-b2cd-526d05ee5dce"
       (reference "LS1") (unit 1) (value "Speaker") (footprint "SamacSys_Parts:AT1220TT9R")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/7ba9a1fd-1fee-4019-badd-d4ec2d34abf1"
-      (reference "PT1") (unit 1) (value "PowerTie_2") (footprint "NetTie:NetTie-2_SMD_Pad2.0mm")
-    )
     (path "/00000000-0000-0000-0000-000061ed99de/bf4db44e-f6b2-4854-a79f-10d85d9159d8"
       (reference "PT2") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/30cbbf80-e316-4993-a149-bebbe70bea80"
-      (reference "PT3") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/25662e6a-3c2e-4855-a0f7-d488dfb3a7b1"
       (reference "PT4") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
