@@ -99,7 +99,6 @@ module spi_driver #(
         end
     endtask
 
-
     task end_xfer(
         input bit next_cs_ni = 1'b1
     );

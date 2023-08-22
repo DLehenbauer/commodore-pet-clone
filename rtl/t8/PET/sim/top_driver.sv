@@ -25,7 +25,8 @@ module top_driver #(
     logic  [7:0]  bus_data_i;
     logic  [7:0]  bus_data_o;
     logic  [7:0]  bus_data_7_0_oe;
-    logic [11:10] ram_addr_o;
+    logic [11:10] ram_addr_11_10_o;
+    logic [15:15] ram_addr_15_o;
     
     logic         spi1_sck;
     logic         spi1_cs_n;
@@ -48,7 +49,6 @@ module top_driver #(
     logic         cpu_nmi_no;
     logic         cpu_nmi_noe;
     logic         cpu_be_o;
-    logic         ram_ce_no;
     logic         pia1_cs2_no;
     logic         pia2_cs2_no;
     logic         via_cs2_no;
@@ -72,12 +72,12 @@ module top_driver #(
         .bus_addr_15_0_i(bus_addr_i),
         .bus_addr_15_0_o(bus_addr_o[15:0]),
         .bus_addr_15_0_oe(bus_addr_15_0_oe),
-        .bus_addr_16_o(bus_addr_o[16]),
         .bus_data_7_0_i(bus_data_i),
         .bus_data_7_0_o(bus_data_o),
         .bus_data_7_0_oe(bus_data_7_0_oe),
-        .ram_addr_o(ram_addr_o),
-        
+        .ram_addr_11_10_o(ram_addr_11_10_o),
+        .ram_addr_16_15_o({ bus_addr_o[16], ram_addr_15_o }),
+
         // SPI1
         .spi1_sck_i(spi1_sck),
         .spi1_cs_ni(spi1_cs_n),
@@ -100,7 +100,6 @@ module top_driver #(
         .cpu_nmi_no(cpu_nmi_no),
         .cpu_nmi_noe(cpu_nmi_noe),
         .cpu_be_o(cpu_be_o),
-        .ram_ce_no(ram_ce_no),
         .pia1_cs2_no(pia1_cs2_no),
         .pia2_cs2_no(pia2_cs2_no),
         .via_cs2_no(via_cs2_no),
@@ -114,6 +113,10 @@ module top_driver #(
         .video_o(video),
         .status_no(status_no)
     );
+
+    logic [16:0] ram_addr = {
+        bus_addr_o[16:16], ram_addr_15_o[15:15], bus_addr_o[14:12], ram_addr_11_10_o[11:10], bus_addr_o[9:0]
+    };
 
     // The tri-state 'bus_addr' is internally controlled by a single '_oe' signal, but exposed from
     // the top level module as a vector of '_oe[15:0]' as required by Efinity.  For simplicity, we'll
