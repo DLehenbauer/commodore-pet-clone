@@ -134,7 +134,7 @@ module top(
     // RES, IRQ, and NMI are active low open drain wire-or signals.  For consistency
     // and convenience we convert these to active high outputs and handle OE here.
     logic cpu_res_i, cpu_res_o;
-    assign cpu_res_i   = cpu_res_o ? 1'b1 : !cpu_res_ni;
+    assign cpu_res_i   = !cpu_res_ni;
     assign cpu_res_no  = !cpu_res_o;
     assign cpu_res_noe = cpu_res_o;     // Only drive open drain wired-or when asserting RES
 
