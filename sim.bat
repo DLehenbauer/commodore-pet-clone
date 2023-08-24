@@ -2,7 +2,7 @@
 setlocal EnableDelayedExpansion
 
 set PROJDIR=%~dp0\rtl\t8\PET
-set BINDIR=C:\Efinity\2022.2\bin
+set BINDIR=C:\Efinity\2023.1\bin
 
 :Parse
     if /I "%~1" == "" (
