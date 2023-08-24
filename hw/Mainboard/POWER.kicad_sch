@@ -2937,7 +2937,7 @@
     (uuid d8c96ae0-4564-40db-9caf-1485ecc60b58)
   )
   (text "I_{LOAD} = 2A\nDUTY ~= 5V/9V ~= 0.56\n\nI_{IN} = I_{LOAD} * (1 - DUTY)\n     ~= 0.9A\nI_{OUT} = I_{LOAD} * DUTY\n     ~= 1.1A"
-    (at 170.18 76.2 0)
+    (at 158.75 86.36 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid eba2c783-10cd-44f3-8863-acd3c6a89a10)
   )
@@ -3612,7 +3612,7 @@
   (symbol (lib_id "PET:PD_GND") (at 123.19 107.95 0) (unit 1)
     (in_bom yes) (on_board yes)
     (uuid 3a6a54af-4661-45ff-b0b1-3e788ca832fd)
-    (property "Reference" "#PWR?" (id 0) (at 123.19 114.3 0)
+    (property "Reference" "#PWR0172" (id 0) (at 123.19 114.3 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "PD_GND" (id 1) (at 123.19 112.395 0))
