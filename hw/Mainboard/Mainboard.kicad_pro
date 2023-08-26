@@ -610,8 +610,7 @@
           "/POWER/9V_UNFILT",
           "/POWER/VAC1",
           "/POWER/VAC2",
-          "CHASSIS_GND",
-          "PD_GND"
+          "CHASSIS_GND"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
