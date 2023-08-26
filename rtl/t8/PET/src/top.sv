@@ -14,7 +14,8 @@
 
 module top(
     // FPGA
-    input  logic         clk16_i,           // 16 MHz system clock (from PLL)
+    input  logic         clk_sys_i,         // 160 MHz clock (from PLL)
+    input  logic         clk16_i,           // 16 MHz clock (from PLL)
     output logic         status_no,         // NSTATUS LED (0 = On, 1 = Off)
 
     // SPI1
@@ -161,6 +162,7 @@ module top(
         : bus_addr_15_0_i[15];
 
     main main(
+        .clk_sys_i(clk_sys_i),
         .clk16_i(clk16_i),
         .bus_rw_ni(bus_rw_ni),
         .bus_rw_no(bus_rw_no),

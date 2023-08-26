@@ -12,6 +12,19 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
+module sync (
+    input  logic clk_i,     // Destination clock domain clock
+    input  logic data_i,    // Signal to be synchronized
+    output logic data_o     // Synchronized signal in destination clock domain
+);
+    logic [1:0] data;
+    
+    always @(posedge clk_i)
+        data <= { data[0], data_i };
+
+    assign data_o = data[1];
+endmodule
+
 // Implements core of SPI Mode 0 byte transfers in a controller/peripheral agnostic way.
 module spi_byte (
     input  logic clk_sys_i,         // Sampling clock
@@ -26,9 +39,24 @@ module spi_byte (
 
     output logic valid_o            // 'rx_byte' valid pulse is high for one period of clk_sys_i.
 );
+    //
     // Signals crossing clock domain
+    //
+
     logic spi_cs_nq;
+    sync sync_cs_n(
+        .clk_i(clk_sys_i),
+        .data_i(spi_cs_ni),
+        .data_o(spi_cs_nq)
+    );
+
     logic spi_sck_q;
+    sync sync_sck(
+        .clk_i(clk_sys_i),
+        .data_i(spi_sck_i),
+        .data_o(spi_sck_q)
+    );
+
     logic spi_rx_q;
     logic spi_tx_d;
 
@@ -101,8 +129,6 @@ module spi_byte (
         bit_count_q <= bit_count_d;
         sr_q        <= sr_d;
 
-        spi_cs_nq   <= spi_cs_ni;
-        spi_sck_q   <= spi_sck_i;
         spi_sck_q2  <= spi_sck_q;
         spi_rx_q    <= spi_rx_i;
         spi_tx_o    <= spi_tx_d;
@@ -115,6 +141,7 @@ endmodule
 // Protocol for SPI1 peripheral
 module spi1(
     input  logic clk_sys_i,         // Sampling / FSM clock
+    input  logic clk_sync_i,        // Destination clock domain
 
     input  logic spi_sck_i,         // SCK
     input  logic spi_cs_ni,         // CS: Also serves as a synchronous reset for the SPI FSM
@@ -162,7 +189,21 @@ module spi1(
     
     logic cmd_rd_a;
 
-    assign spi_valid_o = state[2];
+    // Synchronize 'spi_valid_o' to the destination clock domain
+    sync sync_valid(
+        .clk_i(clk_sync_i),
+        .data_i(state[2]),
+        .data_o(spi_valid_o)
+    );
+
+    // Synchronize 'spi_ready_i' to the sampling clock domain
+    logic spi_ready;
+    sync sync_ready(
+        .clk_i(clk_sys_i),
+        .data_i(spi_ready_i),
+        .data_o(spi_ready)
+    );
+
     assign spi_ready_o = state[3];
 
     always_ff @(posedge clk_sys_i or posedge spi_cs_ni) begin
@@ -210,7 +251,7 @@ module spi1(
                 end
 
                 XFER: begin
-                    if (spi_ready_i) begin
+                    if (spi_ready) begin
                         spi_addr_o <= spi_addr_o + 1'b1;
                         state <= DONE;
                     end

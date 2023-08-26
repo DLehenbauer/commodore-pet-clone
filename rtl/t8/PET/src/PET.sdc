@@ -23,7 +23,8 @@ proc ns_from_mhz { mhz } {
 
 # PLL Constraints
 #################
-create_clock -period 62.5000 clk16_i
+create_clock -period [ns_from_mhz 16] clk16_i
+create_clock -period [ns_from_mhz 160] clk_sys_i
 
 # SPI1 Constraints
 ##################
@@ -43,7 +44,7 @@ create_clock -period 62.5000 clk16_i
 
 # (See https://www.intel.com/content/dam/altera-www/global/en_US/pdfs/literature/an/an433.pdf)
 
-set spi1_sck_period_mhz 4
+set spi1_sck_period_mhz 16
 set spi1_sck_period_ns [ns_from_mhz $spi1_sck_period_mhz]
 
 # 'spi1_sck_v' is a virtual clock that models the edges at which TX and RX transition
@@ -53,7 +54,7 @@ create_clock -name spi1_sck_v -period $spi1_sck_period_ns
 # SCK is center-aligned (phase-shifted 90 degrees from 'spi1_sck_v'.)
 create_clock -name "spi1_sck_i" -period $spi1_sck_period_ns -waveform [list [expr { $spi1_sck_period_ns * 0.25 }] [expr { $spi1_sck_period_ns * 0.75 }]] [get_ports spi1_sck_i]
 
-# SPI sampling and data clocks are asynchronous/unrelated to other clocks in the desgin.
+# SPI sampling and data clocks are asynchronous/unrelated to other clocks in the design.
 set_clock_groups -asynchronous -group {spi1_sck_v spi1_sck_i}
 
 # Remember: TX is incoming from the MCU (RX for the FPGA)
@@ -65,12 +66,8 @@ set_input_delay -min -clock spi1_sck_v -0.250 [get_ports {spi1_mcu_tx_i}]
 # Remember: RX is outgoing to the MCU (TX for the FPGA)
 
 # Assume the required RX data valid window is 1/2 the SCK period, centered on the sampling edge.
-set_output_delay -clock spi1_sck_i -max [expr { $spi1_sck_period_ns * 0.25 }] [get_ports {spi1_mcu_rx_o spi1_mcu_rx_oe}]
-set_output_delay -clock spi1_sck_i -min [expr { $spi1_sck_period_ns * -0.25 }] [get_ports {spi1_mcu_rx_o spi1_mcu_rx_oe}]
-
-# We ignore other peripherals on the SPI bus
-# set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {spi1_mcu_rx_i}]
-# set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {spi1_mcu_rx_i}]
+set_output_delay -clock spi1_sck_i -max [expr { $spi1_sck_period_ns * 0.25 }] [get_ports {spi1_mcu_rx_o}]
+set_output_delay -clock spi1_sck_i -min [expr { $spi1_sck_period_ns * -0.25 }] [get_ports {spi1_mcu_rx_o}]
 
 # Assume CS_N transitions within +/- 250ps of sampling clock.
 #
@@ -81,6 +78,14 @@ set_output_delay -clock spi1_sck_i -min [expr { $spi1_sck_period_ns * -0.25 }] [
 # at 4 MHz or above.
 set_input_delay -clock spi1_sck_i -max [expr { $spi1_sck_period_ns * 0.25 }] [get_ports {spi1_cs_ni}]
 set_input_delay -clock spi1_sck_i -min [expr { $spi1_sck_period_ns * -0.25 }] [get_ports {spi1_cs_ni}]
+
+# Assume that FPGA begins driving the TX (FPGA) -> RX (MCU) pin within 50ns of /CS_N being asserted.
+# To constrain this combinatorial logic, we model CS_N as an asynchronous clock.
+create_clock -name "spi1_cs_n" -period 50 [get_ports spi1_cs_ni]
+set_clock_groups -asynchronous -group {spi_cs_n}
+
+set_output_delay -clock spi1_cs_n -max [expr { $spi1_sck_period_ns * 0.25 }] [get_ports {spi1_mcu_rx_oe}]
+set_output_delay -clock spi1_cs_n -min [expr { $spi1_sck_period_ns * -0.25 }] [get_ports {spi1_mcu_rx_oe}]
 
 # GPIO Constraints
 ####################

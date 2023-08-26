@@ -14,6 +14,7 @@
 
 module main(
     // FPGA
+    input  logic clk_sys_i,
     input  logic clk16_i,
 
     // SPI1
@@ -77,7 +78,8 @@ module main(
     logic        spi_ready;     // Transaction complete: ready for next SPI command
     
     spi1 spi1(
-        .clk_sys_i(clk16_i),
+        .clk_sys_i(clk_sys_i),
+        .clk_sync_i(clk16_i),
         .spi_sck_i(spi1_sck_i),
         .spi_cs_ni(spi1_cs_ni),
         .spi_rx_i(spi1_rx_i),
