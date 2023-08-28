@@ -64,7 +64,7 @@ fw/roms/*.h
 .vscode/.cortex-debug.peripherals.state.json
 .vscode/.cortex-debug.registers.state.json
 
-# Efinity
+# Efinity (old)
 rtl/t8/PET/.lock
 rtl/t8/PET/*.vdb
 rtl/t8/PET/debug_profile.wizard.json
@@ -77,3 +77,17 @@ rtl/t8/PET/work_pnr/**/*
 rtl/t8/PET/work_pt/**/*
 rtl/t8/PET/work_sim/**/*
 rtl/t8/PET/work_syn/**/*
+
+# Efinity (new)
+gw/PET/.lock
+gw/PET/*.vdb
+gw/PET/debug_profile.wizard.json
+gw/PET/efinity_dbg.jtag.log*
+gw/PET/*.gtkw
+gw/PET/*.vcd
+gw/PET/outflow/**/*
+gw/PET/work_dbg/**/*
+gw/PET/work_pnr/**/*
+gw/PET/work_pt/**/*
+gw/PET/work_sim/**/*
+gw/PET/work_syn/**/*
