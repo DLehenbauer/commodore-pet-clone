@@ -14,8 +14,7 @@
 
 module top(
     // FPGA
-    input  logic         clk_sys_i,         // 160 MHz clock (from PLL)
-    input  logic         clk16_i,           // 16 MHz clock (from PLL)
+    input  logic         clk_sys_i,         // 64 MHz clock (from PLL)
     output logic         status_no,         // NSTATUS LED (0 = On, 1 = Off)
 
     // SPI1
@@ -81,4 +80,7 @@ module top(
     output logic v_sync_o,
     output logic video_o
 );
+    timing timing(
+        .clk_sys_i(clk_sys_i)
+    );
 endmodule

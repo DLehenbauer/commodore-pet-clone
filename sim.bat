@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set PROJDIR=%~dp0\rtl\t8\PET
+set PROJDIR=%~dp0\gw\PET
 set BINDIR=C:\Efinity\2023.1\bin
 
 :Parse
