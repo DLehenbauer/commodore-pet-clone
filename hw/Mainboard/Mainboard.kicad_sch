@@ -1987,11 +1987,17 @@
     (path "/00000000-0000-0000-0000-000061ed99de/32481998-cc5d-45ff-8cb5-a3548de120c6"
       (reference "C91") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/0007db88-2858-4ecc-b3c5-71d3aa81f06d"
-      (reference "C92") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/eba71a74-f083-44de-92b1-62bd2e5ae537"
+      (reference "C92") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6a8a481c-9d25-457c-86ab-ae9d8efbc955"
-      (reference "C94") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b7e8046d-f74d-4bc8-88f3-707290f3a35e"
+      (reference "C93") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/4a808977-9b54-4b0f-a52c-664ed30e01ce"
+      (reference "C94") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/111ffe50-c149-4627-ae68-24d9467c426c"
+      (reference "C95") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/a3df4aaa-6494-4487-a930-b5ca7d7062bb"
       (reference "D1") (unit 1) (value "SS34") (footprint "Diode_SMD:D_SMA")
