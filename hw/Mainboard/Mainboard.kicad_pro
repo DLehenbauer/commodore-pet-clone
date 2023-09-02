@@ -458,8 +458,6 @@
           "/Keyboard/R7",
           "/Keyboard/R8",
           "/Keyboard/R9",
-          "/Keyboard/VCC",
-          "/Keyboard/VSS",
           "/MAGIC/BHORIZ",
           "/MAGIC/BVIDEO",
           "/USER/VCC",
@@ -526,7 +524,6 @@
           "/MAGIC/MCU/GP27",
           "/MAGIC/MCU/MCU_I2C0_SCL",
           "/MAGIC/MCU/MCU_I2C0_SDA",
-          "/MAGIC/MCU/MCU_TESTEN",
           "/MAGIC/MCU/MCU_USB_D+",
           "/MAGIC/MCU/MCU_USB_D-",
           "/MAGIC/MCU/MCU_~{CRESET}",
@@ -554,8 +551,7 @@
         "microvia_drill": 0.1,
         "name": "POWER_0.7A",
         "nets": [
-          "+1V2",
-          "+3V3"
+          "+1V2"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
