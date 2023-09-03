@@ -13,7 +13,8 @@
  */
 
 module timing(
-    input  logic clk16_i,
+    input  logic clk_sys_i,
+    output logic clk_16_o,
     output logic strobe_clk_o   = '0,
     output logic setup_clk_o    = 1'b1,
     output logic cpu_clk_o,
@@ -27,6 +28,13 @@ module timing(
     output logic vram1_en_o     = '0,
     output logic vrom1_en_o     = '0
 );
+    logic [1:0] clk_counter = '0;
+
+    always_ff @(posedge clk_sys_i) begin
+        clk_counter <= clk_counter + 1'b1;
+        clk_16_o <= clk_counter[1];
+    end
+
     // Generate two 8 MHz clocks that are offset by 90 degrees:
     //
     //   'setup_clk' rotates ownership of the bus in round robin fashion.
@@ -48,8 +56,8 @@ module timing(
     // Note: edge # = count * 2 + 1
     //       { rise edge #, fall edge #, rise edge # + 32 }
 
-    always_ff @(posedge clk16_i) strobe_clk_o <= ~strobe_clk_o;
-    always_ff @(negedge clk16_i) setup_clk_o  <= ~strobe_clk_o;
+    always_ff @(posedge clk_16_o) strobe_clk_o <= ~strobe_clk_o;
+    always_ff @(negedge clk_16_o) setup_clk_o  <= ~strobe_clk_o;
 
     // We initialize en[7:0] with 8'b00000001 and rotate left on each positive edge of 'setup_clk'.
     //

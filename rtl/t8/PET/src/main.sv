@@ -15,7 +15,6 @@
 module main(
     // FPGA
     input  logic clk_sys_i,
-    input  logic clk16_i,
 
     // SPI1
     input  logic spi1_sck_i,
@@ -66,6 +65,8 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
+    logic clk_16;
+
     //
     // SPI1
     //
@@ -78,8 +79,8 @@ module main(
     logic        spi_ready;     // Transaction complete: ready for next SPI command
     
     spi1 spi1(
-        .clk_sys_i(clk16_i),
-        .clk_sync_i(clk16_i),
+        .clk_sys_i(clk_16),
+        .clk_sync_i(clk_16),
         .spi_sck_i(spi1_sck_i),
         .spi_cs_ni(spi1_cs_ni),
         .spi_rx_i(spi1_rx_i),
@@ -107,7 +108,8 @@ module main(
     logic vrom1_en;
 
     timing timing(
-        .clk16_i(clk16_i),
+        .clk_sys_i(clk_sys_i),
+        .clk_16_o(clk_16),
         .strobe_clk_o(strobe_clk),
         .setup_clk_o(setup_clk),
 
@@ -207,7 +209,7 @@ module main(
 
     video video(
         .reset_i(cpu_res_i),
-        .clk16_i(clk16_i),
+        .clk16_i(clk_16),
         .pixel_clk_i(setup_clk),
         .setup_clk_i(setup_clk),
         .strobe_clk_i(strobe_clk),
