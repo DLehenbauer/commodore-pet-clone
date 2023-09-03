@@ -530,8 +530,7 @@
           "/MAGIC/MCU/SD_DETECT",
           "/MAGIC/MCU/SD_~{CS}",
           "/MAGIC/MCU/XIN",
-          "/MAGIC/MCU/XOUT",
-          "MCU_IOVDD"
+          "/MAGIC/MCU/XOUT"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",

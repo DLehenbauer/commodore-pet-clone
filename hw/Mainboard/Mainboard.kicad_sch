@@ -1736,7 +1736,7 @@
       (reference "C7") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/0cead719-fa35-4748-bf39-023885146fba"
-      (reference "C8") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C8") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/a19761b5-717f-4f4d-a096-4b62a3c63e1b"
       (reference "C9") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -2009,7 +2009,7 @@
       (reference "C98") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/a3df4aaa-6494-4487-a930-b5ca7d7062bb"
-      (reference "D1") (unit 1) (value "SS34") (footprint "Diode_SMD:D_SMA")
+      (reference "D1") (unit 1) (value "SS54") (footprint "Diode_SMD:D_SMA")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000061f4c74a"
       (reference "D2") (unit 1) (value "LED_RED") (footprint "LED_SMD:LED_0603_1608Metric")
@@ -2018,13 +2018,13 @@
       (reference "D3") (unit 1) (value "SS54") (footprint "Diode_SMD:D_SMA")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062e01139"
-      (reference "D4") (unit 1) (value "SS34") (footprint "Diode_SMD:D_SMA")
+      (reference "D4") (unit 1) (value "SS54") (footprint "Diode_SMD:D_SMA")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062e92074"
-      (reference "D5") (unit 1) (value "SS34") (footprint "Diode_SMD:D_SMA")
+      (reference "D5") (unit 1) (value "SS54") (footprint "Diode_SMD:D_SMA")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062e0da5e"
-      (reference "D6") (unit 1) (value "SS34") (footprint "Diode_SMD:D_SMA")
+      (reference "D6") (unit 1) (value "SS54") (footprint "Diode_SMD:D_SMA")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/6fdb0c73-9c35-4abd-a30b-3adbeb3d9b60"
       (reference "D9") (unit 1) (value "SM4007") (footprint "Diode_SMD:D_SOD-123F")
