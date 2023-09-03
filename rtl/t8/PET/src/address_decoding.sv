@@ -16,7 +16,6 @@ module address_decoding(
     input  logic [16:0] addr_i,
 
     output logic ram_en_o,
-    output logic sid_en_o,
     output logic magic_en_o,
     output logic pia1_en_o,
     output logic pia2_en_o,
@@ -26,21 +25,19 @@ module address_decoding(
     output logic is_mirrored_o,
     output logic is_readonly_o
 );
-    localparam NUM_BITS         = 10;
+    localparam NUM_BITS         = 9;
 
     localparam RAM_EN_BIT       = 0,
-               SID_EN_BIT       = 1,
-               MAGIC_EN_BIT     = 2,
-               PIA1_EN_BIT      = 3,
-               PIA2_EN_BIT      = 4,
-               VIA_EN_BIT       = 5,
-               CRTC_EN_BIT      = 6,
-               IO_EN_BIT        = 7,
-               RAM_READONLY_BIT = 8,
-               RAM_MIRRORED_BIT = 9;
+               MAGIC_EN_BIT     = 1,
+               PIA1_EN_BIT      = 2,
+               PIA2_EN_BIT      = 3,
+               VIA_EN_BIT       = 4,
+               CRTC_EN_BIT      = 5,
+               IO_EN_BIT        = 6,
+               RAM_READONLY_BIT = 7,
+               RAM_MIRRORED_BIT = 8;
 
     localparam RAM_EN_MASK       = NUM_BITS'(1'b1) << RAM_EN_BIT,
-               SID_EN_MASK       = NUM_BITS'(1'b1) << SID_EN_BIT,
                MAGIC_EN_MASK     = NUM_BITS'(1'b1) << MAGIC_EN_BIT,
                PIA1_EN_MASK      = NUM_BITS'(1'b1) << PIA1_EN_BIT,
                PIA2_EN_MASK      = NUM_BITS'(1'b1) << PIA2_EN_BIT,
@@ -52,7 +49,6 @@ module address_decoding(
 
     localparam RAM   = RAM_EN_MASK,
                VRAM  = RAM_EN_MASK  | RAM_MIRRORED_MASK,
-               SID   = SID_EN_MASK,
                MAGIC = MAGIC_EN_MASK,
                ROM   = RAM_EN_MASK  | RAM_READONLY_MASK,
                PIA1  = PIA1_EN_MASK | IO_EN_MASK,
@@ -65,7 +61,6 @@ module address_decoding(
     always_comb begin
         priority casez (addr_i[16:0])
             17'b0_0???_????_????_????: select = RAM;    // RAM   : 0000-7FFF
-            17'b0_1000_1111_????_????: select = SID;    // SID   : 8F00-8FFF
             17'b0_1000_????_????_????: select = VRAM;   // VRAM  : 8000-8F00
             17'b0_1110_1000_0000_????: select = MAGIC;  // MAGIC : E800-E80F
             17'b0_1110_1000_0001_????: select = PIA1;   // PIA1  : E810-E81F
@@ -80,7 +75,6 @@ module address_decoding(
     assign is_readonly_o  = select[RAM_READONLY_BIT];
     assign is_mirrored_o  = select[RAM_MIRRORED_BIT];
 
-    assign sid_en_o       = select[SID_EN_BIT];
     assign magic_en_o     = select[MAGIC_EN_BIT];
     assign io_en_o        = select[IO_EN_BIT];
     assign pia1_en_o      = select[PIA1_EN_BIT];

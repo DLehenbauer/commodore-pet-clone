@@ -78,7 +78,7 @@ module main(
     logic        spi_ready;     // Transaction complete: ready for next SPI command
     
     spi1 spi1(
-        .clk_sys_i(clk_sys_i),
+        .clk_sys_i(clk16_i),
         .clk_sync_i(clk16_i),
         .spi_sck_i(spi1_sck_i),
         .spi_cs_ni(spi1_cs_ni),
@@ -151,7 +151,6 @@ module main(
         .pia2_en_o(pia2_en),
         .via_en_o(via_en),
         .crtc_en_o(crtc_en),
-        .sid_en_o(sid_en),
         .io_en_o(io_en),
         .is_mirrored_o(is_mirrored)
     );
@@ -194,11 +193,6 @@ module main(
     audio audio(
         .reset_i(cpu_res_i),
         .clk8_i(strobe_clk),
-        .cpu_en_i(cpu_en),
-        .cpu_wr_en_i(cpu_wr_en),
-        .sid_en_i(sid_en),
-        .addr_i(bus_addr_i[4:0]),
-        .data_i(bus_data_i),
         .diag_i(diag_i),
         .via_cb2_i(via_cb2_i),
         .audio_o(audio_o)

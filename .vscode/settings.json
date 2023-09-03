@@ -22,7 +22,8 @@
     "verilog.linting.linter": "iverilog",
     "verilog.linting.iverilog.arguments": "-g2009",
     "cSpell.words": [
-        "Picoprobe"
+        "Picoprobe",
+        "unsynchronized"
     ],
     "editor.detectIndentation": false,
     "cmake.configureOnOpen": false
