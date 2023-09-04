@@ -65,4 +65,40 @@ module main(
     output logic v_sync_o,
     output logic video_o
 );
+    // Drive nothing to avoid contention
+    assign bus_addr_oe = '0;
+    assign bus_data_oe = '0;
+    assign bus_rw_noe  = '0;
+    assign cpu_be_o    = '0;
+    assign io_oe_o     = '0;
+    assign ram_oe_o    = '0;
+    
+    // Deassert RES to turn off NSTATUS LED 
+    assign cpu_res_o   = 1'b0;
+
+    logic [7:0] tx_byte = 8'hee;
+    logic [7:0] rx_byte;
+    logic rx_valid;
+    logic spi_reset;
+
+    spi_byte spi(
+        .clk_sys_i(clk_sys_i),
+        .spi_sck_i(spi1_sck_i),
+        .spi_cs_ni(spi1_cs_ni),
+        .spi_rx_i(spi1_rx_i),
+        .spi_tx_o(spi1_tx_o),
+        .rx_valid_o(rx_valid),
+        .rx_byte_o(rx_byte),
+        .tx_byte_i(tx_byte),
+        .reset_o(spi_reset)
+    );
+
+    always_ff @(posedge clk_sys_i) begin
+        if (rx_valid) begin
+            tx_byte <= rx_byte;
+            spi_ready_o <= 1'b1;
+        end else if (spi_reset) begin
+            spi_ready_o <= 1'b0;
+        end
+    end
 endmodule
