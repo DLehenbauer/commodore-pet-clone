@@ -45,8 +45,7 @@ module main_tb;
         $dumpvars(0, main_tb);
 
         spi.reset();
-        spi.xfer_bytes('{ 8'haa, 8'h55, 8'h00 });
-        spi.end_xfer();
+        spi.send('{ 8'haa, 8'h55, 8'h00 });
 
         $display("[%t] Test Complete", $time);
         $finish;

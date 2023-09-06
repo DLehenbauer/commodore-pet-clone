@@ -22,11 +22,6 @@ module spi_driver #(
     input  logic spi_rx_i,
     output logic spi_tx_o
 );
-    bit clk_sys = '0;
-
-    // Sampling clock for 'spi_byte_tx' must be 4x SCK_MHZ.
-    initial forever #(1000 / (SCK_MHZ * 5 * 2)) clk_sys = ~clk_sys;
-
     bit start_sck = '0;
 
     always @(posedge start_sck) begin
@@ -41,10 +36,10 @@ module spi_driver #(
 
     task reset;
         spi_cs_no = '0;
-        @(posedge clk_sys);
+        #1;
         spi_sck_o = '0;
         spi_cs_no = '1;
-        @(posedge clk_sys);
+        #1;
     endtask
 
     task begin_xfer(
@@ -57,10 +52,8 @@ module spi_driver #(
 
         // MSB of 'tx_byte' is preloaded while spi_cs_no is high on rising edge of clk_sys.
         tx_byte = tx_i;
-        @(posedge clk_sys);
-
         spi_cs_no = '0;
-        #500;
+        #1;
         start_sck = '1;
     endtask
 
@@ -85,14 +78,6 @@ module spi_driver #(
     );
         integer i;
         
-        // string s;
-        // s = "";
-        // foreach (tx[i]) s = { s, $sformatf("%h ", tx[i]) };
-        // $display("[%t] SPI Send: [ %s]", $time, s);
-
-        // 'tx_byte' is continuously preloaded from falling edge of CS_N.
-        begin_xfer(tx[0]);
-
         foreach(tx[i]) begin
             // 'next_tx' is the next byte to load on the 8th falling edge of SCK.
             xfer_bits(tx[i + 1]);
@@ -109,10 +94,31 @@ module spi_driver #(
 
         start_sck = 0;
 
-        #500;
+        #1;
         spi_cs_no = next_cs_ni;
 
-        #500;
+        #1;
+    endtask
+
+    task send(
+        input logic unsigned [7:0] tx[]
+    );
+        integer i;
+        
+        // string s;
+        // s = "";
+        // foreach (tx[i]) s = { s, $sformatf("%h ", tx[i]) };
+        // $display("[%t] SPI Send: [ %s]", $time, s);
+
+        // 'tx_byte' is continuously preloaded from falling edge of CS_N.
+        begin_xfer(tx[0]);
+
+        foreach(tx[i]) begin
+            // 'next_tx' is the next byte to load on the 8th falling edge of SCK.
+            xfer_bits(tx[i + 1]);
+        end
+
+        end_xfer();
     endtask
 
     logic       rx_valid;
@@ -120,7 +126,6 @@ module spi_driver #(
     logic [7:0] rx_byte_d, rx_byte_q;
 
     spi_byte spi_byte_tx(
-        .clk_sys_i(clk_sys),
         .spi_sck_i(spi_sck_o),
         .spi_cs_ni(spi_cs_no),
         .spi_rx_i(spi_rx_i),
@@ -130,9 +135,7 @@ module spi_driver #(
         .rx_valid_o(rx_valid)
     );
 
-    always_ff @(posedge clk_sys) begin
-        if (rx_valid) begin
-            rx_byte_q <= rx_byte_d;
-        end
+    always_ff @(posedge rx_valid) begin
+        rx_byte_q <= rx_byte_d;
     end
 endmodule

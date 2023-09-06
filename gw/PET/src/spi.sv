@@ -12,25 +12,8 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
- module edge_detect(
-    input logic clk_i,      // Sampling clock
-    input logic data_i,     // Input signal to detect edges
-    output logic pe_o,      // Output for rising edge detection
-    output logic ne_o       // Output for falling edge detection
-);
-    logic [1:0] data = '0;
-
-    always @(posedge clk_i) begin
-        pe_o <= ( data[0] && !data[1]);
-        ne_o <= (!data[0] &&  data[1]);
-        data <= { data[0], data_i };
-    end
-endmodule
-
 // Implements core of SPI Mode 0 byte transfers in a controller/peripheral agnostic way.
 module spi_byte (
-    input  logic clk_sys_i,         // Sampling clock.  Should be at least 4x SCK.
-    
     input  logic spi_cs_ni,         // CS_N also functions as a synchronous reset
     input  logic spi_sck_i,         // SCK must be low before falling edge of CS_N
     input  logic spi_rx_i,
@@ -44,36 +27,37 @@ module spi_byte (
 
     output logic reset_o            // Pulse when CS_N deasserts.  Use to reset decoder.
 );
-    logic sck_pe, sck_ne;
-
-    edge_detect edge_sck(
-        .clk_i(clk_sys_i),
-        .data_i(spi_sck_i),
-        .pe_o(sck_pe),
-        .ne_o(sck_ne)
-    );
-
-    logic cs_n_pe, cs_n_ne;
-
-    edge_detect edge_cs_n(
-        .clk_i(clk_sys_i),
-        .data_i(spi_cs_ni),
-        .pe_o(reset_o),
-        .ne_o(cs_n_ne)
-    );
-
+    logic valid_d;
     logic [2:0] bit_count;
+    logic [7:0] rx_byte_d, rx_byte_q;
     logic [7:0] tx_byte;
 
-    always_ff @(posedge clk_sys_i) begin
-        if (cs_n_ne) begin
+    always_comb begin
+        rx_byte_d = { rx_byte_q[6:0], spi_rx_i };
+        valid_d   = bit_count == 3'd7;
+    end
+
+    always_ff @(posedge spi_cs_ni or posedge spi_sck_i) begin
+        if (spi_cs_ni) begin
             bit_count <= '0;
-            tx_byte <= tx_byte_i;
-            spi_tx_o <= tx_byte_i[7];
-        end else if (sck_pe) begin
-            rx_byte_o <= { rx_byte_o[6:0], spi_rx_i };
+            rx_byte_q <= 8'hxx;
+        end else begin
+            rx_byte_q <= rx_byte_d;
+            rx_valid_o <= valid_d;
+
+            if (valid_d) begin
+                rx_byte_o  <= rx_byte_d;
+            end
+
             bit_count <= bit_count + 1'b1;
-        end else if (sck_ne) begin
+        end
+    end
+
+    always_ff @(negedge spi_cs_ni or negedge spi_sck_i) begin
+        if (spi_sck_i) begin
+            tx_byte  <= tx_byte_i;
+            spi_tx_o <= tx_byte_i[7];
+        end else begin
             if (bit_count == '0) begin
                 tx_byte  <= tx_byte_i;
                 spi_tx_o <= tx_byte_i[7];
@@ -82,7 +66,5 @@ module spi_byte (
                 spi_tx_o <= tx_byte[6];
             end
         end
-
-        rx_valid_o <= sck_pe && bit_count == 4'd7;
     end
 endmodule

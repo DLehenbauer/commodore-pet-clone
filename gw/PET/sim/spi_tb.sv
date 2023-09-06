@@ -15,9 +15,6 @@
  `timescale 1ns / 1ps
 
 module spi_tb;
-    bit clk_sys = '0;
-    initial forever #(1000 / (64 * 2)) clk_sys = ~clk_sys;
-
     logic sck;
     logic cs_n;
     logic pico;
@@ -34,7 +31,6 @@ module spi_tb;
     );
 
     spi_byte peripheral(
-        .clk_sys_i(clk_sys),
         .spi_cs_ni(cs_n),
         .spi_sck_i(sck),
         .spi_tx_o(poci),
@@ -49,8 +45,8 @@ module spi_tb;
         $dumpvars(0, spi_tb);
 
         controller.reset();
-        controller.xfer_bytes('{ 8'haa });
-        controller.end_xfer();
+        tx = 8'h55;
+        controller.send('{ 8'haa });
 
         $display("[%t] Test Complete", $time);
         $finish;
