@@ -80,38 +80,12 @@ module main(
     logic [7:0] rx_byte;
     logic rx_valid;
 
-    spi_byte spi(
+    spi1 spi1(
+        .clk_i(clk_sys_i),
         .spi_sck_i(spi1_sck_i),
         .spi_cs_ni(spi1_cs_ni),
         .spi_rx_i(spi1_rx_i),
         .spi_tx_o(spi1_tx_o),
-        .rx_valid_o(rx_valid),
-        .rx_byte_o(rx_byte),
-        .tx_byte_i(tx_byte)
+        .spi_valid_o(spi_ready_o)
     );
-
-    logic rx_valid_pe;
-
-    edge_detect rx_valid_edge(
-        .clk_i(clk_sys_i),
-        .data_i(rx_valid),
-        .pe_o(rx_valid_pe)
-    );
-
-    logic spi1_reset;
-
-    edge_detect spi1_cs_n_edge(
-        .clk_i(clk_sys_i),
-        .data_i(spi1_cs_ni),
-        .pe_o(spi1_reset)
-    );
-
-    always_ff @(posedge clk_sys_i) begin
-        if (rx_valid_pe) begin
-            tx_byte <= rx_byte;
-            spi_ready_o <= 1'b1;
-        end else if (spi1_reset) begin
-            spi_ready_o <= 1'b0;
-        end
-    end
 endmodule

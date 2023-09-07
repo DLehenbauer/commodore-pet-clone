@@ -47,6 +47,8 @@ module main_tb;
         spi.reset();
         spi.send('{ 8'haa, 8'h55, 8'h00 });
 
+        #1000;
+
         $display("[%t] Test Complete", $time);
         $finish;
     end

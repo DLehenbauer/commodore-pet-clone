@@ -15,7 +15,7 @@
 `timescale 1ns / 1ps
 
 module spi_driver #(
-    parameter SCK_MHZ = 4
+    parameter SCK_MHZ = 24
 )(
     output logic spi_sck_o,
     output logic spi_cs_no,
@@ -121,7 +121,7 @@ module spi_driver #(
         end_xfer();
     endtask
 
-    logic       rx_valid;
+    logic       spi_en;
     logic [7:0] tx_byte = 8'hxx;
     logic [7:0] rx_byte_d, rx_byte_q;
 
@@ -132,10 +132,10 @@ module spi_driver #(
         .spi_tx_o(spi_tx_o),
         .tx_byte_i(tx_byte),
         .rx_byte_o(rx_byte_d),
-        .rx_valid_o(rx_valid)
+        .en_o(spi_en)
     );
 
-    always_ff @(posedge rx_valid) begin
-        rx_byte_q <= rx_byte_d;
+    always_ff @(posedge spi_sck_o) begin
+        if (spi_en) rx_byte_q <= rx_byte_d;
     end
 endmodule

@@ -21,7 +21,7 @@ module spi_tb;
     logic poci;
     logic [7:0] tx;
     logic [7:0] rx;
-    logic valid;
+    logic en;
 
     spi_driver controller(
         .spi_cs_no(cs_n),
@@ -37,7 +37,7 @@ module spi_tb;
         .spi_rx_i(pico),
         .tx_byte_i(tx),
         .rx_byte_o(rx),
-        .rx_valid_o(valid)
+        .en_o(en)
     );
 
     initial begin

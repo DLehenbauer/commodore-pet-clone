@@ -12,17 +12,14 @@
  * @author Daniel Lehenbauer <DLehenbauer@users.noreply.github.com> and contributors
  */
 
-module edge_detect(
-    input logic clk_i,      // Sampling clock
-    input logic data_i,     // Input signal to detect edges
-    output logic pe_o,      // Output for rising edge detection
-    output logic ne_o       // Output for falling edge detection
+ module sync2 (
+    input logic clk_i,      // Destination clock
+    input logic data_i,     // Input data in source clock domain
+    output logic data_o     // Synchronized output in destination clock domain
 );
-    logic q = '0;
-
-    always @(posedge clk_i) begin
-        pe_o <=  data_i && !q;
-        ne_o <= !data_i &&  q;
-        q    <=  data_i;
+    logic q = '0;   // 1st stage FF output
+    
+    always_ff @(posedge clk_i) begin
+        {data_o, q} <= {q, data_i};
     end
 endmodule
