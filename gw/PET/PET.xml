@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="PET" description="" last_change_date="Thu September 7 2023 07:24:21" location="D:/gh/commodore-pet-clone/gw/pet" sw_version="2023.1.150.3.11" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="true" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="PET" description="" last_change_date="Mon September 11 2023 07:11:52" location="D:/gh/commodore-pet-clone/gw/pet" sw_version="2023.1.150.3.11" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="true" design_ood="change" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion"/>
         <efx:device name="T8Q144"/>
@@ -24,6 +24,8 @@
         <efx:sim_file name="sim/sim.sv"/>
         <efx:sim_file name="sim/spi_tb.sv"/>
         <efx:sim_file name="sim/spi_driver.sv"/>
+        <efx:sim_file name="sim/spi1_driver.sv"/>
+        <efx:sim_file name="sim/spi1_tb.sv"/>
     </efx:sim_info>
     <efx:misc_info/>
     <efx:ip_info/>

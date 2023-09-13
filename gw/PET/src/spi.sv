@@ -66,17 +66,20 @@ endmodule
 
 // Protocol for SPI1 peripheral
 module spi1(
-    input  logic clk_i,             // Destination clock domain
+    input  logic clk_i,                 // Destination clock domain
 
-    input  logic spi_sck_i,         // SCK
-    input  logic spi_cs_ni,         // CS: Also serves as a synchronous reset for the SPI FSM
-    input  logic spi_rx_i,          // PICO
-    output logic spi_tx_o,          // POCI
+    input  logic spi_sck_i,             // SCK
+    input  logic spi_cs_ni,             // CS: Also serves as a synchronous reset for the SPI FSM
+    input  logic spi_rx_i,              // PICO
+    output logic spi_tx_o,              // POCI
     
-    output logic spi_valid_o
+    output logic        spi_valid_o,    // Next SPI command received: '_addr_o', '_data_o', and '_rw_no' are valid.
+    output logic [16:0] spi_addr_o,     // Bus address of pending read/write command
+    input  logic  [7:0] spi_data_i,     // Data returned from completed read command
+    output logic  [7:0] spi_data_o,     // Data to be written by pending write command
+    output logic        spi_rw_no       // Direction of pending command (0 = write, 1 = read)
 );
     logic [7:0] spi_rx;
-    logic [7:0] spi_tx;
     logic       spi_en;
 
     spi_byte spi_byte(
@@ -85,26 +88,90 @@ module spi1(
         .spi_rx_i(spi_rx_i),
         .spi_tx_o(spi_tx_o),
         .rx_byte_o(spi_rx),
-        .tx_byte_i(spi_tx),
+        .tx_byte_i(spi_data_i),
         .en_o(spi_en)
     );
 
-    logic spi_valid = '0;
+    // State encoding for our FSM:
+    //
+    //  D = data        (processing a write command, awaiting byte to write)
+    //  A = address     (processing a random access command, awaiting address bytes)
+    //  V = spi_valid_o (a command has been received)
+    //  R = spi_ready_o (signals to MCU that command has finished processing)
+    //
+    //                                RVAD
+    localparam READ_CMD          = 4'b0000,
+               READ_DATA_ARG     = 4'b0001,
+               READ_ADDR_HI_ARG  = 4'b0010,
+               READ_ADDR_LO_ARG  = 4'b0011,
+               VALID             = 4'b0100,
+               DONE              = 4'b1000;
+
+    logic [3:0] state = READ_CMD;   // Current state of FSM
+
+    // Asserted if current CMD reads the target address, in which case FSM will
+    // transition through READ_ADDR_*_ARG before the VALID state.
+    logic cmd_rd_a;
 
     always_ff @(posedge spi_cs_ni or posedge spi_sck_i) begin
         if (spi_cs_ni) begin
-            spi_valid <= '0;
+            // Deasserting CS_N synchronously resets the FSM.
+            state <= READ_CMD;
         end else begin
+            // 'spi_rx' is valid When 'spi_en' is asserted on the positive SCK edge.
+            // Advance the FSM before the next SCK edge shifts 'spi_rx'.
             if (spi_en) begin
-                spi_tx <= spi_rx;
-                spi_valid <= 1'b1;
+                unique case (state)
+                    READ_CMD: begin
+                        spi_rw_no <= spi_rx[7];
+                        cmd_rd_a  <= spi_rx[6];
+
+                        if (spi_rx[6]) begin
+                            // If the incomming CMD reads target address as an argument, capture A16 from rx[0] now.
+                            spi_addr_o <= { spi_rx[0], 16'hxxxx };
+                        end else begin
+                            // Otherwise increment the previous address.
+                            spi_addr_o <= spi_addr_o + 1'b1;
+                        end
+
+                        unique casez(spi_rx)
+                            8'b0???????: state <= READ_DATA_ARG;
+                            8'b11??????: state <= READ_ADDR_HI_ARG;
+                            default:     state <= VALID;
+                        endcase
+                    end
+
+                    READ_DATA_ARG: begin
+                        spi_data_o <= spi_rx;
+                        state <= cmd_rd_a
+                            ? READ_ADDR_HI_ARG
+                            : VALID;
+                    end
+
+                    READ_ADDR_HI_ARG: begin
+                        spi_addr_o <= { spi_addr_o[16], spi_rx, 8'hxx };
+                        state      <= READ_ADDR_LO_ARG;
+                    end
+
+                    READ_ADDR_LO_ARG: begin
+                        spi_addr_o <= { spi_addr_o[16:8], spi_rx };
+                        state      <= VALID;
+                    end
+
+                    VALID: begin
+                        // Remain in the valid state until positve CS_N edge resets the FSM.
+                        state <= VALID;
+                    end
+                endcase
             end
         end
     end
 
+    // 'state[2]' bit indicates 'state == VALID'.  Sychronize this transition to the
+    // FPGA clock domain and output as 'spi_valid_o'.
     sync2 sync_valid(
         .clk_i(clk_i),
-        .data_i(spi_valid),
+        .data_i(state[2]),
         .data_o(spi_valid_o)
     );
 endmodule

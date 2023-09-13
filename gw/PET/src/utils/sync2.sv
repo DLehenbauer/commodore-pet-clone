@@ -13,9 +13,9 @@
  */
 
  module sync2 (
-    input logic clk_i,      // Destination clock
-    input logic data_i,     // Input data in source clock domain
-    output logic data_o     // Synchronized output in destination clock domain
+    input logic clk_i,          // Destination clock
+    input logic data_i,         // Input data in source clock domain
+    output logic data_o = '0    // Synchronized output in destination clock domain
 );
     logic q = '0;   // 1st stage FF output
     

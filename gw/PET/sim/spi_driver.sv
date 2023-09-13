@@ -118,6 +118,7 @@ module spi_driver #(
             xfer_bits(tx[i + 1]);
         end
 
+        @(negedge spi_sck_o);
         end_xfer();
     endtask
 
