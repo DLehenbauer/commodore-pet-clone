@@ -2150,22 +2150,22 @@
       (reference "JP1") (unit 1) (value "VIDEO_OR_5V") (footprint "PET:PinHeader_and_Jumper_1x03_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/0df00b32-fc43-4b8d-b2e6-2eec2e4ddb85"
-      (reference "JP2") (unit 1) (value "CASS A ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP2") (unit 1) (value "CASS A ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/e1beb45f-c642-4d7d-901b-801c2a34e703"
-      (reference "JP3") (unit 1) (value "CASS B ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP3") (unit 1) (value "CASS B ~{MOTOR}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/325e9863-1136-4cb8-a83a-f6de85da234f"
-      (reference "JP4") (unit 1) (value "CASS A READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP4") (unit 1) (value "CASS A READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/eb8e7fc3-6929-4c77-b10b-8a2a52ad0c17"
-      (reference "JP5") (unit 1) (value "CASS B READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP5") (unit 1) (value "CASS B READ") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/2a95e86c-c6c0-46aa-b818-245b269c2229"
-      (reference "JP6") (unit 1) (value "CASS A ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP6") (unit 1) (value "CASS A ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/5bd4a830-73a3-4504-83ce-78525d450a97"
-      (reference "JP7") (unit 1) (value "CASS B ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm")
+      (reference "JP7") (unit 1) (value "CASS B ~{SWITCH}") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/7e646508-d259-48ca-ab1c-aaa28635b314"
       (reference "JP8") (unit 1) (value "DVI_CEC") (footprint "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm")
