@@ -10,7 +10,6 @@
         <efx:design_file name="src/timing.sv" version="default" library="default" />
         <efx:design_file name="src/main.sv" version="default" library="default" />
         <efx:design_file name="src/spi.sv" version="default" library="default" />
-        <efx:design_file name="sim/main_tb.sv" version="default" library="default" />
         <efx:design_file name="src/utils/sync2.sv" version="default" library="default" />
         <efx:design_file name="src/utils/edge_detect.sv" version="default" library="default" />
         <efx:design_file name="src/utils/sync2_edge_detect.sv" version="default" library="default" />
@@ -21,9 +20,9 @@
         <efx:inter_file name="" />
     </efx:constraint_info>
     <efx:sim_info>
-        <efx:sim_file name="sim/sim.sv" />
-        <efx:sim_file name="sim/spi_tb.sv" />
+        <efx:sim_file name="sim/main_tb.sv" />
         <efx:sim_file name="sim/spi_driver.sv" />
+        <efx:sim_file name="sim/spi_tb.sv" />
         <efx:sim_file name="sim/spi1_driver.sv" />
         <efx:sim_file name="sim/spi1_tb.sv" />
     </efx:sim_info>
