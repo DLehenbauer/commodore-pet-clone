@@ -22,6 +22,7 @@
     "verilog.linting.linter": "iverilog",
     "verilog.linting.iverilog.arguments": "-g2009",
     "cSpell.words": [
+        "deasserts",
         "Picoprobe",
         "unsynchronized"
     ],

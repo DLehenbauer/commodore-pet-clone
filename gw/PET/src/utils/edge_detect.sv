@@ -15,14 +15,15 @@
 module edge_detect(
     input logic clk_i,      // Sampling clock
     input logic data_i,     // Input signal to detect edges
-    output logic pe_o,      // Output for rising edge detection
-    output logic ne_o       // Output for falling edge detection
+    output logic pe_o,      // Pulse for rising edge
+    output logic ne_o       // Pulse for falling edge
 );
     logic q = '0;
 
+    assign pe_o =  data_i && !q;
+    assign ne_o = !data_i &&  q;
+
     always @(posedge clk_i) begin
-        pe_o <=  data_i && !q;
-        ne_o <= !data_i &&  q;
         q    <=  data_i;
     end
 endmodule

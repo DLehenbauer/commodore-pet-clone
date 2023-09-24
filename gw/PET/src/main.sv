@@ -66,9 +66,6 @@ module main(
     output logic video_o
 );
     // Drive nothing to avoid contention
-    assign bus_addr_oe = '0;
-    assign bus_data_oe = '0;
-    assign bus_rw_noe  = '0;
     assign cpu_be_o    = '0;
     assign io_oe_o     = '0;
     assign ram_oe_o    = '0;
@@ -76,16 +73,60 @@ module main(
     // Deassert RES to turn off NSTATUS LED
     assign cpu_res_o   = 1'b0;
 
-    logic [7:0] tx_byte = 8'hee;
-    logic [7:0] rx_byte;
-    logic rx_valid;
+    logic [16:0] spi_addr;
+    logic  [7:0] spi_rd_data;
+    logic  [7:0] spi_wr_data;
+    logic        spi_we;
+    logic        spi_cycle;
+    logic        spi_ack;
 
-    spi1 spi1(
-        .clk_i(clk_sys_i),
-        .spi_sck_i(spi1_sck_i),
-        .spi_cs_ni(spi1_cs_ni),
-        .spi_rx_i(spi1_rx_i),
-        .spi_tx_o(spi1_tx_o),
-        .spi_valid_o(spi_ready_o)
+    spi1_master spi1(
+        // SBA
+        .sba_clk_i(clk_i),
+        .sba_addr_o(spi_addr),
+        .sba_rd_data_i(spi_rd_data),
+        .sba_wr_data_o(spi_wr_data),
+        .sba_we_o(spi_we),
+        .sba_cycle_o(spi_cycle),
+        .sba_ack_i(spi_ack),
+
+        // SPI
+        .spi_sck_i(spi_sck_i),
+        .spi_cs_ni(spi_cs_ni),
+        .spi_rx_i(spi_rx_i),
+        .spi_tx_o(spi_tx_o),
+        .spi_ready_o(spi_ready_o)
     );
+
+    logic setup_en;
+    logic capture_en;
+
+    timing timing(
+        .clk_sys_i(clk_sys_i),
+        .setup_en_o(setup_en),
+        .capture_en_o(capture_en)
+    );
+
+    always_ff @(posedge clk_i) begin
+        if (setup_en) begin
+            spi_ack <= 0;
+
+            if (spi_cycle) begin
+                bus_addr_o  <=  spi_addr;
+                bus_rw_no   <= !spi_we;
+                bus_data_o  <= spi_wr_data;
+
+                bus_addr_oe <= 1'b1;
+                bus_rw_noe  <= 1'b1;
+                bus_data_oe <= spi_we;
+            end
+        end else if (capture_en) begin
+            spi_rd_data <= bus_data_i;
+            spi_ack     <= 1'b1;
+
+            bus_addr_oe <= '0;
+            bus_rw_noe  <= '0;
+            bus_data_oe <= '0;
+        end
+    end
 endmodule

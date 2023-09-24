@@ -15,31 +15,40 @@
 `timescale 1ns / 1ps
 
 module spi_driver #(
-    parameter SCK_MHZ = 24
-)(
-    output logic spi_sck_o,
-    output logic spi_cs_no,
+    parameter CLK_MHZ = 64,         // Speed of destination clock
+    parameter SCK_MHZ = 24          // SPI baud rate
+) (
+    output logic spi_sck_o = '0,
+    output logic spi_cs_no = 1'b1,
     input  logic spi_rx_i,
     output logic spi_tx_o
 );
+    localparam CLK_PERIOD = 1000 / CLK_MHZ,
+               SCK_PERIOD = 1000 / SCK_MHZ;
+
     bit start_sck = '0;
 
     always @(posedge start_sck) begin
         while (start_sck) begin
-            #(1000 / SCK_MHZ / 4);
+            #(SCK_PERIOD / 4);
             spi_sck_o <= '1;
-            #(1000 / SCK_MHZ / 2);
+            #(SCK_PERIOD / 2);
             spi_sck_o <= '0;
-            #(1000 / SCK_MHZ / 4);
+            #(SCK_PERIOD / 4);
         end
     end
 
     task reset;
+        $display("[%t]    SPI: Begin .reset()", $time);
+
+        #CLK_PERIOD;
         spi_cs_no = '0;
-        #1;
+        #CLK_PERIOD;
         spi_sck_o = '0;
         spi_cs_no = '1;
-        #1;
+        #CLK_PERIOD;
+
+        $display("[%t]    SPI: End .reset()", $time);
     endtask
 
     task begin_xfer(
@@ -94,10 +103,8 @@ module spi_driver #(
 
         start_sck = 0;
 
-        #1;
         spi_cs_no = next_cs_ni;
-
-        #1;
+        #CLK_PERIOD;
     endtask
 
     task send(
@@ -110,10 +117,11 @@ module spi_driver #(
         // foreach (tx[i]) s = { s, $sformatf("%h ", tx[i]) };
         // $display("[%t] SPI Send: [ %s]", $time, s);
 
-        // 'tx_byte' is continuously preloaded from falling edge of CS_N.
+        // 'tx_byte' is captured on falling edge of CS_N.
         begin_xfer(tx[0]);
 
-        foreach(tx[i]) begin
+        foreach (tx[i]) begin
+            $display("%d", i);
             // 'next_tx' is the next byte to load on the 8th falling edge of SCK.
             xfer_bits(tx[i + 1]);
         end
@@ -122,7 +130,7 @@ module spi_driver #(
         end_xfer();
     endtask
 
-    logic       spi_en;
+    logic       rx_valid;
     logic [7:0] tx_byte = 8'hxx;
     logic [7:0] rx_byte_d, rx_byte_q;
 
@@ -133,10 +141,10 @@ module spi_driver #(
         .spi_tx_o(spi_tx_o),
         .tx_byte_i(tx_byte),
         .rx_byte_o(rx_byte_d),
-        .en_o(spi_en)
+        .rx_valid_o(rx_valid)
     );
 
     always_ff @(posedge spi_sck_o) begin
-        if (spi_en) rx_byte_q <= rx_byte_d;
+        if (rx_valid) rx_byte_q <= rx_byte_d;
     end
 endmodule
