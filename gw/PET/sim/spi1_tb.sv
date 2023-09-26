@@ -18,17 +18,17 @@ module spi1_tb;
     bit clk_sys = '0;
     initial forever #(1000 / (64 * 2)) clk_sys = ~clk_sys;
 
-    logic [16:0] spi_addr;              // 17-bit address of pending transaction
-    logic  [7:0] spi_wr_data;           // Data from MCU when writing
-    logic  [7:0] spi_rd_data;           // Data to MCU when reading
-    logic        spi_we;                // Direction (0 = Write, 1 = Read)
-    logic        spi_cycle;             // Transaction pending: spi_addr, _data, and _rw_n are valid
+    logic [16:0] spi_addr;
+    logic  [7:0] spi_wr_data;
+    logic  [7:0] spi_rd_data;
+    logic        spi_we;
+    logic        spi_cycle;
 
     spi1_driver driver(
-        .sba_clk_i(clk_sys),
-        .sba_addr_o(spi_addr),          // 17-bit address of pending transaction
-        .sba_we_o(spi_we),              // Direction (0 = Write, 1 = Read)
-        .sba_cycle_o(spi_cycle)         // Transaction pending: spi_addr, _data, and _rw_n are valid
+        .clk_i(clk_sys),
+        .addr_o(spi_addr),
+        .we_o(spi_we),
+        .cycle_o(spi_cycle)
     );
 
     initial begin

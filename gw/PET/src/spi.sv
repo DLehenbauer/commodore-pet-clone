@@ -68,16 +68,15 @@ module spi1_master #(
     parameter DATA_WIDTH = 8,
     parameter ADDR_WIDTH = 17
 ) (
-    // SBA Bus
-    input  logic                    sba_clk_i,          // Bus clock
+    input  logic                    clk_i,              // Bus clock
 
-    output logic [ADDR_WIDTH-1:0]   sba_addr_o,         // Address of pending read/write (valid when 'sba_cycle_o' asserted)
-    output logic [DATA_WIDTH-1:0]   sba_wr_data_o,      // Data received from MCU to write (valid when 'sba_cycle_o' asserted)
-    input  logic [DATA_WIDTH-1:0]   sba_rd_data_i,      // Data to transmit to MCU (valid when 'sba_ack_i' asserted)
-    output logic                    sba_we_o,           // Direction of bus transfer (0 = reading, 1 = writing)
+    output logic [ADDR_WIDTH-1:0]   addr_o,             // Address of pending read/write (valid when 'cycle_o' asserted)
+    output logic [DATA_WIDTH-1:0]   wr_data_o,          // Data received from MCU to write (valid when 'cycle_o' asserted)
+    input  logic [DATA_WIDTH-1:0]   rd_data_i,          // Data to transmit to MCU (valid when 'ack_i' asserted)
+    output logic                    we_o,               // Direction of bus transfer (0 = reading, 1 = writing)
     
-    output logic                    sba_cycle_o = '0,   // Requests a bus cycle from the arbiter
-    input  logic                    sba_ack_i,          // Signals termination of cycle ('rd_data_i' valid)
+    output logic                    cycle_o = '0,       // Requests a bus cycle from the arbiter
+    input  logic                    ack_i,              // Signals termination of cycle ('rd_data_i' valid)
 
     // SPI
     input  logic                    spi_sck_i,          // SCK
@@ -130,15 +129,15 @@ module spi1_master #(
             if (spi_rx_valid) begin
                 unique case (state)
                     READ_CMD: begin
-                        sba_we_o <= !spi_rx[7];     // Capture transfer direction (0 = reading, 1 = writing)
+                        we_o <= !spi_rx[7];     // Capture transfer direction (0 = reading, 1 = writing)
                         cmd_rd_a <= spi_rx[6];
 
                         if (spi_rx[6]) begin
                             // If the incomming CMD reads target address as an argument, capture A16 from rx[0] now.
-                            sba_addr_o <= { spi_rx[0], 16'hxxxx };
+                            addr_o <= { spi_rx[0], 16'hxxxx };
                         end else begin
                             // Otherwise increment the previous address.
-                            sba_addr_o <= sba_addr_o + 1'b1;
+                            addr_o <= addr_o + 1'b1;
                         end
 
                         unique casez(spi_rx)
@@ -149,19 +148,19 @@ module spi1_master #(
                     end
 
                     READ_DATA_ARG: begin
-                        sba_wr_data_o <= spi_rx;
+                        wr_data_o <= spi_rx;
                         state <= cmd_rd_a
                             ? READ_ADDR_HI_ARG
                             : VALID;
                     end
 
                     READ_ADDR_HI_ARG: begin
-                        sba_addr_o <= { sba_addr_o[16], spi_rx, 8'hxx };
+                        addr_o <= { addr_o[16], spi_rx, 8'hxx };
                         state      <= READ_ADDR_LO_ARG;
                     end
 
                     READ_ADDR_LO_ARG: begin
-                        sba_addr_o <= { sba_addr_o[16:8], spi_rx };
+                        addr_o <= { addr_o[16:8], spi_rx };
                         state      <= VALID;
                     end
 
@@ -176,16 +175,16 @@ module spi1_master #(
 
     logic cmd_valid_pe;
 
-    sync2_edge_detect sync_valid(   // Cross from SCK to 'sba_clk_i' domain
-        .clk_i(sba_clk_i),
+    sync2_edge_detect sync_valid(   // Cross from SCK to 'clk_i' domain
+        .clk_i(clk_i),
         .data_i(state[2]),          // 'state[2]' bit indicates 'state == VALID'.
         .pe_o(cmd_valid_pe)
     );
 
     logic spi_reset_pe;
 
-    sync2_edge_detect sync_cs_n(    // Cross from CSN to 'sba_clk_i' domain
-        .clk_i(sba_clk_i),
+    sync2_edge_detect sync_cs_n(    // Cross from CSN to 'clk_i' domain
+        .clk_i(clk_i),
         .data_i(!spi_cs_ni),
         .pe_o(spi_reset_pe)
     );
@@ -197,18 +196,18 @@ module spi1_master #(
     // - MCU waits for FPGA to assert READY (ack_i -> spi_ready_o)
     // - MCU deasserts CS_N (no effect)
 
-    always_ff @(posedge sba_clk_i) begin
+    always_ff @(posedge clk_i) begin
         if (spi_reset_pe) begin
             // MCU has asserted CS_N.
             spi_ready_o <= '0;
-            sba_cycle_o <= '0;
+            cycle_o <= '0;
         end else if (cmd_valid_pe) begin
             // MCU has finished transmitting command:
-            sba_cycle_o <= 1'b1;            // Request bus cycle from arbiter.
-        end if (sba_ack_i) begin
+            cycle_o <= 1'b1;            // Request bus cycle from arbiter.
+        end if (ack_i) begin
             // Requested bus cycle has terminated:
-            sba_cycle_o <= '0;              // Bus cycle has completed.
-            spi_tx_byte <= sba_rd_data_i;   // Capture 'sba_rd_data_i' to transmit on next cmd.
+            cycle_o <= '0;              // Bus cycle has completed.
+            spi_tx_byte <= rd_data_i;   // Capture 'rd_data_i' to transmit on next cmd.
             spi_ready_o <= 1'b1;            // Notify MCU we're ready for next cmd.
         end
     end
