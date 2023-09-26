@@ -16,12 +16,14 @@ module spi1_driver #(
     parameter CLK_MHZ = 64,         // Speed of destination clock
     parameter SCK_MHZ = 24          // SPI baud rate
 ) (
+    input  logic clk_i,
     output logic spi_sck_o,
     output logic spi_cs_no,
     output logic spi_pico_o,
     input  logic spi_poci_i
 );
     spi_driver #(CLK_MHZ, SCK_MHZ) spi(
+        .clk_i(clk_i),
         .spi_sck_o(spi_sck_o),
         .spi_cs_no(spi_cs_no),
         .spi_rx_i(spi_poci_i),
@@ -92,6 +94,8 @@ module spi1_driver #(
         input reset,
         input ready
     );
+        $display("[%t]    spi1.set_cpu(reset = %d, ready = %d)", $time, reset, ready);
+
         write_at(17'he80f, { 6'h00, ready, !reset });
     endtask
 endmodule

@@ -24,6 +24,7 @@ module spi1_tb;
     logic spi_poci;
 
     spi1_driver spi1_driver(
+        .clk_i(clk),
         .spi_sck_o(spi_sck),
         .spi_cs_no(spi_cs_n),
         .spi_pico_o(spi_pico),
@@ -140,7 +141,7 @@ module spi1_tb;
         $dumpvars(0, spi1_tb);
 
         spi1_driver.reset();
-        
+
         write_at(17'h00000, 8'h00);
         read_next(8'h01);
         read_next(8'h01);

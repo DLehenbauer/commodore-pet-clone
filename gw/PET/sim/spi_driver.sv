@@ -18,13 +18,14 @@ module spi_driver #(
     parameter CLK_MHZ = 64,         // Speed of destination clock
     parameter SCK_MHZ = 24          // SPI baud rate
 ) (
-    output logic spi_sck_o = '0,
-    output logic spi_cs_no = 1'b1,
+    input  logic clk_i,             // Destination clock
+    
+    output logic spi_sck_o,
+    output logic spi_cs_no,
     input  logic spi_rx_i,
     output logic spi_tx_o
 );
-    localparam CLK_PERIOD = 1000 / CLK_MHZ,
-               SCK_PERIOD = 1000 / SCK_MHZ;
+    localparam SCK_PERIOD = 1000 / SCK_MHZ;
 
     bit start_sck = '0;
 
@@ -39,16 +40,9 @@ module spi_driver #(
     end
 
     task reset;
-        $display("[%t]    SPI: Begin .reset()", $time);
-
-        #CLK_PERIOD;
-        spi_cs_no = '0;
-        #CLK_PERIOD;
         spi_sck_o = '0;
         spi_cs_no = '1;
-        #CLK_PERIOD;
-
-        $display("[%t]    SPI: End .reset()", $time);
+        @(posedge clk_i);           // Hold long enough for destination clock to detect edge.
     endtask
 
     task begin_xfer(
@@ -104,7 +98,7 @@ module spi_driver #(
         start_sck = 0;
 
         spi_cs_no = next_cs_ni;
-        #CLK_PERIOD;
+        @(posedge clk_i);           // Hold CS_N long enough for destination clock to detect edge.
     endtask
 
     task send(
