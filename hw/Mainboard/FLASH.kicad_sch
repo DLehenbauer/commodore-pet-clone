@@ -5,7 +5,9 @@
   (paper "A")
 
   (title_block
-    (title "CBM PET Mainboard Replacement")
+    (title "EconoPET 40/8096")
+    (date "2023-10-01")
+    (rev "A")
   )
 
   (lib_symbols

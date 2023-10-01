@@ -5,7 +5,9 @@
   (paper "A")
 
   (title_block
-    (title "CBM PET Mainboard Replacement")
+    (title "EconoPET 40/8096")
+    (date "2023-10-01")
+    (rev "A")
   )
 
   (lib_symbols
@@ -675,6 +677,12 @@
     )
   )
 
+  (junction (at 83.82 78.74) (diameter 0) (color 0 0 0 0)
+    (uuid 55c104ca-10fa-4d65-8224-6b62b89d229c)
+  )
+  (junction (at 78.74 78.74) (diameter 0) (color 0 0 0 0)
+    (uuid 7a6774fc-ff8b-4530-9cff-f2d7f2aeebf1)
+  )
   (junction (at 107.95 111.76) (diameter 0) (color 0 0 0 0)
     (uuid b67baa29-faa7-4380-8d46-41e8f1df8ff4)
   )
@@ -830,6 +838,10 @@
   (wire (pts (xy 99.06 86.36) (xy 101.6 86.36))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 927b1eb6-e6f4-412f-9a58-8dc81a4889a0)
+  )
+  (wire (pts (xy 78.74 78.74) (xy 83.82 78.74))
+    (stroke (width 0) (type default) (color 0 0 0 0))
+    (uuid 95bb4ee2-cdca-4835-b0a2-6b23929e5ca3)
   )
   (bus (pts (xy 125.73 99.06) (xy 125.73 101.6))
     (stroke (width 0) (type default) (color 0 0 0 0))

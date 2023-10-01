@@ -453,7 +453,6 @@
           "/Keyboard/R9",
           "/MAGIC/BHORIZ",
           "/MAGIC/BVIDEO",
-          "/USER/VCC",
           "GND"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
@@ -587,7 +586,6 @@
         "nets": [
           "+5V",
           "+9V_Unreg",
-          "/MAGIC/MCU/USB/VBUS",
           "/POWER/9V_UNFILT",
           "/POWER/VAC1",
           "/POWER/VAC2",

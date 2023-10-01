@@ -9,4 +9,5 @@
 ## Reference
 
 * [PMOD spec](https://digilent.com/reference/_media/reference/pmod/pmod-interface-specification-1_2_0.pdf)
+* [PMOD Best Practices](https://digilent.com/blog/how-to-design-a-pmod-best-practices/)
 * [VGA](https://github.com/wuxx/icesugar/blob/master/schematic/pmod_vga-v1.1.pdf)
