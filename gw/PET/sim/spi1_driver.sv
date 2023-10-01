@@ -13,16 +13,16 @@
  */
 
 module spi1_driver #(
-    parameter CLK_MHZ = 64,         // Speed of destination clock
     parameter SCK_MHZ = 24          // SPI baud rate
 ) (
     input  logic clk_i,
+
     output logic spi_sck_o,
     output logic spi_cs_no,
     output logic spi_pico_o,
     input  logic spi_poci_i
 );
-    spi_driver #(CLK_MHZ, SCK_MHZ) spi(
+    spi_driver #(SCK_MHZ) spi(
         .clk_i(clk_i),
         .spi_sck_o(spi_sck_o),
         .spi_cs_no(spi_cs_no),

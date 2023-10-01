@@ -15,7 +15,6 @@
 `timescale 1ns / 1ps
 
 module spi_driver #(
-    parameter CLK_MHZ = 64,         // Speed of destination clock
     parameter SCK_MHZ = 24          // SPI baud rate
 ) (
     input  logic clk_i,             // Destination clock
@@ -115,7 +114,6 @@ module spi_driver #(
         begin_xfer(tx[0]);
 
         foreach (tx[i]) begin
-            $display("%d", i);
             // 'next_tx' is the next byte to load on the 8th falling edge of SCK.
             xfer_bits(tx[i + 1]);
         end

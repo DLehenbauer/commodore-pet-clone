@@ -37,6 +37,7 @@ module spi1_tb;
     logic        we;
     logic        cycle;
     logic        spi_ready;
+    logic        ack = '0;
 
     spi1_master spi1(
         .spi_sck_i(spi_sck),
@@ -50,31 +51,22 @@ module spi1_tb;
         .rd_data_i(rd_data),
         .wr_data_o(wr_data),
         .we_o(we),
-        .cycle_o(cycle)
+        .cycle_o(cycle),
+        .ack_i(ack)
     );
 
-    logic        expected_rd_index = '0;
-    logic        expected_wr_index = '0;
-    logic [16:0] expected_addr_fifo [2];
-    logic        expected_we_fifo   [2];
-    logic [7:0]  expected_data_fifo [2];
-
-    wire [16:0] expected_addr = expected_addr_fifo[expected_rd_index];
-    wire        expected_we   = expected_we_fifo[expected_rd_index];
-    wire [7:0]  expected_data = expected_data_fifo[expected_rd_index];
-
-    wire [16:0] last_addr     = expected_addr_fifo[expected_wr_index - 1'b1];
+    logic [16:0] expected_addr;
+    logic        expected_we;
+    logic [7:0]  expected_data;
 
     task set_expected(
         input [16:0] addr_i,
         input        we_i,
         input [7:0]  data_i = 8'hxx
     );
-        expected_addr_fifo[expected_wr_index]  <= addr_i;
-        expected_data_fifo[expected_wr_index]  <= data_i;
-        expected_we_fifo[expected_wr_index]    <= we_i;
-
-        expected_wr_index <= expected_wr_index + 1'b1;
+        expected_addr <= addr_i;
+        expected_data <= data_i;
+        expected_we   <= we_i;
     endtask
 
     task write_at(
@@ -83,6 +75,7 @@ module spi1_tb;
     );
         set_expected(/* addr: */ addr_i, /* we: */ 1'b1, /* data: */ data_i);
         spi1_driver.write_at(addr_i, data_i);
+        @(posedge spi_ready);
     endtask
 
     task read_at(
@@ -90,11 +83,13 @@ module spi1_tb;
     );
         set_expected(/* addr: */ addr_i, /* we: */ '0);
         spi1_driver.read_at(addr_i);
+        @(posedge spi_ready);
     endtask
 
     task read_next();
-        set_expected(/* addr: */ last_addr + 1'b1, /* we: */ '0);
+        set_expected(/* addr: */ expected_addr + 1'b1, /* we: */ '0);
         spi1_driver.read_next();
+        @(posedge spi_ready);
     endtask
 
     always @(negedge spi_cs_n) begin
@@ -116,7 +111,7 @@ module spi1_tb;
     end
 
     always @(posedge cycle) begin
-        #1 $display("[%t]        (cycle = %b, addr = %x, we = %b, wr_data = %x)", $time, cycle, addr, we, wr_data);
+        $display("[%t]        (cycle=%b, addr=%x, we=%b, wr_data=%x, ack=%b, spi_ready=%b)", $time, cycle, addr, we, wr_data, ack, spi_ready);
 
         assert(addr == expected_addr) else begin
             $error("'addr' must produce expected address.  (expected=%h, actual=%h)", expected_addr, addr);
@@ -133,7 +128,11 @@ module spi1_tb;
             $finish;
         end
 
-        expected_rd_index <= expected_rd_index + 1'b1;
+        ack <= 1'b1;
+        #1 $display("[%t]        (cycle=%b, ack=%b, spi_ready=%x)", $time, cycle, ack, spi_ready);
+        @(posedge spi_ready);
+        ack <= 1'b0;
+        $display("[%t]        (cycle=%b, ack=%b, spi_ready=%x)", $time, cycle, ack, spi_ready);
     end
 
     initial begin
