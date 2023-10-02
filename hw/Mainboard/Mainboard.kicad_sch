@@ -1398,9 +1398,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/8e65104c-5813-42ad-ac16-84df381f55d9"
       (reference "#PWR072") (unit 1) (value "+3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/7cdfd584-8a41-484a-b3c5-c89201a279c9"
-      (reference "#PWR073") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3fd27817-43b3-44f7-a74b-557e2e65b123"
       (reference "#PWR074") (unit 1) (value "+1V2") (footprint "")
     )
@@ -1704,8 +1701,17 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/fad6ca08-8961-4872-a5d3-81e5a826af64"
       (reference "#PWR0176") (unit 1) (value "PD_GND") (footprint "")
     )
+    (path "/00000000-0000-0000-0000-00006151ec26/46c089df-4655-4800-8af2-12a847dc0b54"
+      (reference "#PWR0177") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/079005ec-4da9-41dc-a5a0-479afb8f7d7f"
+      (reference "#PWR0178") (unit 1) (value "+5V") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-000061ed99de/ed1ae693-4b15-46b5-b9ad-df0d2148a63c"
       (reference "#PWR0179") (unit 1) (value "PD_GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/286410a7-e91a-4083-b1a3-94cafdcd3d88"
+      (reference "#PWR0180") (unit 1) (value "+5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/82c6b23e-d719-4399-a1eb-e39c2ccc0822"
       (reference "#PWR0181") (unit 1) (value "PD_GND") (footprint "")
@@ -1718,6 +1724,27 @@
     )
     (path "/00000000-0000-0000-0000-000061a7d9c6/b437b3c0-fec2-4677-9f2e-bf1463fe642d"
       (reference "#PWR0184") (unit 1) (value "PD_GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/b1dafdde-58b1-4125-ac51-1a41fe031f52"
+      (reference "#PWR0185") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/a96f8131-2d22-4bd4-bac3-7c268b4318d4"
+      (reference "#PWR0186") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/0dae71d3-e4ec-43e1-a410-048afa0d239a"
+      (reference "#PWR0187") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/314ae49a-a237-4609-9a00-664ad2a2961d"
+      (reference "#PWR0188") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/b98f57a1-14fd-4c4d-9b94-a98a01d70b73"
+      (reference "#PWR0189") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/ba45b3ec-8ae7-4ff1-9ac8-fb2044002926"
+      (reference "#PWR0190") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061b3f8ab/06ea2d97-26dd-4c0f-a76a-e87eebf1a2ba"
+      (reference "#PWR0191") (unit 1) (value "+5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000614e685e/00000000-0000-0000-0000-000061f53899"
       (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -2189,162 +2216,6 @@
     )
     (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/5a88016c-3777-4d9c-b2cd-526d05ee5dce"
       (reference "LS1") (unit 1) (value "Speaker") (footprint "SamacSys_Parts:AT1220TT9R")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/bf4db44e-f6b2-4854-a79f-10d85d9159d8"
-      (reference "PT2") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/25662e6a-3c2e-4855-a0f7-d488dfb3a7b1"
-      (reference "PT4") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/aab8dc63-d93a-43d1-85e6-9fabda04ec0c"
-      (reference "PT5") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/d2cc1928-0e87-40c1-886b-e5b79e736b73"
-      (reference "PT6") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/52564553-0dd1-454c-8276-8069310c7115"
-      (reference "PT7") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/92d8d927-fb6b-469a-9740-347f1ddf10e0"
-      (reference "PT8") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/0bb4457d-04dc-40f4-9e2a-e3d53af6dc74"
-      (reference "PT9") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/04637a54-4913-4ba1-889b-30c1a208dce0"
-      (reference "PT10") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/5268452a-a58b-4298-ac2e-119824130a3a"
-      (reference "PT11") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061ed99de/6338a552-484e-4854-8b2a-b5adc2085816"
-      (reference "PT12") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/9deb86d6-9bd9-4e8a-8ee7-5389badc86cd"
-      (reference "PT13") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/3e389f5a-a667-4c66-983c-a625e30b9501"
-      (reference "PT14") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c0d916aa-6e62-440f-a4ea-a9a0d59a0e0c"
-      (reference "PT15") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/072ae20c-d6e3-4e5a-a8be-ca8fc98a33e0"
-      (reference "PT16") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/f644d0c6-60c4-4dc5-8e66-4d8bca6db5b5"
-      (reference "PT17") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/ecd1293c-e0b8-4710-abfb-8e3b49384eed"
-      (reference "PT18") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/cbeb6a8c-5e02-499e-8659-bd2b817e6b75"
-      (reference "PT19") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3737fd9e-7433-4025-bf4d-e3ec0992daa1"
-      (reference "PT20") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/56a8011c-5036-4fae-9142-33adce49520b"
-      (reference "PT21") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/77e3b5aa-5ae1-4149-a1bd-ebf52e6baa0a"
-      (reference "PT22") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/c0149dcc-7328-4bf7-b520-fec6ae8b045d"
-      (reference "PT23") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/1e9d9dc0-3281-4706-a981-e2b737272d3b"
-      (reference "PT24") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/1d9c7528-f905-4794-8ab8-35e92fb22d45"
-      (reference "PT25") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/2e5a9dbb-685d-4682-a65e-21f208913358"
-      (reference "PT26") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/1fe12ae2-3b0d-4ccb-890b-944a6ae68fdf"
-      (reference "PT27") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/694af70e-4a56-4ba8-92b8-04ac6f9b1a04"
-      (reference "PT28") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/8d79f325-9827-4665-b6ea-377f47fd7b11"
-      (reference "PT29") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_0.28")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/63c33da3-84f5-4dbe-a0a5-dc2c7e7eb61e"
-      (reference "PT30") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/111375f9-032b-4541-b4f8-f58be30b9c15"
-      (reference "PT31") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/d4ad6af2-0911-4ecc-8fe3-69a6a335f3c2"
-      (reference "PT32") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/4fa5da32-3515-40ff-9512-c508a7a408a7"
-      (reference "PT33") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/40dd871f-b7fd-4f59-ade2-a5cd0fb8a51b"
-      (reference "PT34") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b9c2eb/2145c71d-e651-4c8a-a0b9-6df43ccfe823"
-      (reference "PT35") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/3ee42b49-116c-44b8-a1f3-c3cf2ac19c75"
-      (reference "PT36") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061b3f8ab/2cfd1ef6-b425-441a-95c7-0a602a46c8b8"
-      (reference "PT37") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061bef9ce/2aaa4a4b-9644-4f55-a8f0-055d6cff3c62"
-      (reference "PT38") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061bef9ce/52324d2a-64d9-4b4f-b20d-bd53cc528adc"
-      (reference "PT39") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061bef9ce/054db9b4-880c-42da-bd69-06d222dabce6"
-      (reference "PT40") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061bef9ce/fff7aad3-8492-4096-8826-13d89b43b80f"
-      (reference "PT41") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/16c5c168-bcf6-4241-b624-12b545429ccd"
-      (reference "PT42") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-000061a7d9c6/9cdf69fe-bf3e-47ca-a9ed-084d2508b75d"
-      (reference "PT43") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/5d4478c1-4f99-4ffd-a4e4-04932e5d3db1"
-      (reference "PT44") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/558865b8-78a0-4a81-8308-9935555f8725"
-      (reference "PT45") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/5178399f-3ceb-4969-8efa-17e54018f3f1/1435cd12-2017-40ac-b459-9519ce547344"
-      (reference "PT46") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/59d93a22-b993-41ff-a6b2-b39299a7b0ef"
-      (reference "PT47") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c3638af2-eb20-4ef0-b6ba-27947aaf50b1"
-      (reference "PT48") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/80febfd9-11c3-4dcf-8e4c-c2db33e75509"
-      (reference "PT49") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/c562673a-fe22-414c-81e5-6834e9fead43/3c7e1ff8-9659-4eba-8f35-f138d1a3d62d"
-      (reference "PT50") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/4a703e05-8d2c-43db-9b6e-d1126fbddcf0"
-      (reference "PT51") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/fd4ee122-3c43-4766-9714-ea504c1b965e"
-      (reference "PT52") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/9f1657b1-c6b7-43c0-a254-c826e8d7d76d"
-      (reference "PT53") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/6521fafb-cb3f-4004-93ad-439f568f7908/75197780-40dd-4f75-9a98-fee5ae44f8ea"
-      (reference "PT54") (unit 1) (value "PowerTie_2") (footprint "PET:NetTie-2_SMD_Pad_1.6_to_0.4mm")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/06334088-dd78-4e80-a658-961659670bd4"
       (reference "Q1") (unit 1) (value "MMBT3904") (footprint "Package_TO_SOT_SMD:SOT-23")
