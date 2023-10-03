@@ -84,6 +84,11 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 05ee8a83-a4a5-4b91-b148-4c47e0f8bd57)
   )
+  (bus (pts (xy 104.14 151.13) (xy 116.84 151.13))
+    (stroke (width 0) (type default) (color 0 0 0 0))
+    (uuid 06241921-ea49-471a-b0d2-329cdc736ae1)
+  )
+
   (wire (pts (xy 168.91 57.15) (xy 142.24 57.15))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 0a1d0cbe-85ab-4f0f-b3b1-fcef21dfb600)
@@ -124,7 +129,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 1cb64bfe-d819-47e3-be11-515b04f2c451)
   )
-  (wire (pts (xy 214.63 105.41) (xy 214.63 163.83))
+  (wire (pts (xy 214.63 105.41) (xy 214.63 166.37))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 1dc6e845-b0b7-485a-94eb-a4f06c8b6903)
   )
@@ -149,11 +154,6 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 2681e64d-bedc-4e1f-87d2-754aaa485bbd)
   )
-  (bus (pts (xy 110.49 151.13) (xy 110.49 147.32))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid 273de1e4-3199-4fe2-ada7-037551966f78)
-  )
-
   (wire (pts (xy 69.85 36.83) (xy 78.74 36.83))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 2dd76837-a80a-47e1-8d49-9d9601dba9d6)
@@ -166,7 +166,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 33b7f11b-6f33-4668-bdc1-5792615f8226)
   )
-  (wire (pts (xy 109.22 163.83) (xy 109.22 134.62))
+  (wire (pts (xy 109.22 166.37) (xy 109.22 134.62))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 39cc6803-7db3-4877-934d-6e50836e995f)
   )
@@ -222,6 +222,11 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 50e0d676-ec36-44b9-a45f-4a0f6a41d9f0)
   )
+  (bus (pts (xy 104.14 148.59) (xy 116.84 148.59))
+    (stroke (width 0) (type default) (color 0 0 0 0))
+    (uuid 51a39e99-2339-43ac-897e-1b48d64296ba)
+  )
+
   (wire (pts (xy 66.04 175.26) (xy 66.04 134.62))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 54603515-902b-42ce-88de-5fce264d9d07)
@@ -266,33 +271,15 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 6b6d35dc-fa1d-46c5-87c0-b0652011059d)
   )
-  (bus (pts (xy 104.14 151.13) (xy 110.49 151.13))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid 6c77075e-3d93-494a-8b3e-2a8b09a0f6b5)
-  )
-  (bus (pts (xy 104.14 148.59) (xy 107.95 148.59))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid 6d697071-d4f0-4ea9-862b-fbe8cfbef128)
-  )
 
   (wire (pts (xy 66.04 78.74) (xy 78.74 78.74))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 6fba296d-9556-44d8-96ae-3e781f34f9b3)
   )
-  (bus (pts (xy 107.95 144.78) (xy 116.84 144.78))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid 721e72c2-904e-47ed-bf38-4770da2cb31c)
-  )
-
   (wire (pts (xy 161.29 102.87) (xy 161.29 125.73))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 7582a530-a952-46c1-b7eb-75006524ba29)
   )
-  (bus (pts (xy 107.95 148.59) (xy 107.95 144.78))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid 759ec2dd-e709-44a1-a289-ff00e8962ec1)
-  )
-
   (wire (pts (xy 168.91 125.73) (xy 161.29 125.73))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 765684c2-53b3-4ef7-bd1b-7a4a73d87b76)
@@ -383,7 +370,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid b44c0167-50fe-4c67-94fb-5ce2e6f52544)
   )
-  (wire (pts (xy 209.55 158.75) (xy 114.3 158.75))
+  (wire (pts (xy 209.55 161.29) (xy 114.3 161.29))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid b64f53e9-08f4-4967-936d-18f5d6c519a9)
   )
@@ -415,7 +402,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid c85e3068-d7e6-4d84-8d19-4c38a1550eda)
   )
-  (wire (pts (xy 209.55 100.33) (xy 209.55 158.75))
+  (wire (pts (xy 209.55 100.33) (xy 209.55 161.29))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid c89a6932-4c35-49c3-a16d-2e29973adb59)
   )
@@ -424,7 +411,7 @@
     (uuid cd50b8dc-829d-4a1d-8f2a-6471f378ba87)
   )
 
-  (wire (pts (xy 212.09 102.87) (xy 212.09 161.29))
+  (wire (pts (xy 212.09 102.87) (xy 212.09 163.83))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid cef391e2-104e-4a02-ae8c-35f77d6f6528)
   )
@@ -436,11 +423,6 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid d035bb7a-e806-42f2-ba95-a390d279aef1)
   )
-  (bus (pts (xy 110.49 147.32) (xy 116.84 147.32))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid d0d749fe-d1c7-4b87-a539-4bd862c302e1)
-  )
-
   (wire (pts (xy 142.24 116.84) (xy 158.75 116.84))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid d115a0df-1034-4583-83af-ff1cb8acfa17)
@@ -450,11 +432,11 @@
     (uuid d1441985-7b63-4bf8-a06d-c70da2e3b78b)
   )
 
-  (wire (pts (xy 212.09 161.29) (xy 111.76 161.29))
+  (wire (pts (xy 212.09 163.83) (xy 111.76 163.83))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid d1537b63-56a9-403d-af1f-320efea3ce96)
   )
-  (wire (pts (xy 114.3 158.75) (xy 114.3 129.54))
+  (wire (pts (xy 114.3 161.29) (xy 114.3 129.54))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid d35438af-d49e-46d3-af63-b09eb85e6957)
   )
@@ -508,7 +490,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid ea77ba09-319a-49bd-ad5b-49f4c76f232c)
   )
-  (wire (pts (xy 111.76 161.29) (xy 111.76 132.08))
+  (wire (pts (xy 111.76 163.83) (xy 111.76 132.08))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid eee2d4ba-e851-4381-8fdd-7ee0090673e3)
   )
@@ -516,7 +498,7 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid f08895dc-4dcb-4aef-a39b-5a08864cdaaf)
   )
-  (wire (pts (xy 214.63 163.83) (xy 109.22 163.83))
+  (wire (pts (xy 214.63 166.37) (xy 109.22 166.37))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid f14f26e8-73c8-4d83-aba6-a97672a407ea)
   )
@@ -933,14 +915,14 @@
     )
   )
 
-  (sheet (at 116.84 29.21) (size 25.4 121.92) (fields_autoplaced)
+  (sheet (at 116.84 29.21) (size 25.4 125.73) (fields_autoplaced)
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-000061b9c2eb)
     (property "Sheet name" "IO" (id 0) (at 116.84 28.4984 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
-    (property "Sheet file" "IO.kicad_sch" (id 1) (at 116.84 151.7146 0)
+    (property "Sheet file" "IO.kicad_sch" (id 1) (at 116.84 155.5246 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )
     (pin "ATN_IN" input (at 142.24 41.91 0)
@@ -991,11 +973,11 @@
       (effects (font (size 1.27 1.27)) (justify left))
       (uuid f503ea07-bcf1-4924-930a-6f7e9cd312f8)
     )
-    (pin "KEY_ROW[0..3]" output (at 116.84 144.78 180)
+    (pin "KEY_ROW[0..3]" output (at 116.84 148.59 180)
       (effects (font (size 1.27 1.27)) (justify left))
       (uuid 645bdbdc-8f65-42ef-a021-2d3e7d74a739)
     )
-    (pin "KEY_COL[0..7]" input (at 116.84 147.32 180)
+    (pin "KEY_COL[0..7]" input (at 116.84 151.13 180)
       (effects (font (size 1.27 1.27)) (justify left))
       (uuid b1ba92d5-0d41-4be9-b483-47d08dc1785d)
     )
@@ -1440,9 +1422,6 @@
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/107c3dca-1d3b-4170-b6bd-b3e242854fb8"
       (reference "#PWR075") (unit 1) (value "+3V3") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/00000000-0000-0000-0000-000066a110f7"
-      (reference "#PWR076") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/d5d87778-9c6e-47e8-ae63-3da085d155f4"
       (reference "#PWR077") (unit 1) (value "+3V3") (footprint "")
     )
@@ -1454,9 +1433,6 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/f6e460c5-f881-4eb6-b5c0-6f03471506b2"
       (reference "#PWR080") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/897bf1a6-37c0-476f-ade8-45778a9cbc6b"
-      (reference "#PWR081") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/b6d09466-7578-4109-8df5-e9185930a8a8"
       (reference "#PWR082") (unit 1) (value "GND") (footprint "")
@@ -1745,6 +1721,15 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/3b6d0c70-6282-4619-97c5-f97c852cfe84/db19e21b-4d9e-43b0-8c3a-a3f0fbd2ef99"
       (reference "#PWR0177") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/3b7bfc5d-e8f2-4c7a-abe3-25877ee916d0"
+      (reference "#PWR0178") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061a7d9c6/8160d882-7bf9-4f19-99ea-65e28271dd11"
+      (reference "#PWR0179") (unit 1) (value "PD_GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000061a7d9c6/0ad1d7ba-2e09-4b8e-a2be-c5b5eebc4fb0"
+      (reference "#PWR0180") (unit 1) (value "+5V") (footprint "")
     )
     (path "/00000000-0000-0000-0000-0000614e685e/00000000-0000-0000-0000-000061f53899"
       (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -2403,44 +2388,44 @@
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/3b6d0c70-6282-4619-97c5-f97c852cfe84/715235fe-7199-4036-aa32-f022017e5449"
       (reference "R59") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6fb6968e-f0ff-4370-85ec-15db88343369"
-      (reference "RN1") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9fed8c49-41fc-4501-a700-64c4e9814414"
-      (reference "RN2") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/7c713405-2e70-41bc-90e0-6baf7a78bb52"
-      (reference "RN3") (unit 1) (value "470") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/15a36902-479a-424e-a9f0-56c9b1c369d2"
-      (reference "RN4") (unit 1) (value "470") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/7dcf0c38-bd4c-47e4-beea-63f3376ccd30"
-      (reference "RN5") (unit 1) (value "470") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    (path "/00000000-0000-0000-0000-00006151ec26/95315324-189d-4b93-a14a-13e28eb2e3e7"
+      (reference "RN1") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/9a01e495-06c4-4344-900c-0587b083e4bd"
-      (reference "RN6") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/1ec15054-6177-497a-91ee-c5fe842bb7db"
-      (reference "RN7") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/95315324-189d-4b93-a14a-13e28eb2e3e7"
-      (reference "RN8") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/7d4a3f85-9d68-4f24-a031-5bdd55a3463b"
-      (reference "RN9") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+      (reference "RN2") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/d274958a-11e0-4b46-9f0f-53c54a29ff64"
-      (reference "RN10") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
-    )
-    (path "/00000000-0000-0000-0000-00006151ec26/c00fc3f9-502d-46c8-8e5b-307f2d3cce8c"
-      (reference "RN11") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+      (reference "RN3") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/5dd4899e-62e8-48f9-a50e-ad350a4e333e"
-      (reference "RN12") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+      (reference "RN4") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/7d4a3f85-9d68-4f24-a031-5bdd55a3463b"
+      (reference "RN5") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/1ec15054-6177-497a-91ee-c5fe842bb7db"
+      (reference "RN6") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/c00fc3f9-502d-46c8-8e5b-307f2d3cce8c"
+      (reference "RN7") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-00006151ec26/247d5a5f-bba8-42a5-8361-3bb7d794841f"
-      (reference "RN13") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+      (reference "RN8") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/6fb6968e-f0ff-4370-85ec-15db88343369"
+      (reference "RN9") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-0000617d6918/00000000-0000-0000-0000-000062edbe39/9fed8c49-41fc-4501-a700-64c4e9814414"
+      (reference "RN10") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/7c713405-2e70-41bc-90e0-6baf7a78bb52"
+      (reference "RN11") (unit 1) (value "470") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/15a36902-479a-424e-a9f0-56c9b1c369d2"
+      (reference "RN12") (unit 1) (value "470") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
+    )
+    (path "/00000000-0000-0000-0000-00006151ec26/7dcf0c38-bd4c-47e4-beea-63f3376ccd30"
+      (reference "RN13") (unit 1) (value "470") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-000061a7d9c6/bcbd2de6-3f43-40fb-a6c2-b599189218fa"
       (reference "RN14") (unit 1) (value "10k") (footprint "Resistor_SMD:R_Array_Convex_4x0603")
