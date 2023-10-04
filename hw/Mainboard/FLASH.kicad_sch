@@ -448,7 +448,7 @@
     (property "Footprint" "JLCPCB:SW-TH_L6.0-W3.5-P6.50" (id 2) (at 111.76 107.95 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (id 3) (at 111.76 107.95 0)
+    (property "Datasheet" "~" (id 3) (at 111.76 107.95 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "LCSC" "" (id 4) (at 116.84 107.95 90)

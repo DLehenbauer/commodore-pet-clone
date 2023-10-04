@@ -523,7 +523,6 @@
     )
   )
 
-
   (junction (at 153.67 123.19) (diameter 0) (color 0 0 0 0)
     (uuid 3789d269-3a26-40d8-a709-401d53fd2812)
   )
@@ -803,7 +802,7 @@
     (property "Footprint" "Diode_SMD:D_SMA" (id 2) (at 83.82 66.04 90)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (id 3) (at 83.82 66.04 90)
+    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2303141100_MDD-Microdiode-Electronics--SS54_C22452.pdf" (id 3) (at 83.82 66.04 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "LCSC" "C22452" (id 4) (at 83.82 66.04 0)
@@ -847,7 +846,7 @@
     (property "Footprint" "Capacitor_SMD:C_1206_3216Metric" (id 2) (at 83.82 82.55 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/1810221121_Samsung-Electro-Mechanics-CL31A476MPHNNNE_C96123.pdf" (id 3) (at 83.82 82.55 0)
+    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Samsung-Electro-Mechanics-CL31A476MPHNNNE_C96123.pdf" (id 3) (at 83.82 82.55 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "LCSC" "C96123" (id 4) (at 83.82 82.55 0)

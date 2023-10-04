@@ -3877,7 +3877,7 @@
     (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x09_P2.54mm_Vertical" (id 2) (at 210.82 34.29 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (id 3) (at 210.82 34.29 0)
+    (property "Datasheet" "~" (id 3) (at 210.82 34.29 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "MOUSER" "649-1012938195002BLF" (id 4) (at 210.82 34.29 0)
