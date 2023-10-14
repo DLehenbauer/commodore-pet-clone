@@ -1844,7 +1844,7 @@
     (effects (font (size 1.5 1.5) (thickness 0.8) bold) (justify left bottom))
     (uuid 90283901-e984-455f-aff2-fd5e564473ae)
   )
-  (text "Signals with a 'B' prefix have been level shifted from 3V3 to 5V\nNote that ~{IRQ} is pulled to 3V3 (not 5V)"
+  (text "Signals with a 'B' prefix have been level shifted from 3V3 to 5V\n\n~{IRQ} is wire-or'ed and pulled to 3V3 (not 5V)"
     (at 146.05 46.99 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid d1a06c6c-c9a7-41cb-ba12-0ae56c17938d)

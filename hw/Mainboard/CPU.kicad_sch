@@ -1593,7 +1593,7 @@
     (effects (font (size 1.5 1.5) (thickness 0.8) bold) (justify left bottom))
     (uuid 09e03911-b40d-42e7-ab15-5990494fffe8)
   )
-  (text "A single 128KB SRAM chip is used for main RAM, expansion RAM, display RAM\nand ROM.  The ROM portion is initialized at POR by the MCU.\n\nAddress decoding is implemented by the FPGA, which drives RAM_A[10..11]\nand RAM_A[15..16].  Other address lines are connected directly to the bus.\n\nRAM_A[10..11] is driven by the FPGA to mirror display RAM when the CPU\naccesses the range $8000-8FFF.\n\n40 column PET has 1k of screen RAM, mirrored 4 times.\n80 column PET has 2k of screen RAM, mirrored 2 times.\n\nRAM_A[15..16] are driven by the FPGA to implement bank switching when the\nCPU accesses the ranges $8000-FFFF in accordance with the current value of\nthe control register at $FFF0."
+  (text "A single 128KB SRAM chip is used for main RAM, expansion RAM, display RAM\nand ROM.  The ROM portion is initialized at POR by the MCU.\n\nA[15:0] are the address of the shared system bus, which is connected to the\nCPU, IO, FPGA and most RAM address pins.  The exceptions are\nRAM_A[16:15,11:10], which are driven exclusively by the FPGA.\n\nRAM_A[11:10] is used by the FPGA to mirror display RAM when the CPU\naccesses the range $8000-8FFF.\n\n40 column PET has 1k of screen RAM, mirrored 4 times.\n80 column PET has 2k of screen RAM, mirrored 2 times.\n\nRAM_A[16:15] is used by the FPGA to implement bank switching when the\nCPU accesses the ranges $8000-FFFF.  The FPGA monitors writes to the\ncontrol register at $FFF0 to determine which bank is currently selected."
     (at 176.53 55.88 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 2ac93ed8-3110-434d-a050-24d040eb3034)

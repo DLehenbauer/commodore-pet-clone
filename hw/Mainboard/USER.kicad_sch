@@ -868,6 +868,12 @@
     (uuid fdb6cc01-965b-45c9-b8e6-56f3919d4541)
   )
 
+  (text "The jumper allows partial compatibility with\nVIC-20 and C64 user port peripherals by delivering\n+5V on PIN_2 instead of PET video."
+    (at 27.94 66.04 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 294a6f91-cb6e-46f0-a0a2-0a15926f6044)
+  )
+
   (label "VIA_PA0" (at 184.15 85.09 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 07c67042-1c48-4fb8-9b34-24492160bd9b)
