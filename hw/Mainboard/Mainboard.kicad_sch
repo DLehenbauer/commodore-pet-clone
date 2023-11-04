@@ -1737,8 +1737,8 @@
     (path "/00000000-0000-0000-0000-000061ed99de/46a7d887-35aa-4f75-a739-daf384792731"
       (reference "C2") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/3eec6709-b9e1-4d9c-adfa-eb5563d0cc3b"
-      (reference "C3") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    (path "/00000000-0000-0000-0000-000061ed99de/f156cf5d-dbb8-40c8-8563-9a98c6bf7a4b"
+      (reference "C3") (unit 1) (value "47u 10V") (footprint "Capacitor_SMD:C_1206_3216Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/a11b0bc7-d2b3-4273-b8ee-531c67ccfe9e"
       (reference "C4") (unit 1) (value "47u 10V") (footprint "Capacitor_SMD:C_1206_3216Metric")
@@ -1767,8 +1767,8 @@
     (path "/00000000-0000-0000-0000-000061ed99de/80198ade-711f-4236-a8ee-625f878f1a51"
       (reference "C12") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000061ed99de/2eb37de8-81d2-4121-a193-7c4986c7008f"
-      (reference "C13") (unit 1) (value "10u") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    (path "/00000000-0000-0000-0000-000061ed99de/f9c1ebdb-6e30-4b7b-ae16-020df957e740"
+      (reference "C13") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/351551d2-85df-462d-ae28-5687b9725253"
       (reference "C14") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
@@ -2036,6 +2036,9 @@
     )
     (path "/00000000-0000-0000-0000-0000617d6918/b70241ab-8a5c-42d5-a1ab-8f4bc50a1197/3b6d0c70-6282-4619-97c5-f97c852cfe84/917bca46-fcaf-4280-a6d5-dcbf4d2fedb7"
       (reference "C102") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    )
+    (path "/00000000-0000-0000-0000-000061ed99de/c4a770d7-75aa-46cd-a995-d1d8fc6798fd"
+      (reference "C103") (unit 1) (value "22u") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-000062e92074"
       (reference "D1") (unit 1) (value "SS54") (footprint "Diode_SMD:D_SMA")
