@@ -2131,7 +2131,7 @@
       (reference "J11") (unit 1) (value "9V POWER") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-000061ed99de/00000000-0000-0000-0000-00006173f9c1"
-      (reference "J12") (unit 1) (value "9V POWER") (footprint "Connector_BarrelJack:BarrelJack_Horizontal")
+      (reference "J12") (unit 1) (value "9V POWER") (footprint "PET:BarrelJack_Horizontal")
     )
     (path "/00000000-0000-0000-0000-000061bef9ce/79fcdec0-4a21-4a6f-ab34-08f688656fbb"
       (reference "J13") (unit 1) (value "CASS_B_HEADER") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical")

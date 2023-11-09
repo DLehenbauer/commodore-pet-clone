@@ -2965,7 +2965,7 @@
     (uuid 00000000-0000-0000-0000-00006173f9c1)
     (property "Reference" "J12" (id 0) (at 31.9278 31.3182 0))
     (property "Value" "9V POWER" (id 1) (at 31.9278 33.6296 0))
-    (property "Footprint" "Connector_BarrelJack:BarrelJack_Horizontal" (id 2) (at 31.75 40.386 0)
+    (property "Footprint" "PET:BarrelJack_Horizontal" (id 2) (at 31.75 40.386 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "https://www.gravitech.us/poja2x51.html" (id 3) (at 31.75 40.386 0)
