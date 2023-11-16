@@ -38,10 +38,12 @@ void driver_init() {
     gpio_init(SPI_READY_B_PIN);
     gpio_set_dir(SPI_READY_B_PIN, GPIO_IN);
 
-    spi_init(SPI_INSTANCE, SPI_MHZ * 1000 * 1000);
+    uint baudrate = spi_init(SPI_INSTANCE, SPI_MHZ * 1000 * 1000);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
+
+    printf("    spi1     = %d Bd\n", baudrate);
 }
 
 void cmd_start() {
