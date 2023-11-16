@@ -60,6 +60,8 @@ spi_t *spi_get_by_num(size_t num) {
     }
 }
 
+sd_card_t* pSDCardReader;
+
 void init_sd() {
     time_init();
 
