@@ -1,7 +1,10 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/main/containers/debian
+# Ubuntu to support Efinix FPGA toolchain:
+# https://www.efinixinc.com/support/efinity.php
 
-# [Choice] Debian version (use bullseye or stretch on local arm64/Apple Silicon): bullseye, buster, stretch
-ARG VARIANT="bullseye"
+# See here for image contents: https://github.com/devcontainers/images/tree/main/src/base-ubuntu
+
+# [Choice] Ubuntu version (use ubuntu-22.04 or ubuntu-18.04 on local arm64/Apple Silicon): ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
+ARG VARIANT=jammy
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
 # Currently targetted SDK version
@@ -9,14 +12,6 @@ ARG PICO_SDK_VERSION="1.5.0"
 
 # Use unattended mode for 'apt'
 ARG DEBIAN_FRONTEND="noninteractive"
-
-# Required by VS Code "xaver.clang-format" extension
-RUN apt-get update && apt-get -y install --no-install-recommends \
-    clang-format
-
-# Tools for building / verifying RTL
-RUN apt-get update && apt-get -y install --no-install-recommends \
-    iverilog
 
 # Raspberry Pi Pico SDK
 ARG PICO_PATH="/opt/pico"
@@ -75,3 +70,11 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     cd /usr/bin && \
     ln -s /usr/bin/objdump objdump-multiarch && \
     ln -s /usr/bin/nm nm-multiarch
+
+# Required by VS Code "xaver.clang-format" extension
+RUN apt-get update && apt-get -y install --no-install-recommends \
+    clang-format
+
+# Tools for building / verifying RTL
+RUN apt-get update && apt-get -y install --no-install-recommends \
+    iverilog

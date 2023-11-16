@@ -1,13 +1,26 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/blob/main/containers/debian/.devcontainer/devcontainer.json
+// https://github.com/devcontainers/images/blob/main/src/base-ubuntu/.devcontainer/devcontainer.json
 {
     "name": "PET",
-	"build": {
-		"dockerfile": "Dockerfile",
-		// Update 'VARIANT' to pick an Debian version: bullseye, buster
-		// Use bullseye on local arm64/Apple Silicon.
-		"args": { "VARIANT": "bullseye" }
-	},
+    
+    "build": {
+        "dockerfile": "./Dockerfile",
+        "context": "."
+    },
+    
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": "true",
+            "username": "vscode",
+            "userUid": "1000",
+            "userGid": "1000",
+            "upgradePackages": "true"
+        },
+        "ghcr.io/devcontainers/features/git:1": {
+            "version": "latest",
+            "ppa": "false"
+        }
+    },
 
     "customizations": {
         "vscode": {           
@@ -30,5 +43,6 @@
     ],
 
     // TODO: Figure out how to connect to Picoprobe as a non-root user.
+    // More info: https://aka.ms/vscode-remote/containers/non-root
     "remoteUser": "root"
 }
