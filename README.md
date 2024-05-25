@@ -7,7 +7,7 @@ Some assembly required.  :-)
 
 ## Status
 
-Working prototype.  Currently finalizing V1.0 release.
+Working prototype.  PCB and SMT manufacturing files are [here](https://github.com/DLehenbauer/commodore-pet-clone/tree/main/hw/Mainboard/production).
 
 ## About
 
