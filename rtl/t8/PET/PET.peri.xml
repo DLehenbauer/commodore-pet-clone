@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="PET" device_def="T8Q144" location="D:\gh\commodore-pet-clone\rtl\t8\PET" version="2023.1.150.3.11" db_version="20231999" last_change_date="Tue Nov  7 06:48:40 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="PET" device_def="T8Q144" location="D:\gh\commodore-pet-clone\rtl\t8\PET" version="2023.2.307" db_version="20232999" last_change_date="Tue Mar 12 19:14:04 2024" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="1A" iostd="3.3 V LVTTL / LVCMOS"/>
